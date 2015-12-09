@@ -1,0 +1,1 @@
+child_app_styles.min.css is a minified version of paper.css and style.css combined.

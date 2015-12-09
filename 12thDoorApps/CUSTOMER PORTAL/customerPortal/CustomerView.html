@@ -1,0 +1,193 @@
+<div class="card-container" style="padding:20px;">
+    <!--WHITEFRAME START-->
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto" ng-repeat="item in invoiceArray">
+    <form name="editForm"  style="width:960px;"  >
+            <md-content flex>
+            <div layout layout-sm="column" layout-margin flex>
+            <div flex="15">
+				<label>Invoice No:</label>
+				<label ng-if="item.invoiceNo == '-999'">{{item.invoiceRefNo}}</label>
+					<label ng-if="item.invoiceNo != '-999'">{{item.invoiceNo}}</label>
+				</div>
+						<div flex="55"></div>
+                     <div  style="margin-top:-20px;">
+                        	 <md-button ng-click="print()" style="height:30px;" aria-label="change address" href>
+                                    <md-icon md-svg-icon="img/ic_print_24px.svg" style="height:20px; width:20px;"></md-icon>
+                                </md-button>
+                      
+                        	 <md-button ng-click="download()" style="height:30px;" aria-label="change address" href>
+                                    <md-icon md-svg-icon="img/ic_file_download_24px.svg" style="height:20px; width:20px;"></md-icon>
+                                </md-button>
+                        
+                        	<md-button class="md-raised md-primary"ng-click="showPaymentScheme()" href style="background:green; margin-top:5px;">Make Payment</md-button>
+
+                               <md-menu md-position-mode="target-right target" >
+                            <md-button href aria-label="Open demo menu" class="md-icon-button"  ng-click="$mdOpenMenu()">
+                                <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:10px;" ></md-icon>
+                            </md-button>
+                            <md-menu-content width="4">
+                            
+                            </md-menu-content>
+                        </md-menu>
+                        </div>
+				</div>
+
+				<md-divider></md-divider>
+				<div layout layout-sm="column" layout-margin flex>
+					<img src="img/image1.jpg">
+				</div>
+				<div layout layout-sm="column" layout-margin flex style="margin-top:-50px;">
+				<div flex="10" class="blankspace"></div>
+					<h1 style="">INVOICE</h1>
+				</div>
+				<div layout layout-sm="column" layout-margin flex style="margin-top:-20px;">
+				<div flex="10" class="blankspace"></div>
+					<label ng-if="item.invoiceNo == '-999'">#INV {{item.invoiceRefNo}}</label>
+					<label ng-if="item.invoiceNo != '-999'">#INV {{item.invoiceNo}}</label>
+					<div flex="50" class="blankspace"></div>
+					
+				</div>
+				<div layout layout-sm="column" layout-margin style="margin-top:20px;" flex>
+				<div flex="65" class="blankspace"></div>
+					<label>To:</label>
+					
+				</div>
+				<div layout layout-sm="column" layout-margin style="margin-top:10px;" flex>
+				<div flex="10" class="blankspace"></div>
+					<label flex="10">Invoice Date</label>
+					<label flex="15"> {{item.Startdate|date}}</label>
+			<div flex="25" class="blankspace"></div>
+					<label><b>{{item.Name}}</b></label>
+					
+				</div>
+
+				<div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
+				<div flex="10" class="blankspace"></div>
+					<label flex="10">Due Date</label>
+					<label flex="15"> {{item.termtype}}</label>
+					<div flex="25" class="blankspace"></div>
+					<label>{{street}}</label>
+					
+				</div>
+				<div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
+				<div flex="10" class="blankspace"></div>
+					<label flex="10">PO</label>
+					<label flex="15"> {{item.poNum}}</label>
+					<div flex="25" class="blankspace"></div>
+					<label>{{city}}</label>
+					
+				</div>
+				
+				<div layout layout-sm="column" layout-margin style="margin-top:-15px;"  flex>
+				<div flex="10" class="blankspace"></div>
+					<label flex="10">Currency</label>
+					<label flex="15">USD</label>
+					<div flex="25" class="blankspace"></div>
+					<label>{{country}}</label>
+					
+				</div>
+				<div layout layout-sm="column" layout-margin  flex>
+				<div flex="10" class="blankspace"></div>
+					<label flex="10">Comments</label>
+					<label flex>{{item.comments}}</label>
+					<!-- <div flex="50" class="blankspace"></div> -->
+				</div>
+				<div layout layout-sm="column" style="margin-top:30px;" layout-margin  flex>
+				<div flex="10" class="blankspace"></div>
+					<table >
+					<tr>
+						<th style=" width:450px;" flex="50">Description</th>
+						<th style="padding: 10px;" flex>Qty</th>
+						<th style="padding: 10px;" flex>Unit</th>
+						<th style="padding: 10px;" flex>Price</th>
+						<th style="padding: 10px;" flex>Amount</th>
+						<md-divider></md-divider>
+						</tr>
+
+						<tr ng-repeat="prod in item.invoiceProducts">
+							<td style=" width:450px;" flex="50"><b>{{prod.Productname}}</b><br>
+							Optional product line comment- {{prod.olp}}</td>
+							<td style="padding: 10px;"flex>{{prod.quantity}}</td>
+							<td style="padding: 10px;"flex>{{prod.ProductUnit}}</td>
+							<td style="padding: 10px;"flex>{{prod.price}}</td>
+							<td style="padding: 10px;"flex>{{prod.amount|currency}}</td> 
+						</tr>
+						<md-divider></md-divider>
+					</table>
+				</div>
+				 <md-divider></md-divider>
+
+				 <div layout layout-sm="column" layout-margin  flex>
+				 	<div flex="55" class="blankspace"></div>
+				 	<table>
+				 		<tr >
+				 			<td style="padding-top:15px;" flex>Sub Total</td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex>
+				 			{{item.total|currency}}</td>
+				 		</tr>
+				 		<tr >
+				 			<td  style="padding-top:15px;" flex>Discount</td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex>
+				 			{{item.discountAmount|currency}}</td>
+				 		</tr>
+				 		<tr >
+				 			<td style="padding-top:15px;" flex>Tax</td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex>
+				 			{{item.salesTaxAmount|currency}}</td>
+				 		</tr>
+				 		<tr >
+				 			<td style="padding-top:15px;" flex> Other Tax</td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex>
+				 			{{item.otherTaxAmount|currency}}</td>
+				 		</tr>
+				 		<tr >
+				 			<td style="padding-top:15px;" flex> Shipping</td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex>
+				 			{{item.shipping|currency}}</td>
+				 		</tr>
+				 		<tr >
+				 			<td style="padding-top:15px;" flex> Total USD</td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex>
+				 			{{item.finalamount|currency}}</td>
+				 		</tr>
+				 		<tr >
+				 			<td style="padding-top:15px;" flex> Paid</td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex>
+				 			{{item.paidAMount|currency}}</td>
+				 		</tr>
+				 		<tr style="background-color:#C0C0C0;">
+				 			<td style="padding-top:15px; " flex> <label><b>Balance Due USD</b></label></td>
+				 			<td style="padding-left: 75px; padding-top:15px;" flex><b>$200.00</b></td>
+				 			<!-- {{item.balanceDue|currency}}</td> -->
+				 		</tr>
+				 	</table>
+				 </div>
+
+				
+				<div layout layout-sm="column" layout-margin style="margin-top:-40px; " flex>
+				<div flex="5" class="blankspace"></div>
+				<label>Payment method</label>
+
+				<img ng-if="item.paymentMethod == 'PayPal'" src="img/paypal.png" width="80px" height="40px" style="margin-top:-20px; padding:10px;">
+				<img ng-if="item.paymentMethod == 'Stripe'" src="img/stripe.png" width="70px" height="35px" style="margin-top:-20px; padding:10px;">
+				</div>
+
+				<div layout layout-sm="column" layout-margin  flex>
+				<div flex="5" class="blankspace"></div>
+				<label>{{item.notes}}</label>
+				</div>
+				
+				<div layout layout-sm="column" layout-margin  flex>
+					<div flex="5" class="blankspace"></div>
+					<label>GST Registration No:1231564878</label>					
+				</div>
+				<div layout layout-sm="column" layout-margin  flex>
+					<div flex="5" class="blankspace"></div>
+					<label>PST Registration No:1231564878</label>
+				</div>
+                  
+            </md-content>
+            </form>
+    </md-whiteframe>
+    </div>
+    

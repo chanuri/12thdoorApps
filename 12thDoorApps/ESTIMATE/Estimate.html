@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="mainApp">
+<head>
+
+<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.css">
+<link rel="stylesheet" type="text/css" href="css/child_app_styles.min.css">
+<link rel="stylesheet" type="text/css" href="css/ng-sortable.style.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/style.css"> -->
+<link rel="stylesheet" href="css/directive_library.css">
+<!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">-->
+
+</head>
+<body  ng-controller="AppCtrl as ctrl"ng-cloak >
+	<md-background-banner color="#235b91" height="300px"> </md-background-banner>
+	
+	<!--START OF ALL CONTENT-->
+	<div id="md-childApp-contentContainerSection" style="width:100%; height:100%">
+			<div ui-view style="width:100%; height:100%; overflow:auto;"></div>
+		</div>
+
+<script src="js/jquery-2.1.3.min.js"></script>
+<script src="js/jquery-ui.js"></script>
+<!--script src="js/socket.io-1.2.0.js"></script-->
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-material/angular-material.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+
+      
+<script src="js/uimicrokernel.js"></script>
+<script src="js/paymentmodule.js"></script>
+<script src="js/directivelibrary.js"></script>
+<script type="text/javascript" src="js/ng-sortable.js"></script>
+<script src="js/estimate.js"></script>
+<script src="js/viewEstimate.js"></script>
+<script type="js/Estimatectrl.js"></script>
+</body>
+</html>

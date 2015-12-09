@@ -1,0 +1,74 @@
+@import url(http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+.search {
+  width: 100%;
+  position: relative;
+}
+.search:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-family: 'FontAwesome';
+  content: '\f002';
+  background: #C5CAE9;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-smooth: always;
+}
+
+.searchTerm {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  border: 5px solid #C5CAE9;
+  padding: 5px;
+  height: 40px;
+  border-radius: 5px;
+  outline: none;
+}
+
+.searchButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+.dropdown__heading:hover {
+    background: #EAFDFF
+}
+ 
+.dropdown__heading {
+    padding: .5rem;
+    position: relative
+}
+.collapse-card_header_content_info {
+    cursor: pointer
+}
+.dropdown__heading:after,
+.dropdown__heading:before {
+    content: " ";
+    display: table
+}
+.dropdown__heading:after {
+    clear: both
+}
+.dropdown__heading::after {
+    color: #404040;
+    font-family: FontAwesome;
+    font-size: 1rem;
+    line-height: 2rem;
+    padding-left: .4rem;
+    position: absolute;
+    right: 1rem;
+    top: 1rem
+}

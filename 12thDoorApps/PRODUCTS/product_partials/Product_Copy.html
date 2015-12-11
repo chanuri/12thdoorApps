@@ -1,0 +1,208 @@
+<!--Background banner with parallax effect-->
+ 
+<!--CARD CONTAINER START-->
+<div class="card-container" style="padding:20px;">
+   <!--WHITEFRAME START-->
+   <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto;z-index:2" ng-repeat="product in product_copy"> 
+      <!--FORM START-->
+      <form name="editForm" ng-submit="submit(product)" style="width:960px;"  >
+         <md-content flex>
+            <div layout layout-sm="column" layout-margin>
+                              <section-title title="Product Details" > </section-title>
+               <md-input-container flex>
+                  <label>Product name</label>
+                  <input required type="text" ng-model="product.Productname" ng-blur="GenerateCode(product)"/> 
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+               <!--KEEP BLANK SPACE - ask why-->
+            <section-title title > </section-title>
+               <!--KEEP BLANK SPACE - ask why-->
+               <md-input-container flex>
+                  <label>Product Description</label>
+                  <textarea maxlength="200" type="text" ng-model="product.description">
+                  </textarea>
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+            <section-title title > </section-title>
+               <md-input-container flex>
+                  <label>Product Code</label>
+                  <input required type="text" ng-model="product.ProductCode" /> 
+               </md-input-container>
+                        <md-input-container flex>
+                        <label>Unit</label>
+                        <md-select ng-model="product.ProductUnit">
+                           <md-optgroup label="Unit">
+                           <md-option value="Months">Months</md-option>
+                           <md-option value="Days">Days</md-option>
+                           <md-option value="Units">Units</md-option>
+                        </md-select>
+                     </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin >
+             <section-title> </section-title>
+               <md-input-container flex>
+                  <label>Price (without tax)</label>
+                  <input type="text" ng-model="product.productprice" /> 
+               </md-input-container>
+               <md-input-container flex>
+                  <label>Tax</label>
+                  <md-select ng-model="product.producttax">
+                     <md-optgroup label="Tax">
+                     <md-option value="10">10</md-option>
+                     <md-option value="20">20</md-option>
+                  </md-select>
+               </md-input-container>
+            </div>
+             <md-divider> </md-divider>
+            <div layout layout-sm="column" layout-margin >
+                <section-title title="Optional Details"> </section-title>
+              
+               <md-input-container flex>
+                  <label>Cost Price</label>
+                  <input  type="text" ng-model="product.costprice" /> 
+               </md-input-container>
+               <md-input-container flex>
+                  <label>Status</label>
+                  <md-select ng-model="product.status" class="required" >
+                     <md-optgroup label="Status">
+                     <md-option value="Active" selected>Active</md-option>
+                     <md-option value="Inactive">Inactive</md-option>
+                  </md-select>
+               </md-input-container >
+            </div>
+            <div layout layout-sm="column" layout-margin >
+             <section-title> </section-title>
+               <md-input-container flex>
+                  <label>Product Brand</label>
+                  <md-select ng-model="product.brand"   >
+                     <md-optgroup label="Brand">
+                     <md-option value="Brand 1">Brand 1</md-option>
+                     <md-option value="Brand 2">Brand 2</md-option>
+                  </md-select>
+               </md-input-container >
+               <md-input-container flex>
+                  <label>Product Category</label>		
+                  <md-select ng-model="product.ProductCategory" >
+                     <md-optgroup label="Product Category">
+                     <md-option value="Product">Product</md-option>
+                     <md-option value="Package">Package</md-option>
+                  </md-select>
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin >
+             <section-title> </section-title>
+               <md-input-container flex>
+                  <label>Inventory Tracking</label>	
+                  <md-select  ng-model="product.inventory" flex 
+                     ng-change="changeinventory(product.inventory)" >
+                     <md-optgroup label="Inventory">
+                     <md-option value="No" selected> Do Not Track Inventory</md-option>
+                     <md-option value="Yes">Track Inventory</md-option>
+                  </md-select>
+               </md-input-container>
+               <md-input-container flex>
+                  <label>Stock Level</label>
+                  <input required type="text" ng-model="product.stocklevel" ng-disabled="stockdisabled"/> 
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+                <section-title> </section-title>
+              
+               <div ng-init="DemoCtrl()" style="margin-left:-5px; margin-top:-10px;" layout="column" class="chipsdemoBasicUsage" flex>
+                  <md-content class="md-padding" layout="column">
+                      
+                     <md-chips ng-model="product.tags" readonly="readonly" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tags">
+                        
+                        <md-chip-template>
+                           <strong>{{$chip}}</strong>
+                        </md-chip-template>
+                     </md-chips>
+                  </md-content>
+               </div>
+            </div>
+            
+              <div layout layout-sm="column" layout-margin>
+                <section-title> </section-title>
+              
+
+                 <div style=" margin-top:20px;margin-left: 15px;">
+                        <md-button class="md-raised" ng-click="imageuploader()" type="button">Upload Image</md-button>
+               </div>
+               <div style=" margin-top:20px; margin-left: 15px;">
+                        <md-button class="md-raised" ng-click="brochureuploader()" type="button">Upload Brochure</md-button>
+               </div>
+                
+            </div>
+
+
+            <md-divider></md-divider>
+            
+         
+            <div layout="row" layout-align="end start" layout-margin  ng-show="true" >
+                <div>
+                   <md-button id="mySignup" class="md-raised md-primary"  type="submit">Save</md-button>
+              
+               </div>
+             
+               <div style="margin-left: 15px;">
+                    <md-button style="margin-left: 15px;" class="md-raised"  type="button" ng-click="viewProduct()">Cancel</md-button>
+            
+               </div>
+            </div>
+         </md-content>
+      </form>
+   </md-whiteframe>
+   <br><br>
+   <!--WHITEFRAME END-->
+</div>
+<!-- <div  class="lock-size" layout="row">
+   <div id="viewProduct" class="fab_button_animation" style="background:red;"></div>
+   <div id="viewPackage" class="fab_button_animation" style="background:#3498db;"></div>
+   <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+      ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+      <md-fab-trigger>
+         <div style="padding:0px;">
+            <md-button aria-label="menu" class="md-fab md-warn" style="background-color:#db4437;">
+               <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+            </md-button>
+         </div>
+      </md-fab-trigger>
+      <md-fab-actions>
+         <div style="padding:5px;">
+            <md-button aria-label="twitter" class="md-fab md-raised md-mini" ng-click="save()" style="background-color:#1abc9c;">
+               <md-icon md-svg-src="img/ic_save_24px.svg" ></md-icon>
+               <md-tooltip md-direction="left">Save product</md-tooltip>
+            </md-button>
+         </div>
+         <div style="padding:5px;">
+            <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="viewProduct()" style="background-color:red;">
+               <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>
+               <md-tooltip md-direction="left">View Product</md-tooltip>
+            </md-button>
+         </div>
+   
+         <div style="padding:5px;">
+            <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="imageuploader()" style="background-color:#e67e22;">
+               <md-icon md-svg-src="img/ic_cloud_upload_48px.svg"></md-icon>
+               <md-tooltip md-direction="left">Upload Product Image</md-tooltip>
+            </md-button>
+         </div>
+         <div style="padding:5px;">
+            <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="brochureuploader()" style="background-color:#9b59b6;">
+               <md-icon md-svg-src="img/ic_cloud_upload_48px.svg"></md-icon>
+               <md-tooltip md-direction="left">Upload Product Brochure</md-tooltip>
+            </md-button>
+         </div>
+      </md-fab-actions>
+   </md-fab-speed-dial>
+</div> -->
+
+
+
+
+
+<!--CARD CONTAINER END-->
+<!--script src="js/jquery-2.1.3.min.js"></script-->
+<!--script src="js/socket.io-1.2.0.js"></script-->

@@ -1,0 +1,61 @@
+<div class="header_container">
+
+   <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:48px;">
+        
+        
+     <md-autocomplete flex
+        ng-keypress="enter($event)"
+        md-no-cache="$root.noCache"
+        md-selected-item="$root.selectedItem2"
+        md-search-text-change="$root.searchTextChange($root.searchText1)"
+        md-search-text="$root.searchText1"
+        md-selected-item-change="$root.selectedItemChange(item)"
+        md-items="item in $root.querySearch1($root.searchText1)"
+        md-item-text="item.display"
+        placeholder="Search">
+            <md-item-template>
+               <span md-highlight-text="$root.searchText1" md-highlight-flags="^i">{{item.display}}</span> 
+           </md-item-template> 
+
+      </md-autocomplete>
+
+ 
+         <div layout="column">
+           <sort-option name-array="sortarr" serch-item="prodSearch" star="$root.searchText1"></sort-option>
+         </div>
+                       
+         
+                     
+   </md-whiteframe>
+
+  <md-content class="tab_content" style="margin-top:-8px; z-index:2;">
+         <md-tabs md-stretch-tabs md-selected="selectedIndex" ng-click="changeTab(selectedIndex)">
+           <md-tab label="Invoices"></md-tab> 
+           <md-tab label="Recurring Profiles"></md-tab> 
+          </md-tabs>
+  </md-content> 
+
+</div>
+
+<!--START OF SECOND CARD CONTAINER-->
+<div class="card_container" style="padding-top: 117px;">
+    <div class="ui-view-container">
+       <div class="container" ui-view  viewcss></div>        
+    </div>     
+</div>
+
+<div  class="lock-size" layout="row" ng-if="showinvoice == false">
+<md-button class="md-fab" aria-label="Profile" ng-click="addProfile()" style="position:fixed;top:270px;right:50px;background:#db4437">
+            <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+            <md-tooltip md-direction="left">New Recurring Profile</md-tooltip>
+        </md-button>
+    </div>
+      
+
+<div  class="lock-size" layout="row" ng-if="showinvoice == true">
+<md-button class="md-fab" aria-label="Profile" ng-click="add()" style="position:fixed;top:270px;right:50px;background:#db4437">
+    <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+    <md-tooltip md-direction="left">New Invoice</md-tooltip>
+</md-button>
+</div>
+<!--div ui-view></div-->

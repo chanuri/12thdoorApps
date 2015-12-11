@@ -1,0 +1,509 @@
+<div class="header_container" >
+
+  <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:40px;">
+              <md-autocomplete flex
+                      ng-keypress="enter($event)"
+                      md-no-cache="$root.noCache"
+                      md-selected-item="$root.selectedItem2"
+                      md-search-text-change="$root.searchTextChange($root.searchText1)"
+                      md-search-text="$root.searchText1"
+                      md-selected-item-change="$root.selectedItemChange(item)"
+                      md-items="item in $root.querySearch1($root.searchText1)"
+                      md-item-text="item.display"
+                      placeholder="Search">
+            <md-item-template>
+               <span md-highlight-text="$root.searchText1" md-highlight-flags="^i">{{item.display}}</span> 
+           </md-item-template> 
+      </md-autocomplete>
+      <md-menu md-position-mode="target-right target" style="background:rgb(250,250,250);width:50px;height:40px">
+                  
+                     <md-button type="button" aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                        <md-icon md-svg-icon="img/ic_reorder_24px.svg" style="margin-top: -9px;" ></md-icon> 
+                     </md-button>
+                     
+                      <md-menu-content width="4">
+                 <div ng-repeat="item in sortarr">
+
+                 <md-menu-item >
+                     <md-button ng-click="starfunc(item,$index)">
+                        <div layout="row">
+                           <p flex>{{item.name}}</p>
+                           <div>
+                              <md-icon md-svg-icon="img/ic_arrow_drop_up_24px.svg" style="margin-top:4px; position: absolute; left: 150px;" 
+                                 ng-show="item.upstatus"></md-icon>
+                           </div>
+                           <div>
+                              <md-icon md-svg-icon="img/ic_arrow_drop_down_24px.svg" style="margin-top:9px;position: absolute; left: 150px;   "
+                                 ng-show="item.downstatus"></md-icon>
+                           </div>
+                           <md-icon md-menu-align-target md-svg-icon="{{item.src}}" style="margin: auto 3px auto 0;"></md-icon>
+                        </div>
+                     </md-button>
+
+                  </md-menu-item>
+
+                  <md-divider ng-show="item.divider"></md-divider>                   
+                 </div>    
+               </md-menu-content>
+                </md-menu>
+         
+   </md-whiteframe>
+</div>
+<!-- <div id="md-childApp-contentContainerSection"> -->
+
+  <!--END OF FIRST CARD CONTAINER-->
+<div ng-init="Demo$root1()" ></div>
+<!--START OF SECOND CARD CONTAINER-->
+<div class="card_container" style="padding-top:70px;">
+ <div class="ui-view-container">
+    <!--START OF  COLLAPSE CARDS-->
+    <div  class="collapse-card" ng-repeat="tdi in TDEstimate  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch " ng-class="{ active: $active }" style="max-width:960px;">
+        <!--START OF COLLAPSE CARD HEADING-->
+        <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi)">
+
+        <div style="width:56px;">
+                   <div  ng-hide="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
+                         <img src="../../img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                  </div>
+                  <div  ng-show="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
+                         <img src="../../img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                  </div>
+               </div>
+            <!--START OF CARD OPEN SECTION-->
+           <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%; height:70px;" ng-click="$active = !$active;" layout-sm="row">
+
+            <div layout-sm="row" flex>
+            <div layout-sm="column" flex>
+              <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title">
+              <b> {{tdi.Startdate|date}}</b>
+              </span>
+              <span style=" padding-right: 15px;margin-left:-10px;border-right-style: solid; border-width:1px;" class="collapse-card__title" >
+              <b>Estimate No. {{tdi.estimateNo}}</b>
+              </span>
+              <span  class="collapse-card__title" style=" padding-right: 15px;margin-left:-10px;border-right-style: solid; border-width:1px;">
+              <b>{{tdi.Name}}</b>
+              </span>
+              <span  class="collapse-card__title" style="margin-left:-10px;"><b>Amount {{tdi.finalamount|currency}}</b></span>
+              </div>
+
+               <div layout-sm="column" style="margin-top:10px;" flex>
+                
+                 <span style="padding-right: 15px; border-width:1px; font-size:13px; ">
+                 Validity {{tdi.duedate|date}}
+                 </span>
+                  <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid green;background-color: #4CAF50;">
+                    <b style=" width:70px; font-color:#FFFFFF;">
+                    <font color="white">Paid</font>
+                    </b>
+                </span>   
+            </div>
+
+            </div>
+               <div>
+                 <span style="padding-right: 10px; margin-left:120px;"> 
+                 <md-icon md-svg-icon="img/ic_visibility_24px.svg" style="height:20px; width:20px;"></md-icon>
+                  
+                  </span><br><br>
+                  <span style="padding-right: 10px; margin-left:120px;">
+                    <md-icon md-svg-icon="img/ic_drafts_24px.svg" style="height:20px; width:20px;"></md-icon> 
+                  </span>
+               </div>
+            </div>
+            <!--END OF CARD OPEN SECTION-->
+            <!--START OF CARD CONTROLS SECTION-->
+            <div class="collapse-card_header_content_controls" style="width:10%; height:100%;" layout="column" layout-align="center end">
+                <md-menu md-position-mode="target-right target">
+                    <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                        <md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
+                    </md-button>
+                     <md-menu-content width="4">
+                                 <md-menu-item >
+                                        <md-button ng-click="openOtherView(tdi)">
+                                            <md-icon></md-icon>
+                                            <p>Open</p>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item >
+                                        <md-button ng-click="download(tdi)">
+                                            <md-icon></md-icon>
+                                            <p>Download</p>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item >
+                                        <md-button ng-click="showListBottomSheet($event,tdi)">
+                                            <md-icon></md-icon>
+                                            <p>Email</p>
+                                        </md-button>
+                                    </md-menu-item>
+                                     <md-menu-item >
+                                        <md-button ng-click="copyInvoice(tdi)">
+                                            <md-icon></md-icon>
+                                            <p>Copy</p>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item >
+                                        <md-button ng-click="cancelStatus(tdi)">
+                                            <md-icon></md-icon>
+                                            <p>Cancel</p>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item >
+                                        <md-button ng-click="convertpdf(tdi)">
+                                            <md-icon></md-icon>
+                                            <p>PDF</p>
+                                        </md-button>
+                                    </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </div>
+       
+  <div class="collapse-card__body">
+    <form name="editForm" style="max-width:960px;">
+        <md-divider></md-divider>
+        <md-content flex>
+            <div layout layout-sm="column" layout-margin>
+                <section-title title="Customer Details"> </section-title>
+                <md-input-container flex >
+                    <label>Select Customer</label>
+                    <input ng-model="tdi.Name">
+                    </md-input-container>
+                    
+                    </div>
+
+                    <div layout layout-sm="column" layout-margin>
+                    <section-title > </section-title>
+                    
+                    <md-input-container flex="67" ng-show="Billingaddress">
+                        <label>Billing Address</label>
+                        <input  ng-model="tdi.billingAddress" ng-disabled="true"/>
+                    </md-input-container>
+                    <md-input-container flex="67" ng-show="Shippingaddress" >
+                        <label>Shipping Address</label>
+                        <input  ng-model="tdi.shippingAddress" ng-disabled="true"/>
+                    </md-input-container>
+                  <div style="height:30px;width:30px;margin-top:35px;"> 
+                    <md-button ng-click="changeAddress()" style="height:30px;" href>
+                    <md-icon md-svg-src="img/ic_swap_vert_24px.svg" class="iconColor"  md-ink-ripple style="right:1px;left:95%;top:20px;" ></md-icon>
+                    </md-button>
+                    </div>
+                </div>
+
+                        <div layout layout-sm="column" layout-margin>
+                            <section-title> </section-title>
+                            <md-input-container flex >
+                               <label>Estimate No.</label>
+                                <input ng-model="tdi.estimateNo" ng-disabled="true">
+                                </md-input-container>
+                                <div flex >
+                                    <md-date-picker model="tdi.Startdate"  label="Date" dialog-md-theme="datePickerTheme"></md-date-picker>
+                                </div>
+                            </div>
+
+                            <div layout layout-sm="column" layout-margin>
+                                
+                               <section-title> </section-title>
+                                <md-input-container flex >
+                                <label>Payment Terms</label>
+                                <md-select ng-model="tdi.termtype" flex required>
+                                    <md-optgroup label="Terms type">
+                                       <md-option value="Custom">Custom</md-option>
+                                        <md-option value="7days">7 days</md-option>
+                                        <md-option value="14days">14 days</md-option>
+                                        <md-option value="21days">21 days</md-option>
+                                        </md-optgroup>
+                                    </md-select>
+                                    </md-input-container>
+                                    <div flex >
+                                        <md-date-picker model="tdi.duedate"  label="validity" dialog-md-theme="datePickerTheme"></md-date-picker>
+                                    </div>
+                                </div>
+
+                                <div layout layout-sm="column" layout-margin>
+                                   <section-title> </section-title>
+                                    <md-input-container flex >
+                                      <label>Customer Reference</label>
+                                      <input ng-model="tdi.cusRef" >
+                                      </md-input-container>
+
+                                        <md-input-container flex >
+                                            <label>Comments</label>
+                                            <input ng-model="tdi.comments">
+                                            </md-input-container>
+                                        </div>
+
+                                        <md-divider></md-divider>
+
+                                        <div layout layout-sm="column" layout-margin>
+                                            
+                                            <section-title title="Item Details"> </section-title>
+                                                 <ul as-sortable="sortableOptions" style=" width:600px" ng-model="tdi.EstimateProducts">
+                                                  <li ng-repeat="item in tdi.EstimateProducts" as-sortable-item  style=" width:600px">
+                                                   <md-card style="margin-left:-40px; width:630px; margin-bottom:20px !important;" as-sortable-item-handle>
+                                                  <md-card-content >
+
+
+                                                   <div style="margin-top:0px;">
+                                                    <span >
+                                                      {{item.Productname}} 
+                                                      <md-tooltip>Product Name</md-tooltip>
+                                                      </span>
+                                                            
+                                                            <md-menu md-position-mode="target-right target" layout="row" flex-sm="100" flex="5" layout-align="center center" style="margin-top:-30px; margin-left:550px">
+                                                                <md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                                                                    <md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+                                                                  </md-button>
+                                                                  <md-menu-content width="4">
+                                                                    <md-menu-item>
+                                                                      <md-button href ng-click="viewSavedProducts(item)">
+                                                                        <p>view</p>
+                                                                        <md-icon md-menu-align-target ></md-icon>
+                                                                      </md-button>
+                                                                    </md-menu-item>
+                                                                    
+                                                                    <md-menu-item>
+                                                                      <md-button href ng-click="deleteproduct(item)">
+                                                                        <p>Delete</p>
+                                                                        <md-icon md-menu-align-target ></md-icon>
+                                                                      </md-button>
+                                                                    </md-menu-item>
+                                                                  </md-menu-content>
+                                                                </md-menu>
+                                                                <md-divider></md-divider>
+                                                            </div> 
+    
+                                                    <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;">
+
+                                                         <div flex >
+                                                             <span style="color:#808080;">{{item.quantity}} 
+                                                             <md-tooltip>Quantity</md-tooltip>
+                                                             </span> 
+                                                             <span style="color:#808080;">{{item.ProductUnit}} 
+                                                             <md-tooltip>UOM</md-tooltip>
+                                                             </span>
+                                                          </div>
+
+                                                           <div flex>
+                                                             <span style="color:#808080;">{{item.price|currency}}
+                                                             <md-tooltip>Price</md-tooltip>
+                                                             </span> 
+                                                          </div>
+
+                                                          <div flex >
+                                                             <span style="color:#808080;">{{item.discount}}%
+                                                             <md-tooltip>Discount</md-tooltip>
+                                                             </span> 
+                                                          </div>
+
+                                                           <div flex>
+                                                             <span style="color:#808080;">{{item.tax}}%
+                                                             <md-tooltip>Tax</md-tooltip>
+                                                             </span> 
+                                                          </div>
+
+                                                          <div flex >
+                                                             <span style="color:#808080;">{{item.amount|currency}}
+                                                             <md-tooltip>Amount</md-tooltip>
+                                                             </span> 
+                                                          </div>
+
+                                                    </div>                                                              
+                                                  </md-card-content>
+                                                  </md-card></li>
+                                                </ul>
+
+                                        </div>
+
+                                        <md-divider></md-divider>
+
+                                       <div layout layout-sm="column" layout-margin>
+                                                            
+                                                             <section-title title="Totals"> </section-title>
+                                                        </div>
+                                                        <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
+                                                            <div flex="5"></div>
+                                                            <div flex="20" style=""></div>
+                                                            <div flex="10">
+                                                                <label>Sub Total</label>
+                                                            </div>
+                                                     
+                                                                <md-input-container flex="20" >
+                                                                    <input type="text"  ng-model="tdi.fdiscount" style="display:none" />
+                                                                </md-input-container>
+                                                          
+                                                            <div flex="5">
+                                                                <label></label>
+                                                            </div>
+                                                            <div flex="30">
+                                                                <span>{{calculatetotal(tdi)|currency}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
+                                                            <div flex="5"></div>
+                                                            <div flex="20" style="margin-top:35px;"></div>
+                                                            <div flex="10">
+                                                                <label>Discount</label>
+                                                            </div>
+                                                       
+                                                                <md-input-container flex="20" >
+                                                                    <input type="text"  ng-model="tdi.fdiscount" />
+                                                                </md-input-container>
+                                                         
+                                                            <div flex="5">
+                                                                <label></label>
+                                                            </div>
+                                                            <div flex="30" >
+                                                                <label>{{finaldiscount(tdi) | currency}}</label>
+                                                            </div>
+                                                        </div>
+                                                        <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+                                                            <div flex="5"></div>
+                                                            <div flex="20" style="margin-top:35px;"></div>
+                                                            <div flex="10">
+                                                                <label>Sales Tax</label>
+                                                            </div>
+                                                            
+                                                                <md-input-container flex="20" >
+                                                                    <input type="text"  ng-model="tdi.salesTax" />
+                                                                </md-input-container>
+                                                            
+                                                            <div flex="5">
+                                                                <label></label>
+                                                            </div>
+                                                            <div flex="30" >
+                                                                <label>{{CalculateTax(tdi)|currency}}</label>
+                                                            </div>
+                                                        </div>
+                                                        <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+                                                            <div flex="5"></div>
+                                                            <div flex="20" style="margin-top:35px;"></div>
+                                                            <div flex="10">
+                                                                <label>Another Tax</label>
+                                                            </div>
+                                                            
+                                                                <md-input-container flex="20" >
+                                                                    <input type="text" ng-model="tdi.anotherTax" />
+                                                                </md-input-container>
+                                                            
+                                                            <div flex="5">
+                                                                <label></label>
+                                                            </div>
+                                                            <div flex="30">
+                                                                <label>{{CalculateOtherTax(tdi)|currency}}</label>
+                                                            </div>
+                                                        </div>
+                                                        <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+                                                            <div flex="5"></div>
+                                                            <div flex="20" style="margin-top:35px;"></div>
+                                                            <div flex="10">
+                                                                <label>Shipping</label>
+                                                            </div>
+                                                            
+                                                                <md-input-container flex="20" >
+                                                                    <input type="text" ng-model="tdi.shipping" />
+                                                                </md-input-container>
+                                                            
+                                                            <div flex="5">
+                                                                <label></label>
+                                                            </div>
+                                                            <div flex="30">
+                                                                <span >{{finalamount(tdi)| currency}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <center>
+                                                            <md-divider style="width:60%"></md-divider>
+                                                        </center>
+
+                                                        <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+                                                            <div flex="5"></div>
+                                                            <div flex="20" style="margin-top:35px;"></div>
+                                                            <div flex="10">
+                                                                <label>
+                                                                    <b>Total USD</b>
+                                                                </label>
+                                                            </div>
+                                                            
+                                                                <md-input-container flex="20" >
+                                                                    
+                                                                </md-input-container>
+                                                            
+                                                            <div flex="5">
+                                                                <label></label>
+                                                            </div>
+                                                            <div flex="30">
+                                                                <span ng-model="creditNote.totalUSD">
+                                                                    <b>{{finalamount(tdi)| currency}}</b>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                        <md-divider></md-divider>
+                                    <div layout layout-sm="column" layout-margin>
+
+                                            <section-title title="Optional Details"> </section-title>
+                                            <md-input-container flex >
+                                                <label>Notes</label>
+                                                <input ng-model="tdi.notes">
+                                                </md-input-container>
+                                            </div>
+                                            <div layout layout-sm="column" layout-margin>
+                                                
+                                               <section-title> </section-title>
+                                                
+                                                <md-input-container flex >
+                                                <label>Payment Method</label>
+                                                <md-select  ng-model="tdi.paymentMethod" flex>
+                                                    <md-optgroup label="Online Payment Method">
+                                                        <md-option value="Credit">Credit</md-option>
+                                                        <md-option value="Debit">Debit</md-option>
+                                                    </md-optgroup>
+                                                    </md-select>
+                                                    </md-input-container>
+                                                </div>
+                                                <div layout layout-sm="column" layout-margin>
+                                                    <section-title> </section-title>
+                                                    
+                                                    <div layout="column" style="margin-left:0px;" class="chipsdemoBasicUsage" flex>
+                                                        <md-content class="md-padding" layout="column">
+                                                            <md-chips
+                                                                ng-model="tdi.roFruitNames"
+                                                                readonly="readonly"
+                                                                placeholder="Enter a tag"
+                                                                delete-button-label="Remove Tag"
+                                                                delete-hint="Press delete to remove tag"
+                                                                secondary-placeholder="+Tag">
+                                                                
+                                                                <md-chip-template>
+                                                                    <strong>{{$chip}}</strong>
+                                                                </md-chip-template>
+                                                                </md-chips>
+                                                        </md-content>
+                                                    </div>
+                                                </div>
+                                                <md-divider></md-divider>
+                                                <div layout layout-sm="column" layout-margin>
+                                                   
+                                                    <section-title title="Uploaded File Details"> </section-title>
+                                                    <div layout="row" layout-align="center center"  flex>
+                                                        
+                                                        <div flex="98" >
+                                                            <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="tdi.UploadImages.val">
+                                                             </md-table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </md-content>
+                                        </form>
+                                    </div>
+                                    <!--END OF CARD BODY-->
+                                </div>
+                                <!--END OF COLLAPSE CARDS-->
+                            </div>
+                            <!--START OF SECOND CARD CONTAINER--> 
+</div>
+</div>
+<div  class="lock-size" layout="row">
+        <md-button class="md-fab" aria-label="Profile" ng-click="add()" style="position:fixed;top:270px;right:50px;background:#db4437">
+            <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+            <md-tooltip md-direction="left">New Estimate</md-tooltip>
+        </md-button>
+    </div>

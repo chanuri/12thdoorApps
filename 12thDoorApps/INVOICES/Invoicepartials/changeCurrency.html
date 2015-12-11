@@ -1,0 +1,57 @@
+<md-dialog style="max-width:960px;">
+<form>
+	<md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Change Currency</h2>
+      <span flex></span>
+      <md-button href class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+      </md-button>
+      </div>
+      </md-toolbar>
+      <md-dialog-content style="width:760px;" >
+         <div layout layout-sm="column" layout-margin>
+                         
+                               <section-title title="Change Currency"> </section-title>
+                        <md-input-container flex >
+                            <label>Select A Currency</label>
+                            <md-select ng-model="TDinvoice.currency" ng-change="MultiDuDates(TDinvoice.termtype)" flex required/>
+                            <md-optgroup label="Terms type">
+                                <md-option value="term 1">BGP UNITED KINGDOM POUND</md-option>
+                         <!--        <md-option value="term 2">Add Multiple Due Dates</md-option> -->
+                            </md-optgroup>
+                        </md-select>
+                    </md-input-container>
+                    <div flex >
+                   <!--  <label style="type:hidden;">Select A Currency</label> -->
+                        <br><label>Base Currency</label>
+                    </div>
+                </div>
+                <div layout layout-sm="column" layout-margin>
+                     <section-title> </section-title>
+                    <md-input-container flex >
+                        <label>Exchange Rate</label>
+                        <input ng-model="TDinvoice.exchangeRate">
+                        </md-input-container>
+                        <div flex >
+                           <br><br><label>1 BGP in USD</label>
+                        </div>
+                    </div>
+                    <div layout layout-sm="row" layout-margin>
+                    <section-title > </section-title>
+                    <div flex >
+                           <label>Foreign exchange rates provide by </label> 
+                           <br>   <br><label>https://openexchangerates.org/</label>
+                        </div>
+                        
+                    </div>
+                    <md-divider></md-divider>
+      </md-dialog-content>
+      <div class="md-actions" layout="row">
+                
+                <span flex></span>
+                <md-button href ng-click="Change()" class="md-primary">save</md-button>
+           <!--      <md-button href ng-click="cancel()" class="md-primary"> Close</md-button> -->
+              </div>
+</form>
+</md-dialog>

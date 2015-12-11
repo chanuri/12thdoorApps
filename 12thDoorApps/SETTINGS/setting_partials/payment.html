@@ -1,0 +1,121 @@
+<form id="form" name="editForm">
+	<md-content>
+	<div layout layout-sm="column" layout-margin>
+		<div flex="5" hide-sm>	
+		</div>
+		<div flex="20" hide-sm>
+		</div>
+		<md-input-container flex="30">
+		<label>Payments Sequence</label>
+		<input type="text" ng-model="$root.Settings12thdoor.preference.paymentpref.paymentsequence" required>
+	</md-input-container>
+</div>
+<md-divider></md-divider>
+<div layout layout-sm="column" layout-margin style="margin-top: 1px;">
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<div layout="column" layout-align="center start" flex style="margin-bottom: 17px;margin-top: 12px;">
+		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
+			<li ng-repeat="item in $root.Settings12thdoor.preference.paymentpref.PaymentMethod" as-sortable-item>
+				<md-card ng-class="item.activate ? '' : 'inactivate'" style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
+				<md-card-content>
+				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.paymentmethod}}
+							<md-tooltip md-direction="right">Payment Method</md-tooltip>
+						</span>
+					</div>
+					<div flex="5">
+						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+					</md-button>
+					<md-menu-content width="4">
+					<md-menu-item>
+					<md-button ng-click="editpaymentmethodrow(item , $event)">
+					<p>Edit</p>
+					<md-icon md-menu-align-target ></md-icon>
+				</md-button>
+			</md-menu-item>
+			<md-menu-item>
+			<md-button ng-click="deletepaymentmethodrow(item, $index)">
+			<p>Delete</p>
+			<md-icon md-menu-align-target ></md-icon>
+		</md-button>
+	</md-menu-item>
+	<md-menu-item>
+	<md-button ng-click="inactivatepaymentmethod(item)">
+	<p>{{inactivatepaymentmeth}}</p>
+	<md-icon md-menu-align-target ></md-icon>
+</md-button>
+</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+</ul>
+<div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
+	<md-button  class="md-raised" ng-click="addPaymentmethod($event)">
+	Add Offline Payment Method
+</md-button>
+</div>
+</div>
+</div>
+
+<md-divider></md-divider>
+<div layout layout-sm="column" layout-margin>
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<div layout="column" flex style="margin-bottom: 17px;">
+		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
+			<li ng-repeat="item in $root.Settings12thdoor.preference.paymentpref.CusFiel" as-sortable-item>
+				<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
+				<md-card-content>
+				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.name}}
+							<md-tooltip md-direction="right">Custom Fields name</md-tooltip>
+						</span>
+					</div>
+					<div flex="5">
+						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+					</md-button>
+					<md-menu-content width="4">
+					<md-menu-item>
+					<md-button ng-click="editpaymentcusFieldsrow(item ,$event)">
+					<p>Edit</p>
+					<md-icon md-menu-align-target ></md-icon>
+				</md-button>
+			</md-menu-item>
+			<md-menu-item>
+			<md-button ng-click="deletepaymentcusfieldsrow(item, $index)">
+			<p>Delete</p>
+			<md-icon md-menu-align-target ></md-icon>
+		</md-button>
+	</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+</ul>
+<div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
+	<md-button  style="width:30%;" class="md-raised" ng-click="addcusfieldsPayment($event)">
+	Add Custom Fields
+</md-button>
+</div>
+</div>
+</div>
+</md-content>
+</form>

@@ -1,0 +1,399 @@
+       <!--Background banner with parallax effect-->
+   
+      <!--START OF ALL CONTENT-->
+      <div ng-controller="viewctrl as ctrl">
+       <div ng-init="loadAllExpenses()">
+      </div>
+         <!--START OF FIRST CARD CONTAINER-->
+         <div class="header_container"  >
+
+            <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:40px;">
+                    <md-autocomplete flex
+                        ng-keypress="enter($event)"
+                        ng-disabled="ctrl.isDisabled"
+                        md-no-cache="ctrl.noCache"
+                        md-selected-item="ctrl.selectedItem"
+                        md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                        md-search-text="ctrl.searchText"
+                        md-selected-item-change="ctrl.selectedItemChange(item)"
+                        md-items="item in ctrl.querySearchView(ctrl.searchText)"
+                        md-item-text="item.ProductCode"
+                        md-min-length="0"
+                        placeholder="Action Search">
+                        <md-item-template>
+                           <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.ProductCode}}</span>
+                        </md-item-template>
+                     </md-autocomplete>                      
+                 
+                 
+                    <sort-option full-array="expenses" name-array="testarr" serch-item="prodSearch" star="ctrl.searchText" latest="Latest">  </sort-option>
+                  
+                
+            </md-whiteframe>
+         </div>
+         <!--END OF FIRST CARD CONTAINER-->
+         <!--START OF SECOND CARD CONTAINER-->
+         <div class="card_container"  >
+         <div class="ui-view-container">
+            <!--START OF  COLLAPSE CARDS-->
+          <div layout="row" layout-sm="column" layout-align="space-around">
+                    <md-progress-circular id="loader" md-mode="indeterminate"></md-progress-circular>
+                  </div>
+  <div  class="collapse-card"  ng-repeat="expense in expenses | filter:ctrl.searchText || undefined | orderBy: 
+  [prodSearch,Latest]" ng-class="{ active: $active }">
+               <!--START OF COLLAPSE CARD HEADING-->
+               <div class="collapse-card__heading" layout="row" layout-align="start start">
+                  <!--START OF CARD OPEN SECTION-->
+                     <div style="width:56px;">
+                   <div flex ng-hide="expense.favouriteStar" class="collapse-card_header_content_info" ng-click="favouriteFunction(expense)" layout="row">
+                         <img src="../../img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                  </div>
+                  <div flex ng-show="expense.favouriteStar" class="collapse-card_header_content_info" ng-click="favouriteFunction(expense)" layout="row">
+                         <img src="../../img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                  </div>
+               </div>
+               
+                  <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%; height:70px;" ng-click="$active = !$active;" layout-sm="row">
+               
+                
+                     <div layout-sm="row" flex>
+                        <div layout-sm="column" flex>
+                            <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title">
+                                <b> {{expense.date | date}}</b>
+                            </span>
+                            
+                             <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title">
+                                <b>{{expense.Category}}</b>
+                            </span>
+                             <span style="  padding-right: 15px;margin-left:-20px;  border-width:1px;" class="collapse-card__title">
+                                <b>{{expense.Amount}}</b>
+                            </span>
+                          
+                        
+                        </div>
+                        <div layout-sm="column" style="margin-top:10px;" flex>
+
+                          <span style="  padding-right: 15px;  border-width:1px;" class="collapse-card__title">
+                                  <b>{{expense.expense_code}}</b>
+                            </span>
+
+                       <!--      <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;"> {{expense.Billable}}</span> -->
+                             <span style=" padding-left: 15px; margin-left: 16px;   width:71px; background-color: rgba(97, 96, 134, 0.86);">
+                               <b style=" width:70px; font-color:#FFFFFF; padding-right: 15px;">
+                                   <font color="white">{{expense.Billable}}</font>
+                               </b>
+                                 </span>
+                            
+                           <!--  <span style="padding-right: 15px;  border-right-style: solid; padding-left: 15px;  border-width:1px; font-size:13px; ">{{expense.Status}}</span> -->
+                             
+                              <span style=" padding-left: 16px; margin-left: 16px;   width:71px; background-color: #FF0000; " ng-if="expense.Status == 'Unpaid'">
+                               <b style=" width:70px; font-color:#FFFFFF;padding-right: 15px;">
+                                   <font color="white">{{expense.Status}}</font>
+                               </b>
+                                 </span>
+                                 <span style="padding-left: 16px; background-color: #339C38; margin-left: 16px; width: 50px;" ng-if="expense.Status == 'Paid'">
+                                     <b style="font-color:#FFFFFF;padding-right: 15px;">
+                                         <font color="white">{{expense.Status}}</font>
+                                     </b>
+                                 </span>
+                                 <span style="padding-left: 16px; background-color: #212121; margin-left: 16px; width: 100px;" ng-if="expense.Status == 'Cancelled'">
+                                     <b style="font-color:#FFFFFF;padding-right: 15px;">
+                                         <font color="white">{{expense.Status}}</font>
+                                     </b>
+                                 </span>
+                            
+                        </div>
+                    </div>
+
+             </div>
+
+
+                  <!--END OF CARD OPEN SECTION-->
+                  <!--START OF CARD CONTROLS SECTION-->
+                  <div class="collapse-card_header_content_controls" style="width:10%; height:100%;" layout="column" layout-align="center end">
+                     <md-menu md-position-mode="target-right target">
+                        <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                           <md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
+                        </md-button>
+                        <md-menu-content width="4">
+                         <md-menu-item>
+                              <md-button ng-click="ChangeState(expense)">
+                                  <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                                  <p>Open</p>
+                              </md-button>
+                          </md-menu-item>
+                          <md-menu-item>
+                              <md-button>
+                                  <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                                  <p>Print</p>
+                              </md-button>
+                          </md-menu-item>
+                          <md-menu-item>
+                              <md-button ng-click="DownloadPDF(expense)">
+                                  <md-icon md-svg-icon="img/ic_file_download_24px.svg"></md-icon>
+                                  <p>Download</p>
+                              </md-button>
+                          </md-menu-item>
+                        </md-menu-content>
+                     </md-menu>
+                  </div>
+                  <!--END OF CARD CONTROLS SECTION-->
+               </div>
+               <!--END OF COLLAPSE CARD HEADING-->
+               <!--START OF CARD BODY-->
+
+
+               <div class="collapse-card__body" >
+                  <form name="editForm">
+
+                     
+                     <md-divider></md-divider>
+                     <md-content flex>
+                        <div layout layout-sm="column" layout-margin>
+                  <div flex="5">
+                     <img src="../../img/material alperbert/avatar_tile_n_28.png" style="margin-top:22px;border-radius:20px"/>
+                  </div>
+                  <div flex="20" style="margin-top:35px;">
+                     <label style="font-weight:700">Expense Details</label>
+                  </div>
+
+                  <md-date-picker model="expense.date" label="Date" dialog-md-theme="datePickerTheme" flex/>
+                  </md-date-picker>
+
+                  <md-input-container flex >
+                     <label>Supplier  (Optional)</label>
+                     <input ng-model="expense.Vendor" ng-disabled="!expense.disableForm">
+                  </md-input-container>
+
+                </div>
+               
+
+               <div layout layout-sm="column" layout-margin>
+                  <div flex="5" class="blankspace">
+                      
+                  </div>
+                  <div flex="20" style="margin-top:35px;" class="blankspace">
+                      
+                  </div>
+
+                  <md-input-container flex>
+                     <label>Description</label>
+                     <textarea maxlength="200" type="text" ng-model="expense.description" required ng-disabled="!expense.disableForm">
+                     </textarea>
+                  </md-input-container>   
+
+                
+               </div>
+
+
+               <div layout layout-sm="column" layout-margin>
+                  <div flex="5" class="blankspace">
+                      
+                  </div>
+                  <div flex="20" style="margin-top:35px;" class="blankspace">
+                      
+                  </div>
+
+                  <md-input-container flex>
+                        <label>Category</label>
+                         <md-select ng-disabled="!expense.disableForm" ng-model="expense.Category"  >
+                              <md-optgroup label="Category" >
+                        <md-option value="Category 1">Category 1</md-option>
+                        <md-option value="Category 2">Category 2</md-option>
+                              </md-select>
+                  </md-input-container >
+                
+
+                     <md-input-container flex >
+                     <label>Reference No.</label>
+                     <input ng-model="expense.Reference" required ng-disabled="!expense.disableForm">
+                  </md-input-container>
+
+                
+               </div>
+
+
+
+               <div layout layout-sm="column" layout-margin>
+                  <div flex="5" class="blankspace">
+                      
+                  </div>
+                  <div flex="20" style="margin-top:35px;" class="blankspace">
+                      
+                  </div>
+                
+
+                  <md-input-container flex >
+                     <label>Amount</label>
+                     <input ng-model="expense.Amount"  ng-keyup="fullamount(expense,$event)" required ng-disabled="!expense.disableForm">
+                  </md-input-container>
+
+                  <md-input-container flex>
+                        <label>Tax</label>
+                  <md-select placeholder="Tax" ng-change="fullamount(expense,$event)" ng-model="expense.Tax" flex ng-disabled="!expense.disableForm">
+
+                     <md-optgroup label="Tax">
+                     <md-option value="10">10</md-option>
+                     <md-option value="20">20</md-option>
+
+                  </md-select>
+                  </md-input-container flex>
+                
+               </div>
+ 
+
+               <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+                         <div flex="5" class="blankspace">
+                        </div>
+                        <div flex="20"  class="blankspace" style="margin-top:35px;">
+                        
+                        </div> 
+                        <div flex="10">
+                        <label><b>Total USD</b></label>
+                        </div>
+                        <div flex="20"  class="blankspace">
+                        <label></label>
+                        </div>
+                        <div flex="5"  class="blankspace">
+                          <label></label>
+                        </div>
+                        <div flex="20"    style="margin-left:-25px;">
+                        <span ng-model="expense.totalUSD"><b>{{expense.totalUSD| currency}}</b></span>
+                        </div>
+                    </div>
+
+                        <md-divider></md-divider>
+                        <div layout layout-sm="column" layout-margin>
+                           <div flex="5">
+                              <img src="../../img/material alperbert/avatar_tile_f_28.png" style="margin-top:22px;border-radius:20px"/>
+                           </div>
+                           <div flex="20" style="margin-top:35px;">
+                              <label style="font-weight:700">File</label>
+                           </div>
+                           <div layout="row" layout-align="center center" flex>
+                              <div flex="98"  ng-click="tableclickfunc(expense)">
+                                 <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="expense.UploadImages.val"></md-table>
+                              </div>
+                           </div>
+                        </div>
+                        <md-divider></md-divider>
+                        <div layout layout-sm="column"  layout-margin>
+                           <div flex="5">
+                              <img src="../../img/material alperbert/avatar_tile_o_28.png" style="margin-top:22px;border-radius:20px"/>
+                           </div>
+                           <div flex="20" style="margin-top:35px;">
+                              <label style="font-weight:700">Optional Details</label>
+                           </div>
+                           <md-input-container flex>
+                              <label>Status</label>
+                              <md-select  ng-model="expense.Status"  ng-disabled="!expense.disableForm" ng-change="caldisfun(expense)">
+                                 <md-optgroup label="Status">
+                                        
+                                <md-option value="Paid">Paid</md-option>
+                                <md-option value="Unpaid">Unpaid</md-option>
+
+                              </md-select>
+                           </md-input-container>
+                           <md-date-picker model="expense.Duedate" label="Due Date" dialog-md-theme="datePickerTheme" 
+                              style="margin-top: 13px;" flex/>
+                           </md-date-picker>	
+                       		 
+                        </div>
+                        <div layout layout-sm="column"  layout-margin>
+                           <div flex="5" class="blackspace">
+                           </div>
+                           <div flex="20" style="margin-top:35px;" class="blackspace">
+                           </div>                         
+
+                            <md-input-container flex >
+                               <label>Amount</label>
+                               <input ng-model="expense.Assigncustomer" ng-disabled="true">
+                            </md-input-container>
+
+                             <md-input-container flex>
+                              <label>Billable</label>
+                              <md-select  ng-model="expense.Billable"   ng-disabled="!expense.disableForm">
+                                 <md-optgroup label="Billable">
+                                  <md-option value="Billable">Billable</md-option>
+                                  <md-option value="Non-Billable">Non-Billable</md-option>
+                              </md-select>
+                           </md-input-container >
+                        </div>
+
+                        <div layout layout-sm="column" layout-margin>
+                         <div flex="5" class="blankspace">
+                         </div>
+                         <div flex="20" class="blankspace">
+                         </div>
+                         <div layout="column" class="chipsdemoBasicUsage" flex style="margin-left:-5px; margin-top:-10px;" >
+                            <md-content class="md-padding" layout="column">
+                              
+                               <md-chips ng-disabled="checkAbility" ng-model="expense.tags" readonly="readonly" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tags">
+                                
+                                  <md-chip-template>
+                                     <strong>{{$chip}}</strong>
+                                  </md-chip-template>
+                               </md-chips>
+                            </md-content>
+                         </div>
+                      </div>
+                     </md-content>
+                  </form>
+               </div>
+               <!--END OF CARD BODY-->
+            </div>
+            <!--END OF COLLAPSE CARDS-->
+         </div>
+        </div>
+      </div>
+      <footer flex>
+      <div style="display: inline-block;padding-left: 10px;padding-right: 10px;background-color: #FFFFFF;
+      margin-left:35%;">
+           <!-- <p>Posted by: Hege Refsnes</p> -->
+            <md-button ng-click="previous()" style="height:30px;" aria-label="previous" href>
+              <md-icon md-svg-icon="img/ic_keyboard_arrow_left_24px.svg" ></md-icon>
+          </md-button>
+          <md-button ng-click="pageOne()" style="height:30px;" aria-label="next" href>
+              1
+          </md-button>
+          <md-button ng-click="pageTwo()" style="height:30px;" aria-label="next" href>
+              2
+          </md-button>
+          <md-button ng-click="pageThree()" style="height:30px;" aria-label="next" href>
+             3
+          </md-button>
+          <md-button ng-click="pageFour()" style="height:30px;" aria-label="next" href>
+              4
+          </md-button>
+          <md-button ng-click="pageFive()" style="height:30px;" aria-label="next" href>
+              5
+          </md-button>
+           <md-button ng-click="next()" style="height:30px;" aria-label="next" href>
+              <md-icon md-svg-icon=" /ic_keyboard_arrow_right_24px.svg" ></md-icon>
+          </md-button>
+        <!--    <img src="img/ic_keyboard_arrow_left_24px.svg">
+           <img src="img/ic_keyboard_arrow_right_24px.svg"> -->
+      </div>
+          
+      </footer>
+      <!--END OF ALL CONTENT-->
+      <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+         ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+         <md-fab-trigger>
+            <div style="padding:5px;">
+               <md-button aria-label="menu" class="md-fab md-warn" style="background-color:#db4437;">
+                  <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+               </md-button>
+            </div>
+         </md-fab-trigger>
+         <md-fab-actions>
+            <div style="padding:5px;">
+               <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="addexpense()" style="background-color:#2980b9;">
+                  <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon>
+                  <md-tooltip md-direction="left">Add product</md-tooltip>
+               </md-button>
+            </div>
+         </md-fab-actions>
+      </md-fab-speed-dial>
+
+ 

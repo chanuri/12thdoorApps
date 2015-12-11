@@ -1,0 +1,533 @@
+
+<div ng-init="loadAllpayments()" ></div>
+
+<div class="header_container">
+
+   <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:40px;">
+        
+        
+		<md-autocomplete flex
+			ng-keypress="enter($event)"
+			md-selected-item="ctrl.actionSelectedItem"
+			md-search-text="ctrl.actionSearchText"
+			md-selected-item-change="ctrl.selectedActionItemChange(item)"
+			md-items="item in ctrl.actionQuerySearchView(ctrl.actionSearchText)"
+			md-min-length="0"
+			placeholder="Action Search">
+			<md-item-template>
+			<span md-highlight-text="ctrl.actionSearchText" md-highlight-flags="^i">{{item.ProductCode}}</span>
+			</md-item-template>
+				 
+		</md-autocomplete>
+ 
+
+ 
+         <md-menu md-position-mode="target-right target" style="background:rgb(250,250,250);width:50px;height:40px">
+                  
+			 <md-button type="button" aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+				<md-icon md-svg-icon="img/ic_reorder_24px.svg" style="margin-top:-9px;" ></md-icon> 
+			 </md-button>
+			 
+			 <md-menu-content width="4">
+            <md-menu-item ng-repeat="item in [1, 2, 3]">
+              <md-button ng-click="ctrl.announceClick($index)">
+                  <div layout="row">
+                    <p flex>Option {{item}}</p>
+                    <md-icon md-svg-icon="img/ic_vpn_key_24px.svg"></md-icon>
+                  </div>
+              </md-button>
+            </md-menu-item>
+          </md-menu-content>
+		</md-menu>
+                     
+   </md-whiteframe>
+
+ 
+
+</div>
+
+
+<div class="card_container">
+	<div class="span12 ui-view-container">
+    <div class="container">
+
+    
+    <div  class="collapse-card" ng-repeat="payment in payments | filter:ctrl.searchText||undefined | orderBy: prodSearch" ng-class="{ active: $active }" style="" ><!---->
+			
+				<!--START OF COLLAPSE CARD HEADING| filter:ctrl.actionSearchText||undefined-->
+				<div class="collapse-card__heading" layout="row" layout-align="start start" >
+					<div class="collapse-card_header_content_controls" style="width:5%;" flex="5" layout="column" layout-align="center start">
+                         <div style="width:5%">
+                    
+                    <div  ng-hide="payment.favoritestar" class="blankspace collapse-card_header_content_info" 
+                        ng-click="favouriteFunction(payment)" layout="row">
+                        
+                        <img src="img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                        
+                    </div>
+                    
+                    <div  ng-show="payment.favoritestar" class="blankspace collapse-card_header_content_info" 
+                        ng-click="favouriteFunction(payment)" layout="row">
+                        
+                        <img src="img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                        
+                    </div>
+                    
+                </div>
+						
+						
+						<md-button aria-label flex ng-if="content.favourite == false" ng-disabled="false" class="md-icon-button launch" 
+						ng-click="selectItem(content)">
+							<md-icon md-svg-icon="img/ic_check_box_outline_blank_24px.svg"></md-icon>
+						</md-button>
+
+						<md-button aria-label flex ng-if="content.favourite == true" ng-disabled="false" class="md-icon-button launch" 
+						ng-click="selectItem(content)">
+							<md-icon md-svg-icon="img/ic_check_box_24px.svg"></md-icon>
+						</md-button>
+
+
+
+						
+					</div>
+					<!--END OF CARD CONTROLS SECTION-->
+					<!--START OF CARD OPEN SECTION-->
+					<div class="collapse-card_header_content_info" layout="row" style="width:5%;" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();">
+						<div layout-sm="row" flex>
+             
+            <div layout-sm="column" flex>
+                
+              <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>   {{payment.date|date}}</b></span>
+              <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>Payment No. {{payment.number}}</b></span>
+              <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-right-style:solid;border-width:1px;"><b>{{payment.customer}} </b></span>
+                <span style="  padding-right: 15px;margin-left:-20px;border-width:1px;" class="collapse-card__title"><b>Amount. {{payment.amountReceived}}</b></span>
+              </div>
+
+                 <div layout-sm="column" style="margin-top:10px;" flex>
+                <span style="padding-right: 15px; font-size:13px;">Payment Method {{payment.paymentMethod}}</span>
+                
+                  
+             </div>
+             
+         </div>
+					
+					</div>
+					<!--END OF CARD OPEN SECTION-->
+					
+					<!--START OF CARD CONTROLS SECTION-->
+	
+					
+					<div style="width:5%;padding-left:10%;">
+					<div class="collapse-card_header_content_controls" flex="10" style="width:5%;" layout="column" layout-align="center start">
+			         
+						<md-menu md-position-mode="target-right target">
+							<md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+								<md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
+							</md-button>
+							<md-menu-content width="4">
+								<md-menu-item>
+									<md-button ng-click="updateProject(project,project.projectid)">
+										<div layout="row">
+											<p flex>Update Project</p>
+											<md-icon md-svg-icon="img/ic_save_24px.svg"></md-icon>
+										</div>
+									</md-button>
+								</md-menu-item>
+								<md-menu-item>
+									<md-button ng-click="deleteProject(project,$event)">
+										<div layout="row">
+											<p flex>Delete project</p>
+											<md-icon md-svg-icon="img/ic_delete_24px.svg"></md-icon>
+										</div>
+									</md-button>
+								</md-menu-item>
+								
+								<md-menu-item>
+									<md-button ng-click="">
+										<div layout="row">
+											<p flex>Print</p>
+											<md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+										</div>
+									</md-button>
+								</md-menu-item>
+							
+							</md-menu-content>
+						</md-menu>
+                        </div>
+					</div>
+					<!--END OF CARD CONTROLS SECTION-->
+				</div>
+				<!--END OF COLLAPSE CARD HEADING-->
+				
+				<!--START OF CARD BODY-->
+				<div class="collapse-card__body">
+					<form id="form" name="editForm">
+						<md-content>
+<!--
+							<div layout="row" layout-align="end start" style="background:rgb(228, 240, 236)">
+                        
+                        <div style="margin-top:8px">Editing</div>
+                        
+                        <md-switch ng-model="formEditing" aria-label="Switch 1" style="margin:6px" ng-change="onChangeEditing(formEditing,project.staffs)">
+                        </md-switch>
+                        
+                        <md-button style="height:0px;line-height:0px; " class="md-icon-button" aria-label="More" ng-disabled="checkAbilityBtn" ng-click="deleteProject(project,$event)">
+                            
+                            <md-icon md-svg-icon="img/ic_delete_24px.svg"></md-icon>
+                            
+                        </md-button>
+                        
+                        <md-button type="button" style="height:0px;line-height:0px; " class="md-icon-button" aria-label="More" ng-disabled="checkAbilityBtn" ng-click="updateProject(project,project.projectid)">
+                            
+                            <md-icon md-svg-icon="img/ic_save_24px.svg"></md-icon>
+                            
+                        </md-button>
+                        
+                    </div>
+-->
+				            <md-divider></md-divider>
+						 <div layout layout-sm="column" layout-margin>
+            
+          <div flex="5">
+              
+            <img src="img/material alperbert/avatar_tile_p_28.png" style="margin-top:22px;border-radius:20px"/>
+              
+          </div>
+            
+          <div flex="20" style="margin-top:35px;">
+              
+            <label style="font-weight:700">Payment Details</label>
+              
+          </div>
+            
+          <md-autocomplete flex="" required="" md-input-name="autocompleteField" md-no-cache="$root.noCache" md-selected-item="$root.selectedItem1" md-search-text="ctrl.searchText" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" md-floating-label="Customer" md-autofocus="true" md-selected-item-change="selectedItemChange($root.selectedItem1)" ng-keyup="loadInvoices()">
+                        <md-item-template>
+                            <span  md-highlight-text="ctrl.searchText"  md-highlight-flags="^i">{{item.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+         
+            
+        </div>
+          
+        
+          
+        <div layout layout-sm="column" layout-margin>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="20" class="blankspace">
+          </div>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <md-input-container flex >
+              
+            <label>Payment Number</label>
+            <input ng-model="payment.number" required>
+              
+          </md-input-container>
+            
+          <div flex>
+             
+            <md-date-picker model="payment.date" label="Date" dialog-md-theme="datePickerTheme"/>
+            
+          </div>
+            
+         
+            
+        </div>
+          
+        <div layout layout-sm="column" layout-margin>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="20" class="blankspace">
+          </div>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+             
+          <md-input-container flex >
+              
+            <label>Payment method</label>
+            <md-select  ng-model="payment.paymentMethod" flex>
+              <md-optgroup label="Payment Method">
+              <md-option value="Cash">Cash</md-option>
+              <md-option value="Cheq">Cheq</md-option>
+            </md-select>
+                
+          </md-input-container>
+              
+             
+          <md-input-container flex >
+              
+            <label>Amount Received</label>
+            <input ng-model="payment.amountReceived" required ng-keyup="netAmount()">
+              
+          </md-input-container>
+              
+        </div>
+              
+        <div layout layout-sm="column" layout-margin>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="20" class="blankspace">
+          </div>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+         
+            
+           <md-input-container flex >
+              
+            <label>Bank Charges</label>
+            <input ng-model="payment.bankCharges" required  ng-keyup="netAmount()">
+              
+          </md-input-container>
+            
+           <md-input-container flex >
+              
+            <label>Comments</label>
+            <input ng-model="payment.comments">
+              
+          </md-input-container>
+         
+            
+        </div>
+              
+        <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+            <div flex="5">
+            </div>
+            <div flex="20" style="margin-top:35px;">                                           
+            </div> 
+            <div flex>
+                <label><b>Unapplied Advances :</b></label>
+                <span style="margin-left:1%;"><b>{{cAmount}}</b></span>
+            </div>
+            <div flex>
+                <label><b>Total Available :</b></label>
+                <span style="margin-left:1%;"><b>{{nAmount}}</b></span>
+            </div>
+
+                                                        
+         </div>
+        <md-divider></md-divider>
+              
+        <div layout layout-sm="column" layout-margin>
+            
+          <div flex="5">
+              
+            <img src="img/material alperbert/avatar_tile_i_28.png" style="margin-top:22px;border-radius:20px"/>
+              
+          </div>
+            
+          <div flex="15"  style="margin-top:35px;">
+              
+            <label style="font-weight:700">Invoice Details</label>
+              
+          </div>
+
+            <div style="padding-left:40px;" flex>
+       
+                  <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column"                                       style="background-color:#FFFFFF; margin-top:12px;height:40px; border-bottom:1px #f1f1f1 solid;">
+                      
+                      <div layout="row" layout-sm="column" style="height:40px; margin-top:10px;width:101%;font-size:12px;">
+                                <div flex style="margin-left:1%;" >
+                                    <label><b>Date</b></label>
+                                </div>
+
+                                <div flex>
+                                    <label><b>Invoice no</b></label>
+                                </div>
+
+                                <div flex >
+                                    <label><b>Due date</b></label> 
+                                </div>                                               
+                                <div flex>
+                                    <label><b>Amount</b></label> 
+                                </div>
+
+                                <div flex >
+                                    <lable><b>Balance</b></lable> 
+                                </div>
+                                 <div flex >
+                                     <lable><b>Paid amount</b></lable> 
+                                </div>
+                                <div flex >
+                                   <lable></lable> 
+                                </div>
+                                 
+                            </div>    
+                   
+                      
+                </md-whiteframe>
+                
+
+        </div>
+            
+      </div> 
+             
+    <div layout layout-sm="column" layout-margin style="margin-top:-20px;"ng-repeat="invo in outstandingInvoices">
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="15" class="blankspace">
+          </div>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+           <div style="padding-left:40px;" flex>
+          
+               <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column"                                       style="background-color:#ffffff; margin-top:12px;height:40px;">
+                                                         
+                            <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;width:101%;font-size:12px;">
+                                <div flex style="margin-left:1%;" >
+                                   <label>{{invo.date}}</label>
+                                </div>
+
+                                <div flex>
+                                    <label>{{invo.invno}}</label>
+                                </div>
+
+                                <div flex >
+                                    <label>{{invo.duedate}}</label> 
+                                </div>                                               
+                                <div flex>
+                                    <label>{{invo.amount}}</label> 
+                                </div>
+
+                                <div flex >
+                                   <lable>{{invo.balance}}</lable> 
+                                </div>
+                                 <div style="margin-top:-1.5%;"flex >
+                                   <md-input-container flex md-no-float>
+                                   
+                                    <input placeholder="Paid Amount" ng-model="payment.pamount">
+                                   
+                                    </md-input-container>
+                                </div>
+                                <div flex >
+                                   
+                        <md-menu>
+                            <md-button type="button" aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                            <md-icon  style="margin-top: -30px;" md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+                            </md-button>
+                            <md-menu-content width="4">
+                               
+                                 <md-menu-item>
+                                    <md-button href ng-click="history()">
+                                     <p>History</p>
+                                     <md-icon md-menu-align-target></md-icon>
+                                    </md-button>
+                                 </md-menu-item>
+                                
+                               </md-menu-content>
+                        </md-menu>
+                                    
+                                    
+                                </div>
+                            </div>      
+                     </md-whiteframe>
+                     
+        </div>
+     </div>
+          <!---END OF TABLE------>
+            
+        <md-divider></md-divider>
+            
+        <div layout layout-sm="column" layout-margin>
+            
+          <div flex="5">
+              
+            <img src="img/material alperbert/avatar_tile_o_28.png" style="margin-top:22px;border-radius:20px"/>
+              
+          </div>
+            
+          <div flex="20" style="margin-top:35px;">
+              
+            <label style="font-weight:700">Optional Details</label>
+              
+          </div>
+            
+             
+          <div style="margin-left:1%;margin-top:3%;">
+                        <md-button href class="md-raised md-primary" style="height:5px; " ng-click="upload()">Upload File</md-button>
+                        
+          </div>
+            
+        </div>
+            
+        <div class="md-actions" layout="row" layout-align="center center" style="display:none">
+            
+          <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
+          </md-button>
+            
+        </div>
+            
+                         
+						</md-content>
+					</form>
+				</div>
+				<!--END OF CARD BODY-->
+				
+				
+
+			</div>
+    
+    </div>   
+</div>	
+
+</div>
+
+
+
+
+
+
+			
+			<!--END OF COLLAPSE CARDS-->
+            <div id="view" class="fab_button_animation" style="background:#3498db;"></div>
+    
+    <div id="add" class="fab_button_animation" style="background:red;"></div>
+    
+    <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+        ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+        
+        <md-fab-trigger>
+            
+            <div style="padding:0px;">
+                
+                <md-button aria-label="menu" class="md-fab md-warn" style="background-color:red;">
+                    <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+                </md-button>
+                
+            </div>
+            
+        </md-fab-trigger>
+        
+        <md-fab-actions>
+            
+            <div style="padding:5px;">
+                
+                <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="addCustomer()" style="background-color:red;">
+                    
+                    <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon>
+                    <md-tooltip md-direction="left">Add Contact</md-tooltip>
+                    
+                </md-button>
+                
+            </div>
+            
+        </md-fab-actions>
+        
+    </md-fab-speed-dial>

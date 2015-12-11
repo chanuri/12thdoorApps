@@ -1,0 +1,435 @@
+<!--Background banner with parallax effect-->
+
+<style>
+  .md-datepicker-input-container
+  {
+      width:80%
+  }
+    
+  
+</style>
+
+<!--CARD CONTAINER START-->
+
+<div class="card-container" style="padding:20px;" ng-controller="AppCtrlAdd as ctrl">
+    
+  <!--WHITEFRAME START-->
+    
+  <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;width:960px;margin:0 auto">
+      
+<!--    <div id="view" class="fab_button_animation" style="background:#3498db;"></div>-->
+      
+
+  <!--  <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+      ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+        
+      <md-fab-trigger>
+          
+        <div style="padding:0px;">
+            
+          <md-button aria-label="menu" class="md-fab md-warn" style="background-color:red;">
+            <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+          </md-button>
+            
+        </div>
+          
+      </md-fab-trigger>
+        
+      <md-fab-actions>
+          
+        <div style="padding:5px;">
+            
+          <md-button aria-label="twitter" class="md-fab md-raised md-mini" ng-click="save()" style="background-color:#3498db;">
+              
+            <md-icon md-svg-src="img/ic_save_24px.svg" ></md-icon>
+            <md-tooltip md-direction="left">Save</md-tooltip>
+              
+          </md-button>
+            
+        </div>
+          
+        <div style="padding:5px;">
+            
+          <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="Customerview()" style="background-color:#9b59b6;">
+              
+            <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>
+            <md-tooltip md-direction="left">Add Contact</md-tooltip>
+              
+          </md-button>
+            
+        </div>
+          
+      </md-fab-actions>
+        
+    </md-fab-speed-dial>-->
+      
+
+    <!--FORM START-->
+      
+    <form name="editForm" ng-submit="submit();" style="width:100%">
+        
+      <md-content flex>
+          
+        <div layout layout-sm="column" layout-margin>
+            
+          <div flex="5">
+              
+            <img src="img/material alperbert/avatar_tile_p_28.png" style="margin-top:22px;border-radius:20px"/>
+              
+          </div>
+            
+          <div flex="20" style="margin-top:35px;">
+              
+            <label style="font-weight:700">Payment Details</label>
+              
+          </div>
+            
+          <md-autocomplete flex="" required="" md-input-name="autocompleteField" md-no-cache="$root.noCache" md-selected-item="$root.selectedItem1" md-search-text="ctrl.searchText" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" md-floating-label="Customer" md-autofocus="true" md-selected-item-change="selectedItemChange(item.display)"ng-keypress="enter($event)" >
+                        <md-item-template>
+                            <span  md-highlight-text="ctrl.searchText"  md-highlight-flags="^i">{{item.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+         
+            
+        </div>
+          
+        
+          
+        <div layout layout-sm="column" layout-margin>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="20" class="blankspace">
+          </div>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <md-input-container flex >
+              
+            <label>Payment Number</label>
+            <input ng-model="payment.paymentref" required>
+              
+          </md-input-container>
+            
+          <div flex style="margin-top:19px;">
+             
+            <md-datepicker ng-model="payment.date" date-disabled="disabled(payment.date, mode)" md-placeholder="Enter date"></md-datepicker>
+              
+          </div>
+            
+         
+            
+        </div>
+          
+        <div layout layout-sm="column" layout-margin>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="20" class="blankspace">
+          </div>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+         
+              
+          <md-input-container flex >
+              
+            <label>Payment method</label>
+            <md-select  ng-model="payment.paymentMethod" flex>
+              <md-optgroup label="Payment Method">
+              <md-option value="Cash">Cash</md-option>
+              <md-option value="Cheque">Cheque</md-option>
+            </md-select>
+                
+          </md-input-container>
+              
+            <md-input-container flex >
+              
+            <label>Amount Received</label>
+            <input ng-model="payment.amountReceived" required ng-keyup="netAmount()">
+              
+          </md-input-container>
+              
+        </div>
+              
+        <div layout layout-sm="column" layout-margin>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="20" class="blankspace">
+          </div>
+            
+          <!--KEEP BLANK SPACE - ask why-->
+            
+          
+            
+           <md-input-container flex >
+              
+            <label>Bank Charges</label>
+            <input ng-model="payment.bankCharges">
+              
+          </md-input-container>
+            
+          <md-input-container flex >
+              
+            <label>comment</label>
+            <input ng-model="payment.comments">
+              
+          </md-input-container>
+            
+         
+            
+        </div>
+              
+        <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+            <div flex="5">
+            </div>
+            <div flex="20" style="margin-top:35px;">                                           
+            </div> 
+            <div flex>
+                <label><b>Unapplied Advances :</b></label>
+                <span style="margin-left:1%;"><b>{{payment.uAmount|currency}}</b></span>
+                <input type="hidden" ng-model=payment.uAmount>
+            </div>
+            <div flex>
+                <label><b>Total Available :</b></label>
+                <span style="margin-left:1%;"><b>{{nAmount|currency}}</b></span>
+            </div>
+
+                                                        
+         </div>
+        <md-divider></md-divider>
+              
+
+        <div layout layout-sm="column" layout-margin>
+            
+          <div flex="5">
+              
+            <img src="img/material alperbert/avatar_tile_i_28.png" style="margin-top:22px;border-radius:20px"/>
+              
+          </div>
+            
+          <div flex="15"  style="margin-top:35px;">
+              
+            <label style="font-weight:700">Invoice Details</label>
+              
+          </div>
+
+            <div style="padding-left:40px;" flex>
+       
+                  <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#FFFFFF; margin-top:12px;height:40px; border-bottom:1px #f1f1f1 solid;">
+                      
+                      <div layout="row" layout-sm="column" style="height:40px; margin-top:10px;width:101%;font-size:12px;">
+                                
+                                <div flex style="margin-left:1%;" >
+                                    <label><b>Date</b></label>
+                                </div>
+
+                                <div flex>
+                                    <label><b>Invoice no</b></label>
+                                </div>
+
+                                <div flex >
+                                    <label><b>Due date</b></label> 
+                                </div>                                               
+                                <div flex>
+                                    <label><b>Amount</b></label> 
+                                </div>
+
+                                <div flex >
+                                    <lable><b>Balance</b></lable> 
+                                </div>
+                                 <div flex >
+                                     <lable><b>Paid amount</b></lable> 
+                                </div>
+                                <div flex >
+                                   <lable></lable> 
+                                </div>
+                                 
+                            </div>    
+                   
+                      
+                </md-whiteframe>
+                
+
+        </div>
+            
+      </div> 
+
+             
+    <div layout layout-sm="column" layout-margin style="margin-top:-20px;"ng-repeat="invo in outstandingInvoices track by $index">
+            
+        
+            
+          <div flex="5" class="blankspace">
+          </div>
+            
+          <div flex="15" class="blankspace">
+          </div>
+            
+          
+           <div style="padding-left:40px;" flex>
+          
+               <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#ffffff; margin-top:12px;height:40px;">
+                                                         
+                          <div layout="row" layout-sm="column" style="height:20px;margin-top:10px;width:101%;font-size:12px;">
+                                 
+                              <div flex style="margin-top:-5px;">
+                                  
+                                 <input type="checkbox" ng-model="checkbox[$index]"  ng-change="checkItem($index,invo)"> 
+                                  <span><label>{{invo.sdate|date}}</label></span> 
+                                </div>
+
+                                <div flex style="margin-left:20px;">
+                                    <label>{{invo.invono}}</label>
+                                </div>
+
+
+                                <div  flex>
+                                    
+                                     <label >{{invo.mduedate|date}}</label> 
+                                   
+                                    
+                                </div>  
+                                 
+
+                                  
+                                <div flex>
+                                     <lable>{{invo.famount|currency}}</lable> 
+                                </div>
+                              
+                                    
+                                <!--<div flex>
+                                    <label>{{invo.famount|currency}}</label> 
+                                    
+                                </div>-->
+
+                                <div flex>
+                                  
+                                    
+                                    <div ng-if="invo.termtype =='multipleDueDates'">
+                                    <label >{{invo.instalment|currency}}</label>
+                                    </div>
+                                    <div ng-if="invo.termtype!='multipleDueDates'">
+                                     <label>{{invo.famount|currency}}</label>
+                                    </div>
+                                </div>
+                                 <div style="margin-top:-1.5%;"flex >
+                                   <md-input-container flex md-no-float>
+                                   
+                                    <input placeholder="Paid Amount" ng-disabled="invo.checked" ng-model="invo.amount">
+                                   
+                                    </md-input-container>
+                                </div>
+                                <div flex >
+                                   
+                        <md-menu>
+                            <div style="margin-top: -18%; margin-right:0px;">
+                            <md-button type="button"   aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                            <md-icon  md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+                            </md-button>
+                            </div>
+                            <md-menu-content>
+                                
+                                 <md-menu-item>
+                                    <md-button href ng-click="history()">
+                                     <p>View History</p>
+                                     <md-icon md-menu-align-target></md-icon>
+                                    </md-button>
+                                 </md-menu-item>
+
+                                
+                               </md-menu-content>
+                        </md-menu>
+                                    
+                                    
+                                </div>
+                             
+                              
+                               
+                            </div>  
+                   
+                         
+
+                     </md-whiteframe>
+                     
+        </div>
+     </div>
+          <!---END OF TABLE------>
+
+            <div flex  style="margin-left:425px;">
+                <label><b>Total Payments Applied :</b></label>
+                <span style="margin-left:31%;"><b>{{payment.total|currency}}</b></span>
+            </div>
+        <md-divider></md-divider>
+            
+        <div layout layout-sm="column" layout-margin>
+            
+          <div flex="5">
+              
+            <img src="img/material alperbert/avatar_tile_o_28.png" style="margin-top:22px;border-radius:20px"/>
+              
+          </div>
+            
+          <div flex="20" style="margin-top:35px;">
+              
+            <label style="font-weight:700">Optional Details</label>
+              
+          </div>
+            
+          <div style="margin-left:1%;margin-top:3%;">
+                        <md-button href class="md-raised md-primary" style="height:5px; " ng-click="upload()">Upload File</md-button>
+            
+                        
+          </div>
+            
+        </div>
+        <md-divider></md-divider>
+         <div layout layout-sm="column" layout-margin>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                    
+                    <div flex="5" class="blankspace">
+                    </div>
+                    
+                    <div flex="20" class="blankspace">
+                    </div>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                     <div style="margin-left:55%;">
+                        <md-button class="md-raised md-warn" href class="md-raised md-primary" style="height:5px; "ng-click="Customerview()">Cancel</md-button>
+                        
+                    </div>
+                    <div style="margin-left:2%;">
+                        <md-button href class="md-raised md-primary" style="height:5px; " ng-click="save()">Save</md-button>   
+                    </div>
+                </div>
+            <div class="md-actions" layout="row" layout-align="center center" style="display:none">
+                      
+              <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
+             </md-button>
+            
+          </div>
+            
+      </md-content>
+              
+    </form>
+            
+  </md-whiteframe>
+          
+  <br><br>
+          
+  <!--WHITEFRAME END-->
+          
+</div>
+        
+<!--CARD CONTAINER END-->

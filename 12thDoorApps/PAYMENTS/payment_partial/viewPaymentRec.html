@@ -1,0 +1,182 @@
+<div class="card-container" style="padding:20px;">
+    <!--WHITEFRAME START-->
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto" ng-repeat="item in invoiceArray">
+    <form name="editForm"  style="width:960px;" ng-controller="AppCtrlAdd as ctrl"  >
+            <md-content flex>
+            <div layout layout-sm="column" layout-margin flex>
+            <div flex="20">
+				<label>Payment No:</label>
+				<label ng-if="item.paymentid == '-999'">{{item.paymentref}}</label>
+					<label ng-if="item.paymentid != '-999'">{{item.paymentid}}</label>
+				</div>
+						<div flex>
+                           <label>-USD. {{item.total}}</label>
+                        </div>
+                     <div  style="margin-top:-20px;">
+                        	 <md-button ng-click="print()" style="height:30px;" aria-label="change address" href>
+                                    <md-icon md-svg-icon="img/ic_print_24px.svg" style="height:20px; width:20px;"></md-icon>
+                                </md-button>
+                      
+                        	 <md-button ng-click="download()" style="height:30px;" aria-label="change address" href>
+                                    <md-icon md-svg-icon="img/ic_file_download_24px.svg" style="height:20px; width:20px;"></md-icon>
+                                </md-button>
+                        
+                        	 <md-button ng-click="email()" style="height:30px;" aria-label="change address" href>
+                                    <md-icon md-svg-icon="img/ic_email_24px.svg" style="height:20px; width:20px;"></md-icon>
+                               </md-button>
+                               <md-menu md-position-mode="target-right target" >
+                            <md-button href aria-label="Open demo menu" class="md-icon-button"  ng-click="$mdOpenMenu()">
+                                <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:10px;" ></md-icon>
+                            </md-button>
+                            <md-menu-content width="4">
+                            <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Enter Payments</p>
+                                        <md-icon href md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Edit</p>
+                                        <md-icon href md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Copy</p>
+                                        <md-icon md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Cancel</p>
+                                        <md-icon md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button href ng-click="deleteInvoice(item)">
+                                        <p>Delete</p>
+                                        <md-icon md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Copy as Recurring</p>
+                                        <md-icon md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                 <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Credit Note</p>
+                                        <md-icon md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Send Reminder</p>
+                                        <md-icon md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button href ng-click="">
+                                        <p>Add Comments</p>
+                                        <md-icon md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                        </div>
+				</div>
+				<md-divider></md-divider>
+				<div layout layout-sm="column" layout-margin flex>
+					<img src="img/image1.jpg">
+				</div>
+				<div layout layout-sm="column" layout-margin flex style="margin-top:-50px;">
+				<div flex="5" class="blankspace"></div>
+                   <!--  <div flex="20" class="blankspace"></div> -->
+					<h1 style="">PAYMENT RECEIPT</h1>
+				</div>
+				<div layout layout-sm="column" layout-margin flex style="margin-top:-20px;">
+				<div flex="5" class="blankspace"></div>
+					<!--label ng-if="item.invoiceNo == '-999'">#INV {{item.invoiceRefNo}}</label-->
+					<!---label ng-if="item.invoiceNo != '-999'">{{item.paymentid}}</label--->
+					<!-- <label ng-if="item.status == 'Draft'">#INV {{item.invoiceNo}}</label> -->
+					<div flex="60" class="blankspace"></div>
+					<!-- <div ayout layout-sm="row" layout-margin> -->
+					<label>To:</label>
+					<!-- </div> -->
+				</div>
+				<div layout layout-sm="column" layout-margin style="margin-top:20px;" flex>
+				<div flex="5" class="blankspace"></div>
+				<label>Payment No:</label>
+				<label ng-if="item.paymentid == '-999'">{{item.paymentref}}</label>
+				<label ng-if="item.paymentid != '-999'">{{item.paymentid}}</label>
+			   <div flex="50" class="blankspace"></div>
+					<label>{{item.customer}}</label>	
+				</div>
+				<div layout layout-sm="column" layout-margin flex>
+				<div flex="5" class="blankspace"></div>
+					<label>Payment Date: {{item.date|date}}</label>
+					<div flex="60" class="blankspace"></div>
+					<label></label>
+				</div>
+				<div layout layout-sm="column" layout-margin  flex>
+				<div flex="5" class="blankspace"></div>
+					<label>Payment Method: {{item.paymentMethod}}</label>
+					<div flex="60" class="blankspace"></div>
+				</div>
+				<div layout layout-sm="column" layout-margin  flex>
+				<div flex="5" class="blankspace"></div>
+					<label>Comments: {{item.comments}}</label>
+					<div flex="60" class="blankspace"></div>
+				</div>
+				<div layout layout-sm="column" style="margin-top:30px;" layout-margin  flex>
+				<div flex="5" class="blankspace"></div>
+					<table >
+					<tr>
+						<th flex style="padding: 20px;">Date</th>
+						<th style="padding: 20px;" flex>Invoice No.</th>
+						<th style="padding: 20px;" flex>Amount</th>
+						<th style="padding: 20px;" flex>Balance</th>
+						<th style="padding: 20px;" flex>Paid</th>
+						<md-divider></md-divider>
+						</tr>
+
+						<tr ng-repeat="item in item.paidInvoice">
+							<td style="padding: 20px;"flex>{{item.sdate|date}}</td>
+							<td style="padding: 20px;"flex>{{item.invono}}</td>
+							<td style="padding: 20px;"flex>{{item.amount}}</td>
+							<td style="padding: 20px;"flex>{{item.balance}}</td>
+							<td style="padding: 20px;"flex>{{item.amount}}</td>
+							 <md-divider></md-divider>
+						</tr>
+					</table>
+				</div>
+				 <md-divider></md-divider>
+
+				 <div layout layout-sm="column" layout-margin  flex>
+				 	<div flex="40" class="blankspace"></div>
+				 	<table>
+				 		<tr>
+                            <td style="padding-top:30px;" flex><b>Total payments Applied USD</b></td>
+				 			<td style="padding-left: 70px; padding-top:30px;" flex>{{item.total|currency}}</td>
+				 		</tr>
+				 		<tr >
+				 			<td  style="padding-top:30px;" flex><b>Excess Payment USD</b></td>
+				 			<td style="padding-left: 70px; padding-top:30px;" flex>{{item.namount|currency}}</td>
+				 		</tr>
+				 	</table>
+				 </div>
+				<md-divider></md-divider>
+
+            </md-content>
+            </form>
+    </md-whiteframe>
+    </div>
+     <div  class="lock-size" layout="row" >
+    <md-button href class="md-fab" aria-label="Profile" ng-click="view()" style=" position:fixed;top:270px;right:50px;background:#db4437">
+                <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+                <md-tooltip md-direction="left">All Invoices</md-tooltip>
+            </md-button>
+        </div>
+

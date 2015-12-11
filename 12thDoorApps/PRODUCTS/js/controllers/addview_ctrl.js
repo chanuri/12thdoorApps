@@ -3,9 +3,16 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     //  get the settings json object 
     var SettingsApp  = $objectstore.getClient("Settings12thdoor");
     SettingsApp.onGetMany(function(data){
+      console.log(data)
       //console.log(data)
       GetProductCategory(data,function(){  // return one object of array 
-        GetProductBrand(data);
+        GetProductBrand(data,function(){
+          GetCustFields(data,function(){
+            GetProUnits(data,function(){
+              GetProTaxes(data);
+            });
+          });
+        });
       });
     });
     SettingsApp.onError(function(data){
@@ -13,7 +20,46 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     });
     SettingsApp.getByFiltering("*");
 
-    function GetProductBrand(arr){
+
+    function GetProTaxes(arr){
+      $scope.taxesArr = [];      
+      var individualTaxes = arr[0].taxes.individualtaxes; 
+      var multiplelTaxes = arr[0].taxes.multipletaxgroup; 
+
+      for(i=0; i<=individualTaxes.length-1; i++){
+        if(individualTaxes[i].activate){
+          $scope.taxesArr.push(individualTaxes[i]);
+        }
+      }
+      for(j=0; j<=multiplelTaxes.length-1; j++){
+        if(multiplelTaxes[j].activate){
+          $scope.taxesArr.push(multiplelTaxes[j]);
+        }
+      }
+
+    }
+
+    function GetProUnits(arr,callback){
+      $scope.ProUnits = [];
+      var ProductUnits = arr[0].preference.productpref.units;
+      for(i=0; i<= ProductUnits.length -1; i++){
+        if(ProductUnits[i].activate){
+            $scope.ProUnits.push(ProductUnits[i].unitsOfMeasurement);      
+        }
+     }
+     callback();
+    }
+
+    function GetCustFields(arr,callback){
+      $scope.ProCustArr = [];
+      var CustArr = arr[0].preference.productpref.CusFiel; 
+      for(var i=0; i<= CustArr.length-1; i++){
+        $scope.ProCustArr.push(CustArr[i].name);
+      } 
+      callback();
+    }
+
+    function GetProductBrand(arr,callback){
       $scope.ProBrandArray = [];
       var BrandArray = arr[0].preference.productpref.Productbrands;      
       for (var i = BrandArray.length - 1; i >= 0; i--) {
@@ -21,7 +67,10 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             $scope.ProBrandArray.push(BrandArray[i].productbrand);
          }
       }
+      callback();
     }
+
+
 
     function GetProductCategory(arr,callback){
       $scope.CategoryArray = [];

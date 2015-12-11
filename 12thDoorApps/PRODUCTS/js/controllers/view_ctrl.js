@@ -7,7 +7,24 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 		$scope.downloadPdfArr = [];
 		$scope.downloadPdfArr = angular.copy(obj);
 
-		$DownloadPdf.GetPdf($scope.downloadPdfArr,'download'); //pdf type is 'download'
+		// var context = angular.element('widget')[0].getContext('2d');
+  //   	context.font = "34px Arial";
+		html2canvas($("#widget"),{
+			onrendered : function(canvas){
+				         
+                var imgData = canvas.toDataURL(
+                    'image/png');              
+                var doc = new jsPDF();
+                doc.addImage(imgData, 'PNG', 10, 10,200,100);
+                doc.save('sample-file.pdf');
+
+				//theCanvas = canvas;
+				//document.body.appendChild(canvas);
+
+			}
+		})
+
+		//$DownloadPdf.GetPdf($scope.downloadPdfArr,'download'); //pdf type is 'download'
 	}
 
 	// print pdf in a new tab , pass whole object as parameters

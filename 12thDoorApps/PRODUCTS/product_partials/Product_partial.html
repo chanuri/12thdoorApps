@@ -35,10 +35,8 @@
                         <label>Unit</label>
                         <md-select ng-model="product.ProductUnit">
                            <md-optgroup label="Unit">
-                           <md-option value="Months">Months</md-option>
-                           <md-option value="Days">Days</md-option>
-                           <md-option value="Units">Units</md-option>
-                        </md-select>
+                           <md-option ng-repeat="cat in ProUnits" value="{{cat}}">{{cat}}</md-option>
+                         </md-select>
                      </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin >
@@ -51,9 +49,8 @@
                   <label>Tax</label>
                   <md-select ng-model="product.producttax">
                      <md-optgroup label="Tax">
-                     <md-option value="10">10</md-option>
-                     <md-option value="20">20</md-option>
-                  </md-select>
+                     <md-option ng-repeat="cat in taxesArr" value="{{cat}}">{{cat.taxname}}</md-option>
+                   </md-select>
                </md-input-container>
             </div>
              <md-divider> </md-divider>
@@ -119,7 +116,20 @@
                   </md-content>
                </div>
             </div>
-            
+            <div layout layout-sm="column" layout-margin>
+              <section-title></section-title>
+               <div style="margin-left:-5px; margin-top:-10px;" layout="column" class="chipsdemoBasicUsage" flex>
+                  <md-content class="md-padding" layout="column">
+                      
+                     <md-chips ng-model="ProCustArr" readonly="true" placeholder="Enter a tag" secondary-placeholder="+Tags">
+                        
+                        <md-chip-template>
+                           <strong>{{$chip}}</strong>
+                        </md-chip-template>
+                     </md-chips>
+                  </md-content>
+               </div>
+            </div>
               <div layout layout-sm="column" layout-margin>
                <section-title> </section-title>
 

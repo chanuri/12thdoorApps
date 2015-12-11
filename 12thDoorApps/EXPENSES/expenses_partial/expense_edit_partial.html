@@ -1,0 +1,198 @@
+<!--CARD CONTAINER START-->
+<style>
+  .md-datepicker-input-container
+  {
+      width:85%
+  }
+</style>
+<div class="card-container" style="padding:20px;">
+   <!--WHITEFRAME START-->
+   <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto;z-index:2" ng-repeat="Edit_Expense in Edit_Expense">
+      <!--FORM START-->
+      <form name="editForm" ng-submit="updateexpenses(Edit_Expense)" style="width:100%">
+         <md-content flex>
+            <div layout layout-sm="column" layout-margin>
+               
+               <section-title title="Expense Details"> </section-title>
+               
+                  <md-date-picker-new req="true"  model="Edit_Expense.date" label="Due Date" dialog-md-theme="datePickerTheme" 
+                  style="<!-- margin-top: 13px; -->" flex/>
+
+               </md-date-picker-new>
+                  <md-autocomplete flex="" md-input-name="autocompleteField"
+                  md-no-cache="noCache" 
+                  md-selected-item="selectedItemSup" 
+                  md-search-text="searchTextSup"
+                  md-items="item in QuerySearchSup(searchTextSup)" 
+                  md-item-text="item.display" 
+                  md-floating-label="Supplier (Optional)">
+                  <md-item-template>                   
+                       <span  md-highlight-text="searchTextSup">{{item.display}}</span>  
+                  </md-item-template>
+                  <div ng-messages="searchForm.autocompleteField.$error" ng-if="searchForm.autocompleteField.$touched">
+                     <div ng-message="required">You 
+                        <b>must</b> have a favorite state.
+                     </div>
+                     <div ng-message="minlength">Your entry is not long enough.</div>
+                     <div ng-message="maxlength">Your entry is too long.</div>
+                  </div>
+               </md-autocomplete>
+
+            </div>
+            <div layout layout-sm="column" layout-margin>
+              <section-title> </section-title>
+               <md-input-container flex>
+                  <label>Description</label>
+                  <textarea maxlength="200" type="text" ng-model="Edit_Expense.description" required>
+                  </textarea>
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+              <section-title> </section-title>
+               <md-input-container flex>
+                  <label>Category</label>
+                  <md-select name="Category" placeholder="Category" ng-model="Edit_Expense.Category" ng-required="true" >
+                     <md-optgroup label="Category">
+                     <md-option value="Category 1">Category 1</md-option>
+                     <md-option value="Category 2">Category 2</md-option>
+                  </md-select>
+               </md-input-container >
+               <md-input-container flex >
+                  <label>Reference No.</label>
+                  <input ng-model="Edit_Expense.Reference" >
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+              <section-title> </section-title>
+               <md-input-container flex >
+                  <label>Amount</label>
+                  <input ng-model="Edit_Expense.Amount" required ng-keyup="finalamount(Edit_Expense)">
+               </md-input-container>
+               <md-input-container flex>
+               <label>Tax</label>
+               <md-select ng-model="Edit_Expense.Tax" flex ng-change="finalamount(Edit_Expense)">
+                  <md-optgroup label="Tax">
+                  <md-option value="10">10</md-option>
+                  <md-option value="20">20</md-option>
+               </md-select>
+               </md-input-container flex>
+            </div>
+            <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+               
+               <section-title> </section-title>
+               <div layout="row" layout-sm="row" flex>
+                  
+               
+               <div flex="40">
+                  <label><b>{{TotalText}}</b></label>
+               </div>
+                
+               <div flex="15" >
+                  <label></label>
+               </div>
+               <div flex="20"  style="margin-left:-25px;">
+                  <span ><b>{{totalUSD | currency}}</b></span>
+               </div>
+               <div flex layout layout-align="end start" style="margin-top:-8px;"> 
+                    <a class="md-button md-default-theme" ng-click="ChangeAmount(Edit_Expense)"
+                    aria-label="change address" href="" tabindex="0">
+                    <md-icon md-svg-src="img/ic_swap_vert_24px.svg" class="iconColor ng-scope ng-isolate-scope md-default-theme" md-ink-ripple="" style aria-hidden="true">
+                    </md-icon>
+                    </a>
+               </div>
+               </div>
+            </div>
+            <md-divider></md-divider>
+            <div layout layout-sm="column"  layout-margin>
+               
+               <section-title title="Optional Details"> </section-title>
+               <md-input-container flex>
+               <label>Status</label>
+               <md-select  ng-model="Edit_Expense.Status" ng-change="calanderfun(Edit_Expense)">
+                  <md-optgroup label="Status">
+                  <md-option value="Paid">Paid</md-option>
+                  <md-option value="Unpaid">Unpaid</md-option>
+               </md-select>
+               </md-input-container flex>
+               <md-date-picker-new  ng-if="Edit_Expense.Status == 'Paid' || Edit_Expense.Status == 'Cancelled'" dis="calanderdisable" model="Edit_Expense.Duedate" label="Due Date" dialog-md-theme="datePickerTheme" 
+                  style="margin-top: 13px;" flex/>
+               </md-date-picker-new>
+               <md-date-picker-new ng-if="Edit_Expense.Status == 'Unpaid'" dis="calanderdisable" model="Edit_Expense.Duedate" label="Due Date" dialog-md-theme="datePickerTheme" 
+                  style="margin-top: 13px;" flex/>
+               </md-date-picker-new>
+                
+            </div>
+            <div layout layout-sm="column"  layout-margin >
+              <section-title> </section-title>
+               
+               <md-autocomplete flex="" md-input-name="autocompleteField"
+                  md-no-cache="noCache" 
+                  md-selected-item="selectedItem" 
+                  md-search-text="searchText"
+                  md-items="item in querySearch(searchText)" 
+                  md-item-text="item.display" 
+                  md-floating-label="Assign to Customer or Project">
+                  <md-item-template>
+                     <span class="item-title">
+                        <md-icon md-svg-icon="{{item.image}}"></md-icon>
+                        <span style="margin-left: 15px;"> {{item.display}} </span>
+                     </span>
+                     <!-- <span  md-highlight-text="ctrl.searchText">{{item.display}}</span> -->
+                  </md-item-template>
+                  <div ng-messages="searchForm.autocompleteField.$error" ng-if="searchForm.autocompleteField.$touched">
+                     <div ng-message="required">You 
+                        <b>must</b> have a favorite state.
+                     </div>
+                     <div ng-message="minlength">Your entry is not long enough.</div>
+                     <div ng-message="maxlength">Your entry is too long.</div>
+                  </div>
+               </md-autocomplete>
+               <md-input-container flex>
+               <label>Billable</label>
+               <md-select  ng-model="Edit_Expense.Billable"  >
+                  <md-optgroup label="Billable">
+                  <md-option value="Billable">Billable</md-option>
+                  <md-option value="Non-Billable" selected>Non-Billable</md-option>
+               </md-select>
+               </md-input-container flex>		 
+            </div>
+
+             
+            <div layout layout-sm="column" layout-margin>
+               
+               <section-title> </section-title>
+               <div layout="column" class="chipsdemoBasicUsage" flex style="margin-left:-5px; margin-top:-10px;" >
+                  <md-content class="md-padding" layout="column">
+                    
+                     <md-chips ng-disabled="checkAbility" ng-model="Edit_Expense.tags" readonly="readonly" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tags">
+                      
+                        <md-chip-template>
+                           <strong>{{$chip}}</strong>
+                        </md-chip-template>
+                     </md-chips>
+                  </md-content>
+               </div>
+            </div>
+        
+            <div layout layout-sm="column"  layout-margin>
+               
+               <section-title> </section-title>
+               <div style="margin-left: 15px; margin-top:20px;">
+                  <md-button class="md-raised" ng-click="uploader(Edit_Expense)" type="button">Upload</md-button>
+               </div>
+            </div>
+            <md-divider></md-divider>
+            <div layout="row" layout-align="end start" layout-margin  ng-show="true" >
+               <div>
+                  <md-button id="mySignup" class="md-raised md-primary"  type="submit">Edit</md-button>
+               </div>
+               <div style="margin-left: 15px;">
+                  <md-button style="margin-left: 15px;" class="md-raised"  type="button" ng-click="viewExpense()">Cancel</md-button>
+               </div>
+            </div>
+         </md-content>
+      </form>
+   </md-whiteframe>
+   <br><br>
+   <!--WHITEFRAME END-->
+</div>

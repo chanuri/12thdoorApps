@@ -1731,10 +1731,10 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 
 	$scope.submit = function() {
 		
-		var number = Math.random();
-		console.log(Math.random());
+		//var number = Math.random();
+		//console.log(Math.random());
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
-			id:number,
+		//	id:number,
 			name:$scope.name
 			
 

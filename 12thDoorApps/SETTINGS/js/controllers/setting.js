@@ -120,7 +120,7 @@ angular
 				emailcustomeruponsavinginvoice:false,
 				addstockcancelOrdeleteinvoiceincluCreditnote:true,
 				includeaccountstatementwithinvoice:true,
-				CusFiel:[],
+				CusFiel:new Array(),
 				CheckedOfflinePayments:false
 
 			},

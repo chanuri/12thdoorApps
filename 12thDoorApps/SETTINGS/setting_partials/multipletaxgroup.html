@@ -12,17 +12,20 @@
 
 		</div>
 		<div layout layout-sm="column" layout-margin>
-			<div flex style="margin-top: 27px;">
+			<div flex="40" style="margin-top: 27px;">
 				<md-input-container md-no-float>
 				<input ng-model="taxname" placeholder="Multiple Tax Groups Name" required>
 			</md-input-container>
 		</div>
-		<div flex style="margin-top: 27px;">
+		<div flex="40" style="margin-top: 27px;">
 			<md-input-container md-no-float>
 			<md-select ng-model="taxGroups" placeholder="Select Individual Taxes" ng-change="selcetedtax(taxGroups)">
 			<md-option ng-repeat="indi in $root.Settings12thdoor.taxes.individualtaxes" value="{{indi.taxname}}({{indi.rate}}%)">{{indi.taxname}}</md-option>
 		</md-select>
 	</md-input-container>
+</div>
+<div flex="5" layout="row" layout-align="center center" style="font-size:13px;">
+	<md-checkbox ng-model="compound" aria-label="Checkbox 1" ng-init="compound=true">Compound</md-checkbox>
 </div>
 </div>
 <ul as-sortable="sortableOptions" style="width:20%" ng-model="individualtaxes">

@@ -10,7 +10,7 @@
 			</div>
 			<md-input-container flex="40">
 			<label>Account Owner</label>
-			<input ng-model="sdf" ng-disabled="true">
+			<input ng-model="$root.Settings12thdoor.profile.accountOwner" ng-disabled="true">
 		</md-input-container>
 		<div layout="row" layout-align="start center">
 			<a href="#" class="tooltip" data-tooltip="To update your name or email address. please edit your personal profile">
@@ -27,7 +27,7 @@
 	</div>
 	<md-input-container flex="40">
 	<label>Your Email</label>
-	<input type="text" ng-model="zd" ng-disabled="true">
+	<input type="text" ng-model="$root.Settings12thdoor.profile.adminEmail" ng-disabled="true">
 </md-input-container>
 <div layout="row" layout-align="start center">
 	<a href="#" class="tooltip" data-tooltip="To update your name or email address. please edit your personal profile">
@@ -44,7 +44,7 @@
 	</div>
 	<md-input-container flex="40">
 	<label>Accout Url</label>
-	<input type="text" ng-model="url.email" ng-disabled="true">
+	<input type="text" ng-model="$root.Settings12thdoor.profile.accountUrl" ng-disabled="true">
 </md-input-container>
 <div flex="20" layout="row" layout-align="start center">
 	<md-button class="md-primary" style="font-size:12px;" ng-click="changeUrl($event)">
@@ -64,7 +64,7 @@
 	</div>
 	<md-input-container flex>
 	<label>Company Name</label>
-	<input type="text" ng-model="email" >
+	<input type="text" ng-model="$root.Settings12thdoor.profile.companyName" >
 </md-input-container>
 <div flex="5" hide-sm>	
 </div>
@@ -77,7 +77,7 @@
 	</div>
 	<md-input-container flex>
 	<label>Address</label>
-	<input type="text" ng-model="asdf" placeholder="Street">
+	<input type="text" ng-model="$root.Settings12thdoor.profile.street" placeholder="Street">
 </md-input-container>
 <div flex="5" hide-sm>	
 </div>
@@ -88,10 +88,10 @@
 	<div flex="20" hide-sm>
 	</div>
 	<md-input-container flex="30" md-no-float>
-	<input ng-model="user.address2" placeholder="City" >
+	<input ng-model="$root.Settings12thdoor.profile.city" placeholder="City" >
 </md-input-container>
 <md-input-container flex md-no-float>
-<input ng-model="user.jg" placeholder="State" required>
+<input ng-model="$root.Settings12thdoor.profile.state" placeholder="State" required>
 </md-input-container>
 <div flex="5" hide-sm>	
 </div>
@@ -103,12 +103,12 @@
 	<div flex="20" hide-sm>
 	</div>
 	<md-input-container flex="30" md-no-float>
-	<input ng-model="user.yf" placeholder="Zip" required>
+	<input ng-model="$root.Settings12thdoor.profile.zip" placeholder="Zip" required>
 </md-input-container>
 <md-input-container flex>
 <label>Country</label>
-<md-select ng-model="ctrl.userState">
-<md-option ng-repeat="" value="">{{state.abbrev}}</md-option>
+<md-select ng-model="$root.Settings12thdoor.profile.country">
+<md-option ng-repeat="c in country" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
 <div flex="5" hide-sm>	
@@ -122,11 +122,11 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Phone</label>
-	<input type="text" ng-model="wer" required>
+	<input type="text" ng-model="$root.Settings12thdoor.profile.phoneNo" required>
 </md-input-container>
 <md-input-container flex>
 <label>Fax</label>
-<input type="text" ng-model="asd" required>
+<input type="text" ng-model="$root.Settings12thdoor.profile.fax" required>
 </md-input-container>
 <div flex="5" hide-sm>	
 </div>
@@ -139,7 +139,7 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Company Email</label>
-	<input type="text" ng-model="uygi" placeholder="Will display on invoices, estimates etc.. " required>
+	<input type="text" ng-model="$root.Settings12thdoor.profile.companyEmail" placeholder="Will display on invoices, estimates etc.. " required>
 </md-input-container>
 <md-input-container flex>
 <label>Website</label>
@@ -159,7 +159,7 @@
 		Upload Company Logo
 	</md-button>
 </div>
-<div flex layout="row" layout-align="start center" ng-repeat="logo in imagelogoprofile" style="margin-top:-11px;">
+<div flex layout="row" layout-align="start center" ng-repeat="logo in $root.Settings12thdoor.profile.name" style="margin-top:-11px;">
 	<div><p style="color:#B5B5B5;font-size:16px;">{{logo.name}}</p></div>
 	<div><md-icon ng-click="deletelogoimage(logo, $index)" style="color:#A5A0A0" md-svg-src="img/ic_close_24px.svg" aria-label="Insert Drive Icon"></md-icon></div>
 </div>
@@ -177,7 +177,7 @@
 	<div layout="column" flex>
 		<!-- Start customer fields table -->
 		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
-			<li ng-repeat="item in cusFieldsprofile" as-sortable-item>
+			<li ng-repeat="item in $root.Settings12thdoor.profile.CusFiel" as-sortable-item>
 				<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
 				<md-card-content>
 				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
@@ -237,8 +237,8 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Base Currency</label>
-	<md-select ng-model="ctrl.userState">
-	<md-option ng-repeat="" value="">{{state.abbrev}}</md-option>
+	<md-select ng-model="$root.Settings12thdoor.profile.baseCurrency">
+	<md-option ng-repeat="b in curr" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
 </div>
@@ -250,8 +250,8 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Time Zone</label>
-	<md-select ng-model="ctrl.userState">
-	<md-option ng-repeat="" value="">{{state.abbrev}}</md-option>
+	<md-select ng-model="$root.Settings12thdoor.profile.timeZone">
+	<md-option ng-repeat="z in zones" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
 </div>
@@ -262,8 +262,8 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Date Format</label>
-	<md-select ng-model="ctrl.userState">
-	<md-option ng-repeat="" value="">{{state.abbrev}}</md-option>
+	<md-select ng-model="$root.Settings12thdoor.profile.dataFormat">
+	<md-option ng-repeat="d in format" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
 </div>
@@ -274,8 +274,8 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Currency Format</label>
-	<md-select ng-model="ctrl.userState">
-	<md-option ng-repeat="" value="">{{state.abbrev}}</md-option>
+	<md-select ng-model="$root.Settings12thdoor.profile.currencyFormat">
+	<md-option ng-repeat="cf in currFor" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
 </div>
@@ -286,8 +286,8 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Decimal Places</label>
-	<md-select ng-model="ctrl.userState">
-	<md-option ng-repeat="" value="">{{state.abbrev}}</md-option>
+	<md-select ng-model="$root.Settings12thdoor.profile.decimalPlaces">
+	<md-option ng-repeat="deci in decimals" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
 </div>
@@ -298,7 +298,7 @@
 	</div>
 	<md-input-container flex="30">
 	<label>Paper Size</label>
-	<md-select ng-model="ctrl.size">
+	<md-select ng-model="$root.Settings12thdoor.profile.paperSize">
 	<md-option>letter(8.5" x 11")</md-option>
 	<md-option>A3(11.69" x 16.54")</md-option>
 	<md-option>A4(8.27" x 11.69")</md-option>
@@ -329,4 +329,17 @@
 </div> -->
 </md-content>
 </form>
+</div>
+
+<div class="lock-size" layout="row">
+	<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+	ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+	<md-fab-trigger>
+	<md-button aria-label="menu" class="md-fab " style="background-color:#db4437;" ng-click="submit()">
+	<md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;"></md-icon>
+</md-button>
+</md-fab-trigger>
+<md-fab-actions>
+</md-fab-actions>
+</md-fab-speed-dial>
 </div>

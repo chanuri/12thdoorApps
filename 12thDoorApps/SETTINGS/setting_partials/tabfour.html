@@ -68,8 +68,10 @@
 </div>
 </div>
 </div>
+
 <md-divider></md-divider>
-<div layout layout-sm="column" layout-margin >
+
+<div layout layout-sm="column" layout-margin>
 	<div flex="5">
 		<img src="img/material alperbert/avatar_tile_m_28.png" style="margin-top:22px;border-radius:20px"/>
 	</div>
@@ -91,6 +93,11 @@
 						<span ng-repeat="t in item.individualtaxes" style="color:#808080;font-size:15px;">{{t}} 
 							<md-tooltip md-direction="right">Individual Taxes</md-tooltip>
 						</span>
+					</div>
+					<div flex="10" ng-if="!item.compound">
+					</div>
+					<div flex="10" ng-if="item.compound">
+						<md-icon md-svg-src="img/ic_add_circle_24px.svg" style="color:#7BD97B;">
 					</div>
 					<div flex="5">
 						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
@@ -132,6 +139,7 @@
 </div>
 </div>
 </div>
+
 </md-content>
 </form>
 </div>
@@ -152,8 +160,3 @@
 </md-fab-actions>
 </md-fab-speed-dial>
 </div>
-
-
-
-
-

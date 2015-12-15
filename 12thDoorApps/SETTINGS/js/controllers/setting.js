@@ -1765,11 +1765,24 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 		.join(' ');
 	};
 
+	$scope.test = {
+		"preference" : {
+			"invoicepref" : {
+				"name" : "ashjgs",
+				"CusFiel" : []
+			}
+		}
+	}
+	
 	$scope.submit = function() {
 		
 		// var number = Math.random();
 		// console.log(Math.random());
-		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
+		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
+		// 	// id:number,
+		// 	name:$scope.name
+		// })
+		$scope.test.preference.invoicepref.CusFiel.push({
 			// id:number,
 			name:$scope.name
 		})

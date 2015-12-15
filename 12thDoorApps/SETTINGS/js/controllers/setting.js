@@ -95,9 +95,9 @@ angular
 			
 		},
 
-		preference : 
+		"preference" : 
 		{
-			invoicepref:
+			"invoicepref":
 			{
 				prefix:"",
 				editInvoice:false,
@@ -120,11 +120,11 @@ angular
 				emailcustomeruponsavinginvoice:false,
 				addstockcancelOrdeleteinvoiceincluCreditnote:true,
 				includeaccountstatementwithinvoice:true,
-				CusFiel:new Array(),
+				"CusFiel":new Array(),
 				CheckedOfflinePayments:false
 
 			},
-			estimatepref:
+			"estimatepref":
 			{
 				editestimate:false,
 				deleteestimate:false,
@@ -136,7 +136,7 @@ angular
 				includeproductbrochurescustomeremail:true,
 				allowPartialPayments:true,
 				enableDisscounts:true,
-				CusFiel:[]
+				"CusFiel":[]
 			},
 			creditNotepref:
 			{

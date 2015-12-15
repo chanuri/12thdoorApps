@@ -1767,14 +1767,14 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 	
 
 	$scope.submit = function() {
-	$rootScope.Settings12thdoor.preference.invoicepref.asus = [];	
+	$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];	
 		// var number = Math.random();
 		// console.log(Math.random());
 		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
 		// 	// id:number,
 		// 	name:$scope.name
 		// })
-		$rootScope.Settings12thdoor.preference.invoicepref.asus.push({
+		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
 			// id:number,
 			name:$scope.name
 		})

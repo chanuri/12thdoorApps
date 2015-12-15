@@ -1765,19 +1765,16 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 		.join(' ');
 	};
 	
-
+	$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
 	$scope.submit = function() {
-	$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];	
-		// var number = Math.random();
-		// console.log(Math.random());
-		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
-		// 	// id:number,
-		// 	name:$scope.name
-		// })
+		var number = Math.random();
+		console.log(Math.random());
+		
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
-			// id:number,
+			id:number,
 			name:$scope.name
 		})
+		
 		$mdDialog.hide();
 		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);
 	};
@@ -1904,7 +1901,8 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $objectstor
 		.filter(function(pos) { return $scope.toastPosition[pos]; })
 		.join(' ');
 	};
-
+	
+	$rootScope.Settings12thdoor.preference.estimatepref.CusFiel = [];
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.push({
 			name:$scope.ename

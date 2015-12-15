@@ -84,11 +84,16 @@
               
           </div>
             
-          <md-autocomplete flex="" required="" md-input-name="autocompleteField" md-no-cache="$root.noCache" md-selected-item="$root.selectedItem1" md-search-text="ctrl.searchText" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" md-floating-label="Customer" md-autofocus="true" md-selected-item-change="selectedItemChange(item.display)"ng-keypress="enter($event)" >
+          <md-autocomplete flex="" required="" md-input-name="autocompleteField" md-no-cache="$root.noCache"
+           md-selected-item="$root.selectedItem1" md-search-text="ctrl.searchText" 
+           md-items="item in ctrl.querySearch(ctrl.searchText,$event)" md-item-text="item.display" 
+           md-floating-label="Customer" md-autofocus="true"
+           md-selected-item-change="selectedItemChange(item.display)" 
+           ng-keyup="keyPressAutoComplete($event)" >
                         <md-item-template>
                             <span  md-highlight-text="ctrl.searchText"  md-highlight-flags="^i">{{item.display}}</span>
                         </md-item-template>
-                    </md-autocomplete>
+          </md-autocomplete>
          
             
         </div>
@@ -116,7 +121,8 @@
             
           <div flex style="margin-top:19px;">
              
-            <md-datepicker ng-model="payment.date" date-disabled="disabled(payment.date, mode)" md-placeholder="Enter date"></md-datepicker>
+            <md-datepicker ng-model="payment.date" date-disabled="disabled(payment.date, mode)" md-placeholder="Enter date"
+             md-min-date="minDate" md-max-date="maxDate" ></md-datepicker>
               
           </div>
             
@@ -143,8 +149,7 @@
             <label>Payment method</label>
             <md-select  ng-model="payment.paymentMethod" flex>
               <md-optgroup label="Payment Method">
-              <md-option value="Cash">Cash</md-option>
-              <md-option value="Cheque">Cheque</md-option>
+              <md-option ng-repeat="item in PayArr" value="{{item}}">{{item}}</md-option>
             </md-select>
                 
           </md-input-container>
@@ -341,7 +346,7 @@
                             <md-menu-content>
                                 
                                  <md-menu-item>
-                                    <md-button href ng-click="history()">
+                                    <md-button href ng-click="history(invo)">
                                      <p>View History</p>
                                      <md-icon md-menu-align-target></md-icon>
                                     </md-button>

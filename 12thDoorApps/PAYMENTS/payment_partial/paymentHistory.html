@@ -3,7 +3,7 @@
             <div class="md-toolbar-tools">
                 <h2>Payment History</h2>
                 <span flex></span>
-                <md-button href class="md-icon-button" ng-click="cancel()">
+                <md-button href class="md-icon-button" ng-click="close()">
                     <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
                 </md-button>
             </div>
@@ -21,15 +21,15 @@
             <div layout="row" layout-sm="column" style="height:40px; margin-top:35px;width:101%;font-size:12px;">
             <div flex>
                 <label><b>Invoice No:</b></label>
-                <span> Invo-0001</span>
+                <span> {{historyDetails.invono}}</span>
             </div>
             <div flex>
                 <label><b>Date:</b></label>
-                 <span> sep 3,2015</span>
+                 <span> {{historyDetails.sdate | date }}</span>
             </div>
             <div flex>
                 <label><b>Amount:</b></label>
-                <span> USD 500$</span>
+                <span> {{historyDetails.famount | currency }}</span>
             </div>
             </div>
          
@@ -87,27 +87,33 @@
            <div style="padding-left:40px;" flex>
           
                <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column"                                       style="background-color:#ffffff; margin-top:12px;height:40px;">
-                                                         
-                            <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;width:101%;font-size:12px;">
+                          <div layout="column" layout-sm="column" style="height:20px; margin-top:10px;width:101%;font-size:12px;" ng-repeat="item in invoiceHistory">                              
+                            <div layout="row" layout-sm="column" >
                                 <div flex style="margin-left:0%;" >
-                                   <label>sep 3,2015</label>
+                                   <label>{{item.date | date}}</label>
                                 </div>
 
                                 <div flex>
-                                    <label>P-0001</label>
+                                    <label>{{item.payNo}}</label>
                                 </div>
 
                                 <div flex >
-                                    <label>USD 500</label> 
+                                    <label>{{item.paidAmount}}</label> 
                                 </div>     
                                 
                                 <div flex>
-                                    <label>cash</label> 
+                                    <label>{{item.payMethod}}</label> 
                                 </div>
 
                                
                                        
-                            </div>   
+                            </div> 
+                            <div layout="row" layout-sm="column"  style="margin-top:10px;" >
+                                    <label><b>comment:</b></label>
+                                   <span>{{item.comments}}</span>
+                                </div>
+                                
+                          </div>  
                      
                      </md-whiteframe>  
         </div>
@@ -130,10 +136,7 @@
                <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column"                                       style="background-color:#ffffff; margin-top:12px;height:40px;">
                                                          
                             <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;width:101%;font-size:12px;">
-                                <div flex style="margin-left:0%;" >
-                                    <label><b>comment:</b></label>
-                                   <span>this is a comment.</span>
-                                </div>
+                             
 
 
 

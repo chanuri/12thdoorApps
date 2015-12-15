@@ -505,6 +505,7 @@ $scope.addcusfieldsInvoice= function(ev) {
 		templateUrl: 'setting_partials/addcusfieldsInvoice.html',
 		parent: angular.element(document.body),
 		targetEvent: ev,
+		locals:{dataToPass: $rootScope.Settings12thdoor.preference.invoicepref.CusFiel},
 		clickOutsideToClose:true
 	})
 	.then(function(answer) {
@@ -1749,7 +1750,11 @@ function DialogEditprofilecusfieldsController($scope, $mdDialog, $objectstore, $
 	};
 };
 
-function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope, dataToPass) {
+	$scope.invoiceCusfields=dataToPass;
+	console.log($scope.invoiceCusfields);
+	console.log(dataToPass);
+	
 	//Start toast ctrl
 	$scope.toastPosition = {
 		bottom: true,
@@ -1764,14 +1769,13 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 		.filter(function(pos) { return $scope.toastPosition[pos]; })
 		.join(' ');
 	};
-	
-	$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
+
 	$scope.submit = function() {
-		var number = Math.random();
-		console.log(Math.random());
+		//var number = Math.random();
+		//console.log(Math.random());
 		
-		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
-			id:number,
+		$scope.invoiceCusfields.push({
+		//	id:number,
 			name:$scope.name
 		})
 		

@@ -1764,25 +1764,17 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 		.filter(function(pos) { return $scope.toastPosition[pos]; })
 		.join(' ');
 	};
-
-	$scope.test = {
-		"preference" : {
-			"invoicepref" : {
-				"name" : "ashjgs",
-				"CusFiel" : []
-			}
-		}
-	}
 	
+
 	$scope.submit = function() {
-		
+	$rootScope.Settings12thdoor.preference.invoicepref.asus = [];	
 		// var number = Math.random();
 		// console.log(Math.random());
 		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
 		// 	// id:number,
 		// 	name:$scope.name
 		// })
-		$scope.test.preference.invoicepref.CusFiel.push({
+		$rootScope.Settings12thdoor.preference.invoicepref.asus.push({
 			// id:number,
 			name:$scope.name
 		})

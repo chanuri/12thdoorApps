@@ -1780,7 +1780,7 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 		})
 		
 		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);
+		console.log($scope.invoiceCusfields);
 	};
 
 	$scope.hide = function() {

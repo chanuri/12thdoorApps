@@ -1788,6 +1788,8 @@ function DialogEditprofilecusfieldsController($scope, $mdDialog, $objectstore, $
 
 function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope, dataToPass) {
 	$scope.invoiceCusfields=dataToPass;
+	if (!$scope.invoiceCusfields)
+		$scope.invoiceCusfields = [];
 	console.log($scope.invoiceCusfields);
 	console.log(dataToPass);
 	

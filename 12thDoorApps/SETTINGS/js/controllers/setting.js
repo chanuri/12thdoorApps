@@ -1790,21 +1790,6 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 	if (!$rootScope.Settings12thdoor.preference.invoicepref.CusFiel)
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
 
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
-
 	$scope.submit = function() {
 		//var number = Math.random();
 		//console.log(Math.random());
@@ -1815,7 +1800,7 @@ function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, 
 		})
 		
 		$mdDialog.hide();
-		console.log($scope.invoiceCusfields);
+		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);
 	};
 
 	$scope.hide = function() {

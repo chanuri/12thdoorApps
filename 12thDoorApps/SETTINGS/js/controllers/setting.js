@@ -1785,7 +1785,7 @@ function DialogEditprofilecusfieldsController($scope, $mdDialog, $objectstore, $
 	};
 };
 
-function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope, dataToPass) {
+function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 
 	if (!$rootScope.Settings12thdoor.preference.invoicepref.CusFiel)
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];

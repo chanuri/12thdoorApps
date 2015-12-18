@@ -121,7 +121,6 @@ angular
 				addstockcancelOrdeleteinvoiceincluCreditnote:true,
 				includeaccountstatementwithinvoice:true,
 				CusFiel:new Array(),
-
 				CheckedOfflinePayments:false
 
 			},
@@ -747,7 +746,6 @@ $scope.addexpensecategory= function(ev) {
 		clickOutsideToClose:true
 	})
 	.then(function(answer) {
-		
 		if(answer == true){
 			loadexpensecate();
 		}
@@ -755,6 +753,7 @@ $scope.addexpensecategory= function(ev) {
 	}, function() {
 		$scope.status = 'You cancelled the dialog.';
 	});
+	
 };
 
 $scope.deleteexpensecategory = function(expensecategory, index){  
@@ -2009,24 +2008,11 @@ function DialogPrefPaycustomerMethodController($scope, $mdDialog, $objectstore, 
 
 };
 
-function DialogEditprefpaymentmethodController($scope, $mdDialog, $objectstore, $mdToast,$rootScope,paymentmethodedit ) {
+function DialogEditprefpaymentmethodController($scope, $mdDialog, $objectstore, $mdToast, $rootScope, paymentmethodedit ) {
 
 	$scope.Settings12thdoor=angular.copy(paymentmethodedit);
 	console.log($scope.Settings12thdoor);
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
 
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
 
 	$scope.submit = function(obj) {
 		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.splice($scope.Settings12thdoor,1);
@@ -2045,19 +2031,18 @@ function DialogEditprefpaymentmethodController($scope, $mdDialog, $objectstore, 
 };
 
 function DialogPrefexpensecateController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+	
+	console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
 	if(!$rootScope.Settings12thdoor.preference.expensepref.expensecategories)
-		$rootScope.Settings12thdoor.preference.expensepref.expensecategories=[];
+		$rootScope.Settings12thdoor.preference.expensepref.expensecategories = [];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.push({
 			category:$scope.category,
 			activate:true
-
 		})
-
 		$mdDialog.hide();
 		console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
-
 	};
 
 	$scope.hide = function() {
@@ -2074,20 +2059,6 @@ function DialogEditprefExpensecategoryController($scope, $mdDialog, $objectstore
 
 	$scope.Settings12thdoor=angular.copy(expensecategoryedit);
 	console.log($scope.Settings12thdoor);
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
 
 	$scope.submit = function(obj) {
 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.splice($scope.Settings12thdoor,1);

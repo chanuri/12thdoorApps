@@ -381,7 +381,6 @@ angular
 			templateUrl: 'setting_partials/customdetailsforonetabedit.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
-			locals: { CusFieldsProfileedit: CusFieldsProfileedit },
 			clickOutsideToClose:true
 		})
 		.then(function(answer) {
@@ -1745,19 +1744,22 @@ function DialogEditprofilecusfieldsController($scope, $mdDialog, $objectstore, $
 	};
 };
 
-function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope, dataToPass) {
+function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 
+        if (!$rootScope.Settings12thdoor.preference.invoicepref.CusFiel)
+		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
 
 	$scope.submit = function() {
-		// var number = Math.random();
-		// console.log(Math.random());
-		$scope.invoiceCusfields.push({
-			// id:number,
+		//var number = Math.random();
+		//console.log(Math.random());
+		
+		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
+		//	id:number,
 			name:$scope.name
 		})
+		
 		$mdDialog.hide();
-		console.log($scope.invoiceCusfields);
-
+		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);
 	};
 
 	$scope.hide = function() {

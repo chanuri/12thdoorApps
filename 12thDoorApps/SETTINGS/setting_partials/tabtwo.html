@@ -26,26 +26,15 @@
 </div>
 
 <div class="lock-size" layout="row">
-	<div id="add" class="fab_button_animation" style="background:#2980b9;"></div>
-	<div id="viewDrafts" class="fab_button_animation" style="background:#f1c40f;"></div>
-
 	<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
-	ng-class="demo.selectedMode">
-	<!-- 20px -->
+	ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
 	<md-fab-trigger>
 	<md-button aria-label="menu" class="md-fab " style="background-color:#db4437;" ng-click="submit()">
-	<md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+	<md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;"></md-icon>
 </md-button>
 </md-fab-trigger>
-<md-fab-actions >
-            <!--div style="padding:5px;">
-                <md-button aria-label="twitter" class="md-fab md-raised md-mini" ng-click="add()" style="background-color:#2980b9; ">
-                    <md-icon md-svg-src="img/ic_note_add_24px.svg" ></md-icon>
-                    <md-tooltip md-direction="left">New Invoice</md-tooltip>
-                </md-button>
-            </div-->
-
-        </md-fab-actions>
-    </md-fab-speed-dial>
+<md-fab-actions>
+</md-fab-actions>
+</md-fab-speed-dial>
 </div>
 

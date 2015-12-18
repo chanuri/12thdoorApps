@@ -740,7 +740,7 @@ function loadexpensecate(){
 $scope.addexpensecategory= function(ev) {
 	$mdDialog.show({
 		controller: DialogPrefexpensecateController,
-		templateUrl: 'setting_partials/ExpenseCategories.html',
+		templateUrl: 'setting_partials/expenseCategoriess.html',
 		parent: angular.element(document.body),
 		targetEvent: ev,
 		clickOutsideToClose:true
@@ -2032,15 +2032,15 @@ function DialogEditprefpaymentmethodController($scope, $mdDialog, $objectstore, 
 
 function DialogPrefexpensecateController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 	
-	console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
 	if(!$rootScope.Settings12thdoor.preference.expensepref.expensecategories)
 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories = [];
+		console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.push({
 			category:$scope.category,
 			activate:true
-		})
+		});
 		$mdDialog.hide();
 		console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
 	};

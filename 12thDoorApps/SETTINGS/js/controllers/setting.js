@@ -92,12 +92,12 @@ angular
 
 		profile : {
 			CusFiel:[],
-			
+
 		},
 
-		"preference" : 
+		preference : 
 		{
-			"invoicepref":
+			invoicepref:
 			{
 				prefix:"",
 				editInvoice:false,
@@ -120,11 +120,12 @@ angular
 				emailcustomeruponsavinginvoice:false,
 				addstockcancelOrdeleteinvoiceincluCreditnote:true,
 				includeaccountstatementwithinvoice:true,
-				"CusFiel":new Array(),
+				CusFiel:new Array(),
+
 				CheckedOfflinePayments:false
 
 			},
-			"estimatepref":
+			estimatepref:
 			{
 				editestimate:false,
 				deleteestimate:false,
@@ -136,7 +137,7 @@ angular
 				includeproductbrochurescustomeremail:true,
 				allowPartialPayments:true,
 				enableDisscounts:true,
-				"CusFiel":[]
+				CusFiel:[]
 			},
 			creditNotepref:
 			{
@@ -275,43 +276,7 @@ angular
 	};
 
 
-	console.log($rootScope.Settings12thdoor);
-	
-	
-	$scope.submit = function() {
-		console.log($rootScope.Settings12thdoor);	
-		var client = $objectstore.getClient("Settings12thdoor");
-		client.onComplete(function(data) {
-				//$rootScope.Settings12thdoor=data;
-				console.log(data);
-				$mdDialog.show(
-					$mdDialog.alert()
-					.parent(angular.element(document.body))
-					.content('Successfully Saved.')
-					.ariaLabel('Alert Dialog Demo')
-					.ok('OK')
-					.targetEvent(data)
-					);
-			});
-
-		client.onError(function(data) {
-			$mdDialog.show(
-				$mdDialog.alert()
-				.parent(angular.element(document.body))
-				.content('There was an error saving the data.')
-				.ariaLabel('Alert Dialog Demo')
-				.ok('OK')
-				.targetEvent(data)
-				);
-
-		});
-
-		$rootScope.Settings12thdoor.uniqueRecord = "35";
-		client.insert($rootScope.Settings12thdoor, {
-			KeyProperty: "uniqueRecord"
-		});
-
-	}
+	console.log($rootScope.Settings12thdoor);	
 
 	var client = $objectstore.getClient("Settings12thdoor");
 
@@ -319,6 +284,7 @@ angular
 		if (data) {
 			$rootScope.Settings12thdoor=data[0];
 			console.log($rootScope.Settings12thdoor);
+			
 		}
 
 	});
@@ -544,7 +510,6 @@ $scope.addcusfieldsInvoice= function(ev) {
 		clickOutsideToClose:true
 	})
 	.then(function(answer) {
-		
 		if(answer == true){
 			loadcusFieldsinvoice();
 		}
@@ -1720,13 +1685,8 @@ function DialogprofilechangeUrlController($scope, $mdDialog, $objectstore, $mdTo
 }
 
 function DialogprofileController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	}
+	if(!$rootScope.Settings12thdoor.profile.CusFiel)
+		$rootScope.Settings12thdoor.profile.CusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.profile.CusFiel.push({
@@ -1785,22 +1745,19 @@ function DialogEditprofilecusfieldsController($scope, $mdDialog, $objectstore, $
 	};
 };
 
-function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+function DialogPrefInvoiceController($scope, $mdDialog, $objectstore, $mdToast, $rootScope, dataToPass) {
 
-	if (!$rootScope.Settings12thdoor.preference.invoicepref.CusFiel)
-		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
 
 	$scope.submit = function() {
-		//var number = Math.random();
-		//console.log(Math.random());
-		
-		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
-		//	id:number,
+		// var number = Math.random();
+		// console.log(Math.random());
+		$scope.invoiceCusfields.push({
+			// id:number,
 			name:$scope.name
 		})
-		
 		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);
+		console.log($scope.invoiceCusfields);
+
 	};
 
 	$scope.hide = function() {
@@ -1911,43 +1868,30 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $objectstor
  };
 
  function DialogPrefEstiController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
+ 	if(!$rootScope.Settings12thdoor.preference.estimatepref.CusFiel)
+ 		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel=[];
 
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
-	
-	$rootScope.Settings12thdoor.preference.estimatepref.CusFiel = [];
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.push({
-			name:$scope.ename
-		})
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.estimatepref.CusFiel);
-	};
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.push({
+ 			name:$scope.ename
+ 		})
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.estimatepref.CusFiel);
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-function DialogEditprefEstimatecusfieldsController($scope, $mdDialog, $objectstore, $mdToast,$rootScope, CusFieldsestimateedit) {
+ function DialogEditprefEstimatecusfieldsController($scope, $mdDialog, $objectstore, $mdToast,$rootScope, CusFieldsestimateedit) {
 
-	$scope.Settings12thdoor=angular.copy(CusFieldsestimateedit);
-	console.log($scope.Settings12thdoor);
+ 	$scope.Settings12thdoor=angular.copy(CusFieldsestimateedit);
+ 	console.log($scope.Settings12thdoor);
 	//Start toast ctrl
 	$scope.toastPosition = {
 		bottom: true,
@@ -1981,20 +1925,8 @@ function DialogEditprefEstimatecusfieldsController($scope, $mdDialog, $objectsto
 
 function DialogPrefPayController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if (!$rootScope.Settings12thdoor.preference.paymentpref.CusFiel)
+		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel = [];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.push({
@@ -2051,12 +1983,8 @@ function DialogEditprefpaymentcusfieldsController($scope, $mdDialog, $objectstor
 
 function DialogPrefPaycustomerMethodController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 	
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod)
+		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.push({
@@ -2115,21 +2043,8 @@ function DialogEditprefpaymentmethodController($scope, $mdDialog, $objectstore, 
 };
 
 function DialogPrefexpensecateController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.expensepref.expensecategories)
+		$rootScope.Settings12thdoor.preference.expensepref.expensecategories=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.push({
@@ -2189,21 +2104,8 @@ function DialogEditprefExpensecategoryController($scope, $mdDialog, $objectstore
 };
 
 function DialogPrefcusfieldsExpenseController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.expensepref.CusFiel)
+		$rootScope.Settings12thdoor.preference.expensepref.CusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.push({
@@ -2262,6 +2164,8 @@ function DialogEditprefExpensecusfieldsController($scope, $mdDialog, $objectstor
 };
 
 function DialogUnitsOfMeasureProductController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+	if(!$rootScope.Settings12thdoor.preference.productpref.units)
+		$rootScope.Settings12thdoor.preference.productpref.units=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.productpref.units.push({
@@ -2307,6 +2211,9 @@ function DialogEditprefunitsOfMeasureController($scope, $mdDialog, $objectstore,
 };
 
 function DialogProductbrandProductController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+
+	if(!$rootScope.Settings12thdoor.preference.productpref.Productbrands)
+		$rootScope.Settings12thdoor.preference.productpref.Productbrands=[];
 	
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.productpref.Productbrands.push({
@@ -2364,20 +2271,8 @@ function DialogEditprefProductBrandController($scope, $mdDialog, $objectstore, $
 	};
 };
 function DialogProductcategoryProductController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.productpref.Productcategories)
+		$rootScope.Settings12thdoor.preference.productpref.Productcategories=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.productpref.Productcategories.push({
@@ -2436,20 +2331,8 @@ function DialogEditprefProductcateController($scope, $mdDialog, $objectstore, $m
 };
 
 function DialogPrefcusfieldsProductController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.productpref.CusFiel)
+		$rootScope.Settings12thdoor.preference.productpref.CusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.productpref.CusFiel.push({
@@ -2508,20 +2391,8 @@ function DialogEditprefProductcusfieldsController($scope, $mdDialog, $objectstor
 };
 
 function DialogPrefReceiptcusfieldsInventoryController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel)
+		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.push({
@@ -2579,20 +2450,8 @@ function DialogEditprefReciptcusfieldsController($scope, $mdDialog, $objectstore
 };
 
 function DialogPrefIssuecusfieldsInventoryController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel)
+		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.push({
@@ -2651,20 +2510,8 @@ function DialogEditprefIssuecusfieldsController($scope, $mdDialog, $objectstore,
 
 function DialogPrefsuppliercusfieldsContactController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel)
+		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.push({
@@ -2723,20 +2570,8 @@ function DialogEditprefContactsuppliercusfieldsController($scope, $mdDialog, $ob
 
 function DialogPrefcustomercusfieldsContactController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel)
+		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.push({
@@ -2762,20 +2597,7 @@ function DialogEditprefContactcustomercusfieldsController($scope, $mdDialog, $ob
 
 	$scope.Settings12thdoor=angular.copy(customercusFieldcontactedit);
 	console.log($scope.Settings12thdoor);
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	
 
 	$scope.submit = function(obj) {
 		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.splice($scope.Settings12thdoor,1);
@@ -2795,20 +2617,8 @@ function DialogEditprefContactcustomercusfieldsController($scope, $mdDialog, $ob
 
 function DialogPreftaskProjectController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
 
-	//Start toast ctrl
-	$scope.toastPosition = {
-		bottom: true,
-		top: false,
-		left: false,
-		right: true
-	};
-
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
+	if(!$rootScope.Settings12thdoor.preference.project.task)
+		$rootScope.Settings12thdoor.preference.project.task=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.preference.project.task.push({
@@ -2879,6 +2689,8 @@ function DialogusersController($scope, $mdDialog, $objectstore, $mdToast, $rootS
 };
 
 function DialogrolesController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+	if(!$rootScope.Settings12thdoor.users.roles)
+		$rootScope.Settings12thdoor.users.roles=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.users.roles.push({
@@ -2905,6 +2717,9 @@ function DialogrolesController($scope, $mdDialog, $objectstore, $mdToast, $rootS
 };
 
 function DialogindividualtaxController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+
+	if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
+		$rootScope.Settings12thdoor.taxes.individualtaxes=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.taxes.individualtaxes.push({
@@ -2977,6 +2792,9 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog, $objectstore,
 
 
 function DialogmultipletaxgroupController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+
+	if(!$rootScope.Settings12thdoor.taxes.multipletaxgroup)
+		$rootScope.Settings12thdoor.taxes.multipletaxgroup=[];
 
 	$rootScope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
 	console.log($rootScope.individualtaxes);
@@ -3079,8 +2897,8 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog, $objectstore
 };
 
 function DialogProfileUploadImageController($scope, $mdDialog, $objectstore, $mdToast,$rootScope, UploaderService) {
-
 	
+	$rootScope.Settings12thdoor.profile.name=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.profile.name = UploaderService.loadBasicArray();

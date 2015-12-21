@@ -319,18 +319,16 @@ angular
 	};
 	console.log($rootScope.Settings12thdoor);	
 	
-	// var client = $objectstore.getClient("Settings12thdoor");
-
-	// client.onGetMany(function(data) {
-	// 	if (data) {
-	// 		$rootScope.Settings12thdoor=data[0];
-	// 		console.log($rootScope.Settings12thdoor);
+	var client = $objectstore.getClient("Settings12thdoor");
+	
+	client.onGetMany(function(data) {
+		if (data) {
+			$rootScope.Settings12thdoor=data[0];
+			console.log($rootScope.Settings12thdoor);
 			
-	// 	}
-	// });
-	// client.getByFiltering("*");
-
-
+		}
+	});
+	client.getByFiltering("*");
 
 })
 

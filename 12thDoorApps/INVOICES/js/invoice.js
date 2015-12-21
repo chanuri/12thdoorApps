@@ -93,7 +93,7 @@ angular
       $scope.showEditCustomer = false;
       $scope.dueDtaesShow = false;
        // $scope.displayshipaddress = true;
-      $scope.totalSection = false;
+       $scope.totalSection = false;
       $scope.ShippingSwitch = false;
       $scope.TDinvoice.fdiscount = 0;
       $scope.TDinvoice.salesTax = 0;
@@ -386,7 +386,7 @@ angular
           $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
           $rootScope.discount = angular.copy($scope.dis);
           $rootScope.DisplayTaxes =  angular.copy($scope.ShowTaxes);
-           console.log($rootScope.taxType);
+          // console.log($rootScope.taxType);
             
          $mdDialog.show({
             templateUrl: 'Invoicepartials/addproduct.html',
@@ -454,10 +454,7 @@ angular
                         $scope.prod.Productname = $scope.promoItems[i].productName;
                          $scope.prod.costprice = $scope.promoItems[i].price;
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
-
-                         if($scope.promoItems[i].tax == $rootScope.taxType.taxname){
-                          $scope.prod.producttax = $scope.promoItems[i].tax;
-                         }
+                            $scope.prod.producttax = $scope.promoItems[i].tax;                       
                          
 
                          console.log($scope.promoItems[i].tax);
@@ -486,7 +483,7 @@ angular
                             $scope.prod.ProductCodeID = 1;
                           }
 
-                          console.log($scope.prod.ProductCode);
+                         // console.log($scope.prod.ProductCode);
                        }
 
                        $scope.GetMaxNumber = function(obj,name,MaxID){
@@ -1107,11 +1104,14 @@ angular
       $scope.CalculateTax = function() {
          $scope.salesTax = 0;
          angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
+          if(tdIinvoice.tax.type == "individualtaxes"){
             $scope.salesTax += parseInt($scope.total*tdIinvoice.tax.rate/100);
-            // $scope.salesTax += parseInt($scope.total*tdIinvoice.tax.individualtaxes/100);
+          }else{
+             $scope.salesTax += parseInt($scope.total*tdIinvoice.tax.individualtaxes/100);
+          }
          })
          return $scope.salesTax;
-         console.log($scope.salesTax)
+         // console.log($scope.salesTax)
       }
       $scope.CalculateOtherTax = function() {
          $scope.otherTax = 0;

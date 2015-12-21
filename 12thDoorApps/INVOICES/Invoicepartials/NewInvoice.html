@@ -186,9 +186,9 @@
                                                                 <md-tooltip>Discount</md-tooltip>
                                                             </span>
                                                         </div>
-                                                        <div flex="40" >
-                                                            <span style="color:#808080;">{{item.tax.taxname}}
-                                                            <span style="color:#808080;" ng-if="item.type == individualtaxes">({{item.tax.rate}})%</span>
+                                                        <div flex="35" >
+                                                            <span style="color:#808080;">{{item.tax.taxname}}({{item.tax.rate}}%)
+                                                            
                                                              <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">{{tt}}</span>
                                                                 <md-tooltip>Tax</md-tooltip>
                                                             </span>

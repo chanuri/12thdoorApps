@@ -93,7 +93,7 @@ angular
       $scope.showEditCustomer = false;
       $scope.dueDtaesShow = false;
        // $scope.displayshipaddress = true;
-       $scope.totalSection = false;
+      $scope.totalSection = false;
       $scope.ShippingSwitch = false;
       $scope.TDinvoice.fdiscount = 0;
       $scope.TDinvoice.salesTax = 0;

@@ -151,7 +151,7 @@ angular
 				editpayments:false,
 				deletepayments:false,
 				CusFiel:[],
-				PaymentMethod:[]
+				PaymentMethod:[{paymentmethod:"Cash"},{paymentmethod:"Cheque"},{paymentmethod:"TT"},{paymentmethod:"Bank Transfer"},{paymentmethod:"Bank Draft"}]
 
 			},
 			expensepref:
@@ -159,13 +159,13 @@ angular
 				editExpense:false,
 				deleteExpense:false,
 				CusFiel:[],
-				expensecategories:[],
+				expensecategories:[{category:"Advertising"},{category:"Petrol"},{category:"Fuel"}],
 				billingexpensesincludetax:true
 			},
 			productpref:
 			{
-				units:[],
-				CusFiel:[{name:"Shehana"},{name:"Sachila"}],
+				units:[{activate:true, unitsOfMeasurement:"each"}],
+				CusFiel:[],
 				Productbrands:[],
 				Productcategories:[]
 			},
@@ -176,7 +176,7 @@ angular
 			},
 			contactpref:
 			{
-				supplierCusFiel:[{name:"Eranga"}],
+				supplierCusFiel:[],
 				customerCusFiel:[]
 			},
 			project:
@@ -199,8 +199,8 @@ angular
 				{
 					rolename : "admin",
 					permission : {
-						Add : false,
-						View: false
+						Add : true,
+						View: true
 					}
 				},
 				{
@@ -231,6 +231,7 @@ angular
 
 				]
 			}
+			
 
 			]
 		},
@@ -273,9 +274,18 @@ angular
 		}
 
 	};
-
-
 	console.log($rootScope.Settings12thdoor);	
+	
+	var client = $objectstore.getClient("Settings12thdoor");
+
+	client.onGetMany(function(data) {
+		if (data) {
+			$rootScope.Settings12thdoor=data[0];
+			console.log($rootScope.Settings12thdoor);
+			
+		}
+	});
+	client.getByFiltering("*");
 
 	
 

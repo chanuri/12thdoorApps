@@ -714,7 +714,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent(data)
             );
             $scope.newItems.push($scope.product);
-            window.location.href = window.location.protocol + "//" + window.location.host + "/12thdoor/expenses.html";
+            window.location.href = window.location.protocol + "//" + window.location.host + "/12thDoorApps/EXPENSES/EXPENSES.html";
 
           });
           client.onError(function (data) {

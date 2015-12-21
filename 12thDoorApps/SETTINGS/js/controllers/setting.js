@@ -100,8 +100,6 @@ angular
 			invoicepref:
 			{
 				prefix:"",
-				editInvoice:false,
-				deleteInvoice:false,
 				allowPartialPayments:true,
 				enableDisscounts:true,
 				enableTaxes:true,
@@ -120,14 +118,12 @@ angular
 				emailcustomeruponsavinginvoice:false,
 				addstockcancelOrdeleteinvoiceincluCreditnote:true,
 				includeaccountstatementwithinvoice:true,
-				CusFiel:new Array(),
+				CusFiel:[],
 				CheckedOfflinePayments:false
 
 			},
 			estimatepref:
 			{
-				editestimate:false,
-				deleteestimate:false,
 				displayshiptoaddressestimate:false,
 				sendpdfestimateAsattachment:true,
 				nofifyadminwhenviewedOraccepted:true,
@@ -142,24 +138,17 @@ angular
 			{
 				allowPartialPayments:true,
 				enableDisscounts:true,
-				editcreditNote:false,
-				deletecreditNote:false,
 				CusFiel:[]
 			},
 			paymentpref:
 			{
-				editpayments:false,
-				deletepayments:false,
 				CusFiel:[],
-				PaymentMethod:[{paymentmethod:"Cash"},{paymentmethod:"Cheque"},{paymentmethod:"TT"},{paymentmethod:"Bank Transfer"},{paymentmethod:"Bank Draft"}]
-
+				PaymentMethod:[{activate:true, paymentmethod:"Cash"},{activate:true, paymentmethod:"Cheque"},{activate:true, paymentmethod:"TT"},{activate:true, paymentmethod:"Bank Transfer"},{activate:true, paymentmethod:"Bank Draft"}]
 			},
 			expensepref:
 			{
-				editExpense:false,
-				deleteExpense:false,
 				CusFiel:[],
-				expensecategories:[{category:"Advertising"},{category:"Petrol"},{category:"Fuel"}],
+				expensecategories:[{activate:true, category:"Advertising"},{activate:true, category:"Petrol"},{activate:true, category:"Fuel"}],
 				billingexpensesincludetax:true
 			},
 			productpref:
@@ -181,8 +170,6 @@ angular
 			},
 			project:
 			{
-				edittimesheets:false,
-				deletetimesheets:false,
 				task:[]
 			}
 
@@ -199,15 +186,21 @@ angular
 				{
 					rolename : "admin",
 					permission : {
-						Add : true,
-						View: true
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
 					}
 				},
 				{
 					rolename : "divani",
 					permission : {
-						invoiceAdd : false,
-						invoiceView: true
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
 					}
 				}
 				]
@@ -217,20 +210,70 @@ angular
 				{
 					rolename : "admin",
 					permission : {
-						invoiceAdd : false,
-						invoiceView : false
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
 					}
 				},
 				{
 					rolename : "divani",
 					permission : {
-						invoiceAdd : false,
-						invoiceView : true
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
 					}
 				}
 
 				]
+			},{
+				appName : "Recurring",
+				appPermission : [
+				{
+					rolename : "admin",
+					permission : {
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					}
+				}
+				]
+			},{
+				appName : "CreditNotes",
+				appPermission : [
+				{
+					rolename : "admin",
+					permission : {
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					}
+				}
+				]
+			},{
+				appName : "Payments",
+				appPermission : [
+				{
+					rolename : "admin",
+					permission : {
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					}
+				}
+				]
 			}
+			
+
 			
 
 			]
@@ -276,18 +319,18 @@ angular
 	};
 	console.log($rootScope.Settings12thdoor);	
 	
-	var client = $objectstore.getClient("Settings12thdoor");
+	// var client = $objectstore.getClient("Settings12thdoor");
 
-	client.onGetMany(function(data) {
-		if (data) {
-			$rootScope.Settings12thdoor=data[0];
-			console.log($rootScope.Settings12thdoor);
+	// client.onGetMany(function(data) {
+	// 	if (data) {
+	// 		$rootScope.Settings12thdoor=data[0];
+	// 		console.log($rootScope.Settings12thdoor);
 			
-		}
-	});
-	client.getByFiltering("*");
+	// 	}
+	// });
+	// client.getByFiltering("*");
 
-	
+
 
 })
 
@@ -1731,7 +1774,7 @@ function DialogEditprofilecusfieldsController($scope, $mdDialog, $rootScope, Cus
 
 function DialogPrefInvoiceController($scope, $mdDialog, $rootScope) {
 
-        if (!$rootScope.Settings12thdoor.preference.invoicepref.CusFiel)
+	if (!$rootScope.Settings12thdoor.preference.invoicepref.CusFiel)
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
 
 	$scope.submit = function() {
@@ -1740,8 +1783,8 @@ function DialogPrefInvoiceController($scope, $mdDialog, $rootScope) {
 		
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
 		//	id:number,
-			name:$scope.name
-		})
+		name:$scope.name
+	})
 		
 		$mdDialog.hide();
 		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);
@@ -1880,695 +1923,695 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  	$scope.Settings12thdoor=angular.copy(CusFieldsestimateedit);
  	console.log($scope.Settings12thdoor);
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-function DialogPrefPayController($scope, $mdDialog, $rootScope) {
-
-	if (!$rootScope.Settings12thdoor.preference.paymentpref.CusFiel)
-		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel = [];
-
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.push({
-			name:$scope.pname
-		})
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.paymentpref.CusFiel);
-	};
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ function DialogPrefPayController($scope, $mdDialog, $rootScope) {
 
-};
-
-function DialogEditprefpaymentcusfieldsController($scope, $mdDialog,$rootScope,CusFieldspaymentedit ) {
+ 	if (!$rootScope.Settings12thdoor.preference.paymentpref.CusFiel)
+ 		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel = [];
 
-	$scope.Settings12thdoor=angular.copy(CusFieldspaymentedit);
-	console.log($scope.Settings12thdoor);
-
-
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
-
-function DialogPrefPaycustomerMethodController($scope, $mdDialog, $rootScope) {
-	
-	if(!$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod)
-		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod=[];
-
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.push({
-			paymentmethod:$scope.paymentmethod,
-			activate:true
-		})
-
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod);
-
-	};
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.push({
+ 			name:$scope.pname
+ 		})
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.paymentpref.CusFiel);
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-function DialogEditprefpaymentmethodController($scope, $mdDialog, $rootScope, paymentmethodedit ) {
+ };
 
-	$scope.Settings12thdoor=angular.copy(paymentmethodedit);
-	console.log($scope.Settings12thdoor);
+ function DialogEditprefpaymentcusfieldsController($scope, $mdDialog,$rootScope,CusFieldspaymentedit ) {
 
+ 	$scope.Settings12thdoor=angular.copy(CusFieldspaymentedit);
+ 	console.log($scope.Settings12thdoor);
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
-
-function DialogPrefexpensecateController($scope, $mdDialog, $rootScope) {
-	
-	if(!$rootScope.Settings12thdoor.preference.expensepref.expensecategories)
-		$rootScope.Settings12thdoor.preference.expensepref.expensecategories = [];
-		console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
-
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.push({
-			category:$scope.category,
-			activate:true
-		});
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
-	};
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-function DialogEditprefExpensecategoryController($scope, $mdDialog,$rootScope,expensecategoryedit ) {
+ function DialogPrefPaycustomerMethodController($scope, $mdDialog, $rootScope) {
 
-	$scope.Settings12thdoor=angular.copy(expensecategoryedit);
-	console.log($scope.Settings12thdoor);
-
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
-
-function DialogPrefcusfieldsExpenseController($scope, $mdDialog, $rootScope) {
-	if(!$rootScope.Settings12thdoor.preference.expensepref.CusFiel)
-		$rootScope.Settings12thdoor.preference.expensepref.CusFiel=[];
-
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.push({
-			name:$scope.expname,
-			value:$scope.expvalue
-		})
-
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.expensepref.CusFiel);
-
-	};
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	if(!$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod)
+ 		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod=[];
 
-};
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.push({
+ 			paymentmethod:$scope.paymentmethod,
+ 			activate:true
+ 		})
 
-function DialogEditprefExpensecusfieldsController($scope, $mdDialog,$rootScope,cusFieldsexpenseedit ) {
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod);
 
-	$scope.Settings12thdoor=angular.copy(cusFieldsexpenseedit);
-	console.log($scope.Settings12thdoor);
+ 	};
 
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ };
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
-
-function DialogUnitsOfMeasureProductController($scope, $mdDialog,  $rootScope) {
-	if(!$rootScope.Settings12thdoor.preference.productpref.units)
-		$rootScope.Settings12thdoor.preference.productpref.units=[];
-
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.productpref.units.push({
-			unitsOfMeasurement:$scope.unitsOfMeasurement,
-			activate:true
-		})
+ function DialogEditprefpaymentmethodController($scope, $mdDialog, $rootScope, paymentmethodedit ) {
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.productpref.units);
-
-	};
+ 	$scope.Settings12thdoor=angular.copy(paymentmethodedit);
+ 	console.log($scope.Settings12thdoor);
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-function DialogEditprefunitsOfMeasureController($scope, $mdDialog,$rootScope, unitsedit) {
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-	$scope.Settings12thdoor=angular.copy(unitsedit);
-	console.log($scope.Settings12thdoor);
-	
+ function DialogPrefexpensecateController($scope, $mdDialog, $rootScope) {
+
+ 	if(!$rootScope.Settings12thdoor.preference.expensepref.expensecategories)
+ 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories = [];
+ 	console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
+
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.push({
+ 			category:$scope.category,
+ 			activate:true
+ 		});
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.expensepref.expensecategories);
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.productpref.units.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.productpref.units.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ };
 
-function DialogProductbrandProductController($scope, $mdDialog, $rootScope) {
+ function DialogEditprefExpensecategoryController($scope, $mdDialog,$rootScope,expensecategoryedit ) {
 
-	if(!$rootScope.Settings12thdoor.preference.productpref.Productbrands)
-		$rootScope.Settings12thdoor.preference.productpref.Productbrands=[];
-	
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.productpref.Productbrands.push({
-			productbrand:$scope.productbrand,
-			activate:true
-		})
+ 	$scope.Settings12thdoor=angular.copy(expensecategoryedit);
+ 	console.log($scope.Settings12thdoor);
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.productpref.Productbrands);
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.expensepref.expensecategories.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ function DialogPrefcusfieldsExpenseController($scope, $mdDialog, $rootScope) {
+ 	if(!$rootScope.Settings12thdoor.preference.expensepref.CusFiel)
+ 		$rootScope.Settings12thdoor.preference.expensepref.CusFiel=[];
 
-};
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.push({
+ 			name:$scope.expname,
+ 			value:$scope.expvalue
+ 		})
 
-function DialogEditprefProductBrandController($scope, $mdDialog,$rootScope,productBrandedit ) {
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.expensepref.CusFiel);
 
-	$scope.Settings12thdoor=angular.copy(productBrandedit);
-	console.log($scope.Settings12thdoor);
+ 	};
 
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.productpref.Productbrands.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.productpref.Productbrands.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ };
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
-function DialogProductcategoryProductController($scope, $mdDialog,  $rootScope) {
-	if(!$rootScope.Settings12thdoor.preference.productpref.Productcategories)
-		$rootScope.Settings12thdoor.preference.productpref.Productcategories=[];
+ function DialogEditprefExpensecusfieldsController($scope, $mdDialog,$rootScope,cusFieldsexpenseedit ) {
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.productpref.Productcategories.push({
-			productcategory:$scope.productcategory,
-			activate:true
-		})
+ 	$scope.Settings12thdoor=angular.copy(cusFieldsexpenseedit);
+ 	console.log($scope.Settings12thdoor);
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.productpref.Productcategories);
 
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-};
+ function DialogUnitsOfMeasureProductController($scope, $mdDialog,  $rootScope) {
+ 	if(!$rootScope.Settings12thdoor.preference.productpref.units)
+ 		$rootScope.Settings12thdoor.preference.productpref.units=[];
 
-function DialogEditprefProductcateController($scope, $mdDialog, $rootScope,addProductcateedit ) {
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.productpref.units.push({
+ 			unitsOfMeasurement:$scope.unitsOfMeasurement,
+ 			activate:true
+ 		})
 
-	$scope.Settings12thdoor=angular.copy(addProductcateedit);
-	console.log($scope.Settings12thdoor);
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.productpref.units);
 
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.productpref.Productcategories.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.productpref.Productcategories.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ }
 
-function DialogPrefcusfieldsProductController($scope, $mdDialog, $rootScope) {
-	if(!$rootScope.Settings12thdoor.preference.productpref.CusFiel)
-		$rootScope.Settings12thdoor.preference.productpref.CusFiel=[];
+ function DialogEditprefunitsOfMeasureController($scope, $mdDialog,$rootScope, unitsedit) {
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.productpref.CusFiel.push({
-			name:$scope.prname,
-			value:$scope.prvalue
-		})
+ 	$scope.Settings12thdoor=angular.copy(unitsedit);
+ 	console.log($scope.Settings12thdoor);
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.productpref.CusFiel);
 
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.productpref.units.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.productpref.units.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-};
+ function DialogProductbrandProductController($scope, $mdDialog, $rootScope) {
 
-function DialogEditprefProductcusfieldsController($scope, $mdDialog, $rootScope,cusFieldproductedit ) {
+ 	if(!$rootScope.Settings12thdoor.preference.productpref.Productbrands)
+ 		$rootScope.Settings12thdoor.preference.productpref.Productbrands=[];
 
-	$scope.Settings12thdoor=angular.copy(cusFieldproductedit);
-	console.log($scope.Settings12thdoor);
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.productpref.Productbrands.push({
+ 			productbrand:$scope.productbrand,
+ 			activate:true
+ 		})
 
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.productpref.Productbrands);
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.productpref.CusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.productpref.CusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-function DialogPrefReceiptcusfieldsInventoryController($scope, $mdDialog, $rootScope) {
-	if(!$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel)
-		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel=[];
+ };
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.push({
-			name:$scope.inrname
-		})
+ function DialogEditprefProductBrandController($scope, $mdDialog,$rootScope,productBrandedit ) {
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel);
+ 	$scope.Settings12thdoor=angular.copy(productBrandedit);
+ 	console.log($scope.Settings12thdoor);
 
-	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.productpref.Productbrands.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.productpref.Productbrands.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
+ function DialogProductcategoryProductController($scope, $mdDialog,  $rootScope) {
+ 	if(!$rootScope.Settings12thdoor.preference.productpref.Productcategories)
+ 		$rootScope.Settings12thdoor.preference.productpref.Productcategories=[];
 
-function DialogEditprefReciptcusfieldsController($scope, $mdDialog, $rootScope,reciptcusFieldInventoryedit ) {
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.productpref.Productcategories.push({
+ 			productcategory:$scope.productcategory,
+ 			activate:true
+ 		})
 
-	$scope.Settings12thdoor=angular.copy(reciptcusFieldInventoryedit);
-	console.log($scope.Settings12thdoor);
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.productpref.Productcategories);
 
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ };
 
-function DialogPrefIssuecusfieldsInventoryController($scope, $mdDialog,  $rootScope) {
-	if(!$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel)
-		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel=[];
+ function DialogEditprefProductcateController($scope, $mdDialog, $rootScope,addProductcateedit ) {
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.push({
-			name:$scope.ininame
-		})
+ 	$scope.Settings12thdoor=angular.copy(addProductcateedit);
+ 	console.log($scope.Settings12thdoor);
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel);
 
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.productpref.Productcategories.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.productpref.Productcategories.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-};
+ function DialogPrefcusfieldsProductController($scope, $mdDialog, $rootScope) {
+ 	if(!$rootScope.Settings12thdoor.preference.productpref.CusFiel)
+ 		$rootScope.Settings12thdoor.preference.productpref.CusFiel=[];
 
-function DialogEditprefIssuecusfieldsController($scope, $mdDialog, $rootScope,issuecusFieldInventoryedit ) {
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.productpref.CusFiel.push({
+ 			name:$scope.prname,
+ 			value:$scope.prvalue
+ 		})
 
-	$scope.Settings12thdoor=angular.copy(issuecusFieldInventoryedit);
-	console.log($scope.Settings12thdoor);
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.productpref.CusFiel);
 
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ };
 
-function DialogPrefsuppliercusfieldsContactController($scope, $mdDialog, $rootScope) {
+ function DialogEditprefProductcusfieldsController($scope, $mdDialog, $rootScope,cusFieldproductedit ) {
 
-	if(!$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel)
-		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel=[];
+ 	$scope.Settings12thdoor=angular.copy(cusFieldproductedit);
+ 	console.log($scope.Settings12thdoor);
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.push({
-			name:$scope.cosupname
-		})
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel);
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.productpref.CusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.productpref.CusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ function DialogPrefReceiptcusfieldsInventoryController($scope, $mdDialog, $rootScope) {
+ 	if(!$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel)
+ 		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel=[];
 
-};
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.push({
+ 			name:$scope.inrname
+ 		})
 
-function DialogEditprefContactsuppliercusfieldsController($scope, $mdDialog,$rootScope,suppliercusFieldcontactedit ) {
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel);
 
-	$scope.Settings12thdoor=angular.copy(suppliercusFieldcontactedit);
-	console.log($scope.Settings12thdoor);
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ };
 
-function DialogPrefcustomercusfieldsContactController($scope, $mdDialog, $rootScope) {
+ function DialogEditprefReciptcusfieldsController($scope, $mdDialog, $rootScope,reciptcusFieldInventoryedit ) {
 
-	if(!$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel)
-		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel=[];
+ 	$scope.Settings12thdoor=angular.copy(reciptcusFieldInventoryedit);
+ 	console.log($scope.Settings12thdoor);
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.push({
-			name:$scope.cocustomername
-		})
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.contactpref.customerCusFiel);
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ function DialogPrefIssuecusfieldsInventoryController($scope, $mdDialog,  $rootScope) {
+ 	if(!$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel)
+ 		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel=[];
 
-};
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.push({
+ 			name:$scope.ininame
+ 		})
 
-function DialogEditprefContactcustomercusfieldsController($scope, $mdDialog, $rootScope,customercusFieldcontactedit ) {
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel);
 
-	$scope.Settings12thdoor=angular.copy(customercusFieldcontactedit);
-	console.log($scope.Settings12thdoor);
-	
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ };
 
-function DialogPreftaskProjectController($scope, $mdDialog, $rootScope) {
+ function DialogEditprefIssuecusfieldsController($scope, $mdDialog, $rootScope,issuecusFieldInventoryedit ) {
 
-	if(!$rootScope.Settings12thdoor.preference.project.task)
-		$rootScope.Settings12thdoor.preference.project.task=[];
+ 	$scope.Settings12thdoor=angular.copy(issuecusFieldInventoryedit);
+ 	console.log($scope.Settings12thdoor);
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.preference.project.task.push({
-			task:$scope.task,
-			rate:$scope.hourlyrate
-		})
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.preference.project.task);
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-	};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ function DialogPrefsuppliercusfieldsContactController($scope, $mdDialog, $rootScope) {
 
-};
+ 	if(!$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel)
+ 		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel=[];
 
-function DialogEditpreftaskProjectController($scope, $mdDialog, $rootScope,taskProjectedit) {
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.push({
+ 			name:$scope.cosupname
+ 		})
 
-	$scope.Settings12thdoor=angular.copy(taskProjectedit);
-	console.log($scope.Settings12thdoor);
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel);
 
+ 	};
 
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.preference.project.task.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.preference.project.task.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
+ };
 
-function DialogusersController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+ function DialogEditprefContactsuppliercusfieldsController($scope, $mdDialog,$rootScope,suppliercusFieldcontactedit ) {
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.Settings12thdoor=angular.copy(suppliercusFieldcontactedit);
+ 	console.log($scope.Settings12thdoor);
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
 
-};
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-function DialogrolesController($scope, $mdDialog, $rootScope) {
-	if(!$rootScope.Settings12thdoor.users.roles)
-		$rootScope.Settings12thdoor.users.roles=[];
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.users.roles.push({
-			roleName:$scope.roleName,
-			add:$scope.add,
-			view:$scope.view,
-			edit:$scope.edit,
-			cancel:$scope.cancel,
-			delete:$scope.delete,
-		});
+ function DialogPrefcustomercusfieldsContactController($scope, $mdDialog, $rootScope) {
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.users.roles);
-	};
+ 	if(!$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel)
+ 		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel=[];
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.push({
+ 			name:$scope.cocustomername
+ 		})
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.contactpref.customerCusFiel);
 
-};
+ 	};
 
-function DialogindividualtaxController($scope, $mdDialog,  $rootScope) {
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
 
-	if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
-		$rootScope.Settings12thdoor.taxes.individualtaxes=[];
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.taxes.individualtaxes.push({
-			taxname:$scope.taxname,
-			rate:$scope.rate,
-			activate:true,
-			compound:$scope.compound,
-			type:"individualtaxes"
-		})
+ };
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+ function DialogEditprefContactcustomercusfieldsController($scope, $mdDialog, $rootScope,customercusFieldcontactedit ) {
 
-	};
+ 	$scope.Settings12thdoor=angular.copy(customercusFieldcontactedit);
+ 	console.log($scope.Settings12thdoor);
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
+
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
+
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
+
+ function DialogPreftaskProjectController($scope, $mdDialog, $rootScope) {
+
+ 	if(!$rootScope.Settings12thdoor.preference.project.task)
+ 		$rootScope.Settings12thdoor.preference.project.task=[];
+
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.preference.project.task.push({
+ 			task:$scope.task,
+ 			rate:$scope.hourlyrate
+ 		})
+
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.preference.project.task);
+
+ 	};
+
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
+
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+
+ };
+
+ function DialogEditpreftaskProjectController($scope, $mdDialog, $rootScope,taskProjectedit) {
+
+ 	$scope.Settings12thdoor=angular.copy(taskProjectedit);
+ 	console.log($scope.Settings12thdoor);
+
+
+ 	$scope.submit = function(obj) {
+ 		$rootScope.Settings12thdoor.preference.project.task.splice($scope.Settings12thdoor,1);
+ 		$rootScope.Settings12thdoor.preference.project.task.push(obj);
+ 		console.log($scope.Settings12thdoor)
+ 		$mdDialog.hide();
+ 	}
+
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
+
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+ };
+
+ function DialogusersController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
+
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+
+ };
+
+ function DialogrolesController($scope, $mdDialog, $rootScope) {
+ 	if(!$rootScope.Settings12thdoor.users.roles)
+ 		$rootScope.Settings12thdoor.users.roles=[];
+
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.users.roles.push({
+ 			roleName:$scope.roleName,
+ 			add:$scope.add,
+ 			view:$scope.view,
+ 			edit:$scope.edit,
+ 			cancel:$scope.cancel,
+ 			delete:$scope.delete,
+ 		});
+
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.users.roles);
+ 	};
+
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
+
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+
+ };
+
+ function DialogindividualtaxController($scope, $mdDialog,  $rootScope) {
+
+ 	if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
+ 		$rootScope.Settings12thdoor.taxes.individualtaxes=[];
+
+ 	$scope.submit = function() {
+ 		$rootScope.Settings12thdoor.taxes.individualtaxes.push({
+ 			taxname:$scope.taxname,
+ 			rate:$scope.rate,
+ 			activate:true,
+ 			compound:$scope.compound,
+ 			type:"individualtaxes"
+ 		})
+
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+
+ 	};
+
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
+
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
 
 	//when selected compund checkbox
 	//$scope.whenSelectedCopund=false;

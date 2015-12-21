@@ -376,6 +376,7 @@
                 <span style="margin-left:31%;"><b>{{payment.total|currency}}</b></span>
             </div>
         <md-divider></md-divider>
+
             
         <div layout layout-sm="column" layout-margin>
             
@@ -398,6 +399,23 @@
           </div>
             
         </div>
+
+          <div layout layout-sm="column" layout-margin>
+          <div flex="5"> </div>
+            
+          <div flex="20" style="margin-top:35px;"></div>
+             <div style="margin-left:-5px; margin-top:-10px;" layout="column" class="chipsdemoBasicUsage" flex>
+                <md-content class="md-padding" layout="column">
+                    
+                   <md-chips ng-model="payCustArr" readonly="true" placeholder="Enter a tag" secondary-placeholder="+Tags">
+                      
+                      <md-chip-template>
+                         <strong>{{$chip}}</strong>
+                      </md-chip-template>
+                   </md-chips>
+                </md-content>
+             </div>
+          </div>
         <md-divider></md-divider>
          <div layout layout-sm="column" layout-margin>
                     

@@ -206,6 +206,21 @@
                   </md-content>
                </div>
             </div>
+            <div layout layout-sm="column" layout-margin>
+              <section-title></section-title>
+               <div style="margin-left:-5px; margin-top:-10px;" layout="column" class="chipsdemoBasicUsage" flex>
+                  <md-content class="md-padding" layout="column">
+                      
+                     <md-chips ng-model="custArr" readonly="true" placeholder="Enter a tag" secondary-placeholder="+Tags">
+                        
+                        <md-chip-template>
+                           <strong>{{$chip}}</strong>
+                        </md-chip-template>
+                     </md-chips>
+                  </md-content>
+               </div>
+            </div>
+            
             <div layout layout-sm="column"  layout-margin>
                
                <section-title> </section-title>

@@ -42,7 +42,7 @@
       <div class="card_container"  >
       <div class="ui-view-container">
          <!--START OF  COLLAPSE CARDS-->
-         <div  class="collapse-card" ng-repeat="product in products | filter:ctrl.searchText||undefined 
+         <div  class="collapse-card" ng-repeat="product in testProducts | filter:ctrl.searchText||undefined 
          | orderBy: [prodSearch,Latest] " ng-class="{ active: $active }">
             <!--START OF COLLAPSE CARD HEADING-->
             <div class="collapse-card__heading" layout="row" layout-align="start start"
@@ -330,12 +330,24 @@ WITH RESPONSIVE -->
                            </div>
                         </div>
                      </div>
+
+                       
+                   <!--      <hh-table heading="Additional" column-arr="testColumn" full-arr="testArr"></hh-table>
+                    -->  
+
                   </md-content>
                </form>
             </div>
             <!--END OF CARD BODY-->
          </div>
          <!--END OF COLLAPSE CARDS-->
+
+           <footer flex>
+           
+
+            <md-paging paging-gap="2" full-arr="products" paging-arr="testProducts"> </md-paging>
+                
+            </footer>
       </div>
       <!--START OF SECOND CARD CONTAINER-->
 

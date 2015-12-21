@@ -9,8 +9,8 @@ angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'u
             controller: 'AppCtrlAdd',
             templateUrl: 'payment_partial/payment_add.html'
         }).state('View_Payment', {
-            url: '/View_Payment',
-            controller: 'AppCtrlAdd',
+            url: '/View_Payment/payID=:paymentid',
+            controller: 'View_Payment',
             templateUrl: 'payment_partial/viewPaymentRec.html'
         })
     }).config(function($mdThemingProvider) {
@@ -67,14 +67,16 @@ angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'u
         var settingsClient = $objectstore.getClient("Settings12thdoor");
         settingsClient.onGetMany(function(data) {
             //console.log(data)
-            paymentMethod(data);
+            paymentMethod(data,function(){
+                paymentCustArr(data)
+            });
         });
         settingsClient.onError(function(data) {
             console.log("Error retreving the settings data");
         });
         settingsClient.getByFiltering("*");
         //get paymentMethod from the settings app 
-        function paymentMethod(obj) {
+        function paymentMethod(obj,callback) {
             $scope.PayArr = [];
             var payMethod = obj[0].preference.paymentpref.PaymentMethod;
             for (i = 0; i <= payMethod.length - 1; i++) {
@@ -82,7 +84,15 @@ angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'u
                     $scope.PayArr.push(payMethod[i].paymentmethod);
                 }
             }
+            callback();
             //console.log($scope.PayArr);
+        }
+        function paymentCustArr(arr){
+            $scope.payCustArr = [];
+            var fieldArr = arr[0].preference.paymentpref.CusFiel;
+            for(var l=0; l<= fieldArr.length -1; l++){
+                $scope.payCustArr.push(fieldArr[l].name);
+            }
         }
         // maxdate in the calander 
         $scope.maxDate = new Date();
@@ -339,13 +349,16 @@ angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'u
             var client = $objectstore.getClient("payment");
             var client1 = $objectstore.getClient("advancedPayment");
             client.onComplete(function(data) {
-                location.href = '#/View_Payment';
+                //location.href = '#/View_Payment';
+                console.log(data)
                 $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('Payment Added Successfully.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
                 if ($scope.payment.namount > 0) {
                     $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('Unapplied advances USD' + ' ' + $scope.payment.namount + ' ' + 'This amount can be applied on future invoices.').ariaLabel('').ok('OK').targetEvent(data));
                     $state.go($state.current, {}, {
                         reload: true
                     });
+                }else{
+                    $state.go('View_Payment',{'paymentid': data.Data.ID})
                 }
             });
             client.onError(function(data) {
@@ -525,6 +538,11 @@ angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'u
             balance: '50$',
             pamount: '50$'
         }];
+
+
+        $scope.openPayment = function(obj){
+            $state.go('View_Payment',{'paymentid': obj.paymentid})
+        }
         /*___________________________loadAllpayments______________________________________*/
         $scope.loadAllpayments = function() {
             var client = $objectstore.getClient("payment");
@@ -823,4 +841,20 @@ angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'u
                 return $rootScope.invoiceArray;
             }
         }
+    })
+
+
+    .controller('View_Payment',function($scope,$objectstore,$mdDialog,$stateParams){
+        console.log($stateParams.paymentid)
+        $scope.viewPyamentArr = [];
+        var client = $objectstore.getClient('payment');
+        client.onGetOne(function(data){
+            $scope.viewPyamentArr = [];
+            $scope.viewPyamentArr.push(data);
+
+        });
+        client.onError(function(data){
+            console.log("error loading payment data");
+        });
+        client.getByKey($stateParams.paymentid);
     })

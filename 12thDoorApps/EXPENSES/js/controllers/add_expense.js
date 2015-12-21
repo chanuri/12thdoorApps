@@ -4,21 +4,32 @@ rasm.controller('AppCtrl', function ($scope, $mdToast, $uploader, $rootScope, Up
 	var Settings  =  $objectstore.getClient("Settings12thdoor");
 	Settings.onGetMany(function(data){
 		console.log(data)
-		GetCategory(data);
+		GetCategory(data,function(){
+			getCustFiled(data);
+		});
 	});
 	Settings.onError(function(data){
 		console.log("error loading settings")
 	});
 	Settings.getByFiltering("*");
 
-	function GetCategory(arr){
+	function GetCategory(arr,callback){
 		$scope.CategoryArray = [];
 		var CatArr = arr[0].preference.expensepref.expensecategories;
 		for (var i = CatArr.length - 1; i >= 0; i--) {
-         if (CatArr[i].activate) {
-            $scope.CategoryArray.push(CatArr[i].category);
-         }
-      }
+        	if (CatArr[i].activate) {
+            	$scope.CategoryArray.push(CatArr[i].category);
+       		}
+      	}
+        callback();
+	}
+
+	function getCustFiled(arr){
+		$scope.custArr = [];
+		var fieldArr = arr[0].preference.expensepref.CusFiel;
+		for(var l=0; l<= fieldArr.length -1; l++){
+			$scope.custArr.push(fieldArr[l].name);
+		}
 	}
 
 

@@ -135,7 +135,6 @@ rasm.controller('viewctrl', function ($scope, $mdToast, $interval,$state, $Downl
     //end of fab button functions	
   $scope.expenses = [];
   //load all expenses function start
-  $scope.loadAllExpenses = function () {
     var client = $objectstore.getClient("expense12th");
     client.onGetMany(function (data) {
       if (data) {
@@ -145,16 +144,17 @@ rasm.controller('viewctrl', function ($scope, $mdToast, $interval,$state, $Downl
           data[i].expense_code = parseInt(data[i].expense_code);
         }
 
-        $scope.expenses = data;
-        console.log(data);
-
+        $scope.expenses = data;      
       }
     });
     client.onError(function (data) {
       $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('This is embarracing').content('There was an error retreving the data.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
     });
     client.getByFiltering("*");
-  };
+
+
+  $scope.testExpenses = [];
+  
   //load all expenses function end
   //table click function start
   $scope.tableclickfunc = function (obj) {

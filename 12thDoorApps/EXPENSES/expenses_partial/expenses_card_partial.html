@@ -39,7 +39,7 @@
           <div layout="row" layout-sm="column" layout-align="space-around">
                     <md-progress-circular id="loader" md-mode="indeterminate"></md-progress-circular>
                   </div>
-  <div  class="collapse-card"  ng-repeat="expense in expenses | filter:ctrl.searchText || undefined | orderBy: 
+  <div  class="collapse-card"  ng-repeat="expense in testExpenses | filter:ctrl.searchText || undefined | orderBy: 
   [prodSearch,Latest]" ng-class="{ active: $active }">
                <!--START OF COLLAPSE CARD HEADING-->
                <div class="collapse-card__heading" layout="row" layout-align="start start">
@@ -343,39 +343,28 @@
                <!--END OF CARD BODY-->
             </div>
             <!--END OF COLLAPSE CARDS-->
+            <footer flex>
+            <!--   <div style="display: inline-block;padding-left: 10px;padding-right: 10px;background-color: #FFFFFF;
+            margin-left:35%;">
+                 <md-button ng-click="previousPage()" style="height:30px;" aria-label="previous" href>
+                    <md-icon md-svg-icon="img/ic_keyboard_arrow_left_24px.svg" ></md-icon>
+                </md-button>
+                <md-button ng-click="splitDataFunc(item.startPage,item.endPage)" style="height:30px;" aria-label="next" ng-repeat="item in pageArr" href>
+                    {{item.pageNum}}
+                </md-button>
+               
+                 <md-button ng-click="nextPage()" style="height:30px;" aria-label="next" href>
+                    <md-icon md-svg-icon=" img/ic_keyboard_arrow_right_24px.svg" ></md-icon>
+                </md-button>
+            </div> -->
+
+            <md-paging paging-gap="6" full-arr="expenses" paging-arr="testExpenses"> </md-paging>
+                
+            </footer>
          </div>
         </div>
       </div>
-      <footer flex>
-      <div style="display: inline-block;padding-left: 10px;padding-right: 10px;background-color: #FFFFFF;
-      margin-left:35%;">
-           <!-- <p>Posted by: Hege Refsnes</p> -->
-            <md-button ng-click="previous()" style="height:30px;" aria-label="previous" href>
-              <md-icon md-svg-icon="img/ic_keyboard_arrow_left_24px.svg" ></md-icon>
-          </md-button>
-          <md-button ng-click="pageOne()" style="height:30px;" aria-label="next" href>
-              1
-          </md-button>
-          <md-button ng-click="pageTwo()" style="height:30px;" aria-label="next" href>
-              2
-          </md-button>
-          <md-button ng-click="pageThree()" style="height:30px;" aria-label="next" href>
-             3
-          </md-button>
-          <md-button ng-click="pageFour()" style="height:30px;" aria-label="next" href>
-              4
-          </md-button>
-          <md-button ng-click="pageFive()" style="height:30px;" aria-label="next" href>
-              5
-          </md-button>
-           <md-button ng-click="next()" style="height:30px;" aria-label="next" href>
-              <md-icon md-svg-icon=" /ic_keyboard_arrow_right_24px.svg" ></md-icon>
-          </md-button>
-        <!--    <img src="img/ic_keyboard_arrow_left_24px.svg">
-           <img src="img/ic_keyboard_arrow_right_24px.svg"> -->
-      </div>
-          
-      </footer>
+
       <!--END OF ALL CONTENT-->
       <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
          ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">

@@ -1,5 +1,22 @@
 rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
-   
+  
+
+    $scope.currentPage = 1;
+
+    $scope.testProducts = [];
+    //test 
+
+    $scope.testColumn = ['id','name','pcode','lname','company'];
+    $scope.testArr = [{
+      value:['12','samal','3221','rana','duo'],
+      addition:true
+    }]
+
+
+
+    //end test
+
+
     //  get the settings json object 
     var SettingsApp  = $objectstore.getClient("Settings12thdoor");
     SettingsApp.onGetMany(function(data){
@@ -561,6 +578,10 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     $scope.product = {};
 
     $scope.submit = function () {
+
+      $scope.product.producttax = {};
+      $scope.product.producttax = JSON.parse($scope.producttax);
+      console.log($scope.product.producttax);
 
       if ($scope.product.ProductCode.indexOf('-') === -1) {
         console.log("dash missing")

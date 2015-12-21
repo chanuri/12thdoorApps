@@ -165,7 +165,7 @@ angular
 			productpref:
 			{
 				units:[],
-				CusFiel:[],
+				CusFiel:[{name:"Shehana"},{name:"Sachila"}],
 				Productbrands:[],
 				Productcategories:[]
 			},
@@ -176,7 +176,7 @@ angular
 			},
 			contactpref:
 			{
-				supplierCusFiel:[],
+				supplierCusFiel:[{name:"Eranga"}],
 				customerCusFiel:[]
 			},
 			project:

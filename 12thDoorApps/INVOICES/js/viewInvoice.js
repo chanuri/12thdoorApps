@@ -156,11 +156,16 @@ $scope.cancelStatus = function(obj, ev) {
       };
       
       $scope.openOtherView = function(InvoItem){
-        $rootScope.invoiceArray.splice(InvoItem, 1);
-        invoiceDetails.setArray(InvoItem);
+       $rootScope.invoiceArray.splice(InvoItem, 1);
+       invoiceDetails.setArray(InvoItem);
        $scope.Address = InvoItem.billingAddress.split(',');
        $scope.street = $scope.Address[0];
        $scope.city = $scope.Address[1]+$scope.Address[3]+$scope.Address[2]+$scope.Address[4];
+
+       $scope.shippingAddress = InvoItem.shippingAddress.split(',');
+       $scope.ShippingStreet = $scope.shippingAddress[0];
+       $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+       $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
         $state.go('view', {'invoiceno': InvoItem.invoiceNo});
       }
       $scope.viewSavedProducts = function(obj) {
@@ -444,6 +449,11 @@ $scope.cancelStatus = function(obj, ev) {
                $scope.street = $scope.Address[0];
                $scope.city = $scope.Address[1]+$scope.Address[3];
                $scope.country = $scope.Address[2]+$scope.Address[4];
+
+               $scope.shippingAddress = data[0].shippingAddress.split(',');
+               $scope.ShippingStreet = $scope.shippingAddress[0];
+               $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+               $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
 
                
@@ -467,11 +477,8 @@ $scope.cancelStatus = function(obj, ev) {
          if (data) {
             //$scope.TDinvoice = data;
             for (var i = data.length - 1; i >= 0; i--) {
-              //console.log(data[i]);
                //data[i].invoiceNo = parseInt(data[i].invoiceNo);
                for (var x = data[i].paidInvoice.length - 1; x >= 0; x--) {
-                 // console.log(data[i].paidInvoice[x]);
-                 // console.log(data[i].paidInvoice[x].invono);
                  if($stateParams.invoiceno == data[i].paidInvoice[x].invono){
                 
                  $scope.Payment.push(data[i]);

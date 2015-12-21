@@ -1,3 +1,4 @@
+//Angular Material Design - v0.11.0
 angular.module('mainApp')
 .controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $rootScope,invoiceDetails,$stateParams, InvoiceService, $filter, $state, $location, UploaderService,MultipleDudtesService) {
 // console.log($rootScope.invoiceArray);

@@ -22,6 +22,18 @@
                             </md-chips>
                         </md-content>
                         </div>
+
+                        <div layout layout-sm="column" style="margin-top:-30px; " layout-margin ng-init="bccCtrl()" >
+                        <md-content class="md-padding" layout="column"  flex>
+                         <md-chips flex
+                            ng-model="emailBCCrec"
+                            readonly="readonly"
+                            delete-button-label="Remove Tag"
+                            delete-hint="Press delete to remove tag"
+                            secondary-placeholder="BCC">
+                            </md-chips>
+                        </md-content>
+                        </div>
             
                <div layout layout-sm="column" layout-margin style="margin-top:-30px; "> 
                     <md-content class="md-padding" layout="column"  flex>

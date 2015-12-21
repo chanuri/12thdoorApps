@@ -9,7 +9,7 @@
             </div>
         </md-toolbar>
         <md-dialog-content style="width:850px;" >
-            <div layout layout-sm="column" layout-margin  >
+            <div layout layout-sm="column" layout-margin>
                 <section-title title="Item Details"> </section-title>
                 <md-autocomplete flex="" required="" 
                           ng-keypress="enter($event)"
@@ -33,7 +33,7 @@
                     <label>Quantity</label>
                     <input type="number" ng-model="qty" ng-change="setSelectedClient($root.searchTextt)" required/>
                 </md-input-container>
-                <div flex ng-repeat="pim in promoItems">
+                <div flex ng-repeat="pim in promoItems" >
                     <md-input-container >
                         <label>Unit</label>
                             <md-select ng-model="pim.ProductUnit" ng-change="setUOM(pim)" flex required/>
@@ -55,19 +55,19 @@
             </div>
             <div layout layout-sm="column" layout-margin>
                <section-title> </section-title>
-             <!--     -->
-                <md-input-container ng-if="$root.showdiscount != SubTotal Items" ng-show="$root.Showdiscount" flex>
+             <!--    -->
+                <md-input-container ng-show="$root.Showdiscount"  flex>
                     <label>Discount</label>
-                    <input type="text" ng-model="discount" />
+                    <input type="text" ng-model="discount" ng-if="$root.discount == 'Individual Items'" />
                 </md-input-container>
-
-                <div flex ng-repeat="pim in promoItems">
+               <!--  -->
+                <div flex ng-repeat="pim in promoItems" ng-show="$root.DisplayTaxes">
                 <md-input-container flex style="margin-top:9px;">
                     <label>Tax</label>
-                     <md-select ng-model="pim.tax" ng-disabled="TaxDisabled" ng-change="setTax(pim)" flex required/>
+                     <md-select ng-model="pim.tax.taxname" ng-disabled="TaxDisabled" ng-change="setTax(pim)" flex required/>
                             <md-optgroup label="Tax">
                                 <md-option ng-repeat="tax in $root.taxType" value="{{tax.taxname}}">
-                                {{tax.taxname}} {{tax.rate}}% 
+                                {{tax.taxname}} {{tax.rate}} {{tax.individualtaxes}}%
                               </md-option>
                             </md-optgroup>
                         </md-select>

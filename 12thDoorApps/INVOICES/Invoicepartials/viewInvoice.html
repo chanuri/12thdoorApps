@@ -312,6 +312,15 @@
 						<md-divider></md-divider>
 					</table>
 				</div>
+				<md-divider></md-divider>
+				<div layout layout-sm="column" ng-show="item.DiplayShipiingAddress" layout-margin>
+					<section-title title="Shipping Address"> </section-title>
+					<div layout layout-sm="column" layout-margin>
+					{{ShippingStreet}}<br>
+					{{ShippingCity}}<br>
+					{{ShippingCountry}}<br>
+					</div>
+				</div>
             </md-content>
             </form>
     </md-whiteframe>

@@ -1,3 +1,4 @@
+//Angular Material Design - v0.11.0
 angular
    .module('mainApp', ['ngMaterial', 'directivelibrary','12thdirective', 'uiMicrokernel', 'ui.router', 'ui.sortable'])
    .config(function($mdThemingProvider) {
@@ -116,10 +117,12 @@ angular
               $scope.note = $scope.Settings[i].preference.invoicepref.defaultNote;
               $scope.paymentTerm = $scope.Settings[i].preference.invoicepref.defaultPaymentTerms;  
               $scope.dis = $scope.Settings[i].preference.invoicepref.disscountItemsOption;
-               $scope.ShippingCharges= $scope.Settings[i].preference.invoicepref.enableshipping;
+              $scope.ShippingCharges= $scope.Settings[i].preference.invoicepref.enableshipping;
               $scope.partialPayment =  $scope.Settings[i].preference.invoicepref.allowPartialPayments;
               $scope.ShowDiscount = $scope.Settings[i].preference.invoicepref.enableDisscounts;
-               
+              $scope.ShowShipAddress = $scope.Settings[i].preference.invoicepref.displayshipaddress;
+              $scope.ShowTaxes = $scope.Settings[i].preference.invoicepref.enableTaxes;
+               // console.log($scope.ShowTaxes)
                $scope.cusF = $scope.Settings[i].preference.invoicepref.CusFiel
 
                for (var x = $scope.Settings[i].taxes.individualtaxes.length - 1; x >= 0; x--) {
@@ -129,8 +132,9 @@ angular
                };
                for (var y = $scope.Settings[i].taxes.multipletaxgroup.length - 1; y >= 0; y--) {
                 $scope.individualTax.push($scope.Settings[i].taxes.multipletaxgroup[y]); 
-                 // console.log($scope.multiTax);
+                
                };
+               
                 for (var z = $scope.Settings[i].preference.productpref.units.length - 1; z >= 0; z--) {
                   $scope.UnitOfMeasure.push($scope.Settings[i].preference.productpref.units[z])
                 };
@@ -140,13 +144,14 @@ angular
         $scope.TDinvoice.comments = $scope.com;
         $scope.TDinvoice.notes = $scope.note;
         $scope.TDinvoice.termtype =  $scope.paymentTerm;
+        $scope.TDinvoice.DiplayShipiingAddress = $scope.ShowShipAddress;
         $scope.TDinvoice.allowPartialPayments = $scope.partialPayment;
        $scope.AllTaxes = $scope.individualTax;
         $scope.UOM = $scope.UnitOfMeasure;
         $scope.CusFields = $scope.cusF;
         $scope.Displaydiscount = $scope.ShowDiscount;
         
-          console.log($scope.ShowDiscount);
+          //console.log( $scope.TDinvoice.DiplayShipiingAddress);
       });
       client.onError(function(data) {
       });
@@ -174,7 +179,6 @@ angular
               $scope.TDinvoice.duedate != $scope.ninetyDays){
             $scope.TDinvoice.termtype = "Custom";
          }
-
       });
 
 //----------set date according to the payment term type----------------------------
@@ -239,6 +243,7 @@ angular
             $scope.showdate = false;
          }
       });
+
         $scope.$watch("TDinvoice.termtype", function() {
          if ($scope.TDinvoice.termtype == "Net 90 days") {
             $scope.ninetyDays = new Date();
@@ -376,11 +381,12 @@ angular
       //dialog box pop up to add product
       $scope.addproduct = function(ev) {
 
-           $rootScope.taxType = angular.copy($scope.AllTaxes);
-            $rootScope.AllUnitOfMeasures = angular.copy($scope.UOM)
-           $rootScope.Showdiscount == angular.copy($scope.Displaydiscount);
-            console.log($scope.Displaydiscount); 
-             $rootScope.discount == angular.copy($scope.dis);
+          $rootScope.taxType = angular.copy($scope.AllTaxes);
+          $rootScope.AllUnitOfMeasures = angular.copy($scope.UOM)
+          $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
+          $rootScope.discount = angular.copy($scope.dis);
+          $rootScope.DisplayTaxes =  angular.copy($scope.ShowTaxes);
+           console.log($rootScope.taxType);
             
          $mdDialog.show({
             templateUrl: 'Invoicepartials/addproduct.html',
@@ -389,9 +395,9 @@ angular
                $scope.prducatsAdd = {};
                $scope.prod = {};
                $scope.promoItems = [];
-                $scope.taxType = [];
+               $scope.taxType = [];
                $scope.AllUnitOfMeasures = [];
-                console.log($rootScope.Showdiscount);
+
                $scope.addproductToarray = function(item,ev) {
                  
                   $scope.promoItems[0] = {
@@ -448,8 +454,57 @@ angular
                         $scope.prod.Productname = $scope.promoItems[i].productName;
                          $scope.prod.costprice = $scope.promoItems[i].price;
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
-                         $scope.prod.producttax = $scope.promoItems[i].tax;
+
+                         if($scope.promoItems[i].tax == $rootScope.taxType.taxname){
+                          $scope.prod.producttax = $scope.promoItems[i].tax;
+                         }
+                         
+
+                         console.log($scope.promoItems[i].tax);
+                         $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
+                          if ($scope.product.length>0) {
+                            //if array is not empty
+                             $scope.PatternExsist = false; // use to check pattern match the object of a array 
+                             $scope.MaxID = 0;
+                              for(y=0; y<=$scope.product.length-1; y++){
+                                if ($scope.product[y].ProductCode.substring(0, 3) === $scope.FirstLetters) {
+                                  $scope.CurrendID = $scope.product[y].ProductCodeID;
+                                  if ($scope.CurrendID > $scope.MaxID) {
+                                    $scope.MaxID = $scope.CurrendID;
+                                  };
+                                   $scope.PatternExsist = true;
+                                };
+                              }
+                              if (!$scope.PatternExsist) {
+                                $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                                $scope.prod.ProductCodeID = 1;
+                              }else if($scope.PatternExsist){
+                                $scope.GetMaxNumber($scope.prod,$scope.FirstLetters,$scope.MaxID)
+                              }       
+                          }else{
+                            $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                            $scope.prod.ProductCodeID = 1;
+                          }
+
+                          console.log($scope.prod.ProductCode);
                        }
+
+                       $scope.GetMaxNumber = function(obj,name,MaxID){
+                        $scope.FinalNumber = MaxID +1;
+                        $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
+                        $scope.Zerros="";
+                        for(i=0; i<4-$scope.FinalNumberLength; i++ ){
+                          var str = "0";
+                          $scope.Zerros = $scope.Zerros + str;
+                        }
+                        $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
+                        obj.ProductCodeID = $scope.FinalNumber;
+                        obj.ProductCode = name +'-'+ $scope.Zerros;
+
+                        // $scope.prod.ProductCodeID = obj.ProductCodeID;
+                        // $scope.prod.ProductCode = obj.ProductCode;
+                       }
+
                        $scope.prod.ProductCategory = "Product";
                        $scope.prod.progressshow = "false"
                        $scope.prod.favouriteStar = false;
@@ -488,6 +543,7 @@ angular
                       }, function() {
                       });
                         }
+
                          $mdDialog.hide();
                      }
                     }
@@ -539,10 +595,10 @@ angular
                            else if($scope.product[i].Productname.toLowerCase() != package.toLowerCase()){
                               $scope.SproductName = package;
                               $scope.Sprice = $scope.productPrice;
-                              $scope.SProductUnit = "each";
+                              $scope.SProductUnit = $scope.promoItems.ProductUnit;
                               $scope.Sqty = $scope.qty;
                               $scope.Solp = $scope.olp;
-                              $scope.Stax = $scope.promoItems.tax;
+                              $scope.Stax = $scope.Ptax;
                               $scope.Sstatus = "notavailable"
                               $scope.promoItems.splice(0,1)
                               $scope.promoItems.push({
@@ -568,12 +624,26 @@ angular
                     // for (var i =  $rootScope.taxType.length - 1; i >= 0; i--) {
                     //   if(pDis.tax == $rootScope.taxType[i].taxname){
                     //     $scope.percentage = $rootScope.taxType[i].rate;
-                        
                     //   }
-
                     // };
-                    
-                     $scope.Stax = pDis.tax;
+
+                    // if(pDis.status == "notavailable"){
+                      for (var i = $rootScope.taxType.length - 1; i >= 0; i--) {
+                       if($rootScope.taxType[i].taxname == pDis.tax.taxname){
+                            $scope.Ptax = ({
+                               taxname:$rootScope.taxType[i].taxname,
+                               activate: $rootScope.taxType[i].activate, 
+                               compound:$rootScope.taxType[i].compound,
+                               rate:$rootScope.taxType[i].rate, 
+                               type: $rootScope.taxType[i].type, 
+                               individualtaxes:$rootScope.taxType[i].individualtaxes});
+                           
+                        }
+                      };
+                    // }
+                    // console.log($scope.Ptax)
+                     $scope.Stax = $scope.Ptax;
+                     // console.log($scope.Stax);
 
                    }
                    $scope.setUOM = function(pUOM){
@@ -791,13 +861,11 @@ angular
                   if ($rootScope.selectedItem1 === null) {
                      $rootScope.selectedItem1 = query;
                   } else {}
-                  // console.log($rootScope.selectedItem1)
                }
             }
       function querySearch(query) {
          $scope.enter = function(keyEvent) {
                if (keyEvent.which == 40) {
-                  // console.log($rootScope.selectedItem1)
                }
             }
             //Custom Filter
@@ -871,18 +939,17 @@ angular
 
       //save invoice details
        $scope.submit = function() {
-          // console.log();
          $scope.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
          $scope.ProgressBar.PaymentScheme = $scope.TDinvoice.termtype;
           $scope.ProgressBar.PaymentSchemeActive= "false";
         
           if($scope.TDinvoice.termtype != "multipleDueDates"){
-         $scope.TDinvoice.MultiDueDAtesArr= {
+         $scope.TDinvoice.MultiDueDAtesArr= [{
                            DueDate: $scope.TDinvoice.duedate,
                            Percentage: "0",
                            dueDateprice: "0",
                            paymentStatus:'Unpaid'
-                        };
+                        }];
         }else{
           $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.value;
          // console.log($scope.ProgressBar);
@@ -941,7 +1008,7 @@ angular
             val: []
          };
         
-         $rootScope.invoiceArray.splice(0, 1);
+        $rootScope.invoiceArray.splice(0, 1);
         invoiceDetails.setArray($scope.TDinvoice);
         //console.log($rootScope.invoiceArray);
 
@@ -1022,11 +1089,13 @@ angular
       $scope.finaldiscount = function() {
          $scope.finalDisc = 0;
          $scope.Discount = 0;
-
+         
          if($scope.dis == "SubTotal Items" ){
           $scope.finalDisc = parseInt($scope.total*$scope.TDinvoice.fdiscount/100)
-       }else{
+       }else if ($scope.dis == "Individual Items" ){
+
          angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
+          // console.log(tdIinvoice);
             $scope.Discount +=   parseInt(tdIinvoice.discount);
             $scope.finalDisc = parseInt($scope.total*$scope.Discount/100);
          })
@@ -1037,10 +1106,12 @@ angular
       }
       $scope.CalculateTax = function() {
          $scope.salesTax = 0;
-         // angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
-         //    $scope.salesTax += parseInt($scope.total*tdIinvoice.tax/100);
-         // })
+         angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
+            $scope.salesTax += parseInt($scope.total*tdIinvoice.tax.rate/100);
+            // $scope.salesTax += parseInt($scope.total*tdIinvoice.tax.individualtaxes/100);
+         })
          return $scope.salesTax;
+         console.log($scope.salesTax)
       }
       $scope.CalculateOtherTax = function() {
          $scope.otherTax = 0;

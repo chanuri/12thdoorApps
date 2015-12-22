@@ -91,7 +91,8 @@ angular
 	$rootScope.Settings12thdoor= {
 
 		profile : {
-			CusFiel:[]
+			CusFiel:[],
+
 		},
 
 		preference : 
@@ -316,8 +317,10 @@ angular
 		}
 
 	};
-	console.log($rootScope.Settings12thdoor);
 	
+	console.log($rootScope.Settings12thdoor);	
+	
+
 	var client = $objectstore.getClient("Settings12thdoor");
 
 	client.onGetMany(function(data) {
@@ -328,7 +331,7 @@ angular
 	});
 
 	client.getByFiltering("*");
-	
+
 })
 
 .controller('oneCtrl', function ($scope,$state, $objectstore, $mdDialog, $rootScope, UploaderService, $window) {
@@ -1403,7 +1406,6 @@ $scope.edittaskProjectrow = function(taskProjectedit, ev) {
 		{title:'File Manager',url: 'setting_partials/FileManager.html', spritePosition: '-152px'}
 		];
 
-
 	})
 
 .controller('threeCtrl', function ($scope,$state, $objectstore, $mdDialog, $rootScope, $window) {
@@ -1770,18 +1772,22 @@ function DialogEditprofilecusfieldsController($scope, $mdDialog, $rootScope, Cus
 };
 
 function DialogPrefInvoiceController($scope, $mdDialog, $rootScope) {
-
+	$scope.fields=[];
 	if (!$rootScope.Settings12thdoor.preference.invoicepref.CusFiel)
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
 
 	$scope.submit = function() {
 		//var number = Math.random();
 		//console.log(Math.random());
-		
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
 		//	id:number,
-		name:$scope.name
-	})
+		name:$scope.labelshown,
+		inputType:$scope.inputType,
+		textBoxFields:$scope.textBoxFields,
+		fields:$scope.fields,
+		type:$scope.type
+		
+	});
 		
 		$mdDialog.hide();
 		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);

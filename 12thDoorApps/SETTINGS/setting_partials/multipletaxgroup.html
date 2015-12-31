@@ -19,8 +19,8 @@
 		</div>
 		<div flex="40" style="margin-top: 27px;">
 			<md-input-container md-no-float>
-			<md-select ng-model="taxGroups" placeholder="Select Individual Taxes" ng-change="selcetedtax(taxGroups)">
-			<md-option ng-repeat="indi in $root.Settings12thdoor.taxes.individualtaxes" value="{{indi.taxname}}({{indi.rate}}%)">{{indi.taxname}}</md-option>
+			<md-select ng-model="taxName" placeholder="Select Individual Taxes" ng-change="selcetedtax(taxName)">
+			<md-option ng-repeat="indi in $root.Settings12thdoor.taxes.individualtaxes" value="{{indi}}">{{indi.taxname}}</md-option>
 		</md-select>
 	</md-input-container>
 </div>
@@ -33,7 +33,7 @@
 		<div style="margin-left:-33px;" class="add-mdcard" as-sortable-item-handle>
 			<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
 				<div flex="20">
-					<span style="color:#808080;font-size:15px;">{{item}}
+					<span style="color:#808080;font-size:15px;">{{item.taxname}}({{item.rate}}%)
 					</span>
 				</div>
 				<div flex="5">

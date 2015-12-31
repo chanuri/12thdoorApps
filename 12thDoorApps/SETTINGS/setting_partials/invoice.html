@@ -57,8 +57,8 @@
 	<md-switch  flex="20" class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableDisscounts" aria-label="Switch 1" ng-init="$root.Settings12thdoor.preference.invoicepref.enableDisscounts=true" ng-change="enableDiscountForInvoice($root.Settings12thdoor.preference.invoicepref.enableDisscounts)">
 	Enable Discounts
 </md-switch>
-<md-input-container flex="30" style="margin-bottom: -19px;" ng-if="$root.Settings12thdoor.preference.invoicepref.enableDisscounts">
-<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.disscountItemsOption">
+<md-input-container flex="30" style="margin-bottom: -19px;" ng-show="$root.Settings12thdoor.preference.invoicepref.enableDisscounts">
+<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.disscountItemsOption" >
 <md-option selected>Individual Items</md-option>
 <md-option>SubTotal Items</md-option>
 </md-select>
@@ -273,7 +273,7 @@
 	<div flex="20" hide-sm>
 	</div>
 	<div layout="column" layout-align="center start" flex style="margin-top:-2px;">
-		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
+		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="$root.Settings12thdoor.preference.invoicepref.CusFiel">
 			<li ng-repeat="item in $root.Settings12thdoor.preference.invoicepref.CusFiel" as-sortable-item>
 				<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
 				<md-card-content>
@@ -332,7 +332,7 @@
 <md-input-container flex="30" ng-if="$root.Settings12thdoor.preference.invoicepref.emailcustomeruponsavinginvoice" style="margin-bottom:-19px;">
 <!-- <label></label> -->
 <md-select ng-model="$root.Settings12thdoor.preference.invoicepref.emailcustomeroption">
-<md-option selected>Display pop up and prompt</md-option>
+<md-option>Display pop up and prompt</md-option>
 <md-option>Send email in background</md-option>
 </md-select>
 </md-input-container>

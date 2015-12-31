@@ -11,32 +11,33 @@
 			</div>
 			<md-input-container flex="40">
 			<label>Role Name</label>
-			<input ng-model="roleName">
+			<input ng-model="Settings12thdoor.rolename">
 		</md-input-container>
+
 	</div>
 
 	<md-divider></md-divider>
 
 	<div layout layout-margin>
 		<div flex="20"><span>Modules</span></div>
-		<div flex layout="row" layout-align="center center"><span>Add</span></div>
 		<div flex layout="row" layout-align="center center"><span>View</span></div>
+		<div flex layout="row" layout-align="center center"><span>Add</span></div>
 		<div flex layout="row" layout-align="center center"><span>Edit</span></div>
 		<div flex layout="row" layout-align="center center"><span>Cancel</span></div>
 		<div flex layout="row" layout-align="center center"><span>Delete</span></div>
 	</div>
 
-	<div layout layout-margin ng-repeat="app in appCollection">
-		<div flex="20" layout="row" layout-align="start center"><label>{{app}}</label></div>
-		<div flex layout="row" layout-align="center center"><md-checkbox  ng-model="add" class="md-primary">
+	<div layout layout-margin ng-repeat="app in Settings12thdoor">
+		<div flex="20" layout="row" layout-align="start center"><label>{{app.appName}}</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox  ng-model="app.view" class="md-primary">
 		</md-checkbox></div>
-		<div flex layout="row" layout-align="center center"><md-checkbox  ng-model="view" class="md-primary">
+		<div flex layout="row" layout-align="center center"><md-checkbox  ng-model="app.add" class="md-primary">
 		</md-checkbox></div>
-		<div flex layout="row" layout-align="center center"><md-checkbox ng-model="edit" class="md-primary">
+		<div flex layout="row" layout-align="center center"><md-checkbox ng-model="app.edit" class="md-primary">
 		</md-checkbox></div>
-		<div flex layout="row" layout-align="center center"><md-checkbox ng-model="cancel" class="md-primary">
+		<div flex layout="row" layout-align="center center"><md-checkbox ng-model="app.cancel" class="md-primary">
 		</md-checkbox></div>
-		<div flex layout="row" layout-align="center center"><md-checkbox ng-model="deletee" class="md-primary">
+		<div flex layout="row" layout-align="center center"><md-checkbox ng-model="app.deletee" class="md-primary">
 		</md-checkbox></div>
 	</div>
 

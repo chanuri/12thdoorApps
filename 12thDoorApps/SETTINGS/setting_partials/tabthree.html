@@ -18,19 +18,17 @@
 
 	<md-divider style="margin-top:21px;"></md-divider>
 	
-	<div layout layout-sm="column" layout-margin style="margin-bottom: 21px;">
+	<div layout layout-sm="column" layout-margin>
 		<div flex="5" hide-sm></div>
 		<div flex="20" hide-sm></div>
-<!-- 		
 		<div layout="column" layout-align="center start" flex style="margin-top:-2px;">
-			<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
-				<li ng-repeat="item in  $root.Settings12thdoor.users.roles" as-sortable-item>
-					<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle ng-repeat="role in item.appPermission">
+			<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="sd">
+				<li  as-sortable-item ng-repeat="item in $root.Settings12thdoor.users.roles">
+					<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle >
 					<md-card-content>
-					
 					<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
 						<div flex>
-							<span style="color:#808080;font-size:15px;">{{role.rolename}}
+							<span style="color:#808080;font-size:15px;">{{item.rolename}}
 								<md-tooltip md-direction="right">Custom Fields name</md-tooltip>
 							</span>
 						</div>
@@ -40,14 +38,14 @@
 							<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
 						</md-button>
 						<md-menu-content width="4">
-						<md-menu-item>
-						<md-button ng-click="editRoles(item , $event)">
+						<md-menu-item ng-hide="item[0,1,2]">
+						<md-button ng-click="editrolerow(item , $event)">
 						<p>Edit</p>
 						<md-icon md-menu-align-target ></md-icon>
 					</md-button>
 				</md-menu-item>
 				<md-menu-item>
-				<md-button ng-click="deleteRoleRaw(item, $index)">
+				<md-button ng-click="deleteinvoicecusfieldsrow(item, $index)">
 				<p>Delete</p>
 				<md-icon md-menu-align-target ></md-icon>
 			</md-button>
@@ -61,15 +59,10 @@
 </li>
 </ul>
 <div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
-	<md-button  class="md-raised" ng-click="roles($event)">
-	Roles
+	<md-button  class="md-primary" ng-click="roles($event)">
+	Add Role
 </md-button>
 </div>
-</div> -->
-<div flex style="margin-top:29px;">
-	<md-button class="md-primary" ng-click="roles($event)" >
-	Roles
-</md-button>
 </div>
 </div>
 </md-content>

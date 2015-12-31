@@ -12,13 +12,55 @@
 		</div>
 		
 		<div layout layout-sm="column" layout-margin>
-			<md-input-container flex md-no-float>
-			<input type="text" ng-model="cosupname" placeholder="Name" required>
-		</md-input-container>
-		<div flex="20" layout="row" layout-align="center center" style="font-size:13px;margin-top:-11px;">
-			<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1">Show on PDF</md-checkbox>
-		</div>
-	</div>
+			<md-input-container flex="30">
+			<label>Select Field Type</label>
+			<md-select ng-model="type">
+			<md-option value="textBox">Text box</md-option>
+			<md-option value="selectBox">select box</md-option>
+		</md-select>
+	</md-input-container>
+</div>
+
+<div layout layout-sm="column" layout-margin ng-show="type=='selectBox'" >
+	<div layout="row" flex layout-margin>
+		<md-input-container flex>
+		<label>title to be shown</label>
+		<input ng-model="labelshown" type="text" required>
+	</md-input-container>
+	<div flex>
+		<md-chips ng-model="fields" readonly="false" placeholder="Enter more" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Fields" required>
+	</md-chips>
+	<input type="hidden" ng-model="company.input[i].id" ng-init="company.input[i].id=i">
+</div>
+</div>
+<div flex="20" layout="row" layout-align="center center" style="font-size:13px;margin-top:-11px;">
+	<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1">Show on PDF</md-checkbox>
+</div>
+</div>
+
+<div layout layout-sm="column" layout-margin ng-show="type=='textBox'">
+	<md-input-container flex>
+	<label>label to be shown</label>
+	<input ng-model="labelshown" type="text" required>
+</md-input-container>
+<md-input-container flex>
+<label>default text</label>
+<input ng-model="textBoxFields" type="{{inputType}}">
+</md-input-container>
+<md-input-container flex>
+<label>Type</label>
+<md-select ng-model="inputType">
+<md-option value="number">Numbers</md-option>
+<md-option value="text">Text</md-option>
+<md-option value="email">Email</md-option>
+</md-select>
+</md-input-container>
+<!-- <input type="hidden" ng-model="company.input[i].id" ng-init="company.input[i].id=i"> -->
+<div flex="20" layout="row" layout-align="center center" style="font-size:13px;margin-top:-11px;">
+	<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1">Show on PDF</md-checkbox>
+</div>
+
+</div>
 </md-content>
 </form>
 </div>

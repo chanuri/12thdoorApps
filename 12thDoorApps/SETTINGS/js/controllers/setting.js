@@ -45,7 +45,8 @@ angular
         })
         .state('main.six', {
         	url: '/tabsix',
-        	templateUrl: 'setting_partials/tabsix.html'
+        	templateUrl: 'setting_partials/tabsix.html',
+        	controller:'paymentctrl'
         })
         .state('main.seven', {
         	url: '/tabseven',
@@ -119,7 +120,8 @@ angular
 				addstockcancelOrdeleteinvoiceincluCreditnote:true,
 				includeaccountstatementwithinvoice:true,
 				CusFiel:[],
-				CheckedOfflinePayments:false
+				CheckedOfflinePayments:false,
+				emailcontent:{ emailBody:"Dear Customer,</br> Attached invoice No.{{no}}. To pay online or download click on the below link :{{accounturl}} </br> Thank You for your business! </br> {{companyName}}"}
 
 			},
 			estimatepref:
@@ -143,7 +145,7 @@ angular
 			paymentpref:
 			{
 				CusFiel:[],
-				PaymentMethod:[{activate:true, paymentmethod:"Cash"},{activate:true, paymentmethod:"Cheque"},{activate:true, paymentmethod:"TT"},{activate:true, paymentmethod:"Bank Transfer"},{activate:true, paymentmethod:"Bank Draft"}]
+				PaymentMethod:[{activate:true, paymentmethod:"Cash",paymentType:"Offline"},{activate:true, paymentmethod:"Cheque",paymentType:"Offline"},{activate:true, paymentmethod:"TT",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Transfer",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Draft",paymentType:"Offline"}]
 			},
 			expensepref:
 			{
@@ -181,100 +183,398 @@ angular
 
 			roles:[
 			{
-				appName : "invoice",
-				appPermission : [
-				{
-					rolename : "admin",
-					permission : {
-						add : true,
-						view: true,
-						edit:true,
-						cancel:true,
-						delete:true
-					}
+				rolename : "Super admin", 
+				0:{
+					appName : "invoice",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					deletee:true
 				},
-				{
-					rolename : "divani",
-					permission : {
-						add : false,
-						view: true,
-						edit:true,
-						cancel:true,
-						delete:true
-					}
-				}
-				]
-			},{
-				appName : "Estimate",
-				appPermission : [
-				{
-					rolename : "admin",
-					permission : {
-						add : true,
-						view: true,
-						edit:true,
-						cancel:true,
-						delete:true
-					}
+				1:{
+					appName : "Recurring",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
 				},
-				{
-					rolename : "divani",
-					permission : {
-						add : true,
-						view: true,
-						edit:true,
-						cancel:true,
-						delete:true
-					}
-				}
+				2:{
+					appName : "Estimate",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
 
-				]
-			},{
-				appName : "Recurring",
-				appPermission : [
-				{
-					rolename : "admin",
-					permission : {
-						add : true,
-						view: true,
-						edit:true,
-						cancel:true,
-						delete:true
-					}
+				},
+				3:{
+					appName : "Credit Notes",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				4:{
+					appName : "Payments",
+
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				5:{
+					appName : "Expenses",
+
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				6:{
+					appName : "Product",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+
+				},
+				7:{
+					appName : "Inventory Receipts",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				8:{
+					appName : "Inventory Receipts",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				9:{
+					appName : "Project",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				10:{
+					appName : "TimeSheets",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				11:{
+					appName : "Contacts Customer",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				12:{
+					appName : "Contacts Suppliers",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				13:{
+					appName : "360 View",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				14:{
+					appName : "Reports",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
 				}
-				]
-			},{
-				appName : "CreditNotes",
-				appPermission : [
-				{
-					rolename : "admin",
-					permission : {
-						add : true,
-						view: true,
-						edit:true,
-						cancel:true,
-						delete:true
-					}
+			},
+			{
+				rolename : "Manager",
+				0:{
+					appName : "invoice",
+					add : true,
+					view: true,
+					edit:false,
+					cancel:false,
+					deletee:true
+				},
+				1:{
+					appName : "Recurring",
+					add : true,
+					view: true,
+					edit:false,
+					cancel:false,
+					delete:true
+				},
+				2:{
+					appName : "Estimate",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				3:{
+					appName : "Credit Notes",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				4:{
+					appName : "Payments",
+
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				5:{
+					appName : "Expenses",
+
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				6:{
+					appName : "Product",
+					add : false,
+					view: true,
+					edit:false,
+					cancel:true,
+					delete:true
+
+
+				},
+				7:{
+					appName : "Inventory Receipts",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				8:{
+					appName : "Inventory Receipts",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				9:{
+					appName : "Project",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				10:{
+					appName : "TimeSheets",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				11:{
+					appName : "Contacts Customer",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				12:{
+					appName : "Contacts Suppliers",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				13:{
+					appName : "360 View",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				14:{
+					appName : "Reports",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
 				}
-				]
-			},{
-				appName : "Payments",
-				appPermission : [
-				{
-					rolename : "admin",
-					permission : {
-						add : true,
-						view: true,
-						edit:true,
-						cancel:true,
-						delete:true
-					}
+			},
+			{
+				rolename : "User", //hav to make json app wise
+				0:{
+					appName : "invoice",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					deletee:true
+				},
+				1:{
+					appName : "Recurring",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				2:{
+					appName : "Estimate",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				3:{
+					appName : "Credit Notes",
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				4:{
+					appName : "Payments",
+
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				5:{
+					appName : "Expenses",
+
+					add : true,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+				},
+				6:{
+					appName : "Product",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+
+
+				},
+				7:{
+					appName : "Inventory Receipts",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				8:{
+					appName : "Inventory Receipts",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				9:{
+					appName : "Project",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				10:{
+					appName : "TimeSheets",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				11:{
+					appName : "Contacts Customer",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				12:{
+					appName : "Contacts Suppliers",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				13:{
+					appName : "360 View",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
+				},
+				14:{
+					appName : "Reports",
+					add : false,
+					view: true,
+					edit:true,
+					cancel:true,
+					delete:true
 				}
-				]
 			}
-			
-
-			
 
 			]
 		},
@@ -293,10 +593,12 @@ angular
 		},
 
 		payments :
-		{
-
-
-		},
+		[{activate:false, url:"img/payment/paypal.png", paymentType:"online",name:"paypal",label:"Activate"},
+		{activate:false, url:"img/payment/googlewallet.png",paymentType:"online",name:"googlewallet",label:"Activate"},
+		{activate:false, url:"img/payment/stripe.png",paymentType:"online",name:"stripe",label:"Activate"},
+		{activate:false, url:"img/payment/2checkout.png",paymentType:"online",name:"2checkout",label:"Activate"},
+		{activate:false, url:"img/payment/authroizenet.png",paymentType:"online",name:"authroizenet",label:"Activate"},
+		{activate:false, url:"img/payment/worldpay.png",paymentType:"online",name:"worldpay",label:"Activate"}],
 
 
 		languages :
@@ -317,9 +619,8 @@ angular
 		}
 
 	};
-	
+
 	console.log($rootScope.Settings12thdoor);	
-	
 
 	var client = $objectstore.getClient("Settings12thdoor");
 
@@ -1107,7 +1408,7 @@ $scope.addcusfieldsProduct= function(ev) {
 	});
 };
 
-$scope.deletcusfieldsexpense = function(cusFieldsproduct, index){  
+$scope.deletcusfieldsproduct = function(cusFieldsproduct, index){  
 	$rootScope.Settings12thdoor.preference.productpref.CusFiel.splice(index, 1);
 }
 
@@ -1482,9 +1783,34 @@ $scope.edittaskProjectrow = function(taskProjectedit, ev) {
 			clickOutsideToClose:true
 		})
 		.then(function(answer) {
+
 			if (answer==true) {
 				loadRoles();
-			};
+			}
+
+		}, function() {
+			$scope.status = 'You cancelled the dialog.';
+		});
+	};
+
+	
+
+	$scope.editrolerow = function(editrole,ev) {
+		console.log(editrole);
+		$mdDialog.show({
+			controller: DialogEditrolesController,
+			templateUrl: 'setting_partials/editroles.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			locals: { editrole: editrole },
+			clickOutsideToClose:true
+		})
+		.then(function(answer) {
+
+			if (answer==true) {
+				loadRoles();
+			}
+
 		}, function() {
 			$scope.status = 'You cancelled the dialog.';
 		});
@@ -1493,8 +1819,6 @@ $scope.edittaskProjectrow = function(taskProjectedit, ev) {
 })
 
 .controller('taxctrl', function ($scope,$state, $objectstore, $mdDialog, $rootScope, $window) {
-
-	
 
 	$scope.submit = function() {
 		console.log($rootScope.Settings12thdoor);	
@@ -1532,7 +1856,7 @@ $scope.edittaskProjectrow = function(taskProjectedit, ev) {
 
 
 	function loadindividualtaxes(){
-		$scope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
+		$scope.individualtaxes = $rootScope.Settings12thdoor.taxes.individualtaxes;
 		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
 	};
 
@@ -1711,6 +2035,72 @@ $scope.sortableOptions = {
 		}
 	}
 
+})
+
+.controller('paymentctrl', function ($scope,$state, $objectstore, $mdDialog, $rootScope, $window) {
+
+	$scope.pay = $rootScope.Settings12thdoor.payments;
+
+	$scope.submit = function() {
+		console.log($rootScope.Settings12thdoor);	
+		var client = $objectstore.getClient("Settings12thdoor");
+		client.onComplete(function(data) {
+				//$rootScope.Settings12thdoor=data;
+				console.log(data);
+				$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.content('Successfully Saved.')
+					.ariaLabel('Alert Dialog Demo')
+					.ok('OK')
+					.targetEvent(data)
+					);
+			});
+
+		client.onError(function(data) {
+			$mdDialog.show(
+				$mdDialog.alert()
+				.parent(angular.element(document.body))
+				.content('There was an error saving the data.')
+				.ariaLabel('Alert Dialog Demo')
+				.ok('OK')
+				.targetEvent(data)
+				);
+
+		});
+
+		$rootScope.Settings12thdoor.uniqueRecord = "35";
+		client.insert($rootScope.Settings12thdoor, {
+			KeyProperty: "uniqueRecord"
+		});
+
+	}
+
+
+	$scope.activepayment1=function(data){
+
+		if(data.activate){
+			data.activate=false;
+			// var element = document.getElementById("SearchCardSub");
+			// element.setAttribute("class", "");
+			data.label="activate";
+			console.log(data.label);
+			console.log(data.activate);
+		}
+
+		else{
+			data.activate=true;
+			// var element = document.getElementById("SearchCardSub");
+			// element.setAttribute("class", "tintImage");
+			data.label="Inactivate";
+			console.log(data.label);
+			console.log(data.activate);
+		}
+
+	}
+
+
+
 });
 
 function DialogprofilechangeUrlController($scope, $mdDialog, $rootScope) {
@@ -1725,14 +2115,18 @@ function DialogprofilechangeUrlController($scope, $mdDialog, $rootScope) {
 }
 
 function DialogprofileController($scope, $mdDialog, $rootScope) {
+
+	$scope.fields=[];
 	if(!$rootScope.Settings12thdoor.profile.CusFiel)
 		$rootScope.Settings12thdoor.profile.CusFiel=[];
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.profile.CusFiel.push({
-			name:$scope.profname,
-			value:$scope.profvalue
-
+			name:$scope.labelshown,
+			inputType:$scope.inputType,
+			textBoxFields:$scope.textBoxFields,
+			fields:$scope.fields,
+			type:$scope.type
 		})
 
 		$mdDialog.hide();
@@ -1833,6 +2227,17 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
 	function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootScope) {
 
+		$rootScope.Settings12thdoor.preference.invoicepref.emailcontent = {};
+
+		$scope.submit = function() {
+			$rootScope.Settings12thdoor.preference.invoicepref.emailcontent.push({
+				emailBody:$scope.emailBody
+			});
+
+			$mdDialog.hide();
+		}
+
+
 		$scope.readonly = false;
 		$scope.selectedItem = null;
 		$scope.searchText = null;
@@ -1841,6 +2246,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 		$scope.selectedCustomers = [];
 		$scope.selectedcustomercc=[];
 
+		
     /**
      * Search for vegetables.
      */
@@ -1901,12 +2307,18 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogPrefEstiController($scope, $mdDialog, $rootScope) {
+
+ 	$scope.fields=[];
  	if(!$rootScope.Settings12thdoor.preference.estimatepref.CusFiel)
  		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel=[];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.push({
- 			name:$scope.ename
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
  		$mdDialog.hide();
  		console.log($rootScope.Settings12thdoor.preference.estimatepref.CusFiel);
@@ -1944,12 +2356,18 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  function DialogPrefPayController($scope, $mdDialog, $rootScope) {
 
+ 	$scope.fields=[];
+
  	if (!$rootScope.Settings12thdoor.preference.paymentpref.CusFiel)
  		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel = [];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.push({
- 			name:$scope.pname
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
  		$mdDialog.hide();
  		console.log($rootScope.Settings12thdoor.preference.paymentpref.CusFiel);
@@ -1995,7 +2413,9 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.paymentpref.PaymentMethod.push({
  			paymentmethod:$scope.paymentmethod,
- 			activate:true
+ 			activate:true,
+ 			paymentType:"Offline"
+
  		})
 
  		$mdDialog.hide();
@@ -2082,13 +2502,19 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogPrefcusfieldsExpenseController($scope, $mdDialog, $rootScope) {
+
+ 	$scope.fields=[];
+ 	
  	if(!$rootScope.Settings12thdoor.preference.expensepref.CusFiel)
  		$rootScope.Settings12thdoor.preference.expensepref.CusFiel=[];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.push({
- 			name:$scope.expname,
- 			value:$scope.expvalue
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
 
  		$mdDialog.hide();
@@ -2270,13 +2696,17 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogPrefcusfieldsProductController($scope, $mdDialog, $rootScope) {
+ 	$scope.fields=[];
  	if(!$rootScope.Settings12thdoor.preference.productpref.CusFiel)
  		$rootScope.Settings12thdoor.preference.productpref.CusFiel=[];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.productpref.CusFiel.push({
- 			name:$scope.prname,
- 			value:$scope.prvalue
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
 
  		$mdDialog.hide();
@@ -2317,12 +2747,17 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogPrefReceiptcusfieldsInventoryController($scope, $mdDialog, $rootScope) {
+ 	$scope.fields=[];
  	if(!$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel)
  		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel=[];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.push({
- 			name:$scope.inrname
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
 
  		$mdDialog.hide();
@@ -2363,12 +2798,17 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogPrefIssuecusfieldsInventoryController($scope, $mdDialog,  $rootScope) {
+ 	$scope.fields=[];
  	if(!$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel)
  		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel=[];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.push({
- 			name:$scope.ininame
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
 
  		$mdDialog.hide();
@@ -2409,13 +2849,17 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogPrefsuppliercusfieldsContactController($scope, $mdDialog, $rootScope) {
-
+ 	$scope.fields=[];
  	if(!$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel)
  		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel=[];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.push({
- 			name:$scope.cosupname
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
 
  		$mdDialog.hide();
@@ -2455,13 +2899,17 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogPrefcustomercusfieldsContactController($scope, $mdDialog, $rootScope) {
-
+ 	$scope.fields=[];
  	if(!$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel)
  		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel=[];
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.push({
- 			name:$scope.cocustomername
+ 			name:$scope.labelshown,
+ 			inputType:$scope.inputType,
+ 			textBoxFields:$scope.textBoxFields,
+ 			fields:$scope.fields,
+ 			type:$scope.type
  		})
 
  		$mdDialog.hide();
@@ -2549,7 +2997,11 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  	};
  };
 
- function DialogusersController($scope, $mdDialog, $objectstore, $mdToast, $rootScope) {
+ function DialogusersController($scope, $mdDialog, $rootScope) {
+
+ 	$rootScope.roles= $rootScope.Settings12thdoor.users.roles;
+ 	console.log($rootScope.Settings12thdoor.users.roles);
+
 
  	$scope.hide = function() {
  		$mdDialog.hide();
@@ -2562,59 +3014,138 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
  };
 
  function DialogrolesController($scope, $mdDialog, $rootScope) {
+
+ 	$scope.appCollection = ["invoice","recurring","estimate"];
+ 	console.log($scope.appCollection);
+
+ 	$scope.appFeature=[
+ 	{feautureName:"add", feautureValue:true},
+ 	{feautureName:"view", feautureValue:true},
+ 	{feautureName:"edit", feautureValue:true},
+ 	{feautureName:"delete", feautureValue:true},
+ 	{feautureName:"cancel", feautureValue:true}
+ 	]
+
  	if(!$rootScope.Settings12thdoor.users.roles)
  		$rootScope.Settings12thdoor.users.roles=[];
 
- 	$scope.submit = function() {
- 		$rootScope.Settings12thdoor.users.roles.push({
- 			roleName:$scope.roleName,
- 			add:$scope.add,
- 			view:$scope.view,
- 			edit:$scope.edit,
- 			cancel:$scope.cancel,
- 			delete:$scope.delete,
- 		});
-
- 		$mdDialog.hide();
- 		console.log($rootScope.Settings12thdoor.users.roles);
- 	};
-
- 	$scope.hide = function() {
- 		$mdDialog.hide();
- 	};
-
- 	$scope.cancel = function() {
- 		$mdDialog.cancel();
- 	};
-
- };
-
- function DialogindividualtaxController($scope, $mdDialog,  $rootScope) {
-
- 	if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
- 		$rootScope.Settings12thdoor.taxes.individualtaxes=[];
 
  	$scope.submit = function() {
- 		$rootScope.Settings12thdoor.taxes.individualtaxes.push({
- 			taxname:$scope.taxname,
- 			rate:$scope.rate,
- 			activate:true,
- 			compound:$scope.compound,
- 			type:"individualtaxes"
- 		})
+ 		//$scope.appCollection = {"name":"invoice","name":"recurring","name":"estimate"}
+ 		//console.log($scope.appCollection);
 
- 		$mdDialog.hide();
- 		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+ 		for(var apps = 0; apps <= $scope.appCollection.length; apps++){
+ 			// if($scope.appCollection[apps] == $scope.appCollection[0]){
+ 				$scope.appCollection[apps]=appName;
+ 				var appName={};
+ 				appName.appName=$scope.appCollection[apps];
+ 				appName.appFeature=$scope.appFeature[apps];
 
- 	};
+ 				$rootScope.Settings12thdoor.users.roles.push({
+ 					roleName:$scope.roleName,
+ 					// appName:$scope.appCollection[apps],
+ 					// appFeature:$scope.appFeature[apps]
+ 					appName:appName
 
- 	$scope.hide = function() {
- 		$mdDialog.hide();
- 	};
+ 					
 
- 	$scope.cancel = function() {
- 		$mdDialog.cancel();
- 	};
+ 				})
+
+ 			// }
+ 			// else if($scope.appCollection[apps]==$scope.appCollection[1]){
+ 			// 	$rootScope.Settings12thdoor.users.roles.push({
+ 			// 		roleName:$scope.roleName,
+ 			// 		appName:$scope.appCollection[1],
+ 			// 		appFeature:$scope.appFeature
+
+ 			// 	})
+ 			// } else{
+
+ 			// 	$rootScope.Settings12thdoor.users.roles.push({
+ 			// 		roleName:$scope.roleName,
+ 			// 		appName:$scope.appCollection[2],
+ 			// 		appFeature:$scope.appFeature
+
+ 			// 	})
+
+ 			// }
+ 			
+ 		};
+
+ 		
+ 		
+ 		// $rootScope.Settings12thdoor.users.roles.push({
+ 		// 	roleName:$scope.roleName,
+ 		
+
+
+ 		// });
+
+$mdDialog.hide();
+console.log($rootScope.Settings12thdoor.users.roles);
+};
+
+$scope.hide = function() {
+	$mdDialog.hide();
+};
+
+$scope.cancel = function() {
+	$mdDialog.cancel();
+};
+
+};
+
+function DialogEditrolesController($scope, $mdDialog, $rootScope, editrole) {
+
+	$scope.Settings12thdoor=angular.copy(editrole);
+	console.log($scope.Settings12thdoor);
+
+
+	$scope.submit = function(obj) {
+		$rootScope.Settings12thdoor.users.roles.splice($scope.Settings12thdoor,1);
+		$rootScope.Settings12thdoor.users.roles.push(obj);
+		console.log($scope.Settings12thdoor)
+		$mdDialog.hide();
+	}
+
+
+
+	$scope.hide = function() {
+		$mdDialog.hide();
+	};
+
+	$scope.cancel = function() {
+		$mdDialog.cancel();
+	};
+
+};
+
+function DialogindividualtaxController($scope, $mdDialog,  $rootScope) {
+
+	if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
+		$rootScope.Settings12thdoor.taxes.individualtaxes=[];
+
+	$scope.submit = function() {
+		$rootScope.Settings12thdoor.taxes.individualtaxes.push({
+			taxname:$scope.taxname,
+			rate:$scope.rate,
+			activate:true,
+			compound:$scope.compound,
+			type:"individualtaxes"
+		})
+
+		$mdDialog.hide();
+		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+
+	};
+
+	$scope.hide = function() {
+		$mdDialog.hide();
+	};
+
+	$scope.cancel = function() {
+		$mdDialog.cancel();
+	};
 
 	//when selected compund checkbox
 	//$scope.whenSelectedCopund=false;
@@ -2667,8 +3198,16 @@ function DialogmultipletaxgroupController($scope, $mdDialog, $rootScope) {
 	} 
 	
 	$scope.selcetedtax=function(tax){
+		console.log(tax);
+
+		// var obj=eval ("(" + tax + ")");
+		// $scope.individualtaxes.push(obj);
 		// console.log(typeof($scope.individualtax));
-		$scope.individualtaxes.push(tax);
+
+		$scope.individualtaxes.push(JSON.parse(tax));
+		console.log($scope.individualtaxes);
+		
+		// $scope.individualtaxes.push(tax);
 		loadselctedindivitax();
 	}
 

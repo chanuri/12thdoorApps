@@ -1,6 +1,6 @@
 
 <div>
-	<form id="form" name="editForm">
+	<form id="form" name="editForm" style="box-shadow:0 5px 5px -3px rgba(0,0,0,.14),0 8px 10px 1px rgba(0,0,0,.098),0 3px 14px 2px rgba(0,0,0,.084)">
 		<md-content>
 		<div layout layout-sm="column" layout-margin>
 			<div flex="5">
@@ -10,79 +10,40 @@
 				<label style="font-weight:700">Payment Gateways</label>
 			</div>
 		</div>
-		<div layout="row" layout-sm="column" flex>
-			<div flex>
-				<md-card>
-				<img ng-src="img/payment/paypal.png" class="md-card-image" style="width: 260px;" alt="Washed Out">
+		<div layout="row" layout-wrap >
+			<div layout layout-sm="row" layout-margin layout-wrap layout-align="center center">
+				<md-card  ng-repeat="onlinePay in pay" style="width:280px;">
+				<div class="SearchCard ">
+					<div>
+						<img ng-src="{{onlinePay.url}}" class="md-card-image" alt="Washed Out">
+					</div>
+				</div>
 				<md-card-content style="border-top:1px solid #E5E5E5;">
 			</md-card-content>
 			<div class="md-actions" layout="row" layout-align="center center">
-				<md-button class="md-primary" style="font-size:12px;">Activate</md-button>|
+				<md-button class="md-primary" style="font-size:12px;" ng-click="activepayment1(onlinePay)">{{onlinePay.label}}</md-button>|
 				<md-button class="md-primary" style="font-size:12px;">Edit</md-button>
 			</div>
 		</md-card>
 	</div>
-	<div flex>
-		<md-card>
-		<img ng-src="img/payment/googlewallet.png" class="md-card-image" style="width: 260px;" alt="Washed Out">
-		<md-card-content style="border-top:1px solid #E5E5E5;">
-		<!-- <div layout="row" layout-align="center center">
-			<p>Google Wallet</p>
-		</div> -->
-	</md-card-content>
-	<div class="md-actions" layout="row" layout-align="center center">
-		<md-button class="md-primary" style="font-size:12px;">Activate</md-button>|
-		<md-button class="md-primary" style="font-size:12px;">Edit</md-button>
-	</div>
-</md-card>
 </div>
-<div flex>
-	<md-card>
-	<img ng-src="img/payment/stripe.png" class="md-card-image" style="width:260px;" alt="Washed Out">
-	<md-card-content style="border-top:1px solid #E5E5E5;">
-</md-card-content>
-<div class="md-actions" layout="row" layout-align="center center">
-	<md-button class="md-primary" style="font-size:12px;">Activate</md-button>|
-	<md-button class="md-primary" style="font-size:12px;">Edit</md-button>
-</div>
-</md-card>
-</div>
-</div>
-<div layout="row" layout-sm="column" flex style="margin-bottom: 40px;">
-	<div flex>
-		<md-card>
-		<img ng-src="img/payment/2checkout.png" class="md-card-image" style="width: 260px;" alt="Washed Out">
-		<md-card-content style="border-top:1px solid #E5E5E5;">
-	</md-card-content>
-	<div class="md-actions" layout="row" layout-align="center center">
-		<md-button class="md-primary" style="font-size:12px;">Activate</md-button>|
-		<md-button class="md-primary" style="font-size:12px;">Edit</md-button>
-	</div>
-</md-card>
-</div>
-<div flex>
-	<md-card>
-	<img ng-src="img/payment/authroizenet.png" class="md-card-image" style="width: 260px;" alt="Washed Out">
-	<md-card-content style="border-top:1px solid #E5E5E5;">
-</md-card-content>
-<div class="md-actions" layout="row" layout-align="center center">
-	<md-button class="md-primary" style="font-size:12px;">Activate</md-button>|
-	<md-button class="md-primary" style="font-size:12px;">Edit</md-button>
-</div>
-</md-card>
-</div>
-<div flex>	<md-card>
-	<img ng-src="img/payment/worldpay.png" class="md-card-image" style="width: 260px;" alt="Washed Out">
-	<md-card-content style="border-top:1px solid #E5E5E5;">
-</md-card-content>
-<div class="md-actions" layout="row" layout-align="center center">
-	<md-button class="md-primary" style="font-size:12px;">Activate</md-button>|
-	<md-button class="md-primary" style="font-size:12px;">Edit</md-button>
-</div>
-</md-card></div>
-</div>
+</br>
+</br>
 </md-content>
 </form>
+</div>
+
+<div class="lock-size" layout="row">
+	<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+	ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+	<md-fab-trigger>
+	<md-button aria-label="menu" class="md-fab " style="background-color:#db4437;" ng-click="submit()">
+	<md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;"></md-icon>
+</md-button>
+</md-fab-trigger>
+<md-fab-actions>
+</md-fab-actions>
+</md-fab-speed-dial>
 </div>
 
 

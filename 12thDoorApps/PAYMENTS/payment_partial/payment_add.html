@@ -70,7 +70,7 @@
                </md-input-container>
                <md-input-container flex >
                   <label>Amount Received</label>
-                  <input ng-model="payment.amountReceived" required ng-change="netAmount('{{payment.amountReceived}}')">
+                  <input ng-model="payment.amountReceived" required ng-change="netAmount()">
                </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
@@ -115,7 +115,7 @@
                <div style="padding-left:40px;" flex>
                   <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#FFFFFF; margin-top:12px;height:40px; border-bottom:1px #f1f1f1 solid;">
                      <div layout="row" layout-sm="column" style="height:40px; margin-top:10px;width:101%;font-size:12px;">
-                        <div flex style="margin-left:1%;" >
+                        <div flex="25" style="max-width: 152px;padding-left: 7px;" >
                            <label><b>Date</b></label>
                         </div>
                         <div flex>
@@ -147,10 +147,11 @@
                </div>
                <div style="padding-left:40px;" flex>
                   <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#ffffff; margin-top:12px;height:40px;">
-                     <div layout="row" layout-sm="column" style="height:20px;margin-top:10px;width:101%;font-size:12px;">
-                        <div flex style="margin-top:-5px;">
-                           <input type="checkbox" ng-model="checkbox[$index]"  ng-change="checkItem($index,invo)"> 
-                           <span><label>{{invo.sdate|date}}</label></span> 
+                     <div layout="row" layout-sm="column" flex style="height:20px;margin-top:10px;width:101%;font-size:12px;">
+                        <div layout="row" flex="20" style="margin-top:-10px;">
+                           <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="checkbox[$index]" class="md-primary" ng-change="checkItem($index,invo)"></md-checkbox>
+                           <!-- <input type="checkbox" ng-model="checkbox[$index]"  ng-change="checkItem($index,invo)"> 
+                            --><span style="margin-top: 10px;"><label>{{invo.sdate|date}}</label></span> 
                         </div>
                         <div flex style="margin-left:20px;">
                            <label>{{invo.invono}}</label>
@@ -171,7 +172,7 @@
                         </div>
                         <div style="margin-top:-1.5%;"flex >
                            <md-input-container flex md-no-float>
-                              <input placeholder="Paid Amount" ng-disabled="true" ng-model="invo.amount">
+                              <input placeholder="Paid Amount" ng-model="invo.amount" ng-change="getPaidAmount(invo, '{{invo.amount}}')">
                            </md-input-container>
                         </div>
                         <div flex >

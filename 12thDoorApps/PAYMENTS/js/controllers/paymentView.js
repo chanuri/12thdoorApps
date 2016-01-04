@@ -12,7 +12,176 @@
     $rootScope.prodSearch = "";
     $scope.self = this;
     $scope.self.searchText = "";
-   
+
+
+
+    $scope.testarr = [{
+      name: "Starred",
+      id: "favouriteStarNo",
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : false,
+      divider: true,
+      close: false
+    }, {
+      name: "Date",
+      id: "date",
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : false,
+      divider: false,
+      close: true
+    }, {
+      name: 'Payment No',
+      id: 'paymentid',
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : false,
+      divider: false,
+      close: false
+    }, {
+      name: "Customer",
+      id: "customer",
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : false,
+      divider: false,
+      close: false
+    }, {
+      name: "Amount",
+      id: "total",
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : false,
+      divider: false,
+      close: false
+    }, {
+      name: "Payment Method",
+      id: "paymentMethod",
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : false,
+      divider: true,
+      close: false
+    }, {
+      name: "Cancelled",
+      id: "paymentStatus",
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : false,
+      divider: false,
+      close: false
+    }];
+
+    $scope.self = this;
+    $scope.self.searchText = "";
+    $scope.prodSearch = '-date';
+    $scope.indexno = 1;
+    $scope.latest = '-date';
+
+    $scope.DefaultCancel = function(item){
+      $scope.testarr[1].close = true;
+      $scope.testarr[$scope.indexno].upstatus = false;
+      $scope.testarr[$scope.indexno].downstatus = false;
+      item.close = false;
+      $scope.prodSearch = '-date';
+      $scope.indexno = 1;
+      $scope.latest = '-date';
+    }
+
+    $scope.CheckFullArrayStatus = function(type,id){  
+        $scope.BackUpArray = [];
+        //remove all all object that status = paid and put them into backup array
+            for (var i = $scope.payments.length - 1; i >= 0; i--) {
+                if ($scope.payments[i].paymentStatus === type) {
+                   $scope.BackUpArray.push($scope.payments[i]);            
+                   $scope.payments.splice(i,1);           
+                };
+            };
+        $scope.payments = MergeArr($scope.BackUpArray,$scope.payments);         
+    }
+
+    function MergeArr(backup,arr){
+        //sort back up array by date in accending order       
+        backup.sort(function(a,b){
+            return new Date(b.date) - new Date(a.date);
+        });        
+
+        arr.sort(function(a,b){
+         return new Date(b.date) - new Date(a.date);
+        });
+
+        //prepend backup array to fullarray 
+        for (var i = backup.length - 1; i >= 0; i--) {
+            arr.unshift(backup[i]);        
+        }; 
+        return arr;
+      }
+
+    function SortStarFunc(){
+        $scope.BackUpArrayStar = [];
+        for (var i = $scope.payments.length - 1; i >= 0; i--) {
+            if ($scope.payments[i].favouriteStarNo === 0) {
+              $scope.BackUpArrayStar.push($scope.payments[i]);            
+              $scope.payments.splice(i,1);           
+            };
+        };
+        $scope.payments = MergeArr($scope.BackUpArrayStar,$scope.payments);        
+    }
+
+    $scope.starfunc = function(item, index) {
+
+        if (item.id === "favouriteStarNo") {
+            $scope.prodSearch = null;
+            item.upstatus == false;
+            item.downstatus = false;
+            $scope.testarr[$scope.indexno].upstatus = false;
+            $scope.testarr[$scope.indexno].downstatus = false;
+            $scope.testarr[$scope.indexno].close = false;
+            item.close = true;
+            $scope.indexno = index;
+            $scope.latest = '-date'
+            SortStarFunc();
+
+        } else if (item.id === "paymentStatus") {
+            $scope.latest = null;
+            $scope.prodSearch = null;
+            item.upstatus == false;
+            item.downstatus = false;
+            $scope.testarr[$scope.indexno].downstatus = false;
+            $scope.testarr[$scope.indexno].upstatus = false;
+            $scope.testarr[$scope.indexno].close = false;
+            item.close = true;
+            $scope.indexno = index;
+            $scope.CheckFullArrayStatus(item.name, item.id);
+
+        } else {
+
+            if (item.upstatus == false && item.downstatus == false) {
+                item.upstatus = !item.upstatus;
+                item.close = true;
+                $scope.testarr[$scope.indexno].upstatus = false;
+                $scope.testarr[$scope.indexno].downstatus = false;
+                $scope.testarr[$scope.indexno].close = false;
+                $scope.indexno = index;
+            } else {
+                item.upstatus = !item.upstatus;
+                item.downstatus = !item.downstatus;
+                item.close = true;
+            }
+
+            $scope.self.searchText = "";
+
+            if (item.upstatus) {
+                $scope.prodSearch = item.id;
+                $scope.latest = '-date';
+            }
+            if (item.downstatus) {
+                $scope.prodSearch = '-' + item.id;
+                $scope.latest = '-date';
+            }
+        }
+    }
     
     $scope.openPayment = function(obj) {
         $state.go('View_Payment', {
@@ -120,6 +289,14 @@
             client.onError(function(data) {
                 $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('Error Occure while Adding to Favourite').ariaLabel('').ok('OK').targetEvent(data));
             });
+
+            if (obj.favouriteStarNo == 1 ) {
+                obj.favouriteStarNo = 0;
+            }
+            else if (obj.favouriteStarNo == 0){
+                obj.favouriteStarNo = 1;
+            }
+
             obj.favoritestar = !obj.favoritestar;
             client.insert(obj, {
                 KeyProperty: "paymentid"

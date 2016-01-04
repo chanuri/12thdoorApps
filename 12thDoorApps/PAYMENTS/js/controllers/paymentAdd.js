@@ -123,7 +123,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                         date: data[i].date,
                         payNo: data[i].paymentid,
                         payMethod: data[i].paymentMethod,
-                        paidAmount: data[i].paidInvoice[j].amount,
+                        paidAmount: data[i].paidInvoice[j].balance,
                         comments: data[i].comments
                     });
                 }
@@ -212,7 +212,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                 duedate: $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr[j].DueDate,
                                 famount: $scope.TDInvoice.updateInvoice[i].finalamount,
                                 mduedate: $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr[j].DueDate,
-                                instalment: $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr[j].dueDateprice,
+                                instalment: $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr[j].balance,
                                 termtype: $scope.TDInvoice.updateInvoice[i].termtype,
                                 checked: false
                             });
@@ -281,7 +281,8 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                     amount: invo.amount,
                     invono: invo.invono,
                     sdate: invo.sdate,
-                    duedate: invo.duedate
+                    duedate: invo.mduedate,
+                    balance : "0"
                 });
 
                  $scope.payment.total = (parseInt($scope.payment.total) + parseInt(invo.amount));
@@ -341,6 +342,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     $scope.submit = function() {
 
         $scope.payment.favoritestar = false;
+        $scope.payment.favouriteStarNo = 1;
         $scope.payment.namount = $scope.nAmount;
         $scope.payment.paymentid = "-999";
         $scope.payment.paymentStatus = "active";
@@ -414,7 +416,6 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         };
     }
     function uInvoice(callback) {
-
         for(i=0; i<= $scope.outstandingInvoices.length-1; i++){
             if($scope.outstandingInvoices[i].checked){
                 console.log($scope.outstandingInvoices[i].checked);
@@ -422,13 +423,26 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                     for(o=0; o <= $scope.allInvoiceArr[k].MultiDueDAtesArr.length-1; o++){
                         if ( ($scope.outstandingInvoices[i].invono == $scope.allInvoiceArr[k].invoiceNo) && ($scope.allInvoiceArr[k].MultiDueDAtesArr[o]['DueDate'] == $scope.outstandingInvoices[i].mduedate) ){
 
+                            for (var y = 0; y < $scope.payment.paidInvoice.length; y++) { 
+                                    
+                                if ( ($scope.payment.paidInvoice[y].invono == $scope.allInvoiceArr[k].invoiceNo) && ( parseInt($scope.payment.paidInvoice[y].balance) != 0 ) ) {
+                                     
+                                    console.log($scope.payment.paidInvoice[y].balance);
+                                    $scope.allInvoiceArr[k].MultiDueDAtesArr[o]['balance'] = $scope.payment.paidInvoice[y].balance.toString();                                    
+                                    $scope.allInvoiceArr[k].MultiDueDAtesArr[o]['paymentStatus'] = "Unpaid"; 
+                                
+                                }else if(($scope.payment.paidInvoice[y].invono == $scope.allInvoiceArr[k].invoiceNo) && ( parseInt($scope.payment.paidInvoice[y].balance) == 0 ) ){
+                                    console.log($scope.allInvoiceArr[k].invoiceNo + ' paid' );
+                                    $scope.allInvoiceArr[k].MultiDueDAtesArr[o]['paymentStatus'] = "paid"; 
+                                    $scope.allInvoiceArr[k].MultiDueDAtesArr[o]['balance'] = "0"; 
+                                }
+                            }
                             console.log($scope.allInvoiceArr[k].MultiDueDAtesArr[o]['DueDate']);
                             console.log($scope.outstandingInvoices[i].mduedate);
 
                             console.log($scope.allInvoiceArr[k].invoiceNo);
                             console.log($scope.outstandingInvoices[i].invono);
-
-                            $scope.allInvoiceArr[k].MultiDueDAtesArr[o]['paymentStatus'] = "paid";   
+   
                             console.log($scope.allInvoiceArr[k])               
                             var client = $objectstore.getClient("invoice12thdoor");
                             client.onComplete(function(data) {
@@ -481,7 +495,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         }
         /*______________________________viewpromotion_______________________________________*/
     $scope.nAmount = "";
-    $scope.netAmount = function(oldAmount) {
+    $scope.netAmount = function() {
        
         if( parseInt($scope.payment.total) != 0){
             $scope.nAmount = ( ( parseInt($scope.payment.uAmount) -  parseInt($scope.payment.total) )    + parseInt($scope.payment.amountReceived) );
@@ -533,6 +547,36 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         $scope.AddImage = function () {
             $scope.uploadimages.val = UploaderService.loadBasicArray();
         }
+    }
+
+
+    $scope.getPaidAmount = function(obj, oldValue){
+        if (obj.amount == "") {
+            obj.amount = 0;
+        }
+        else if (oldValue == "") {
+            oldValue = 0;
+        }
+
+        $scope.payment.total = ( parseInt($scope.payment.total) - parseInt(oldValue) ) + parseInt(obj.amount); 
+        var difference = parseInt(oldValue) - parseInt(obj.amount);
+        console.log(difference);
+
+        if ($scope.nAmount >= 0) {
+            $scope.nAmount =  parseInt($scope.nAmount) + difference;            
+        }else{
+            $scope.nAmount = ( parseInt($scope.nAmount) + parseInt(oldValue) ) - parseInt(obj.amount); 
+        }           
+       // $scope.nAmount = ( parseInt($scope.nAmount) - parseInt($scope.payment.total ) ) ;
+  
+
+        for (var i = 0; i < $scope.payment.paidInvoice.length; i++) {  
+            if ( ($scope.payment.paidInvoice[i]['invono'] == obj.invono) && ($scope.payment.paidInvoice[i]['duedate'] == obj.mduedate) ) {
+                $scope.payment.paidInvoice[i].balance = parseInt($scope.payment.paidInvoice[i].amount) - parseInt(obj.amount);                
+                console.log($scope.payment.paidInvoice[i].balance);
+            }
+        }
+        //$scope.netAmount();
     }
 });
 //END OF AppCtrlAdd

@@ -698,7 +698,7 @@ angular
 	$scope.addcusfieldsProfile= function(ev) {
 		$mdDialog.show({
 			controller: DialogprofileController,
-			templateUrl: 'setting_partials/customdetailsforprofile.html',
+			templateUrl: 'setting_partials/addCustomdetailsforProfile.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true
@@ -717,13 +717,14 @@ angular
 		$rootScope.Settings12thdoor.profile.CusFiel.splice(index, 1);
 	}
 
-	$scope.editprofilecusFieldsrow = function(CusFieldsProfileedit, ev) {
-		console.log(CusFieldsProfileedit);
+	$scope.editprofilecusFieldsrow = function(cusFieldsProfileedit, ev) {
+		console.log(cusFieldsProfileedit);
 		$mdDialog.show({
 			controller: DialogEditprofilecusfieldsController,
-			templateUrl: 'setting_partials/customdetailsforonetabedit.html',
+			templateUrl: 'setting_partials/editCustomdetailsforprofile.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
+			locals: { cusFieldsProfileedit: cusFieldsProfileedit },
 			clickOutsideToClose:true
 		})
 		.then(function(answer) {
@@ -2122,7 +2123,7 @@ function DialogprofileController($scope, $mdDialog, $rootScope) {
 
 	$scope.submit = function() {
 		$rootScope.Settings12thdoor.profile.CusFiel.push({
-			name:$scope.labelshown,
+			labelshown:$scope.labelshown,
 			inputType:$scope.inputType,
 			textBoxFields:$scope.textBoxFields,
 			fields:$scope.fields,
@@ -2144,9 +2145,9 @@ function DialogprofileController($scope, $mdDialog, $rootScope) {
 
 };
 
-function DialogEditprofilecusfieldsController($scope, $mdDialog, $rootScope, CusFieldsProfileedit) {
+function DialogEditprofilecusfieldsController($scope, $mdDialog, $rootScope, cusFieldsProfileedit) {
 
-	$scope.Settings12thdoor=angular.copy(CusFieldsProfileedit);
+	$scope.Settings12thdoor=angular.copy(cusFieldsProfileedit);
 	console.log($scope.Settings12thdoor);
 
 	$scope.submit = function(obj) {
@@ -2171,17 +2172,17 @@ function DialogPrefInvoiceController($scope, $mdDialog, $rootScope) {
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel = [];
 
 	$scope.submit = function() {
-		//var number = Math.random();
-		//console.log(Math.random());
+		var number = Math.random();
+		console.log(Math.random());
 		$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push({
-		//	id:number,
-		name:$scope.labelshown,
-		inputType:$scope.inputType,
-		textBoxFields:$scope.textBoxFields,
-		fields:$scope.fields,
-		type:$scope.type
-		
-	});
+			id:number,
+			labelshown:$scope.labelshown,
+			inputType:$scope.inputType,
+			textBoxFields:$scope.textBoxFields,
+			fields:$scope.fields,
+			type:$scope.type
+
+		});
 		
 		$mdDialog.hide();
 		console.log($rootScope.Settings12thdoor.preference.invoicepref.CusFiel);
@@ -2212,41 +2213,45 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 				break;
 			}
 
-			$mdDialog.hide();
-		}
+		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.splice($scope.Settings12thdoor,1);
+		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push(obj);
+		// console.log($scope.Settings12thdoor);
 
-		$scope.hide = function() {
-			$mdDialog.hide();
-		};
+		$mdDialog.hide();
+	}
 
-		$scope.cancel = function() {
-			$mdDialog.cancel();
-		};
-
+	$scope.hide = function() {
+		$mdDialog.hide();
 	};
 
-	function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootScope) {
+	$scope.cancel = function() {
+		$mdDialog.cancel();
+	};
 
-		$rootScope.Settings12thdoor.preference.invoicepref.emailcontent = {};
+};
 
-		$scope.submit = function() {
-			$rootScope.Settings12thdoor.preference.invoicepref.emailcontent.push({
-				emailBody:$scope.emailBody
-			});
+function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootScope) {
 
-			$mdDialog.hide();
-		}
+	$rootScope.Settings12thdoor.preference.invoicepref.emailcontent = {};
+
+	$scope.submit = function() {
+		$rootScope.Settings12thdoor.preference.invoicepref.emailcontent.push({
+			emailBody:$scope.emailBody
+		});
+
+		$mdDialog.hide();
+	}
 
 
-		$scope.readonly = false;
-		$scope.selectedItem = null;
-		$scope.searchText = null;
-		$scope.querySearch = querySearch;
-		$scope.customers = loadCustomers();
-		$scope.selectedCustomers = [];
-		$scope.selectedcustomercc=[];
+	$scope.readonly = false;
+	$scope.selectedItem = null;
+	$scope.searchText = null;
+	$scope.querySearch = querySearch;
+	$scope.customers = loadCustomers();
+	$scope.selectedCustomers = [];
+	$scope.selectedcustomercc=[];
 
-		
+
     /**
      * Search for vegetables.
      */
@@ -2314,7 +2319,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.estimatepref.CusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -2363,7 +2368,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.paymentpref.CusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -2510,7 +2515,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.expensepref.CusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -2702,7 +2707,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.productpref.CusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -2753,7 +2758,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.inventorypref.ReciptCusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -2804,7 +2809,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.inventorypref.IssueCusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -2855,7 +2860,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.contactpref.supplierCusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -2905,7 +2910,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 
  	$scope.submit = function() {
  		$rootScope.Settings12thdoor.preference.contactpref.customerCusFiel.push({
- 			name:$scope.labelshown,
+ 			labelshown:$scope.labelshown,
  			inputType:$scope.inputType,
  			textBoxFields:$scope.textBoxFields,
  			fields:$scope.fields,
@@ -3126,7 +3131,12 @@ function DialogindividualtaxController($scope, $mdDialog,  $rootScope) {
 		$rootScope.Settings12thdoor.taxes.individualtaxes=[];
 
 	$scope.submit = function() {
+
+		var number = Math.random();
+		console.log(Math.random());
+
 		$rootScope.Settings12thdoor.taxes.individualtaxes.push({
+			id:number,
 			taxname:$scope.taxname,
 			rate:$scope.rate,
 			activate:true,
@@ -3166,39 +3176,47 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 	
 
 	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.taxes.individualtaxes.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
+		// $rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
+		// $rootScope.Settings12thdoor.taxes.individualtaxes.push(obj);
+		// console.log($scope.Settings12thdoor)
 
-	$scope.hide = function() {
-		$mdDialog.hide();
+		for (var i = 0; i <  $rootScope.Settings12thdoor.taxes.individualtaxes.length; i++)
+			if ( $rootScope.Settings12thdoor.taxes.individualtaxes[i].id &&  $rootScope.Settings12thdoor.taxes.individualtaxes[i].id === obj.id) { 
+				$rootScope.Settings12thdoor.taxes.individualtaxes.splice(i, 1);
+				$rootScope.Settings12thdoor.taxes.individualtaxes.push(obj);
+				break;
+			}
+
+			$mdDialog.hide();
+		}
+
+		$scope.hide = function() {
+			$mdDialog.hide();
+		};
+
+		$scope.cancel = function() {
+			$mdDialog.cancel();
+		};
 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
 
+	function DialogmultipletaxgroupController($scope, $mdDialog, $rootScope) {
 
-function DialogmultipletaxgroupController($scope, $mdDialog, $rootScope) {
+		if(!$rootScope.Settings12thdoor.taxes.multipletaxgroup)
+			$rootScope.Settings12thdoor.taxes.multipletaxgroup=[];
 
-	if(!$rootScope.Settings12thdoor.taxes.multipletaxgroup)
-		$rootScope.Settings12thdoor.taxes.multipletaxgroup=[];
+		$rootScope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
+		console.log($rootScope.individualtaxes);
 
-	$rootScope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
-	console.log($rootScope.individualtaxes);
+		$scope.individualtaxes = new Array();
 
-	$scope.individualtaxes = new Array();
+		function loadselctedindivitax(){
+			$scope.loadselctedtax=$scope.individualtaxes;
+			console.log($scope.individualtaxes);
+		} 
 
-	function loadselctedindivitax(){
-		$scope.loadselctedtax=$scope.individualtaxes;
-		console.log($scope.individualtaxes);
-	} 
-	
-	$scope.selcetedtax=function(tax){
-		console.log(tax);
+		$scope.selcetedtax=function(tax){
+			console.log(tax);
 
 		// var obj=eval ("(" + tax + ")");
 		// $scope.individualtaxes.push(obj);
@@ -3216,8 +3234,11 @@ function DialogmultipletaxgroupController($scope, $mdDialog, $rootScope) {
 	}
 
 	$scope.submit = function() {
+		var number = Math.random();
+		console.log(Math.random());
 
 		$rootScope.Settings12thdoor.taxes.multipletaxgroup.push({
+			id:number,
 			taxname:$scope.taxname,
 			individualtaxes:$scope.individualtaxes,
 			activate:true,
@@ -3246,73 +3267,86 @@ function DialogmultipletaxgroupController($scope, $mdDialog, $rootScope) {
 
 function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope, multipletaxgroupedit) {
 	
-
 	$scope.Settings12thdoor=angular.copy(multipletaxgroupedit);
 	console.log($scope.Settings12thdoor);
 
 	$rootScope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
 
+	$scope.individualtaxes = new Array();
+
 	function loadselctedindivitax(){
 		//$scope.Settings12thdoor.individualtaxes=$scope.loadtax;
-		$scope.loadtax=$rootScope.Settings12thdoor.taxes.individualtaxes;
-		console.log($scope.loadtax);
+		// $scope.loadtax=$rootScope.Settings12thdoor.taxes.individualtaxes;
+		// console.log($scope.loadtax);
+		// console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+		$scope.loadselctedtax=$rootScope.Settings12thdoor.taxes.individualtaxes;
 		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
 	} 
 	
 	$scope.selcetedtax=function(tax){
-		// console.log(typeof($scope.individualtax));
-		$rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.taxes.individualtaxes.push(tax);
+		// $rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
+		// $rootScope.Settings12thdoor.taxes.individualtaxes.push(tax);
 		console.log(tax);
-		
+		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+		$rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
+		$rootScope.Settings12thdoor.taxes.individualtaxes.push(JSON.parse(tax));
+		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+
 		loadselctedindivitax();
 	}
 
-	$scope.deleteselecttax = function(loadselctedtax, index){ 
-		$scope.Settings12thdoor.individualtaxes.splice(index, 1);
-	}
+	// $scope.deleteselecttax = function(loadselctedtax, index){ 
+	// 	$rootScope.Settings12thdoor.taxes.individualtaxes.splice(index, 1);
+	// }
 
-	$scope.getToastPosition = function() 
-	{
-		return Object.keys($scope.toastPosition)
-		.filter(function(pos) { return $scope.toastPosition[pos]; })
-		.join(' ');
-	};
 
 	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.taxes.multipletaxgroup.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.taxes.multipletaxgroup.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
+		// $rootScope.Settings12thdoor.taxes.multipletaxgroup.splice($scope.Settings12thdoor,1);
+		// $rootScope.Settings12thdoor.taxes.multipletaxgroup.push(obj);
+		// console.log($scope.Settings12thdoor)
+
+		for (var i = 0; i < $rootScope.Settings12thdoor.taxes.multipletaxgroup.length; i++)
+			if ($rootScope.Settings12thdoor.taxes.multipletaxgroup[i].id && $rootScope.Settings12thdoor.taxes.multipletaxgroup[i].id === obj.id) { 
+				$rootScope.Settings12thdoor.taxes.multipletaxgroup.splice(i, 1);
+				$rootScope.Settings12thdoor.taxes.multipletaxgroup.push(obj);
+				break;
+			}
+
+
+			$mdDialog.hide();
+		};
+
+		$scope.sortableOptions = {
+			containment: '#sortable-container'
+		};
+
+		$scope.hide = function() {
+			$mdDialog.hide();
+		};
+
+		$scope.cancel = function() {
+			$mdDialog.cancel();
+		};
+	};
+
+	function DialogProfileUploadImageController($scope, $mdDialog, $objectstore, $mdToast,$rootScope, UploaderService) {
+
+		$rootScope.Settings12thdoor.profile.name=[];
+
+		$scope.submit = function() {
+			$rootScope.Settings12thdoor.profile.name = UploaderService.loadBasicArray();
+
+			$mdDialog.hide();
+			console.log($rootScope.Settings12thdoor.profile.name);
+
+		};
+
+		$scope.hide = function() {
+			$mdDialog.hide();
+		};
+
+		$scope.cancel = function() {
+			$mdDialog.cancel();
+		};
 	}
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-};
-
-function DialogProfileUploadImageController($scope, $mdDialog, $objectstore, $mdToast,$rootScope, UploaderService) {
-	
-	$rootScope.Settings12thdoor.profile.name=[];
-
-	$scope.submit = function() {
-		$rootScope.Settings12thdoor.profile.name = UploaderService.loadBasicArray();
-
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.profile.name);
-
-	};
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-}
 

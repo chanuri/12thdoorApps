@@ -184,7 +184,8 @@ angular
 			roles:[
 			{
 				rolename : "Super admin", 
-				0:{
+				appPermission:[
+				{
 					appName : "invoice",
 					add : true,
 					view: true,
@@ -192,7 +193,7 @@ angular
 					cancel:true,
 					deletee:true
 				},
-				1:{
+				{
 					appName : "Recurring",
 					add : true,
 					view: true,
@@ -200,7 +201,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				2:{
+				{
 					appName : "Estimate",
 					add : true,
 					view: true,
@@ -209,7 +210,7 @@ angular
 					delete:true
 
 				},
-				3:{
+				{
 					appName : "Credit Notes",
 					add : true,
 					view: true,
@@ -218,7 +219,7 @@ angular
 					delete:true
 
 				},
-				4:{
+				{
 					appName : "Payments",
 
 					add : true,
@@ -228,7 +229,7 @@ angular
 					delete:true
 
 				},
-				5:{
+				{
 					appName : "Expenses",
 
 					add : true,
@@ -238,17 +239,15 @@ angular
 					delete:true
 
 				},
-				6:{
+				{
 					appName : "Product",
 					add : false,
 					view: true,
 					edit:true,
 					cancel:true,
 					delete:true
-
-
 				},
-				7:{
+				{
 					appName : "Inventory Receipts",
 					add : false,
 					view: true,
@@ -256,7 +255,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				8:{
+				{
 					appName : "Inventory Receipts",
 					add : false,
 					view: true,
@@ -264,7 +263,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				9:{
+				{
 					appName : "Project",
 					add : false,
 					view: true,
@@ -272,7 +271,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				10:{
+				{
 					appName : "TimeSheets",
 					add : false,
 					view: true,
@@ -280,7 +279,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				11:{
+				{
 					appName : "Contacts Customer",
 					add : false,
 					view: true,
@@ -288,7 +287,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				12:{
+				{
 					appName : "Contacts Suppliers",
 					add : false,
 					view: true,
@@ -296,7 +295,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				13:{
+				{
 					appName : "360 View",
 					add : false,
 					view: true,
@@ -304,7 +303,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				14:{
+				{
 					appName : "Reports",
 					add : false,
 					view: true,
@@ -312,26 +311,28 @@ angular
 					cancel:true,
 					delete:true
 				}
+				]
 			},
 			{
 				rolename : "Manager",
-				0:{
+				appPermission:[
+				{
 					appName : "invoice",
 					add : true,
 					view: true,
-					edit:false,
-					cancel:false,
+					edit:true,
+					cancel:true,
 					deletee:true
 				},
-				1:{
+				{
 					appName : "Recurring",
 					add : true,
 					view: true,
-					edit:false,
-					cancel:false,
+					edit:true,
+					cancel:true,
 					delete:true
 				},
-				2:{
+				{
 					appName : "Estimate",
 					add : true,
 					view: true,
@@ -340,7 +341,7 @@ angular
 					delete:true
 
 				},
-				3:{
+				{
 					appName : "Credit Notes",
 					add : true,
 					view: true,
@@ -349,7 +350,7 @@ angular
 					delete:true
 
 				},
-				4:{
+				{
 					appName : "Payments",
 
 					add : true,
@@ -359,7 +360,7 @@ angular
 					delete:true
 
 				},
-				5:{
+				{
 					appName : "Expenses",
 
 					add : true,
@@ -369,17 +370,15 @@ angular
 					delete:true
 
 				},
-				6:{
+				{
 					appName : "Product",
 					add : false,
 					view: true,
-					edit:false,
+					edit:true,
 					cancel:true,
 					delete:true
-
-
 				},
-				7:{
+				{
 					appName : "Inventory Receipts",
 					add : false,
 					view: true,
@@ -387,7 +386,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				8:{
+				{
 					appName : "Inventory Receipts",
 					add : false,
 					view: true,
@@ -395,7 +394,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				9:{
+				{
 					appName : "Project",
 					add : false,
 					view: true,
@@ -403,7 +402,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				10:{
+				{
 					appName : "TimeSheets",
 					add : false,
 					view: true,
@@ -411,7 +410,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				11:{
+				{
 					appName : "Contacts Customer",
 					add : false,
 					view: true,
@@ -419,7 +418,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				12:{
+				{
 					appName : "Contacts Suppliers",
 					add : false,
 					view: true,
@@ -427,7 +426,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				13:{
+				{
 					appName : "360 View",
 					add : false,
 					view: true,
@@ -435,7 +434,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				14:{
+				{
 					appName : "Reports",
 					add : false,
 					view: true,
@@ -443,10 +442,12 @@ angular
 					cancel:true,
 					delete:true
 				}
+				]
 			},
 			{
-				rolename : "User", //hav to make json app wise
-				0:{
+				rolename : "User", 
+				appPermission:[
+				{
 					appName : "invoice",
 					add : true,
 					view: true,
@@ -454,7 +455,7 @@ angular
 					cancel:true,
 					deletee:true
 				},
-				1:{
+				{
 					appName : "Recurring",
 					add : true,
 					view: true,
@@ -462,7 +463,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				2:{
+				{
 					appName : "Estimate",
 					add : true,
 					view: true,
@@ -471,7 +472,7 @@ angular
 					delete:true
 
 				},
-				3:{
+				{
 					appName : "Credit Notes",
 					add : true,
 					view: true,
@@ -480,7 +481,7 @@ angular
 					delete:true
 
 				},
-				4:{
+				{
 					appName : "Payments",
 
 					add : true,
@@ -490,7 +491,7 @@ angular
 					delete:true
 
 				},
-				5:{
+				{
 					appName : "Expenses",
 
 					add : true,
@@ -500,17 +501,15 @@ angular
 					delete:true
 
 				},
-				6:{
+				{
 					appName : "Product",
 					add : false,
 					view: true,
 					edit:true,
 					cancel:true,
 					delete:true
-
-
 				},
-				7:{
+				{
 					appName : "Inventory Receipts",
 					add : false,
 					view: true,
@@ -518,7 +517,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				8:{
+				{
 					appName : "Inventory Receipts",
 					add : false,
 					view: true,
@@ -526,7 +525,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				9:{
+				{
 					appName : "Project",
 					add : false,
 					view: true,
@@ -534,7 +533,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				10:{
+				{
 					appName : "TimeSheets",
 					add : false,
 					view: true,
@@ -542,7 +541,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				11:{
+				{
 					appName : "Contacts Customer",
 					add : false,
 					view: true,
@@ -550,7 +549,7 @@ angular
 					cancel:true,
 					delete:true
 				},
-				12:{
+				{
 					appName : "Contacts Suppliers",
 					add : false,
 					view: true,
@@ -558,22 +557,24 @@ angular
 					cancel:true,
 					delete:true
 				},
-				13:{
+				{
 					appName : "360 View",
 					add : false,
-					view: true,
+					view: false,
 					edit:true,
-					cancel:true,
-					delete:true
+					cancel:false,
+					delete:false
 				},
-				14:{
+				{
 					appName : "Reports",
 					add : false,
-					view: true,
+					view: false,
 					edit:true,
-					cancel:true,
+					cancel:false,
 					delete:true
 				}
+				]
+				
 			}
 
 			]
@@ -3020,142 +3021,251 @@ function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootSco
 
  function DialogrolesController($scope, $mdDialog, $rootScope) {
 
- 	$scope.appCollection = ["invoice","recurring","estimate"];
- 	console.log($scope.appCollection);
+ 	$scope.appCollection = ["Invoice","Recurring","Estimate","Credit Notes","Payment","Expense","Product","Inventory Receipts","Inventory Issues","Project","TimeSheets","Contacts Customer","Contacts Suppliers","360 View","Reports"];
+ 	console.log($scope.appCollection[0]);
 
- 	$scope.appFeature=[
- 	{feautureName:"add", feautureValue:true},
- 	{feautureName:"view", feautureValue:true},
- 	{feautureName:"edit", feautureValue:true},
- 	{feautureName:"delete", feautureValue:true},
- 	{feautureName:"cancel", feautureValue:true}
- 	]
+ 	$scope.appPermission=[];
+
+ 	$scope.invoice={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.recurring={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.estimate={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.creditNotes={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.payments={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.expenses={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.product={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.inventoryR={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.inventoryI={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.project={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.timeSheets={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.contactsCustomer={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.contactsSuppliers={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.view360={add:false,view:false,edit:false,cancel:false,deletee:false};
+ 	$scope.reports={add:false,view:false,edit:false,cancel:false,deletee:false};
 
  	if(!$rootScope.Settings12thdoor.users.roles)
  		$rootScope.Settings12thdoor.users.roles=[];
 
-
  	$scope.submit = function() {
- 		//$scope.appCollection = {"name":"invoice","name":"recurring","name":"estimate"}
- 		//console.log($scope.appCollection);
+ 		
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[0],
+ 			add : $scope.invoice.add,
+ 			view: $scope.invoice.view,
+ 			edit:$scope.invoice.edit,
+ 			cancel:$scope.invoice.cancel,
+ 			deletee:$scope.invoice.deletee
+ 		});
 
- 		for(var apps = 0; apps <= $scope.appCollection.length; apps++){
- 			// if($scope.appCollection[apps] == $scope.appCollection[0]){
- 				$scope.appCollection[apps]=appName;
- 				var appName={};
- 				appName.appName=$scope.appCollection[apps];
- 				appName.appFeature=$scope.appFeature[apps];
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[1],
+ 			add : $scope.recurring.add,
+ 			view: $scope.recurring.view,
+ 			edit:$scope.recurring.edit,
+ 			cancel:$scope.recurring.cancel,
+ 			deletee:$scope.recurring.deletee
+ 		});
 
- 				$rootScope.Settings12thdoor.users.roles.push({
- 					roleName:$scope.roleName,
- 					// appName:$scope.appCollection[apps],
- 					// appFeature:$scope.appFeature[apps]
- 					appName:appName
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[2],
+ 			add : $scope.estimate.add,
+ 			view: $scope.estimate.view,
+ 			edit:$scope.estimate.edit,
+ 			cancel:$scope.estimate.cancel,
+ 			deletee:$scope.estimate.deletee
+ 		});
 
- 					
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[3],
+ 			add : $scope.creditNotes.add,
+ 			view: $scope.creditNotes.view,
+ 			edit:$scope.creditNotes.edit,
+ 			cancel:$scope.creditNotes.cancel,
+ 			deletee:$scope.creditNotes.deletee
+ 		});
 
- 				})
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[4],
+ 			add : $scope.payments.add,
+ 			view: $scope.payments.view,
+ 			edit:$scope.payments.edit,
+ 			cancel:$scope.payments.cancel,
+ 			deletee:$scope.payments.deletee
+ 		});
 
- 			// }
- 			// else if($scope.appCollection[apps]==$scope.appCollection[1]){
- 			// 	$rootScope.Settings12thdoor.users.roles.push({
- 			// 		roleName:$scope.roleName,
- 			// 		appName:$scope.appCollection[1],
- 			// 		appFeature:$scope.appFeature
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[5],
+ 			add : $scope.expenses.add,
+ 			view: $scope.expenses.view,
+ 			edit:$scope.expenses.edit,
+ 			cancel:$scope.expenses.cancel,
+ 			deletee:$scope.expenses.deletee
+ 		});
 
- 			// 	})
- 			// } else{
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[6],
+ 			add : $scope.product.add,
+ 			view: $scope.product.view,
+ 			edit:$scope.product.edit,
+ 			cancel:$scope.product.cancel,
+ 			deletee:$scope.product.deletee
+ 		});
 
- 			// 	$rootScope.Settings12thdoor.users.roles.push({
- 			// 		roleName:$scope.roleName,
- 			// 		appName:$scope.appCollection[2],
- 			// 		appFeature:$scope.appFeature
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[7],
+ 			add : $scope.inventoryR.add,
+ 			view: $scope.inventoryR.view,
+ 			edit:$scope.inventoryR.edit,
+ 			cancel:$scope.inventoryR.cancel,
+ 			deletee:$scope.inventoryR.deletee
+ 		});
 
- 			// 	})
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[8],
+ 			add : $scope.inventoryI.add,
+ 			view: $scope.inventoryI.view,
+ 			edit:$scope.inventoryI.edit,
+ 			cancel:$scope.inventoryI.cancel,
+ 			deletee:$scope.inventoryI.deletee
+ 		});
 
- 			// }
- 			
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[9],
+ 			add : $scope.project.add,
+ 			view: $scope.project.view,
+ 			edit:$scope.project.edit,
+ 			cancel:$scope.project.cancel,
+ 			deletee:$scope.project.deletee
+ 		});
+
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[10],
+ 			add : $scope.timeSheets.add,
+ 			view: $scope.timeSheets.view,
+ 			edit:$scope.timeSheets.edit,
+ 			cancel:$scope.timeSheets.cancel,
+ 			deletee:$scope.timeSheets.deletee
+ 		});
+
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[11],
+ 			add : $scope.contactsCustomer.add,
+ 			view: $scope.contactsCustomer.view,
+ 			edit:$scope.contactsCustomer.edit,
+ 			cancel:$scope.contactsCustomer.cancel,
+ 			deletee:$scope.contactsCustomer.deletee
+ 		});
+
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[12],
+ 			add : $scope.contactsSuppliers.add,
+ 			view: $scope.contactsSuppliers.view,
+ 			edit:$scope.contactsSuppliers.edit,
+ 			cancel:$scope.contactsSuppliers.cancel,
+ 			deletee:$scope.contactsSuppliers.deletee
+ 		});
+
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[13],
+ 			add : $scope.view360.add,
+ 			view: $scope.view360.view,
+ 			edit:$scope.view360.edit,
+ 			cancel:$scope.view360.cancel,
+ 			deletee:$scope.view360.deletee
+ 		});
+
+ 		$scope.appPermission.push({
+ 			appName:$scope.appCollection[14],
+ 			add : $scope.reports.add,
+ 			view: $scope.reports.view,
+ 			edit:$scope.reports.edit,
+ 			cancel:$scope.reports.cancel,
+ 			deletee:$scope.reports.deletee
+ 		});
+
+ 		console.log($scope.appPermission);
+
+ 		var number = Math.random();
+ 		console.log(Math.random());
+
+ 		$rootScope.Settings12thdoor.users.roles.push({
+ 			id:number,
+ 			rolename:$scope.rolename, 
+ 			appPermission:$scope.appPermission
+ 		});
+ 		console.log($rootScope.Settings12thdoor.users.roles);
+
+
+ 		$mdDialog.hide();
+ 		console.log($rootScope.Settings12thdoor.users.roles);
+
+ 	};
+
+ 	$scope.hide = function() {
+ 		$mdDialog.hide();
+ 	};
+
+ 	$scope.cancel = function() {
+ 		$mdDialog.cancel();
+ 	};
+
+ };
+
+ function DialogEditrolesController($scope, $mdDialog, $rootScope, editrole) {
+
+ 	$scope.Settings12thdoor=angular.copy(editrole);
+ 	console.log($scope.Settings12thdoor);
+
+ 	$scope.submit = function(obj) {
+
+ 		for (var i = 0; i < $rootScope.Settings12thdoor.users.roles.length; i++)
+ 			if ($rootScope.Settings12thdoor.users.roles[i].id && $rootScope.Settings12thdoor.users.roles[i].id === obj.id) { 
+ 				$rootScope.Settings12thdoor.users.roles.splice(i, 1);
+ 				$rootScope.Settings12thdoor.users.roles.push(obj);
+ 				break;
+ 			}
+ 			$mdDialog.hide();
+ 		}
+
+ 		$scope.hide = function() {
+ 			$mdDialog.hide();
  		};
 
- 		
- 		
- 		// $rootScope.Settings12thdoor.users.roles.push({
- 		// 	roleName:$scope.roleName,
- 		
+ 		$scope.cancel = function() {
+ 			$mdDialog.cancel();
+ 		};
 
+ 	};
 
- 		// });
+ 	function DialogindividualtaxController($scope, $mdDialog,  $rootScope) {
 
-$mdDialog.hide();
-console.log($rootScope.Settings12thdoor.users.roles);
-};
+ 		if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
+ 			$rootScope.Settings12thdoor.taxes.individualtaxes=[];
 
-$scope.hide = function() {
-	$mdDialog.hide();
-};
+ 		$scope.submit = function() {
+ 			var number = Math.random();
+ 			console.log(Math.random());
 
-$scope.cancel = function() {
-	$mdDialog.cancel();
-};
+ 			$rootScope.Settings12thdoor.taxes.individualtaxes.push({
+ 				id:number,
+ 				taxname:$scope.taxname,
+ 				rate:$scope.rate,
+ 				activate:true,
+ 				compound:$scope.compound,
+ 				type:"individualtaxes"
+ 			})
 
-};
+ 			$mdDialog.hide();
+ 			console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
 
-function DialogEditrolesController($scope, $mdDialog, $rootScope, editrole) {
+ 		};
 
-	$scope.Settings12thdoor=angular.copy(editrole);
-	console.log($scope.Settings12thdoor);
+ 		$scope.hide = function() {
+ 			$mdDialog.hide();
+ 		};
 
-
-	$scope.submit = function(obj) {
-		$rootScope.Settings12thdoor.users.roles.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.users.roles.push(obj);
-		console.log($scope.Settings12thdoor)
-		$mdDialog.hide();
-	}
-
-
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
-
-};
-
-function DialogindividualtaxController($scope, $mdDialog,  $rootScope) {
-
-	if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
-		$rootScope.Settings12thdoor.taxes.individualtaxes=[];
-
-	$scope.submit = function() {
-
-		var number = Math.random();
-		console.log(Math.random());
-
-		$rootScope.Settings12thdoor.taxes.individualtaxes.push({
-			id:number,
-			taxname:$scope.taxname,
-			rate:$scope.rate,
-			activate:true,
-			compound:$scope.compound,
-			type:"individualtaxes"
-		})
-
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
-
-	};
-
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
-
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 		$scope.cancel = function() {
+ 			$mdDialog.cancel();
+ 		};
 
 	//when selected compund checkbox
 	//$scope.whenSelectedCopund=false;
@@ -3176,6 +3286,7 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 	
 
 	$scope.submit = function(obj) {
+		console.log(obj);
 		// $rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
 		// $rootScope.Settings12thdoor.taxes.individualtaxes.push(obj);
 		// console.log($scope.Settings12thdoor)
@@ -3205,7 +3316,7 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 		if(!$rootScope.Settings12thdoor.taxes.multipletaxgroup)
 			$rootScope.Settings12thdoor.taxes.multipletaxgroup=[];
 
-		$rootScope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
+		$scope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
 		console.log($rootScope.individualtaxes);
 
 		$scope.individualtaxes = new Array();
@@ -3271,6 +3382,7 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 	console.log($scope.Settings12thdoor);
 
 	$rootScope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
+	$scope.selectedtaxes=[];
 
 	$scope.individualtaxes = new Array();
 
@@ -3288,16 +3400,16 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 		// $rootScope.Settings12thdoor.taxes.individualtaxes.push(tax);
 		console.log(tax);
 		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
-		$rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
-		$rootScope.Settings12thdoor.taxes.individualtaxes.push(JSON.parse(tax));
-		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+		$scope.selectedtaxes.splice($scope.Settings12thdoor,1);
+		$scope.selectedtaxes.push(JSON.parse(tax));
+		console.log($scope.selectedtaxes);
 
 		loadselctedindivitax();
 	}
 
-	// $scope.deleteselecttax = function(loadselctedtax, index){ 
-	// 	$rootScope.Settings12thdoor.taxes.individualtaxes.splice(index, 1);
-	// }
+	$scope.deleteselecttax = function(loadselctedtax, index){ 
+		$scope.selectedtaxes.splice(index, 1);
+	}
 
 
 	$scope.submit = function(obj) {
@@ -3311,7 +3423,6 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 				$rootScope.Settings12thdoor.taxes.multipletaxgroup.push(obj);
 				break;
 			}
-
 
 			$mdDialog.hide();
 		};

@@ -75,13 +75,13 @@
 	</div>
 	<div flex="20" hide-sm>
 	</div>
-	<md-input-container flex>
-	<label>Address</label>
+	<md-input-container flex md-no-float>
 	<input type="text" ng-model="$root.Settings12thdoor.profile.street" placeholder="Street">
 </md-input-container>
 <div flex="5" hide-sm>	
 </div>
 </div>
+
 <div layout layout-sm="column" layout-margin>
 	<div flex="5" hide-sm>	
 	</div>
@@ -238,7 +238,8 @@
 	<md-input-container flex="30">
 	<label>Base Currency</label>
 	<md-select ng-model="$root.Settings12thdoor.profile.baseCurrency">
-	<md-option ng-repeat="b in curr" value="">{{state.abbrev}}</md-option>
+	<md-option>USD</md-option>
+	<md-option>CAD</md-option>
 </md-select>
 </md-input-container>
 </div>

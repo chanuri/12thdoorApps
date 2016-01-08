@@ -52,6 +52,32 @@
 	</div>
 	<div flex="20" hide-sm>
 	</div>
+	<md-switch  flex="20" class="md-primary" ng-model="$root.Settings12thdoor.preference.estimatepref.enableDisscounts" aria-label="Switch 1" ng-init="$root.Settings12thdoor.preference.estimatepref.enableDisscounts=true">
+	Enable Discounts
+</md-switch>
+<md-input-container flex="30" style="margin-bottom: -19px;" ng-show="$root.Settings12thdoor.preference.estimatepref.enableDisscounts">
+<md-select ng-model="$root.Settings12thdoor.preference.estimatepref.disscountItemsOption" >
+<md-option selected>Individual Items</md-option>
+<md-option>SubTotal Items</md-option>
+</md-select>
+</md-input-container>
+</div>
+<div layout layout-sm="column" layout-margin>
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.estimatepref.enableshipping" aria-label="Switch 1">
+	Enable Shipping
+</md-switch>
+</div>
+
+<md-divider></md-divider>
+<div layout layout-sm="column" layout-margin>
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
 	<md-switch flex="33" class="md-primary" ng-model="$root.Settings12thdoor.preference.estimatepref.sendpdfestimateAsattachment" aria-label="Switch 1">
 	Send PDF Estimate as attachment
 </md-switch>

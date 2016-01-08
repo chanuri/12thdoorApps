@@ -20,10 +20,11 @@
 		<div flex style="margin-top: 27px;">
 			<md-input-container md-no-float>
 			<md-select ng-model="taxName" placeholder="Select Individual Taxes" ng-change="selcetedtax(taxName)">
-			<md-option ng-repeat="indi in $root.Settings12thdoor.taxes.individualtaxes" value="{{indi}}">{{indi.taxname}}</md-option>
+			<md-option ng-repeat="indi in $rootScope.Settings12thdoor.taxes.individualtaxes" value="{{indi}}">{{indi.taxname}}</md-option>
 		</md-select>
 	</md-input-container>
 </div>
+
 </div>
 
 <ul as-sortable="sortableOptions" style="width:20%" ng-model="$root.Settings12thdoor.taxes.individualtaxes">

@@ -257,6 +257,15 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
                if($stateParams.profileName == data[i].profileName){
                 recurringInvoiceService.removeArray1(data[i], 1);
                   recurringInvoiceService.setArray1(data[i]);
+                   $scope.Address = data[i].billingAddress.split(',');
+               $scope.street = $scope.Address[0];
+               $scope.city = $scope.Address[1]+$scope.Address[3];
+               $scope.country = $scope.Address[2]+$scope.Address[4];
+
+               $scope.shippingAddress = data[i].shippingAddress.split(',');
+               $scope.ShippingStreet = $scope.shippingAddress[0];
+               $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+               $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
             };
          }
@@ -273,6 +282,43 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
          );
       });
       client.getByFiltering("*");
+
+      var client = $objectstore.getClient("twethdoorProfileDraft");
+      client.onGetMany(function(data) {
+         if (data) {
+           for (var i = data.length - 1; i >= 0; i--) {
+               data[i].invoiceNo = parseInt(data[i].invoiceNo);
+               $scope.TDinvoice.push(data[i]);
+
+               if($stateParams.profileName == data[i].profileName){
+                recurringInvoiceService.removeArray1(data[i], 1);
+                  recurringInvoiceService.setArray1(data[i]);
+                   $scope.Address = data[i].billingAddress.split(',');
+               $scope.street = $scope.Address[0];
+               $scope.city = $scope.Address[1]+$scope.Address[3];
+               $scope.country = $scope.Address[2]+$scope.Address[4];
+
+               $scope.shippingAddress = data[i].shippingAddress.split(',');
+               $scope.ShippingStreet = $scope.shippingAddress[0];
+               $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+               $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
+               }
+            };
+         }
+      });
+      client.onError(function(data) {
+         $mdDialog.show(
+            $mdDialog.alert()
+            .parent(angular.element(document.body))
+            .title('This is embarracing')
+            .content('There was an error retreving the data.')
+            .ariaLabel('Alert Dialog Demo')
+            .ok('OK')
+            .targetEvent(data)
+         );
+      });
+      client.getByFiltering("*");
+
       $scope.getSelected = function(inv) {
          $scope.obtable = inv.table;
       }
@@ -306,10 +352,12 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
  .factory('recurringInvoiceService', function($rootScope) {
-      $rootScope.prodArray = {
-         val: []
-      };
+      $rootScope.prodArray = {val: []};
       $rootScope.invoiceArray = [];
+      $rootScope.fullArr = {val:[]};
+      $rootScope.taxArr = [];
+      $rootScope.correctArr = [];
+
       return {
          setArray: function(newVal) {
             $rootScope.prodArray.val.push(newVal);
@@ -326,7 +374,78 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
          removeArray1: function(newVals) {
             $rootScope.invoiceArray.splice(newVals, 1);
             return $rootScope.prodArray;
-         }
+         },
+         seteditArrayView: function(vall, arry) {
+            arry.push(vall);
+            return arry;
+        },
+        setFullArr : function(obj){
+          //console.log(obj.tax)
+            this.setArray(obj);
+            $rootScope.correctArr = [];
+            $rootScope.multiTax = [];
+               $rootScope.total = 0;
+           // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
+            if(obj.tax.type == "individualtaxes"){
+               $rootScope.taxArr.push({
+                 taxName: obj.tax.taxname,
+                 rate: obj.tax.rate,
+                 salesTax: parseInt(obj.amount*obj.tax.rate/100)
+               })
+               }else if(obj.tax.type == "multipletaxgroup"){
+                  for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
+                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate); 
+                  }; 
+
+                   angular.forEach($rootScope.multiTax, function(tdIinvoice) {
+                     $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
+
+                     return $rootScope.total
+                   })
+
+
+                      console.log($rootScope.total)
+
+                   $rootScope.taxArr.push({
+                       taxName: obj.tax.taxname,
+                       rate:$rootScope.multiTax ,
+                       salesTax: $rootScope.total
+                     })
+                   console.log( $rootScope.taxArr)
+               }
+            
+            $rootScope.taxArr = $rootScope.taxArr.sort(function(a,b){
+                                     return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                                 });
+            if($rootScope.taxArr.length > 1){
+            
+               for(l=0; l<=$rootScope.taxArr.length-1; l++){
+                  if ($rootScope.taxArr[l+1]) {
+
+                     if ($rootScope.taxArr[l].taxName == $rootScope.taxArr[l+1].taxName) {
+                        var sumSalesTax = 0;
+                        var txtName = $rootScope.taxArr[l].taxName;
+                        var rate = $rootScope.taxArr[l].rate;
+
+                        sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l+1].salesTax;
+                        $rootScope.taxArr.splice(l,2);
+                        //$rootScope.taxArr.splice(l+1,1);
+                        $rootScope.taxArr.push({
+                           taxName : txtName,
+                           rate : rate,
+                           salesTax : sumSalesTax
+                        })
+                        
+                        $rootScope.taxArr.sort(function(a,b){
+                            return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                        });
+                      
+                     };
+                  };                  
+               }
+               console.log($rootScope.taxArr)
+            }
+        }    
 
       }
    })

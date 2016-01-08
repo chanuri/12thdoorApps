@@ -82,86 +82,83 @@
                 </div>
                 <md-divider></md-divider>
                 <div layout layout-sm="column" layout-margin flex>
-                    <div style="width:200px; height:90px; border: 1px solid #FF7F50;background-color:#FF7F50;" >
+                    <div style="width:240px; height:80px; border: 1px solid #FF8C00;background-color:#FF8C00;" >
                         <center style="font-color:#FFFFFF;">
-                            <h3 style="font-color:#FFFFFF;">START DATE</h3>
-                            <label >
-                                <b style="font-color:#FFFFFF;">{{item.Startdate|date}}</b>
-                            </label>
+                            <h4 style="color:#FFFFFF;">START DATE</h4>
+                               <p style="color:#FFFFFF; margin-top:-20px;"><b>{{item.Startdate|date}}</b></p>
+                               <p style="color:#FFFFFF; margin-top:-20px;"> Next Invoice {{item.Startdate|date}}</p>
                         </center>
                     </div>
-                    <div flex="5" class="blankspace"></div>
-                    <div style=" width:200px; height:90px; border: 1px solid #1E90FF;background-color:#1E90FF;" >
+                    <div flex="2" class="blankspace"></div>
+                    <div style=" width:240px; height:80px; border: 1px solid #87CEEB;background-color:#87CEEB;" >
                         <center>
-                            <h3 style="font-color:#FFFFFF;">billing Frequency</h3>
-                            <label style="font-color:#FFFFFF;">
-                                <b>{{item.billingFrequency}}</b>
-                            </label>
+                            <h4 style="color:#FFFFFF;">billing Frequency</h4>
+                            <p style="color:#FFFFFF; margin-top:-20px;"><b>{{item.billingFrequency}}</b></p>
                         </center>
                     </div>
-                    <div flex="5" class="blankspace"></div>
-                    <div style=" width:200px; height:90px; border: 1px solid #696969;background-color:#696969;" >
+                    <div flex="2" class="blankspace"></div>
+                    <div style=" width:240px; height:80px; border: 1px solid #708090;background-color:#708090;" >
                         <center>
-                            <h3 style="font-color:#FFFFFF;">Occurences</h3>
-                            <label style="font-color:#FFFFFF;">
-                                <b>{{item.occurences}}</b>
-                            </label>
+                            <h4 style="color:#FFFFFF;" >Occurences</h4>
+                               <p style="color:#FFFFFF; margin-top:-20px;"> <b>{{item.occurences}}</b></p>
                         </center>
                     </div>
-                    <div flex="5" class="blankspace"></div>
-                    <div style=" width:200px; height:90px; border: 1px solid #228B22;background-color:#228B22;" >
+                    <div flex="2" class="blankspace"></div>
+                    <div style=" width:240px; height:80px; border: 1px solid #3CB371;background-color:#3CB371;" >
                         <center>
-                            <h3 style="font-color:#FFFFFF;">Last Invoice</h3>
-                            <label style="font-color:#FFFFFF;">
-                                <b>{{}}</b>
-                            </label>
+                            <h4 style="color:#FFFFFF;">Last Invoice</h4>
+                               <p style="color:#FFFFFF; margin-top:-20px;"> <b>{{}}</b></p>
                         </center>
                     </div>
                 </div>
                 <div layout layout-sm="column" layout-margin  flex >
                     <div flex="5" class="blankspace"></div>
-                    <!--  <div flex="20" class="blankspace"></div> -->
                     <h1 style="">Recurring Profile</h1>
                 </div>
                 <div layout layout-sm="column" layout-margin flex style="margin-top:-20px;">
                     <div flex="5" class="blankspace"></div>
                     <label ng-if="item.invoiceNo == '-999'">#INV {{item.profileRefName}}</label>
                     <label ng-if="item.invoiceNo != '-999'">#INV {{item.profileRefName}}</label>
-                    <div flex="50" class="blankspace"></div>
-                    <!-- <div ayout layout-sm="row" layout-margin> -->
-                    <label>To:</label>
-                    <!-- </div> -->
                 </div>
                 <div layout layout-sm="column" layout-margin style="margin-top:20px;" flex>
-                    <div flex="5" class="blankspace"></div>
-                    <!-- <div ayout layout-sm="row" layout-margin flex> -->
-                    <label>Start Date: {{item.Startdate|date}}</label>
-                    <!-- 		</div> -->
-                    <div flex="40" class="blankspace"></div>
-                    <!-- <div ayout layout-sm="row" layout-margin > -->
-                    <label>
-                        <b>{{item.Name}}</b>
-                    </label>
-                    <!-- </div> -->
+                <div flex="65" class="blankspace"></div>
+                    <label>To:</label>
+                    
                 </div>
-                <div layout layout-sm="column" layout-margin flex>
-                    <div flex="5" class="blankspace"></div>
-                    <label>Billing Frequency: {{item.billingFrequency}}</label>
-                    <div flex="40" class="blankspace"></div>
-                    <label>{{item.billingAddress}}</label>
+                <div layout layout-sm="column" layout-margin style="margin-top:10px;" flex>
+                <div flex="5" class="blankspace"></div>
+                    <label flex="15">Start Date</label>
+                    <label flex="15"> {{item.Startdate|date}}</label>
+                    <div flex="25" class="blankspace"></div>
+                    <label><b>{{item.Name}}</b></label>
                 </div>
+                <div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
+                <div flex="5" class="blankspace"></div>
+                    <label flex="15">Billing Frequency</label>
+                    <label flex="15"> {{item.billingFrequency}}</label>
+                    <div flex="25" class="blankspace"></div>
+                    <label>{{street}}</label>
+                    
+                </div>
+                 <div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
+                <div flex="5" class="blankspace"></div>
+                    <label flex="15">Occurences</label>
+                    <label flex="15"> {{item.occurences}}</label>
+                    <div flex="25" class="blankspace"></div>
+                   <label>{{city}}</label>
+                </div>
+                <div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
+                <div flex="5" class="blankspace"></div>
+                   <label flex="15">Currency</label>
+                    <label flex="15">USD</label>
+                    <div flex="25" class="blankspace"></div>
+                    <label>{{country}}</label>
+                </div>
+               
                 <div layout layout-sm="column" layout-margin  flex>
-                    <div flex="5" class="blankspace"></div>
-                    <label>Occurences:{{item.occurences}}</label>
-                    <div flex="50" class="blankspace"></div>
-                </div>
-                <div layout layout-sm="column" layout-margin  flex>
-                    <div flex="5" class="blankspace"></div>
-                    <label>Currency:</label>
-                </div>
-                <div layout layout-sm="column" layout-margin  flex>
-                    <div flex="5" class="blankspace"></div>
-                    <label>Invoice Comments: {{item.comments}}</label>
+                <div flex="5" class="blankspace"></div>
+                    <label flex="15">Comments</label>
+                    <label flex>{{item.comments}}</label>
                 </div>
                 <div layout layout-sm="column" style="margin-top:30px;" layout-margin  flex>
                     <div flex="5" class="blankspace"></div>
@@ -203,11 +200,6 @@
                             <td style="padding-top:30px;" flex>Tax</td>
                             <td style="padding-left: 90px; padding-top:30px;" flex>
                             {{item.salesTaxAmount|currency}}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding-top:30px;" flex>Other Tax</td>
-                            <td style="padding-left: 90px; padding-top:30px;" flex>
-                            {{item.otherTaxAmount|currency}}</td>
                         </tr>
                         <tr>
                             <td style="padding-top:30px;" flex>Shipping</td>

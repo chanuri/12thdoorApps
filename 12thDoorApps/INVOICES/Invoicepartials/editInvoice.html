@@ -146,11 +146,14 @@
                                                   </span>
                                               </div>
                                               <div flex>
-                                                  <span style="color:#808080;">{{item.tax}}%
-                                   
-                                                      <md-tooltip>Tax</md-tooltip>
-                                                  </span>
-                                              </div>
+                                                 <span style="color:#808080;">{{item.tax.taxname}}
+                                                            <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                                                                <md-tooltip>Tax</md-tooltip>
+                                                            </span>
+                                                             <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                                                                <md-tooltip>Tax</md-tooltip>
+                                                            </span>
+                                                 </div>
                                               <div flex >
                                                   <span style="color:#808080;">{{item.amount|currency}}
                                    
@@ -281,8 +284,8 @@
                           <label></label>
                       </div>
                       <div flex="30">
-                          <span ng-model="creditNote.totalUSD">
-                              <b>{{finalamount(tdi)| currency}}</b>
+                          <span >
+                              <b>{{finalamount(tdi) | currency}}</b>
                           </span>
                       </div>
                   </div>
@@ -347,6 +350,11 @@
                               </div>
                                <div >
                                 <md-button flex  class="md-raised md-primary" ng-show="saveInvoiceB" ng-click="saveInvoice(tdi)">
+                                  <span class="loginBtnLabel">Save</span>
+                              </md-button>
+                              </div>
+                               <div >
+                                <md-button flex  class="md-raised md-primary" ng-show="showSave" ng-click="savetoInvoices(tdi)">
                                   <span class="loginBtnLabel">Save</span>
                               </md-button>
                               </div>

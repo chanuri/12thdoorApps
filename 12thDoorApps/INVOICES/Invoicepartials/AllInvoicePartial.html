@@ -105,12 +105,6 @@ ng-controller="viewCtrl as ctrl">
                                             <p>Open</p>
                                         </md-button>
                                     </md-menu-item>
-                                     <!-- <md-menu-item>
-                                        <md-button ng-click="printDetails($index)">
-                                            <md-icon></md-icon>
-                                            <p>Print</p>
-                                        </md-button>
-                                    </md-menu-item> -->
                                     <md-menu-item >
                                         <md-button ng-click="download(tdi)">
                                             <md-icon></md-icon>
@@ -189,17 +183,17 @@ ng-controller="viewCtrl as ctrl">
                                             <md-input-container flex >
                                                 <label>Payment Terms</label>
                                                 <md-select ng-model="tdi.termtype" flex ng-disabled="true" required>
-                                                    <md-optgroup label="Terms type">
-                                                         <md-option value="Custom" >Custom</md-option>
-                                                        <md-option value="Net 7 days">Net 7 days</md-option>
-                                                        <md-option value="Net 14 days" >Net 14 days</md-option>
-                                                        <md-option value="Net 21 days">Net 21 days</md-option>
-                                                        <md-option value="Net 30 days">Net 30 days</md-option>
-                                                        <md-option value="Net 45 days">Net 45 days</md-option>
-                                                        <md-option value="Net 60 days">Net 60 days</md-option>
-                                                         <md-option value="Net 90 days">Net 90 days</md-option>
-                                                        <md-option value="multipleDueDates" >Multiple Due Dates</md-option>
-                                                        </md-optgroup>
+                                                <md-optgroup label="Terms type">
+                                                    <md-option value="Custom" >Custom</md-option>
+                                                    <md-option value="Net 7 days">Net 7 days</md-option>
+                                                    <md-option value="Net 14 days" >Net 14 days</md-option>
+                                                    <md-option value="Net 21 days">Net 21 days</md-option>
+                                                    <md-option value="Net 30 days">Net 30 days</md-option>
+                                                    <md-option value="Net 45 days">Net 45 days</md-option>
+                                                    <md-option value="Net 60 days">Net 60 days</md-option>
+                                                    <md-option value="Net 90 days">Net 90 days</md-option>
+                                                    <md-option value="multipleDueDates" >Multiple Due Dates</md-option>
+                                                </md-optgroup>
                                                 </md-select>
                                             </md-input-container>
                                             <div flex >
@@ -273,12 +267,17 @@ ng-controller="viewCtrl as ctrl">
                                     <md-tooltip>Discount</md-tooltip>
                                 </span>
                             </div>
-                            <div flex>
-                                <span style="color:#808080;">{{item.tax}}%
-                 
-                                    <md-tooltip>Tax</md-tooltip>
-                                </span>
-                            </div>
+                           
+                            <div flex="35" >
+                            <span style="color:#808080;">{{item.tax.taxname}}
+                        <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                            <md-tooltip>Tax</md-tooltip>
+                        </span>
+                         <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                            <md-tooltip>Tax</md-tooltip>
+                        </span>
+
+                        </div>
                             <div flex >
                                 <span style="color:#808080;">{{item.amount|currency}}
                  
@@ -301,7 +300,6 @@ ng-controller="viewCtrl as ctrl">
                     <div flex="10">
                         <label>Sub Total</label>
                     </div>
-             
                         <md-input-container flex="20" >
                             <input type="text" style="display:none" aria-label="sub-total"/>
                         </md-input-container>
@@ -310,7 +308,7 @@ ng-controller="viewCtrl as ctrl">
                         <label></label>
                     </div>
                     <div flex="30">
-                        <span>{{calculatetotal(tdi) | currency}}</span>
+                        <span>{{tdi.total | currency}}</span>
                     </div>
                 </div>
                 <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
@@ -328,7 +326,7 @@ ng-controller="viewCtrl as ctrl">
                         <label></label>
                     </div>
                     <div flex="30" >
-                        <label> - {{finaldiscount(tdi) | currency}}</label>
+                        <label> - {{tdi.fdiscount | currency}}</label>
                     </div>
                 </div>
                 <div layout layout-sm="column" layout-margin style="overflow:hidden;">
@@ -346,27 +344,10 @@ ng-controller="viewCtrl as ctrl">
                         <label></label>
                     </div>
                     <div flex="30" >
-                        <label>{{CalculateTax(tdi)|currency}}</label>
+                        <label>{{tdi.salesTaxAmount|currency}}</label>
                     </div>
                 </div>
-                <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                    <div flex="5"></div>
-                    <div flex="20" style="margin-top:35px;"></div>
-                    <div flex="10">
-                        <label>Another Tax</label>
-                    </div>
-                    
-                        <md-input-container flex="20" >
-                            <input type="text" ng-model="tdi.anotherTax" ng-disabled="true" style="margin-top:-12px;" aria-label="Another_tax"/>
-                        </md-input-container>
-                    
-                    <div flex="5">
-                        <label></label>
-                    </div>
-                    <div flex="30">
-                        <label>{{CalculateOtherTax(tdi)|currency}}</label>
-                    </div>
-                </div>
+                
                 <div layout layout-sm="column" layout-margin style="overflow:hidden;">
                     <div flex="5"></div>
                     <div flex="20" style="margin-top:35px;"></div>
@@ -397,7 +378,6 @@ ng-controller="viewCtrl as ctrl">
                             <b>Total USD</b>
                         </label>
                     </div>
-                    
                         <md-input-container flex="20" >
                             
                         </md-input-container>
@@ -407,7 +387,7 @@ ng-controller="viewCtrl as ctrl">
                     </div>
                     <div flex="30">
                         <span ng-model="creditNote.totalUSD">
-                            <b>{{finalamount(tdi)| currency}}</b>
+                            <b>{{tdi.finalamount| currency}}</b>
                         </span>
                     </div>
                 </div>
@@ -421,17 +401,13 @@ ng-controller="viewCtrl as ctrl">
                     </div>
                     <div layout layout-sm="column" layout-margin>
                         <section-title> </section-title>
+
                         <md-input-container flex >
-                            <label>Payment Method</label>
-                            <md-select  ng-model="tdi.paymentMethod" ng-disabled="true" flex>
-                                <md-optgroup label="Online Payment Method">
-                                   <md-option value="PayPal">PayPal</md-option>
-                                    <md-option value="Stripe ">Stripe </md-option>
-                                    <md-option value="cash">Cash </md-option>
-                                    <md-option value="Cheque">Cheque </md-option>
-                                </md-optgroup>
-                            </md-select>
+                       <label>Payment Method</label>
+                    <input ng-model="tdi.paymentMethod"  ng-disabled="true">  
+                        </input>
                         </md-input-container>
+                        
                     </div>
                     <div layout layout-sm="column" layout-margin>
                         <section-title> </section-title>
@@ -465,8 +441,7 @@ ng-controller="viewCtrl as ctrl">
                                 <td style="padding: 30px;" flex>{{mutidate.Percentage}} % </td>
                                 <td style="padding: 30px;" flex> {{mutidate.dueDateprice}} </td>
                             </tr>
-                        </table>
-                        
+                        </table>                      
                     </div>
                      <md-divider></md-divider>
                     <div layout layout-sm="column" layout-margin>

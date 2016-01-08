@@ -12,7 +12,7 @@
         <form name="editForm" ng-submit="submit()" style="width:960px;"  >
             <md-content flex>
                 <div layout layout-sm="column" layout-margin  >
-                    <section-title title="Customer Details"> </section-title>
+                   <section-title title="Customer Details"> </section-title>
                     <md-autocomplete flex="67" required="" 
                     md-input-name="autocompleteField"
                          md-no-cache="ctrl.noCache" 
@@ -81,9 +81,7 @@
                         <label>Profile Name</label>
                         <input ng-model="TDinvoice.profileRefName" ng-disabled="true">
                         </md-input-container>
-                        <!-- <div flex >
-                            <md-date-picker model="TDinvoice.Startdate"  label="Start Date" dialog-md-theme="datePickerTheme" /></md-date-picker>
-                        </div> -->
+                        
                          <md-datepicker ng-model="TDinvoice.Startdate" md-placeholder="Start Date" required flex style="margin-top:25px; width:230px;"></md-datepicker>
 
                     </div>
@@ -92,7 +90,7 @@
                        
                         <md-input-container flex required>
                             <label>Billing Frequency</label>
-                            <md-select ng-model="TDinvoice.billingFrequency" flex />
+                            <md-select ng-model="TDinvoice.billingFrequency" ng-required="true" flex />
                             <md-optgroup label="Terms type">
                                 <md-option value="weekly">Weekly</md-option>
                                 <md-option value="2weeks">2 Weeks</md-option>
@@ -110,7 +108,7 @@
                     
                      <md-input-container flex >
                             <label>Occurences</label>
-                            <input ng-model="TDinvoice.occurences" >
+                            <input ng-model="TDinvoice.occurences" ng-required="true" >
                             </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
@@ -192,11 +190,16 @@
                                                              </span> 
                                                           </div>
 
-                                                           <div flex>
-                                                             <span style="color:#808080;">{{item.tax}}%
-                                                             <md-tooltip>Tax</md-tooltip>
-                                                             </span> 
-                                                          </div>
+                                                           <div flex="35" >
+                                                            <span style="color:#808080;">{{item.tax.taxname}}
+                                                            <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                                                                <md-tooltip>Tax</md-tooltip>
+                                                            </span>
+                                                             <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                                                                <!-- <md-tooltip>Tax</md-tooltip> -->
+                                                            </span>
+                                                           
+                                                        </div>
 
                                                           <div flex >
                                                              <span style="color:#808080;">{{item.amount|currency}}
@@ -214,136 +217,106 @@
                                                      <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addproduct()">New Line</md-button>
                                                 </div>
                                                </div>
-                                   <!-- <div flex="50" class="blankspace"></div> -->
                                             </div>
                                        <md-divider></md-divider>
-                                    <div layout layout-sm="column" layout-margin>
-                        
-                         <section-title title="Totals"> </section-title>
-                        </div>
-                       <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
-                              <div flex="5"></div>
-                              <div flex="20" style=""></div>
-                              <div flex="10">
-                                  <label>Sub Total</label>
-                              </div>
-                                  <md-input-container flex="20" >
-                                      <input type="text"  ng-model="tdi.fdiscount" aria-label="discount" style="display:none" />
-                                  </md-input-container>
-                              <div flex="5">
-                                  <label></label>
-                              </div>
-                              <div flex="30">
-                                  <span>{{calculatetotal() | currency}}</span>
-                              </div>
-                          </div>
-                          <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
-                              <div flex="5"></div>
-                              <div flex="20" style="margin-top:35px;"></div>
-                              <div flex="10">
-                                  <label>Discount</label>
-                              </div>
-                                  <md-input-container flex="20" >
-                                       <input type="text"  ng-model="TDinvoice.fdiscount" aria-label="discount" style="margin-top:-12px;"/>
-                                  </md-input-container>
-                              <div flex="5">
-                                  <label></label>
-                              </div>
-                              <div flex="30" >
-                                  <label>{{finaldiscount(TDinvoice.fdiscount) | currency}}</label>
-                              </div>
-                          </div>
-                        <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                              <div flex="5"></div>
-                              <div flex="20" style="margin-top:35px;"></div>
-                              <div flex="10">
-                                  <label>Sales Tax</label>
-                              </div>
-                                  <md-input-container flex="20" >
-                                      <input type="text"  ng-model="TDinvoice.salesTax" aria-label="sales tax" style="margin-top:-12px;"/>
-                                  </md-input-container>
-                              <div flex="5">
-                                  <label></label>
-                              </div>
-                              <div flex="30" >
-                                  <label>{{CalculateTax(Dinvoice.salesTax)|currency}}</label>
-                              </div>
-                          </div>
-                          <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                              <div flex="5"></div>
-                              <div flex="20" style="margin-top:35px;"></div>
-                              <div flex="10">
-                                  <label>Another Tax</label>
-                              </div>
-                                  <md-input-container flex="20" >
-                                      <input type="text" ng-model="TDinvoice.anotherTax" aria-label="Another Tax" style="margin-top:-12px;"/>
-                                  </md-input-container>
-                              <div flex="5">
-                                  <label></label>
-                              </div>
-                              <div flex="30">
-                                  <label>{{CalculateOtherTax(TDinvoice.anotherTax)|currency}}</label>
-                              </div>
-                          </div>
-                      <div layout layout-sm="column" layout-margin style="overflow:hidden; height:50px;" ng-hide="shipping">
-                    
-                              <div flex="5"></div>
-                              <div flex="20" style="margin-top:35px;"></div>
-                              <div flex="10">
-                                  <label>Shipping</label>
-                              </div>
-                                  <md-input-container flex="20" >
-                                      <input type="text" ng-model="TDinvoice.shipping" aria-label="shipping" style="margin-top:-12px;" ng-change="finalamount(TDinvoice.shipping)"/>
-                                  </md-input-container>
-                              
-                              <div flex="5">
-                                  <label></label>
-                              </div>
-                              <div flex="15">
-                                  <span >{{TDinvoice.shipping| currency}}</span>
-                              </div>
-                          </div>
-                          <div layout layout-sm="column" layout-margin style="overflow:hidden; margin-top:-10px; height:30px;" >
-                              <div flex="5"></div>
-                              <div flex="20" style=""></div>
-                              <div flex="10"></div>
-                                  <md-input-container flex="20" >
-                                  </md-input-container> 
-                              <div flex="5">
-                                  <label></label>
-                              </div>
-                              <div flex="20">
-                              </div>
-                             <div flex="5" style="margin-right:30px; ">
-                                <md-switch ng-model="ShippingSwitch" aria-label="Switch 1" style="margin-top:-10px!important;">
-                                  </md-switch>
-                           </div>
-                          </div>
-                          <center>
-                              <md-divider style="width:60%"></md-divider>
-                          </center>
-                    <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                              <div flex="5"></div>
-                              <div flex="20" style="margin-top:35px;"></div>
-                              <div flex="10">
-                                  <label>
-                                      <b>Total USD</b>
-                                  </label>
-                              </div>
-                                  <md-input-container flex="20" >
-                                  </md-input-container>
-                              <div flex="5">
-                                  <label></label>
-                              </div>
-                              <div flex="27">
-                                <span ng-model="TDinvoice.totalUSD"><b>{{finalamount()| currency}}</b></span>
-                              </div>
-                              <div style="height:30px; width:40px;"> 
-                            <md-button ng-click="acceptAccount()" style="height:30px;" aria-label="accept account" href>
-                            <md-icon md-svg-src="img/ic_more_horiz_24px.svg" class="iconColor"  md-ink-ripple style="right:1px;margin-right:0px;" ></md-icon>
-                            </md-button>
+                                       <div ng-if="prodArray.val.length != 0" > 
+                            <div layout layout-sm="column" layout-margin>
+                                <section-title title="Totals"> </section-title>
                             </div>
-                          </div>
+                            <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
+                                <div flex="5"></div>
+                                <div flex="20" style=""></div>
+                                <div flex="10">
+                                    <label>Sub Total</label>
+                                </div>
+                                <md-input-container flex="20" >
+                                    <input type="text"  ng-model="tdi.fdiscount" aria-label="discount" style="display:none" />
+                                </md-input-container>
+                                <div flex="5">
+                                    <label></label>
+                                </div>
+                                <div flex="30">
+                                    <span>{{calculatetotal() | currency}}</span>
+                                </div>
+                            </div>
+                            <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;" ng-show="Displaydiscount">
+                                <div flex="5"></div>
+                                <div flex="20" style="margin-top:35px;"></div>
+                                <div flex="10">
+                                    <label>Discount</label>
+                                </div>
+                                <md-input-container flex="20" >
+                                    <input type="text"  ng-model="TDinvoice.fdiscount" aria-label="discount" style="margin-top:-12px;" ng-disabled="checkDiscout"/>
+                                </md-input-container>
+                                <div flex="5">
+                                    <label></label>
+                                </div>
+                                <div flex="30">
+                                    <label>{{finaldiscount(TDinvoice.fdiscount) | currency}}</label>
+                                    <label style="display:none">{{CalculateTax()}}</label>
+                                </div>
+                            </div>
+                            <div layout layout-sm="column" ng-repeat="tt in taxArr" layout-margin style="overflow:hidden;">
+                                <div flex="5"></div>
+                             
+                                <div flex="20" style="margin-top:35px;"></div>
+                                <div flex="10">
+                                    <label>{{tt.taxName}}</label>
+                                </div>
+                                <md-input-container flex="20" >
+                                    <input type="text"  ng-model="tt.rate" aria-label="sales tax" style="margin-top:-12px;"/>
+                                </md-input-container>
+                                <div flex="5">
+                                    <label></label>
+                                </div>
+                                <div flex="30" >
+                                    <label>{{tt.salesTax| currency}}</label>
+                                   <!--  <span style="display:none">{{CalculateTax()}}</span > -->
+                                </div>
+                            </div>
+                            <div layout layout-sm="column" layout-margin style="overflow:hidden; height:50px;" ng-show="ShippingCharges">
+                                <div flex="5"></div>
+                                <div flex="20" style="margin-top:35px;"></div>
+                                <div flex="10">
+                                    <label>Shipping</label>
+                                </div>
+                                <md-input-container flex="20" >
+                                    <input type="text" ng-model="TDinvoice.shipping" aria-label="shipping" style="margin-top:-12px;" ng-change="finalamount(TDinvoice.shipping)"/>
+                                </md-input-container>
+                                <div flex="5">
+                                    <label></label>
+                                </div>
+                                <div flex="15">
+                                    <span >{{TDinvoice.shipping| currency}}</span>
+                                </div>
+                            </div>
+                            <center>
+                                <md-divider style="width:60%"></md-divider>
+                            </center>
+                            <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+                                <div flex="5"></div>
+                                <div flex="20" style="margin-top:35px;"></div>
+                                <div flex="10">
+                                    <label>
+                                        <b>Total USD</b>
+                                    </label>
+                                </div>
+                                <md-input-container flex="20" ></md-input-container>
+                                <div flex="5">
+                                    <label></label>
+                                </div>
+                                <div flex="27">
+                                    <span ng-model="TDinvoice.totalUSD">
+                                        <b>{{finalamount()| currency}}</b>
+                                    </span>
+                                </div>
+                                <div style="height:30px; width:40px;">
+                                    <md-button ng-click="acceptAccount()" style="height:30px;" aria-label="accept account" href>
+                                        <md-icon md-svg-src="img/ic_more_horiz_24px.svg" class="iconColor"  md-ink-ripple style="right:1px;margin-right:0px;" ></md-icon>
+                                    </md-button>
+                                </div>
+                            </div>
+                            </div>
                           <md-divider></md-divider>
                           <div layout layout-sm="column" layout-margin  >
                               
@@ -356,7 +329,9 @@
                               <div layout layout-sm="column" layout-margin>
                                  
                                   <section-title> </section-title>
-                                  <md-select placeholder="Payment Method" ng-model="TDinvoice.paymentMethod" flex>
+                                   <md-input-container flex required>
+                            <label>Payment Method</label>
+                                  <md-select  ng-model="TDinvoice.paymentMethod" flex>
                                       <md-optgroup label="Online Payment Method">
                                          <md-option value="PayPal">PayPal</md-option>
                                          <md-option value="Stripe ">Stripe </md-option>
@@ -366,6 +341,22 @@
                                            <md-option value="Cheque">Cheque </md-option>
                                       </md-optgroup>
                                   </md-select>
+                                  </md-input-container>
+                              </div>
+                              <div layout layout-sm="column" layout-margin>
+                                 
+                                  <section-title> </section-title>
+                                  <md-input-container flex required>
+                            <label>Invoice Settings</label>
+                            <md-select  ng-model="TDinvoice.saveOption" flex>
+                                      <md-optgroup label="Invoice Settings">
+                                         <md-option value="saveAsPending">Save As Pending</md-option>
+                                         <md-option value="saveAndEmail">Save and Email </md-option>
+                                         <md-option value="saveandCharage">Save, Email and Charge Customer</md-option>
+                                      </md-optgroup>
+                                  </md-select>
+                    </md-input-container>
+                                  
                               </div>
                               <div layout layout-sm="column" layout-margin>
                                    <section-title> </section-title>

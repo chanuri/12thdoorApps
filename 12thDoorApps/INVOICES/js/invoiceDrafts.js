@@ -77,6 +77,9 @@ angular.module('mainApp')
       $rootScope.testArray = {val: []};
       $rootScope.editProdArray = {val: []};
       $rootScope.showprodArray = {val: []};
+      $rootScope.fullArr = {val:[]};
+      $rootScope.taxArr = [];
+      $rootScope.correctArr = [];
       return {
          setArray: function(newVal) {
             $rootScope.testArray.val.push(newVal);
@@ -109,7 +112,75 @@ angular.module('mainApp')
         seteditArrayView: function(vall, arry) {
             arry.push(vall);
             return arry;
-        }
+        },
+        setFullArr : function(obj){
+          //console.log(obj.tax)
+            this.setArray(obj);
+            $rootScope.correctArr = [];
+            $rootScope.multiTax = [];
+               $rootScope.total = 0;
+           // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
+            if(obj.tax.type == "individualtaxes"){
+               $rootScope.taxArr.push({
+                 taxName: obj.tax.taxname,
+                 rate: obj.tax.rate,
+                 salesTax: parseInt(obj.amount*obj.tax.rate/100)
+               })
+               }else if(obj.tax.type == "multipletaxgroup"){
+                  for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
+                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate); 
+                  }; 
+
+                   angular.forEach($rootScope.multiTax, function(tdIinvoice) {
+                     $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
+
+                     return $rootScope.total
+                   })
+
+
+                      console.log($rootScope.total)
+
+                   $rootScope.taxArr.push({
+                       taxName: obj.tax.taxname,
+                       rate:$rootScope.multiTax ,
+                       salesTax: $rootScope.total
+                     })
+                   console.log( $rootScope.taxArr)
+               }
+            
+            $rootScope.taxArr = $rootScope.taxArr.sort(function(a,b){
+                                     return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                                 });
+            if($rootScope.taxArr.length > 1){
+            
+               for(l=0; l<=$rootScope.taxArr.length-1; l++){
+                  if ($rootScope.taxArr[l+1]) {
+
+                     if ($rootScope.taxArr[l].taxName == $rootScope.taxArr[l+1].taxName) {
+                        var sumSalesTax = 0;
+                        var txtName = $rootScope.taxArr[l].taxName;
+                        var rate = $rootScope.taxArr[l].rate;
+
+                        sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l+1].salesTax;
+                        $rootScope.taxArr.splice(l,2);
+                        //$rootScope.taxArr.splice(l+1,1);
+                        $rootScope.taxArr.push({
+                           taxName : txtName,
+                           rate : rate,
+                           salesTax : sumSalesTax
+                        })
+                        
+                        $rootScope.taxArr.sort(function(a,b){
+                            return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                        });
+                      
+                     };
+                  };                  
+               }
+              // console.log($rootScope.taxArr)
+            }
+
+        }    
 
       }
    })

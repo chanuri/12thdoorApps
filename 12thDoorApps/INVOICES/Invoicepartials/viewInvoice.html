@@ -210,11 +210,6 @@
 				 			{{item.salesTaxAmount|currency}}</td>
 				 		</tr>
 				 		<tr >
-				 			<td style="padding-top:15px;" flex> Other Tax</td>
-				 			<td style="padding-left: 75px; padding-top:15px;" flex>
-				 			{{item.otherTaxAmount|currency}}</td>
-				 		</tr>
-				 		<tr >
 				 			<td style="padding-top:15px;" flex> Shipping</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.shipping|currency}}</td>
@@ -241,7 +236,7 @@
 				<div layout layout-sm="column" layout-margin style="margin-top:-40px; " flex>
 				<div flex="5" class="blankspace"></div>
 				<label>Payment method</label>
-
+					<label>{{item.paymentMethod}}</label>
 				<img ng-if="item.paymentMethod == 'PayPal'" src="img/paypal.png" width="80px" height="40px" style="margin-top:-20px; padding:10px;">
 				<img ng-if="item.paymentMethod == 'Stripe'" src="img/stripe.png" width="70px" height="35px" style="margin-top:-20px; padding:10px;">
 				</div>

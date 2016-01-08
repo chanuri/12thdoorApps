@@ -5,11 +5,26 @@ angular.module('mainApp')
 $scope.editInvoiceB = false;
 $scope.saveInvoiceB = false;
  $scope.systemMessage = [];
+
+for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
+  if($rootScope.invoiceArray[i].status == "Draft"){
+    $scope.showSave = true;
+  }
+};
+
+ if($state.current.name == 'copy') {
+        $scope.saveInvoiceB = true;
+     }else if($state.current.name == 'estimateInvoice'){
+      $scope.saveInvoiceB = true;
+     }else{
+        $scope.editInvoiceB = true;
+     }
+
 $scope.edit = function(updatedForm) {
          updatedForm.invoiceNo = updatedForm.invoiceNo.toString();
 
         if(updatedForm.status == "Draft"){
-          var client = $objectstore.getClient("twelfthdoorInvoiceDraft");
+          var client = $objectstore.getClient("invoice12thdoorDraft");
         //updatedForm.invoiceProducts = $rootScope.showprodArray.val;
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
@@ -38,7 +53,7 @@ $scope.edit = function(updatedForm) {
          });
         }else{
        
-         var client = $objectstore.getClient("twelfthdoorInvoice");
+         var client = $objectstore.getClient("invoice12thdoor");
          //updatedForm.invoiceProducts = $rootScope.showprodArray.val;
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
@@ -120,10 +135,10 @@ $scope.edit = function(updatedForm) {
             .cancel('Cancel')
             .targetEvent(obj);
          $mdDialog.show(confirm).then(function() {
-            var draftdelete = $objectstore.getClient("twelfthdoorInvoiceDraft");
+            var draftdelete = $objectstore.getClient("invoice12thdoorDraft");
             obj.status = "Unpaid";
             draftdelete.onComplete(function(data) {
-               var newInsert = $objectstore.getClient("twelfthdoorInvoice");
+               var newInsert = $objectstore.getClient("invoice12thdoor");
                newInsert.onComplete(function(data) {
                   $mdDialog.show(
                      $mdDialog.alert()
@@ -242,7 +257,7 @@ $scope.edit = function(updatedForm) {
                      });
                      //console.log($rootScope.editProdArray.val)
                       if($scope.promoItems[i].status == 'notavailable'){
-                           var confirm = $mdDialog.confirm()
+                          var confirm = $mdDialog.confirm()
                             .title('Would you like to save this product for future use?')
                             .content('')
                             .ariaLabel('Lucky day')
@@ -254,12 +269,54 @@ $scope.edit = function(updatedForm) {
                         $scope.prod.Productname = $scope.promoItems[i].productName;
                          $scope.prod.costprice = $scope.promoItems[i].price;
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
-                         $scope.prod.producttax = $scope.promoItems[i].tax;
+                         $scope.prod.producttax = $scope.promoItems[i].tax;                       
+                         
+                         console.log($scope.promoItems[i].tax);
+                         $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
+                          if ($scope.product.length>0) {
+                            //if array is not empty
+                             $scope.PatternExsist = false; // use to check pattern match the object of a array 
+                             $scope.MaxID = 0;
+                              for(y=0; y<=$scope.product.length-1; y++){
+                                if ($scope.product[y].ProductCode.substring(0, 3) === $scope.FirstLetters) {
+                                  $scope.CurrendID = $scope.product[y].ProductCodeID;
+                                  if ($scope.CurrendID > $scope.MaxID) {
+                                    $scope.MaxID = $scope.CurrendID;
+                                  };
+                                   $scope.PatternExsist = true;
+                                };
+                              }
+                              if (!$scope.PatternExsist) {
+                                $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                                $scope.prod.ProductCodeID = 1;
+                              }else if($scope.PatternExsist){
+                                $scope.GetMaxNumber($scope.prod,$scope.FirstLetters,$scope.MaxID)
+                              }       
+                          }else{
+                            $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                            $scope.prod.ProductCodeID = 1;
+                          }
+
                        }
+
+                       $scope.GetMaxNumber = function(obj,name,MaxID){
+                        $scope.FinalNumber = MaxID +1;
+                        $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
+                        $scope.Zerros="";
+                        for(i=0; i<4-$scope.FinalNumberLength; i++ ){
+                          var str = "0";
+                          $scope.Zerros = $scope.Zerros + str;
+                        }
+                        $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
+                        obj.ProductCodeID = $scope.FinalNumber;
+                        obj.ProductCode = name +'-'+ $scope.Zerros;
+                       }
+
                        $scope.prod.ProductCategory = "Product";
                        $scope.prod.progressshow = "false"
                        $scope.prod.favouriteStar = false;
                        $scope.prod.favouriteStarNo = 1;
+                       $scope.prod.tags = [];
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
@@ -286,14 +343,14 @@ $scope.edit = function(updatedForm) {
                                .targetEvent(data)
                             );
                          });
-                         $scope.prod.ProductCode = "-999";
+                         $scope.prod.product_code = "-999";
                          client.insert([$scope.prod], {
-                            KeyProperty: "ProductCode"
+                            KeyProperty: "product_code"
                          });
                       }, function() {
                       });
                         }
-                        console.log($rootScope.editProdArray.val)
+                        // console.log($rootScope.editProdArray.val)
                          for (var i = $rootScope.editProdArray.val.length - 1; i >= 0; i--) {
                              $rootScope.invoiceArray[0].invoiceProducts.push($rootScope.editProdArray.val[i]);
                            };
@@ -438,24 +495,20 @@ $scope.edit = function(updatedForm) {
             }
          })
       }
+
+
         $scope.TDinvoice =[];
-     var client = $objectstore.getClient("twelfthdoorInvoice");
+     var client = $objectstore.getClient("invoice12thdoor");
       client.onGetMany(function(data) {
          if (data) {
-           // $scope.TDinvoice = data;
-               
-
             for (var i = data.length - 1; i >= 0; i--) {
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
-               //data[i].invoiceProducts=$rootScope.editProdArray;
                $scope.TDinvoice.push(data[i]);
-               //console.log( $rootScope.editProdArray)
                
                if($stateParams.invoiceno == data[i].invoiceNo){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
                }
-               
             };
          }
       });
@@ -479,6 +532,12 @@ $scope.edit = function(updatedForm) {
          $scope.ProgressBar.PaymentScheme = $scope.TDinvoice.termtype;
           $scope.ProgressBar.PaymentSchemeActive= "false";
          $scope.ProgressBar.PaymentSchemeData.push($rootScope.dateArray.value);
+         $scope.TDinvoice.commentsAndHistory=[];
+         $scope.TDinvoice.commentsAndHistory.push({
+              done: false,
+              text: "Invoice was created by Mr.dddd",
+              date:new Date()
+         });
          console.log($scope.ProgressBar);
 
          $scope.imagearray = UploaderService.loadArray();
@@ -505,7 +564,7 @@ $scope.edit = function(updatedForm) {
                });
             }
          };
-         var client = $objectstore.getClient("twelfthdoorInvoice");
+         var client = $objectstore.getClient("invoice12thdoor");
          updatedForm.ProgressBarDetails = $scope.ProgressBar;
          //updatedForm.invoiceProducts = $rootScope.editProdArray.val;
          updatedForm.commentsAndHistory = {};
@@ -577,7 +636,7 @@ $scope.edit = function(updatedForm) {
           .cancel('clear');
             $mdDialog.show(confirm).then(function() {
 
-         var client = $objectstore.getClient("twelfthdoorInvoiceDraft");
+         var client = $objectstore.getClient("invoice12thdoorDraft");
          // $scope.TDinvoice.invoiceProducts = $rootScope.testArray.val;
          // $scope.TDinvoice.total = $scope.total;
          // $scope.TDinvoice.finalamount = $scope.famount;
@@ -653,15 +712,6 @@ $scope.edit = function(updatedForm) {
          };
       }
 
-
-     if($state.current.name == 'copy') {
-        $scope.saveInvoiceB = true;
-     }else if($state.current.name == 'estimateInvoice'){
-      $scope.saveInvoiceB = true;
-     }else{
-        $scope.editInvoiceB = true;
-     }
-
 })
 .controller('estimateCtrl', function($scope, $mdDialog, $objectstore, $window, $stateParams,$rootScope,invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService,MultipleDudtesService) {
      
@@ -669,7 +719,7 @@ $scope.edit = function(updatedForm) {
      $scope.saveInvoiceB = true;
 
 
-      var client = $objectstore.getClient("twelfthdoorInvoice");
+      var client = $objectstore.getClient("invoice12thdoor");
       client.onGetMany(function(data) {
          if (data) {
            // $scope.TDinvoice = data;
@@ -686,7 +736,5 @@ $scope.edit = function(updatedForm) {
       });
       client.onError(function(data) {});
       client.getByFiltering("*");
-
-
 
   })

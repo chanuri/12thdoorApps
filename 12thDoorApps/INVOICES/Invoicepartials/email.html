@@ -1,29 +1,30 @@
 
             <md-dialog style="max-width:960px;" arial-label="email">
-           <!--  <md-toolbar >
-    <div  >
-      <h2>Email</h2>
-      <span flex></span>
-      <md-button href class="md-icon-button" ng-click="cancel()">
-        <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-      </md-button>
-      </div>
-      </md-toolbar> -->
-       
-        <md-dialog-content style="width:800px;" >
+            <div layout layout-sm="column" layout-margin >
+            <div flex="90"></div>
+            <md-button href class="md-icon-button"  ng-click="cancel()">
+                  <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+       </div>
+        <md-dialog-content style="width:650px; margin-top:-30px; " >
             <div layout layout-sm="column" layout-margin ng-init="recipientCtrl()" >
                         <md-content class="md-padding" layout="column"  flex>
                          <md-chips flex
                             ng-model="emailrec"
                             readonly="readonly"
                             delete-button-label="Remove Tag"
+                            md-on-append="myFn($chip)"
                             delete-hint="Press delete to remove tag"
                             secondary-placeholder="To">
                             </md-chips>
                         </md-content>
                         </div>
-
-                        <div layout layout-sm="column" style="margin-top:-30px; " layout-margin ng-init="bccCtrl()" >
+                       <!--  <div layout layout-sm="column"  layout-margin > 
+                        <p style="colour:#FF0000;" ng-show="Emailerror">
+                      Please check the email address format {{show}}.
+                    </p> 
+                    </div> -->
+                        <div layout layout-sm="column"  layout-margin ng-init="bccCtrl()" >
                         <md-content class="md-padding" layout="column"  flex>
                          <md-chips flex
                             ng-model="emailBCCrec"
@@ -60,8 +61,9 @@
                        </md-card-content>
                        </md-content>
                        </md-card>
-                   </div>
-</md-content>
+                   </div>      
+                   
+   </md-content>
          </md-dialog-content>
             <div class="md-actions" layout="row">
                 <span flex></span>

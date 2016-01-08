@@ -71,7 +71,7 @@ angular.module('mainApp')
       };
 
  $scope.favouriteFunction = function(obj) {
-         var client = $objectstore.getClient("twelfthdoorInvoice");
+         var client = $objectstore.getClient("invoice12thdoor");
          obj.invoiceNo = obj.invoiceNo.toString();
           if (obj.favourite) {
                obj.favouriteStarNo = 0;
@@ -107,7 +107,7 @@ $scope.cancelStatus = function(obj, ev) {
           .ok('Yes')
           .cancel('No');
             $mdDialog.show(confirm).then(function() {
-         var client = $objectstore.getClient("twelfthdoorInvoice");
+         var client = $objectstore.getClient("invoice12thdoor");
          obj.invoiceNo = obj.invoiceNo.toString();
          // if(obj.status != "Draft"){
           $scope.systemMessage.push({text:"The Invoice was Cancelled by mr.Perera", done:false,  date:new Date()});
@@ -214,7 +214,7 @@ $scope.cancelStatus = function(obj, ev) {
             .cancel('Cancel')
             .targetEvent(ev);
          $mdDialog.show(confirm).then(function() {
-            var client = $objectstore.getClient("twelfthdoorInvoiceDraft");
+            var client = $objectstore.getClient("invoice12thdoorDraft");
 
             client.onComplete(function(data) {
                $mdDialog.show(
@@ -252,7 +252,7 @@ $scope.cancelStatus = function(obj, ev) {
             .cancel('Cancel')
             .targetEvent(ev);
          $mdDialog.show(confirm).then(function() {
-            var client = $objectstore.getClient("twelfthdoorInvoice");
+            var client = $objectstore.getClient("invoice12thdoor");
           //   $scope.systemMessage.push({text:"The Invoice was Deleted by mr.Perera", done:false,  date:new Date()});
           // for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
           //  obj.commentsAndHistory.push($scope.systemMessage[i]);
@@ -309,7 +309,7 @@ $scope.cancelStatus = function(obj, ev) {
       $scope.copyInvoice = function(InvoItem){
         invoiceDetails.removeArray(InvoItem, 1);
          $scope.InvoiceDetails = [];
-       var client = $objectstore.getClient("twelfthdoorInvoice");
+       var client = $objectstore.getClient("invoice12thdoor");
               client.onGetMany(function(data) {
                  if (data) {
                   $scope.InvoiceDetails = data;
@@ -322,7 +322,7 @@ $scope.cancelStatus = function(obj, ev) {
              //console.log( $scope.TDinvoice.invoiceRefNo);
                  }
               });
-              client.getByFiltering("select maxCount from domainClassAttributes where class='twelfthdoorInvoice'");
+              client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoor'");
 
       
         invoiceDetails.setArray(InvoItem);
@@ -424,11 +424,11 @@ $scope.cancelStatus = function(obj, ev) {
 
       }, 100, 0, true);
 
-      //retrieve Data from invoice class
-      var client = $objectstore.getClient("twelfthdoorInvoice");
+            //retrieve Data from invoice class
+      var client = $objectstore.getClient("invoice12thdoorDraft");
       client.onGetMany(function(data) {
          if (data) {
-           // $scope.TDinvoice = data;
+
             for (var i = data.length - 1; i >= 0; i--) {
                loading_spinner.remove();
               data[i].addView = "";
@@ -441,22 +441,19 @@ $scope.cancelStatus = function(obj, ev) {
                     $scope.multipleDueDAtes = true;
                    }
                  };
-
                if($stateParams.invoiceno == data[i].invoiceNo){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
-                  $scope.Address = data[0].billingAddress.split(',');
+                  $scope.Address = data[i].billingAddress.split(',');
                $scope.street = $scope.Address[0];
                $scope.city = $scope.Address[1]+$scope.Address[3];
                $scope.country = $scope.Address[2]+$scope.Address[4];
 
-               $scope.shippingAddress = data[0].shippingAddress.split(',');
+               $scope.shippingAddress = data[i].shippingAddress.split(',');
                $scope.ShippingStreet = $scope.shippingAddress[0];
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
-
-               
             };
          }
       });
@@ -472,17 +469,59 @@ $scope.cancelStatus = function(obj, ev) {
       });
       client.getByFiltering("*");
 
+      
+      var client = $objectstore.getClient("invoice12thdoor");
+      client.onGetMany(function(data) {
+         if (data) {
+            for (var i = data.length - 1; i >= 0; i--) {
+               loading_spinner.remove();
+              data[i].addView = "";
+               data[i].invoiceNo = parseInt(data[i].invoiceNo);
+               $scope.TDinvoice.push(data[i]);
+               //console.log($scope.TDinvoice)
+               for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
+
+                   if(data[i].termtype == "multipleDueDates"){
+                    $scope.multipleDueDAtes = true;
+                   }
+                 };
+               if($stateParams.invoiceno == data[i].invoiceNo){
+                invoiceDetails.removeArray(data[i], 1);
+                  invoiceDetails.setArray(data[i]);
+                  $scope.Address = data[i].billingAddress.split(',');
+               $scope.street = $scope.Address[0];
+               $scope.city = $scope.Address[1]+$scope.Address[3];
+               $scope.country = $scope.Address[2]+$scope.Address[4];
+
+               $scope.shippingAddress = data[i].shippingAddress.split(',');
+               $scope.ShippingStreet = $scope.shippingAddress[0];
+               $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+               $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
+               }
+            };
+         }
+      });
+      client.onError(function(data) {
+         $mdDialog.show(
+            $mdDialog.alert()
+            .parent(angular.element(document.body))
+            .content('There was an error retreving the data.')
+            .ariaLabel('Alert Dialog Demo')
+            .ok('OK')
+            .targetEvent(data)
+         );
+      });
+      client.getByFiltering("*");
+
+
        var client = $objectstore.getClient("payment");
       client.onGetMany(function(data) {
          if (data) {
-            //$scope.TDinvoice = data;
             for (var i = data.length - 1; i >= 0; i--) {
-               //data[i].invoiceNo = parseInt(data[i].invoiceNo);
                for (var x = data[i].paidInvoice.length - 1; x >= 0; x--) {
                  if($stateParams.invoiceno == data[i].paidInvoice[x].invono){
                 
                  $scope.Payment.push(data[i]);
-                 //$scope.paydate.push(data[i].paidInvoice[x]);
                  console.log($scope.Payment);
                }
                };
@@ -503,28 +542,6 @@ $scope.cancelStatus = function(obj, ev) {
       client.getByFiltering("*");
 
       $scope.paydate = [];
-
- var client1 = $objectstore.getClient("twelfthdoorInvoiceDraft");
-      client1.onGetMany(function(data) {
-         if (data) {
-            // $scope.TDinvoice = data;
-            for (var i = data.length - 1; i >= 0; i--) {
-               data[i].invoiceNo = parseInt(data[i].invoiceNo);
-               $scope.TDinvoice.push(data[i]);
-            };
-         }
-      });
-      client1.onError(function(data) {
-         $mdDialog.show(
-            $mdDialog.alert()
-            .parent(angular.element(document.body))
-            .content('There was an error retreving the data.')
-            .ariaLabel('Alert Dialog Demo')
-            .ok('OK')
-            .targetEvent(data)
-         );
-      });
-      client1.getByFiltering("*");
 
       $scope.getSelected = function(inv) {
          $scope.obtable = inv.table;
@@ -772,7 +789,7 @@ $scope.email = function(item) {
 
           console.log(todoText.addView)
           
-         var client = $objectstore.getClient("twelfthdoorInvoice");
+         var client = $objectstore.getClient("invoice12thdoor");
          todoText.invoiceNo = todoText.invoiceNo.toString();
 
             for (var i =  $scope.todos.length - 1; i >= 0; i--) {
@@ -803,7 +820,6 @@ $scope.email = function(item) {
       }
   };
 
-  
 
   // $scope.deleteComments = function(index){
   //   $scope.testarr.splice( $scope.testarr.indexOf(index), 1 );
@@ -813,8 +829,9 @@ $scope.email = function(item) {
    }) //END OF viewCtrl
    //--------------------------------------------------------------------------------------------------------------
    //--------------------------------------------------------------------------------------------------------------
-  .controller('emailCtrl', function($scope,$mdDialog, $rootScope, invo) {
+  .controller('emailCtrl', function($scope,$mdDialog, $rootScope, invo, $mdToast, $document) {
     $scope.test = invo;
+    //console.log($scope.test)
       $scope.subject = "invoice No."+ $scope.test.invoiceNo + " " +$scope.test.Name;
 
   $scope.cancel = function() {
@@ -823,10 +840,11 @@ $scope.email = function(item) {
 
        $scope.recipientCtrl = function($timeout, $q) {
          var self = this;
+         $scope.Emailerror=false;
          self.readonly = false;
-         // Lists of tags names and Vegetable objects
-         self.emailrecipient = [$scope.test.Email];
-         self.emailrec = angular.copy(self.emailrecipient);
+         // self.emailrecipient = [$scope.test.Email];
+         // $scope.emailrec = angular.copy(self.emailrecipient);
+         $scope.emailrec = [$scope.test.Email];
          self.tags = [];
          self.newVeg = function(chip) {
             return {
@@ -834,13 +852,61 @@ $scope.email = function(item) {
                type: 'unknown'
             };
          };
-      }
+       }
 
+        $scope.$watchCollection("emailrec", function() {
+         var re = /\S+@\S+\.\S+/;
+         $scope.Emailerror=false;
+         for (var i = $scope.emailrec.length - 1; i >= 0; i--) {
+
+          if(re.test($scope.emailrec[i]) == false){
+            $scope.show = $scope.emailrec[i];
+            $scope.Emailerror=true; 
+            $scope.emailrec.splice(i, 1);        
+            
+            $scope.showActionToast();
+          }    
+         };  
+     });
+
+      var last = {
+      bottom: false,
+      top: true,
+      left: false,
+      right: true
+    };
+
+  $scope.toastPosition = angular.extend({},last);
+  $scope.getToastPosition = function() {
+    sanitizePosition();
+    return Object.keys($scope.toastPosition)
+      .filter(function(pos) { return $scope.toastPosition[pos]; })
+      .join(' ');
+  };
+  
+  function sanitizePosition() {
+    var current = $scope.toastPosition;
+    if ( current.bottom && last.top ) current.top = false;
+    if ( current.top && last.bottom ) current.bottom = false;
+    if ( current.right && last.left ) current.left = false;
+    if ( current.left && last.right ) current.right = false;
+    last = angular.extend({},current);
+  }
+
+        $scope.showActionToast = function() {
+            $mdToast.show({
+          controller: 'ToastCtrl',
+          template: 'invalid',
+          parent : $document[0].querySelector('#toastBounds'),
+          hideDelay: 6000,
+          position: $scope.getToastPosition()
+        });
+      };
+      
        $scope.bccCtrl = function($timeout, $q) {
          var self = this;
          self.readonly = false;
-         // Lists of tags names and Vegetable objects
-         self.emailBCCrecipient = [];
+         self.emailBCCrecipient = [$scope.test.adminEmail];
          self.emailBCCrec = angular.copy(self.emailBCCrecipient);
          self.tags = [];
          self.newVeg = function(chip) {

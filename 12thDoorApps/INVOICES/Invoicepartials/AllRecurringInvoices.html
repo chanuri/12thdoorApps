@@ -4,13 +4,13 @@
     <!--START OF COLLAPSE CARD HEADING-->
     <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi)">
         <div style="width:56px;">
-            <div  ng-hide="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
-                <img src="img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
-            </div>
-            <div  ng-show="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
-                <img src="img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
-            </div>
-        </div>
+                    <div  ng-hide="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
+                        <img src="../../img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                    </div>
+                    <div  ng-show="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
+                        <img src="../../img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+                    </div>
+                </div>
         <!--START OF CARD OPEN SECTION-->
         <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%; height:70px;" ng-click="$active = !$active;" layout-sm="row">
             <div layout-sm="row" flex>
@@ -111,20 +111,15 @@
                     <md-divider></md-divider>
                     <md-content flex>
                         <div layout layout-sm="column" layout-margin>
-                            <div flex="5">
-                                <img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:22px;border-radius:20px"/>
-                            </div>
-                            <div flex="20" style="margin-top:35px;">
-                                <label style="font-weight:700">Customer Details</label>
-                            </div>
+                         <section-title title="Customer Details"> </section-title>
+                            
                             <md-input-container flex >
                                 <label>Select Customer</label>
                                 <input ng-model="tdi.Name">
                                 </md-input-container>
                             </div>
                             <div layout layout-sm="column" layout-margin>
-                                <div flex="5" class="blankspace"></div>
-                                <div flex="20" class="blankspace"></div>
+                                 <section-title > </section-title>
                                 <md-input-container flex="67" ng-show="Billingaddress">
                                     <label>Billing Address</label>
                                     <input  ng-model="tdi.billingAddress" ng-disabled="true"/>
@@ -140,8 +135,7 @@
                                 </div>
                             </div>
                             <div layout layout-sm="column" layout-margin>
-                                <div flex="5" class="blankspace"></div>
-                                <div flex="20" class="blankspace"></div>
+                                <section-title> </section-title>
                                 <md-input-container flex >
                                     <label>Profile Name</label>
                                     <input ng-model="tdi.profileName" ng-disabled="true">
@@ -151,8 +145,7 @@
                                     </div>
                                 </div>
                                 <div layout layout-sm="column" layout-margin>
-                                    <div flex="5" class="blankspace"></div>
-                                    <div flex="20" class="blankspace"></div>
+                                   <section-title> </section-title>
                                     <md-input-container flex >
                                         <label>Billing Frequency</label>
                                         <md-select ng-model="tdi.billingFrequency" flex required>
@@ -175,8 +168,7 @@
                                     </md-input-container>
                                 </div>
                                 <div layout layout-sm="column" layout-margin>
-                                    <div flex="5" class="blankspace"></div>
-                                    <div flex="20" class="blankspace"></div>
+                                    <section-title> </section-title>
                                     <md-input-container flex >
                                         <label>Internal Note.</label>
                                         <input ng-model="tdi.inNote" >
@@ -188,12 +180,9 @@
                                         </div>
                                         <md-divider></md-divider>
                                         <div layout layout-sm="column" layout-margin>
-                                            <div flex="5">
-                                                <img src="img/material alperbert/avatar_tile_i_28.png" style="margin-top:22px;border-radius:20px"/>
-                                            </div>
-                                            <div flex="20" style="margin-top:35px;">
-                                                <label style="font-weight:700">Invoice Items</label>
-                                            </div>
+                                            
+                                            <section-title title="Invoice Items"> </section-title>
+
                                             <ul as-sortable="sortableOptions" style=" width:600px" ng-model="tdi.recurringProducts">
                                                 <li ng-repeat="item in tdi.recurringProducts" as-sortable-item  style=" width:600px">
                                                     <md-card style="margin-left:-40px; width:630px; margin-bottom:20px !important;" as-sortable-item-handle>
@@ -253,17 +242,18 @@
                                                                         <md-tooltip>Discount</md-tooltip>
                                                                     </span>
                                                                 </div>
-                                                                <div flex>
-                                                                    <span style="color:#808080;">{{item.tax}}%
-                                                             
-                                                                        
-                                                                        <md-tooltip>Tax</md-tooltip>
-                                                                    </span>
+                                                                <div flex="35" >
+                                                                    <span style="color:#808080;">{{item.tax.taxname}}
+                                                                <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                                                                    <md-tooltip>Tax</md-tooltip>
+                                                                </span>
+                                                                 <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                                                                    <md-tooltip>Tax</md-tooltip>
+                                                                </span>
+
                                                                 </div>
                                                                 <div flex >
                                                                     <span style="color:#808080;">{{item.amount|currency}}
-                                                             
-                                                                        
                                                                         <md-tooltip>Amount</md-tooltip>
                                                                     </span>
                                                                 </div>
@@ -277,13 +267,9 @@
                                         <div style="overflow:hidden;">
                                             <div style="overflow:hidden;">
                                                 <div layout layout-sm="column" layout-margin>
-                                                    <div flex="5">
-                                                        <img src="img/material alperbert/avatar_tile_t_28.png" style="margin-top:22px;border-radius:20px"/>
-                                                    </div>
-                                                    <div flex="20" style="margin-top:35px;">
-                                                        <label style="font-weight:700">Totals</label>
-                                                    </div>
+                                                    <section-title title="Totals"> </section-title>
                                                 </div>
+
                                                 <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
                                                     <div flex="5"></div>
                                                     <div flex="20" style=""></div>
@@ -387,20 +373,15 @@
                                                 </div>
                                                 <md-divider></md-divider>
                                                 <div layout layout-sm="column" layout-margin  >
-                                                    <div flex="5">
-                                                        <img src="img/material alperbert/avatar_tile_o_28.png" style="margin-top:22px;border-radius:20px"/>
-                                                    </div>
-                                                    <div flex="20" style="margin-top:35px;">
-                                                        <label style="font-weight:700">Optional Details</label>
-                                                    </div>
+                                                    
+                                                <section-title title="Optional Details"> </section-title>
                                                     <md-input-container flex >
                                                         <label>Notes</label>
                                                         <input ng-model="tdi.notes">
                                                         </md-input-container>
                                                     </div>
                                                     <div layout layout-sm="column" layout-margin>
-                                                        <div flex="5" class="blankspace"></div>
-                                                        <div flex="20" class="blankspace"></div>
+                                                       <section-title > </section-title>
                                                         <md-input-container flex >
                                                             <label>Payment Method</label>
                                                             <md-select  ng-model="tdi.paymentMethod" flex>
@@ -412,8 +393,7 @@
                                                         </md-input-container>
                                                     </div>
                                                     <div layout layout-sm="column" layout-margin>
-                                                        <div flex="5" class="blankspace"></div>
-                                                        <div flex="20" class="blankspace"></div>
+                                                       <section-title > </section-title>
                                                         <div layout="column" style="margin-left:0px;" class="chipsdemoBasicUsage" flex>
                                                             <md-content class="md-padding" layout="column">
                                                                 <md-chips

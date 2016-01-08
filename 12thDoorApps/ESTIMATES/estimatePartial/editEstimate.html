@@ -9,7 +9,7 @@
     <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto">
         <!--FORM START-->
         <form name="editForm" style="width:960px;"  >
-            <md-content flex>
+            <md-content ng-repeat="tdi in EstimateArray" flex>
                 <div layout layout-sm="column" layout-margin  >
                      <section-title title="Customer Details"> </section-title>
                     
@@ -68,7 +68,7 @@
                    <!--  <div flex >
                         <md-date-picker model="tdi.duedate"  label="Validity" dialog-md-theme="datePickerTheme" ng-disabled="Showdate" />
                     </div> -->
-                    <md-datepicker ng-model="tdi.duedate" md-placeholder="Validity" required flex style="margin-top:25px; width:230px;" ng-disabled="showdate" ></md-datepicker>
+                    <md-datepicker ng-model="tdi.validity" md-placeholder="Validity" required flex style="margin-top:25px; width:230px;" ng-disabled="showdate" ></md-datepicker>
                 </div>
                 <div layout layout-sm="column" layout-margin>
                    <section-title> </section-title>
@@ -90,8 +90,10 @@
                                 <section-title title="Invoice Items"> </section-title>
                                         <div>
                                     <ul as-sortable="sortableOptions"  ng-model="testArray.val"  flex>
-                                        <li ng-repeat="item in testArray.val" as-sortable-item flex style="margin-bottom:20px !important;">
+                                        <li ng-repeat="item in tdi.EstimateProducts" as-sortable-item flex style="margin-bottom:20px !important;">
+                                   
                                          <md-card style="margin-left:-30px;" as-sortable-item-handle flex>
+                                        
                                         <md-card-content >
                                          <div style="margin-top:0px;">
                                                   <span >
@@ -143,11 +145,16 @@
                                                    </span> 
                                                 </div>
 
-                                                 <div flex>
-                                                   <span style="color:#808080;">{{item.tax}}%
-                                                   <md-tooltip>Tax</md-tooltip>
-                                                   </span> 
-                                                </div>
+                                                 <div flex="35" >
+                                                      <span style="color:#808080;">{{item.tax.taxname}}
+                                                  <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                                                      <md-tooltip>Tax</md-tooltip>
+                                                  </span>
+                                                   <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                                                      <md-tooltip>Tax</md-tooltip>
+                                                  </span>
+
+                                                  </div>
 
                                                 <div flex >
                                                    <span style="color:#808080;">{{item.amount|currency}}
@@ -159,7 +166,7 @@
                                         </md-card></li>
                                       </ul>
                                                 <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
-                                                     <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addproduct()">New Line</md-button>
+                                                     <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addProductArray()">New Line</md-button>
                                                 </div>
                                                </div>
                                             </div>
@@ -181,7 +188,7 @@
                                     <label></label>
                                 </div>
                                 <div flex="30">
-                                    <span>{{calculatetotal() | currency}}</span>
+                                    <span>{{calculatetotal(tdi) | currency}}</span>
                                 </div>
                             </div>
                             <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
@@ -216,22 +223,7 @@
                                     <label>{{CalculateTax(tdi.salesTax)|currency}}</label>
                                 </div>
                             </div>
-                            <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                                <div flex="5"></div>
-                                <div flex="20" style="margin-top:35px;"></div>
-                                <div flex="10">
-                                    <label>Another Tax</label>
-                                </div>
-                                <md-input-container flex="20" >
-                                    <input type="text" ng-model="tdi.anotherTax" aria-label="Another Tax" style="margin-top:-12px;"/>
-                                </md-input-container>
-                                <div flex="5">
-                                    <label></label>
-                                </div>
-                                <div flex="30">
-                                    <label>{{CalculateOtherTax(tdi.anotherTax)|currency}}</label>
-                                </div>
-                            </div>
+                           
                             <div layout layout-sm="column" layout-margin style="overflow:hidden; height:50px;" ng-hide="shipping">
                                 <div flex="5"></div>
                                 <div flex="20" style="margin-top:35px;"></div>
@@ -278,7 +270,7 @@
                                 </div>
                                 <div flex="27">
                                     <span ng-model="tdi.totalUSD">
-                                        <b>{{finalamount()| currency}}</b>
+                                        <b>{{finalamount(tdi)| currency}}</b>
                                     </span>
                                 </div>
                                 <div style="height:30px; width:40px;">
@@ -321,19 +313,34 @@
                                                </div>
                                             </div>
                                         <md-divider></md-divider>
-                                         <div class="md-actions" layout="row" layout-sm="column" layout-align="end start" >
-                                     <div style="margin-top:20px;">
-                                            <md-button  class="md-raised md-primary" type="submit">
+                                         
+                                        <div class="md-actions" layout="row" layout-sm="column" layout-align="end start" >
+
+                                         <div >
+                                          <md-button href class="md-raised  md-warn" ng-click="cancel()" flex>
+                                                    <span class="loginBtnLabel">Cancel</span>
+                                                </md-button>
+                                               </div>
+                                                
+                                                 <div >
+                                                  <md-button  class="md-raised md-primary" ng-show="editEstimate" ng-click="edit(tdi)" flex>
+                                                    <span class="loginBtnLabel">Edit</span>
+                                                </md-button>
+                                                </div>
+                                                 <div >
+                                                  <md-button flex  class="md-raised md-primary" ng-show="saveEstimateB" ng-click="saveEstimate(tdi)">
+                                                    <span class="loginBtnLabel">Save</span>
+                                                </md-button>
+                                                </div>
+                                                <div >
+                                              <md-button flex  class="md-raised md-primary" ng-show="showSave" ng-click="savetoEstimate(tdi)">
                                                 <span class="loginBtnLabel">Save</span>
-                                            </md-button></div>
-                                             <div style="padding-left:20px; margin-top:20px;padding-right:20px;">
-                                             <md-button href class="md-raised md-primary" ng-click="clearEstimate()">
-                                                <span class="loginBtnLabel">Cancel</span>
-                                            </md-button></div>
-                                        </div>
-                                    </md-content>
-                                </form>
-                            </md-whiteframe>
+                                            </md-button>
+                                            </div>
+                                            </div>
+                                                      </md-content>
+                                                  </form>
+                                              </md-whiteframe>
                                                 <!--WHITEFRAME END-->
                                             </div>
                                             <!--CARD CONTAINER END-->

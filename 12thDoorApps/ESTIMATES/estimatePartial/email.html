@@ -1,0 +1,73 @@
+
+            <md-dialog style="max-width:960px;" arial-label="email">
+            <div layout layout-sm="column" layout-margin >
+            <div flex="90"></div>
+            <md-button href class="md-icon-button"  ng-click="cancel()">
+                  <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+       </div>
+        <md-dialog-content style="width:650px; margin-top:-30px; " >
+            <div layout layout-sm="column" layout-margin ng-init="recipientCtrl()" >
+                        <md-content class="md-padding" layout="column"  flex>
+                         <md-chips flex
+                            ng-model="emailrec"
+                            readonly="readonly"
+                            delete-button-label="Remove Tag"
+                            md-on-append="myFn($chip)"
+                            delete-hint="Press delete to remove tag"
+                            secondary-placeholder="To">
+                            </md-chips>
+                        </md-content>
+                        </div>
+                       <!--  <div layout layout-sm="column"  layout-margin > 
+                        <p style="colour:#FF0000;" ng-show="Emailerror">
+                      Please check the email address format {{show}}.
+                    </p> 
+                    </div> -->
+                        <div layout layout-sm="column"  layout-margin ng-init="bccCtrl()" >
+                        <md-content class="md-padding" layout="column"  flex>
+                         <md-chips flex
+                            ng-model="emailBCCrec"
+                            readonly="readonly"
+                            delete-button-label="Remove Tag"
+                            delete-hint="Press delete to remove tag"
+                            secondary-placeholder="BCC">
+                            </md-chips>
+                        </md-content>
+                        </div>
+            
+               <div layout layout-sm="column" layout-margin style="margin-top:-30px; "> 
+                    <md-content class="md-padding" layout="column"  flex>
+                    <md-input-container flex >
+                        <label>Subject</label>
+                       <!--  <label>Invoice No.{{test.invoiceRefNo}}</label> -->
+                        <input ng-model="subject">
+                        </md-input-container>
+                        </md-content>
+                    </div>
+                        <div layout layout-sm="column" layout-margin style="margin-top:-30px;">
+                       <md-card style="width:100%">
+                       <md-content class="md-padding" layout="column">
+                       <md-card-content>
+                       <p>
+                        Dear Customer,<br><br>
+                        Attached Invoice No. {{test.invoiceRefNo}}. <br><br>
+                        To pay or download click on the below link: <br><br>
+                        <a href="http://localhost/12thdoor/12thdoorApps/CUSTOMER%20PORTAL/CustomerPortal.html#/customer_Portal/INo={{test.invoiceRefNo}}">
+                        //http:localhost/12thdoor/invoice.html#/contactView/INo={{test.invoiceRefNo}}</a><br>
+                        <br>Thank you for your business!<br><br>
+                        ABC Company 
+                        </p>
+                       </md-card-content>
+                       </md-content>
+                       </md-card>
+                   </div>      
+                   
+   </md-content>
+         </md-dialog-content>
+            <div class="md-actions" layout="row">
+                <span flex></span>
+                 <md-button href ng-click="sendmail()" class="md-raised md-primary">Send</md-button>
+            </div>
+    </md-dialog>
+

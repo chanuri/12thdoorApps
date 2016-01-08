@@ -10,12 +10,7 @@
     </md-toolbar>
     <md-dialog-content style="width:850px;">
         <div layout layout-sm="column" layout-margin>
-            <div flex="5">
-                <img src="img/material alperbert/avatar_tile_n_28.png" style="margin-top:22px;border-radius:20px"/>
-            </div>
-            <div flex="20" style="margin-top:35px;">
-                <label style="font-weight:700">Contact Name</label>
-            </div>
+            <section-title title="Contact Name"> </section-title>
             <md-input-container id="accContainer" flex >
                 <label>Company or Individual Name</label>
                 <input  ng-model="contact.Name" required></input>
@@ -27,12 +22,7 @@
         </div>
         <md-divider></md-divider>
         <div layout layout-sm="column" layout-margin>
-            <div flex="5">
-                <img src="img/material alperbert/avatar_tile_p_28.png" style="margin-top:22px;border-radius:20px"/>
-            </div>
-            <div flex="20" style="margin-top:35px;">
-                <label style="font-weight:700">Contact Person</label>
-            </div>
+            <section-title title="Contact Person"> </section-title>
             <md-input-container id="accContainer" flex >
                 <label>First Name</label>
                 <input id="accNo" ng-model="contact.CustomerFname" required></input>
@@ -46,23 +36,16 @@
         <md-divider></md-divider>
         <div ng-show="showBilling" flex>
             <div layout layout-sm="column" layout-margin >
-                <div flex="5">
-                    <img src="img/material alperbert/avatar_tile_b_28.png" style="margin-top:22px;border-radius:20px"/>
-                </div>
-                <div flex="20" style="margin-top:35px;">
-                    <label style="font-weight:700">Billing Address</label>
+                <section-title title="Billing Address"> </section-title>
                     <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
-                </div>
+               
                 <md-input-container id="accContainer" flex >
                     <label>Street</label>
                     <input id="accNo" ng-model="contact.baddress.street" required></input>
                 </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
-                <!--KEEP BLANK SPACE - ask why-->
-                <div flex="5" class="blankspace"></div>
-                <div flex="20" class="blankspace"></div>
-                <!--KEEP BLANK SPACE - ask why-->
+                <section-title > </section-title>
                 <md-input-container id="accContainer" flex >
                     <label>City</label>
                     <input id="accNo" ng-model="contact.baddress.city" required></input>
@@ -73,10 +56,7 @@
                 </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
-                <!--KEEP BLANK SPACE - ask why-->
-                <div flex="5" class="blankspace"></div>
-                <div flex="20" class="blankspace"></div>
-                <!--KEEP BLANK SPACE - ask why-->
+               <section-title > </section-title>
                 <md-input-container id="accContainer" flex >
                     <label>Zip code</label>
                     <input id="accNo" ng-model="contact.baddress.zip" required></input>
@@ -95,23 +75,16 @@
             </div>
             <div ng-show="showShipping" flex>
                 <div layout layout-sm="column" layout-margin >
-                    <div flex="5">
-                        <img src="img/material alperbert/avatar_tile_s_28.png" style="margin-top:22px;border-radius:20px"/>
-                    </div>
-                    <div flex="20" style="margin-top:35px;">
-                        <label style="font-weight:700">Shipping Address</label>
+                     <section-title title="Shipping Address"> </section-title>
                         <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
-                    </div>
+                    
                     <md-input-container id="accContainer" flex >
                         <label>Street</label>
                         <input id="accNo" ng-model="contact.saddress.s_street"></input>
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
-                    <!--KEEP BLANK SPACE - ask why-->
-                    <div flex="5" class="blankspace"></div>
-                    <div flex="20" class="blankspace"></div>
-                    <!--KEEP BLANK SPACE - ask why-->
+                    <section-title > </section-title>
                     <md-input-container id="accContainer" flex >
                         <label>City</label>
                         <input id="accNo" ng-model="contact.saddress.s_city"></input>
@@ -122,10 +95,7 @@
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
-                    <!--KEEP BLANK SPACE - ask why-->
-                    <div flex="5" class="blankspace"></div>
-                    <div flex="20" class="blankspace"></div>
-                    <!--KEEP BLANK SPACE - ask why-->
+                    <section-title > </section-title>
                     <md-input-container id="accContainer" flex >
                         <label>Zip code</label>
                         <input id="accNo" ng-model="contact.saddress.s_zip"></input>
@@ -144,14 +114,7 @@
                 </div>
                 <md-divider></md-divider>
                 <div layout layout-sm="column" layout-margin>
-                    <!--KEEP BLANK SPACE - ask why-->
-                    <div flex="5">
-                        <img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:22px;border-radius:20px"/>
-                    </div>
-                    <div flex="20" style="margin-top:35px;">
-                        <label style="font-weight:700">Contact Numbers</label>
-                    </div>
-                    <!--KEEP BLANK SPACE - ask why-->
+                     <section-title title="Contact Numbers"> </section-title>
                     <md-input-container id="accContainer" flex >
                         <label>Phone</label>
                         <input type="phone" ng-model="contact.Phone" required></input>
@@ -162,10 +125,7 @@
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
-                    <!--KEEP BLANK SPACE - ask why-->
-                    <div flex="5" class="blankspace"></div>
-                    <div flex="20" class="blankspace"></div>
-                    <!--KEEP BLANK SPACE - ask why-->
+                     <section-title > </section-title>
                     <md-input-container id="accContainer" flex >
                         <label>Fax</label>
                         <input id="accNo" ng-model="contact.Fax" required></input>
@@ -175,7 +135,7 @@
                         <input id="accNo" ng-model="contact.Website" required></input>
                     </md-input-container>
                 </div>
-                <!--      <md-button href ng-click="closeDialog()" class="btn btn-small">close</md-button> -->
+                
             </md-dialog-content>
             <div class="md-actions" layout="row">
                 <md-button href ng-click="AddCus()" class="md-primary">Save</md-button>

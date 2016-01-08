@@ -1,6 +1,5 @@
 angular
-  .module('mainApp', ['ngMaterial', 'directivelibrary', 'uiMicrokernel', 'ui.router', 'ui.sortable'])
-
+  .module('mainApp', ['ngMaterial', 'directivelibrary','12thdirective', 'uiMicrokernel', 'ui.router', 'ui.sortable'])
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('datePickerTheme').primaryPalette('teal');
 })
@@ -28,8 +27,13 @@ angular
   .state('editEst',{
       url: '/viewEstimate/EstNo=:estimateNo',
       templateUrl: 'estimatePartial/editEstimate.html',
-      controller: 'viewCtrl'
+      controller: 'editCtrl'
    })
+  .state('copy',{
+            url: '/copyEstimateDetails',
+            templateUrl: 'estimatePartial/editEstimate.html',
+            controller: 'editCtrl'
+         })
 
 })
 
@@ -41,7 +45,7 @@ angular
     $scope.product = {};
     $scope.TDEstimate.estimateRefNo = 'N/A'
     $scope.Showdate = false;
-    //$scope.TDEstimate.termtype = "7days";
+    $scope.Settings = {};
     $scope.TDEstimate.Startdate =  new Date();
     $scope.showEditCustomer = false;
     $scope.dueDtaesShow = false;
@@ -52,6 +56,80 @@ angular
     $scope.TDEstimate.anotherTax = 0;
     $scope.TDEstimate.shipping = 0;
      $scope.TDEstimate.famount = 0;
+     $scope.individualTax = [];
+       $scope.UnitOfMeasure = [];
+
+      var client = $objectstore.getClient("Settings12thdoor");
+      client.onGetMany(function(data) {
+         if (data) {
+           $scope.Settings = data;
+            for (var i =  $scope.Settings.length - 1; i >= 0; i--) {
+              //console.log($scope.Settings[i].preference.estimatepref.dafultnote)
+              $scope.Dnote = $scope.Settings[i].preference.estimatepref.dafultnote;
+              $scope.DComment = $scope.Settings[i].preference.estimatepref.defaultcomment;
+              $scope.Davlidity = $scope.Settings[i].preference.estimatepref.defaultvalidity;
+              $scope.showShippingAddress = $scope.Settings[i].preference.estimatepref.displayshiptoaddressestimate
+              $scope.cusFields = $scope.Settings[i].preference.estimatepref.CusFiel;
+              $scope.mail = $scope.Settings[i].profile.adminEmail;
+              $scope.EmailPermission = $scope.Settings[i].preference.estimatepref.copyadminforallestimate;
+               $scope.partialPyments =  $scope.Settings[i].preference.estimatepref.allowPartialPayments;
+               $scope.discount = $scope.Settings[i].preference.estimatepref.enableDisscounts;
+               $scope.enableShipping = $scope.Settings[i].preference.estimatepref.enableshipping;
+               $scope.dis = $scope.Settings[i].preference.estimatepref.disscountItemsOption;
+
+              for (var z = $scope.Settings[i].preference.productpref.units.length - 1; z >= 0; z--) {
+                  $scope.UnitOfMeasure.push($scope.Settings[i].preference.productpref.units[z])
+                };
+
+              for (var x = $scope.Settings[i].taxes.individualtaxes.length - 1; x >= 0; x--) {
+                 $scope.individualTax.push($scope.Settings[i].taxes.individualtaxes[x]);
+                 };
+              for (var y = $scope.Settings[i].taxes.multipletaxgroup.length - 1; y >= 0; y--) {
+                $scope.individualTax.push($scope.Settings[i].taxes.multipletaxgroup[y]); 
+               };
+
+            };
+         }
+
+         if($scope.EmailPermission == true){
+          $scope.TDEstimate.adminEmail = $scope.mail;
+         }
+
+          $scope.TDEstimate.notes = $scope.Dnote; 
+          $scope.TDEstimate.comments = $scope.DComment;
+          $scope.TDEstimate.displayShippingAddress = $scope.showShippingAddress;
+          $scope.CutomFields = $scope.cusFields;
+          $scope.UOM = $scope.UnitOfMeasure;
+          $scope.calculateDiscount = $scope.discount;
+           $scope.TDEstimate.allowPartialPayments =  $scope.partialPyments;
+           $scope.AllTaxes = $scope.individualTax;
+           $scope.DispalyShipping = $scope.enableShipping;
+          //console.log($scope.UOM)
+
+          if($scope.Davlidity == "7 Days"){
+             $scope.sevenDays= new Date();
+            $scope.sevenDays.setDate($scope.sevenDays.getDate() + 7);
+            $scope.TDEstimate.validity =  $scope.sevenDays;
+          }else if($scope.Davlidity == "14 Days"){
+             $scope.fourteendays = new Date();
+            $scope.fourteendays.setDate($scope.fourteendays.getDate() + 14);
+            $scope.TDEstimate.validity = $scope.fourteendays;
+          }else if($scope.Davlidity == "30 Days"){
+            $scope.thirtyDays = new Date();
+            $scope.thirtyDays.setDate($scope.thirtyDays.getDate() + 30);
+            $scope.TDEstimate.validity = $scope.thirtyDays;
+          }
+          //console.log($scope.CutomFields)
+      });
+      client.onError(function(data) {
+      });
+
+      client.getByFiltering("*");
+
+     
+      if($scope.dis == "SubTotal Items" ){
+        checkDiscout = false;
+      }
 
     //checks whether the use has selected a name or not. if the name is selecter the it enebles the user to edit the customer details
     $scope.selectedItemChange = function(c) {
@@ -63,7 +141,7 @@ angular
     };
 
      $scope.EstimateDetails = [];
-       var client = $objectstore.getClient("twethdoorEstimate");
+       var client = $objectstore.getClient("domainClassAttributes");
         client.onGetMany(function(data) {
            if (data) {
             $scope.EstimateDetails = data;
@@ -73,98 +151,17 @@ angular
       };
       $scope.maxID = parseInt($scope.ID)+1;
       $scope.TDEstimate.estimateRefNo = $scope.maxID.toString();
-       
+       console.log($scope.TDEstimate.estimateRefNo)
            }
         });
-        client.getByFiltering("select maxCount from domainClassAttributes where class='twethdoorEstimate'");
+        client.getByFiltering("select maxCount from domainClassAttributes where class='Estimate12thdoor'");
 
     $scope.changeAddress = function() {
       $scope.Billingaddress = !$scope.Billingaddress;
       $scope.Shippingaddress = !$scope.Shippingaddress;
     }
 
-    //check whether the the user select the dudate. if the user enters a due date the payment type will be change to custom
-      $scope.$watch("TDEstimate.duedate", function() {
-         if ($scope.TDEstimate.duedate != null && $scope.TDEstimate.termtype==null) {
-            $scope.TDEstimate.termtype = "Custom";
-         }
-         else if($scope.TDEstimate.duedate != null && $scope.TDEstimate.duedate != $scope.sevenDays && 
-            $scope.TDEstimate.duedate != $scope.fourteendays && $scope.TDEstimate.duedate != $scope.twentyOneDays &&
-             $scope.TDEstimate.duedate != $scope.thirtyDays && $scope.TDEstimate.duedate != $scope.fourtyFiveDays &&
-             $scope.TDEstimate.duedate != $scope.sixtyDays && $scope.TDEstimate.duedate != $scope.dueOnReceiptDay){
-            $scope.TDEstimate.termtype = "Custom";
-         }
-      });
-
-//----------set date according to the payment term type----------------------------
-      $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "DueonReceipt") {
-            $scope.dueOnReceiptDay = new Date();
-            $scope.TDEstimate.duedate = $scope.dueOnReceiptDay;
-            $scope.showdate = false;
-         }
-      });
-
-      $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "7days") {
-             $scope.sevenDays= new Date();
-            $scope.sevenDays.setDate($scope.sevenDays.getDate() + 7);
-            $scope.TDEstimate.duedate =$scope.sevenDays;
-            $scope.showdate = false;
-         }
-      });
-
-       $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "14days") {
-            $scope.fourteendays = new Date();
-            $scope.fourteendays.setDate($scope.fourteendays.getDate() + 14);
-            $scope.TDEstimate.duedate = $scope.fourteendays;
-            $scope.showdate = false;
-         }
-      });
-
-        $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "21days") {
-            $scope.twentyOneDays = new Date();
-            $scope.twentyOneDays.setDate($scope.twentyOneDays.getDate() + 21);
-            $scope.TDEstimate.duedate = $scope.twentyOneDays;
-            $scope.showdate = false;
-         }
-      });
-
-        $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "30days") {
-            $scope.thirtyDays = new Date();
-            $scope.thirtyDays.setDate($scope.thirtyDays.getDate() + 30);
-            $scope.TDEstimate.duedate = $scope.thirtyDays;
-            $scope.showdate = false;
-         }
-      });
-
-        $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "45days") {
-            $scope.fourtyFiveDays = new Date();
-            $scope.fourtyFiveDays.setDate($scope.fourtyFiveDays.getDate() + 45);
-            $scope.TDEstimate.duedate = $scope.fourtyFiveDays;
-            $scope.showdate = false;
-         }
-      });
-
-        $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "60days") {
-            $scope.sixtyDays = new Date();
-            $scope.sixtyDays.setDate($scope.sixtyDays.getDate() + 60);
-            $scope.TDEstimate.duedate = $scope.sixtyDays;
-            $scope.showdate = false;
-         }
-      });
-         $scope.$watch("TDEstimate.termtype", function() {
-         if ($scope.TDEstimate.termtype == "multipleDueDates") {
-            $scope.showdate = true;
-         }
-      });
-//-------------------------------------------------------------------------------------
-
+  
     //Autocomplete stuff
     $rootScope.self = this;
     $rootScope.self.tenants = loadAll();
@@ -220,17 +217,23 @@ angular
     
     //dialog box pop up to add product
     $scope.addproduct = function(ev) {
+      $rootScope.AllUnitOfMeasures = angular.copy($scope.UOM);
+       $rootScope.taxType = angular.copy($scope.AllTaxes);
+       $rootScope.discounts = angular.copy($scope.calculateDiscount);
+       $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
       $mdDialog.show({
-
         templateUrl: 'estimatePartial/addproduct.html',
          targetEvent: ev,
             controller: function addProductController($scope, $mdDialog) {
-               $scope.prducatsAdd = {};
+               
+                $scope.prducatsAdd = {};
                $scope.prod = {};
                $scope.promoItems = [];
+               $scope.taxType = [];
+               $scope.AllUnitOfMeasures = [];
                //add product to the invoice
                $scope.addproductToarray = function(item,ev) {
-
+                 // console.log(item)
                   $scope.promoItems[0] = {
                       productName: $scope.SproductName,
                       price : $scope.Sprice,
@@ -241,7 +244,8 @@ angular
                       olp: $scope.olp,
                       status:$scope.Sstatus
                   }
-
+                  // console.log($scope.promoItems)
+                  // console.log($scope.discount)
                   for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
 
                     if($scope.promoItems[i].qty == null){
@@ -257,12 +261,12 @@ angular
                           }
                         });
                       };
-                    }else if($scope.promoItems[i].ProductUnit == null){
+                     }else if($scope.promoItems[i].ProductUnit == null){
 
                     }else if($scope.promoItems[i].price == null){
 
                     }else{
-                     InvoiceService.setArray({
+                     InvoiceService.setFullArr({
                         Productname: $scope.promoItems[i].productName,
                         price: $scope.promoItems[i].price,
                         quantity: $scope.promoItems[i].qty,
@@ -273,6 +277,8 @@ angular
                         amount: $scope.Amount,
                         status:$scope.promoItems[i].status,
                      });
+                      // console.log($scope.promoItems[i].discount)
+                      // $rootScope.calculatetotal(); 
                       if($scope.promoItems[i].status == 'notavailable'){
                            var confirm = $mdDialog.confirm()
                             .title('Would you like to save this product for future use?')
@@ -286,12 +292,54 @@ angular
                         $scope.prod.Productname = $scope.promoItems[i].productName;
                          $scope.prod.costprice = $scope.promoItems[i].price;
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
-                         $scope.prod.producttax = $scope.promoItems[i].tax;
+                         $scope.prod.producttax = $scope.promoItems[i].tax;                       
+                         
+                         console.log($scope.promoItems[i].tax);
+                         $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
+                          if ($scope.product.length>0) {
+                            //if array is not empty
+                             $scope.PatternExsist = false; // use to check pattern match the object of a array 
+                             $scope.MaxID = 0;
+                              for(y=0; y<=$scope.product.length-1; y++){
+                                if ($scope.product[y].ProductCode.substring(0, 3) === $scope.FirstLetters) {
+                                  $scope.CurrendID = $scope.product[y].ProductCodeID;
+                                  if ($scope.CurrendID > $scope.MaxID) {
+                                    $scope.MaxID = $scope.CurrendID;
+                                  };
+                                   $scope.PatternExsist = true;
+                                };
+                              }
+                              if (!$scope.PatternExsist) {
+                                $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                                $scope.prod.ProductCodeID = 1;
+                              }else if($scope.PatternExsist){
+                                $scope.GetMaxNumber($scope.prod,$scope.FirstLetters,$scope.MaxID)
+                              }       
+                          }else{
+                            $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                            $scope.prod.ProductCodeID = 1;
+                          }
+
                        }
+
+                       $scope.GetMaxNumber = function(obj,name,MaxID){
+                        $scope.FinalNumber = MaxID +1;
+                        $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
+                        $scope.Zerros="";
+                        for(i=0; i<4-$scope.FinalNumberLength; i++ ){
+                          var str = "0";
+                          $scope.Zerros = $scope.Zerros + str;
+                        }
+                        $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
+                        obj.ProductCodeID = $scope.FinalNumber;
+                        obj.ProductCode = name +'-'+ $scope.Zerros;
+                       }
+
                        $scope.prod.ProductCategory = "Product";
                        $scope.prod.progressshow = "false"
                        $scope.prod.favouriteStar = false;
                        $scope.prod.favouriteStarNo = 1;
+                       $scope.prod.tags = [];
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
@@ -318,16 +366,17 @@ angular
                                .targetEvent(data)
                             );
                          });
-                         $scope.prod.ProductCode = "-999";
+                         $scope.prod.product_code = "-999";
                          client.insert([$scope.prod], {
-                            KeyProperty: "ProductCode"
+                            KeyProperty: "product_code"
                          });
                       }, function() {
                       });
                         }
+                        //console.log($rootScope.testArray.val)
                          $mdDialog.hide();
                      }
-                     }
+                    }
                   }
                   //close dialog box
                $scope.cancel = function() {
@@ -379,7 +428,7 @@ angular
                               $scope.SProductUnit = $scope.promoItems.ProductUnit;
                               $scope.Sqty = $scope.qty;
                               $scope.Solp = $scope.olp;
-                              $scope.Stax = $scope.promoItems.tax;
+                              $scope.Stax = $scope.Ptax;
                               $scope.Sstatus = "notavailable"
                               $scope.promoItems.splice(0,1)
                               $scope.promoItems.push({
@@ -401,7 +450,22 @@ angular
                       $scope.Sprice = pd.price;
                    }
                    $scope.setTax = function(pDis){
-                     $scope.Stax = pDis.tax;
+                    // if(pDis.status == "notavailable"){
+                      for (var i = $rootScope.taxType.length - 1; i >= 0; i--) {
+                       if($rootScope.taxType[i].taxname == pDis.tax.taxname){
+                            $scope.Ptax = ({
+                               taxname:$rootScope.taxType[i].taxname,
+                               activate: $rootScope.taxType[i].activate, 
+                               compound:$rootScope.taxType[i].compound,
+                               rate:$rootScope.taxType[i].rate, 
+                               type: $rootScope.taxType[i].type, 
+                               individualtaxes:$rootScope.taxType[i].individualtaxes});
+                           
+                        }
+                      };
+                     $scope.Stax = $scope.Ptax;
+                     // console.log($scope.Stax);
+
                    }
                    $scope.setUOM = function(pUOM){
                       $scope.SProductUnit = pUOM.ProductUnit;
@@ -613,6 +677,17 @@ angular
          }
 
 //----------------------------------------------------------------------------------------
+
+
+    $scope.check = function(cc){
+          $scope.TDEstimate.CutomFields ={};
+          for (var i = $scope.CutomFields.length - 1; i >= 0; i--) {
+           $scope.TDEstimate.CutomFields = ({name:  $scope.CutomFields[i].labelshown,
+                                                 id: cc});
+          };
+         console.log($scope.TDEstimate.CutomFields)
+         }
+
     //save invoice details
     $scope.submit = function() {
      
@@ -640,7 +715,14 @@ angular
                });
             }
          };
-      var client = $objectstore.getClient("twethdoorEstimate");
+      var client = $objectstore.getClient("Estimate12thdoor");
+
+        for (var i = $scope.CutomFields.length - 1; i >= 0; i--) {
+          if($scope.CutomFields[i].type== 'textBox'){
+           $scope.TDEstimate.CutomFields = ({name:  $scope.CutomFields[i].type,
+                                                 id:  $scope.CutomFields[i].textBoxFields});
+          }
+         }
 
       $scope.TDEstimate.EstimateProducts = $rootScope.testArray.val;
       $scope.TDEstimate.total = $scope.total;
@@ -648,11 +730,17 @@ angular
       $scope.TDEstimate.discountAmount = $scope.finalDisc;
       $scope.TDEstimate.salesTaxAmount = $scope.salesTax;
       $scope.TDEstimate.otherTaxAmount = $scope.otherTax;
-      $scope.TDEstimate.status = "N";
+      $scope.TDEstimate.status = "Valid";
       $scope.TDEstimate.Name = $rootScope.selctedName.display;
       $scope.TDEstimate.billingAddress = $rootScope.selctedName.BillingAddress;
       $scope.TDEstimate.shippingAddress = $rootScope.selctedName.ShippingAddress;
-
+      $scope.TDEstimate.Email = $rootScope.selctedName.value.Email;
+      $scope.TDEstimate.commentsAndHistory=[];
+         $scope.TDEstimate.commentsAndHistory.push({
+              done: false,
+              text: "Estimate was created by Mr.dddd",
+              date:new Date()
+         });
       $scope.TDEstimate.UploadImages = {
         val: []
       };
@@ -662,16 +750,17 @@ angular
         EstimateDetails.setArray($scope.TDEstimate);
 
       client.onComplete(function(data) {
-        $state.go('viewEst', {'estimateNo': $scope.TDEstimate.estimateRefNo});
+        
         $mdDialog.show(
           $mdDialog.alert()
           .parent(angular.element(document.body))
           .title('')
-          .content('credit Note Successfully Saved')
+          .content('Estimate Successfully Saved')
           .ariaLabel('Alert Dialog Demo')
           .ok('OK')
           .targetEvent(data)
         );
+        $state.go('viewEst', {'estimateNo': $scope.TDEstimate.estimateRefNo});
       });
 
       client.onError(function(data) {
@@ -739,29 +828,36 @@ angular
       $scope.finaldiscount = function() {
          $scope.finalDisc = 0;
          $scope.Discount = 0;
-          angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
+         if($scope.dis == "SubTotal Items" ){
+            $scope.finalDisc = parseInt($scope.total*$scope.TDinvoice.fdiscount/100)
+         }else if ($scope.dis == "Individual Items" ){
+            angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
             $scope.Discount +=   parseInt(tdIinvoice.discount);
             $scope.finalDisc = parseInt($scope.total*$scope.Discount/100);
          })
-         return $scope.finalDisc;
+       }
+      // $scope.CalculateTax();
+       return $scope.finalDisc;
       }
-      $scope.CalculateTax = function() {
-         $scope.salesTax = 0;
-         angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
-            $scope.salesTax += parseInt($scope.total*tdIinvoice.tax/100);
-         })
-         return $scope.salesTax;
+     $scope.CalculateTax = function() {
+         $scope.salesTax=0;
+        //console.log($rootScope.taxArr)
+         for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
+
+            $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
+          }
+           //console.log($scope.salesTax)
+           return $scope.salesTax;
+       
       }
-      $scope.CalculateOtherTax = function() {
-         $scope.otherTax = 0;
-         $scope.otherTax = ($scope.total * $scope.TDEstimate.anotherTax / 100);
-         return $scope.otherTax;
-      }
+     
       $scope.finalamount = function() {
          $rootScope.famount = 0;
-         $rootScope.famount = parseInt($scope.total - $scope.finalDisc)+
-          parseInt($scope.salesTax)+parseInt($scope.otherTax)+parseInt($scope.TDEstimate.shipping);
+         $rootScope.famount = parseInt($scope.total - $scope.finalDisc)+parseInt($scope.salesTax)+
+         parseInt($scope.TDEstimate.shipping);
+
          return $rootScope.famount;
+         console.log($rootScope.famount)
       };
 
     $scope.view = function() {
@@ -784,6 +880,21 @@ angular
       };
     }
 
+     $scope.EstimateDraftDetails = [];   
+       var client = $objectstore.getClient("domainClassAttributes");
+        client.onGetMany(function(data) {
+           if (data) {
+            $scope.EstimateDraftDetails = data;
+
+          for (var i = $scope.EstimateDraftDetails.length - 1; i >= 0; i--) {
+            $scope.ID = $scope.EstimateDraftDetails[i].maxCount;
+      };
+      $scope.maxID = parseInt($scope.ID)+1;
+      $scope.refNo = $scope.maxID.toString();
+           }
+        });
+        client.getByFiltering("select maxCount from domainClassAttributes where class='Estimate12thdoorDraft'");
+
     $scope.clearEstimate = function(ev){
       var confirm = $mdDialog.confirm()
           .title('Would you like save this to draft?')
@@ -794,48 +905,21 @@ angular
           .cancel('clear');
             $mdDialog.show(confirm).then(function() {
 
-      //         $scope.imagearray = UploaderService.loadArray();
-      // console.log($scope.imagearray);
-      // if ($scope.imagearray.length > 0) {
 
-      //   for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-      //     console.log($scope.imagearray[indexx].name);
-
-      //     $uploader.upload("45.55.83.253", "EstimateUploades", $scope.imagearray[indexx]);
-      //     $uploader.onSuccess(function(e, data) {
-
-      //       var toast = $mdToast.simple()
-      //         .content('Successfully uploaded!')
-      //         .action('OK')
-      //         .highlightAction(false)
-      //         .position("bottom right");
-      //       $mdToast.show(toast).then(function() {
-      //         //whatever
-      //       });
-      //     });
-
-      //     $uploader.onError(function(e, data) {
-
-      //       var toast = $mdToast.simple()
-      //         .content('There was an error, please upload!')
-      //         .action('OK')
-      //         .highlightAction(false)
-      //         .position("bottom right");
-      //       $mdToast.show(toast).then(function() {});
-      //     });
-      //   }
-      // };
-     var client = $objectstore.getClient("twethdoorEstimateDraft");
+      
+     var client = $objectstore.getClient("Estimate12thdoorDraft");
+     $scope.TDEstimate.invoiceRefNo = $scope.refNo;
       $scope.TDEstimate.EstimateProducts = $rootScope.testArray.val;
       $scope.TDEstimate.total = $scope.total;
       $scope.TDEstimate.finalamount = $scope.famount;
       $scope.TDEstimate.discountAmount = $scope.finalDisc;
       $scope.TDEstimate.salesTaxAmount = $scope.salesTax;
       $scope.TDEstimate.otherTaxAmount = $scope.otherTax;
-      $scope.TDEstimate.status = "N";
+      $scope.TDEstimate.status = "Draft";
       $scope.TDEstimate.Name = $rootScope.selctedName.display;
       $scope.TDEstimate.billingAddress = $rootScope.selctedName.BillingAddress;
       $scope.TDEstimate.shippingAddress = $rootScope.selctedName.ShippingAddress;
+      $scope.TDEstimate.Email = $rootScope.selctedName.value.Email;
       // $scope.TDEstimate.MultiDueDAtesArr = $scope.dateArray.value;
       // $scope.TDEstimate.UploadImages = {
       //   val: []
@@ -887,8 +971,12 @@ angular
                  $scope.TDEstimate.notes = "";
                  $scope.TDEstimate.paymentMethod = "";
                  $scope.TDEstimate.roFruitNames = "";
+                 $scope.TDEstimate.termtype = "";
+                 $scope.TDEstimate.Startdate = "";
+                 $scope.TDEstimate.validity = "";
 
-                 //location.href = '#/invoice_app';
+
+                 location.href = '#/allEstimates';
          
             });
       }
@@ -934,125 +1022,3 @@ angular
 
 //-------------------------------------------------------------------------------------------------------  
 //------------------------------------------------------------------------------------------------------
-.controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService) {
-
-  $scope.uploadimages = {
-    val: []
-  };
-  $scope.uploadimages.val = UploaderService.loadBasicArray();
-
-  $scope.$on('viewRecord', function(event, args) {
-    $scope.uploadimages.val.splice(args, 1);
-  });
-  $scope.toggleSearch = false;
-  $scope.headers = [{
-    name: 'Name',
-    field: 'name'
-  }, {
-    name: 'Size',
-    field: 'size'
-  }];
-  $scope.custom = {
-    name: 'bold',
-    size: 'grey'
-  };
-  $scope.sortable = ['name', 'size'];
-  $scope.thumbs = 'thumb';
-  $scope.count = 3;
-
-  $scope.AddImage = function() {
-    $scope.uploadimages.val = UploaderService.loadBasicArray();
-  }
-
-  $scope.cancel = function() {
-    $mdDialog.cancel();
-  };
-})
-
-//-------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------
-
-.factory('InvoiceService', function($rootScope) {
-    $rootScope.testArray = {
-      val: []
-    };
-
-    return {
-
-      setArray: function(newVal) {
-        $rootScope.testArray.val.push(newVal);
-
-        return $rootScope.testArray;
-      },
-      removeArray: function(newVals) {
-
-        $rootScope.testArray.val.splice(newVals, 1);
-        return $rootScope.testArray;
-      }
-    }
-  })
-  //-----------------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------------------
-  .factory('UploaderService', function($rootScope) {
-    $rootScope.uploadArray = [];
-    $rootScope.basicinfo = [];
-    return {
-
-      setFile: function(val) {
-        $rootScope.uploadArray.push(val);
-        return $rootScope.uploadArray;
-      },
-
-      BasicArray: function(name, size) {
-        $rootScope.basicinfo.push({
-          'name': name,
-          'size': size
-        });
-        console.log($rootScope.basicinfo);
-        return $rootScope.basicinfo;
-      },
-
-      removebasicArray: function(arr) {
-        for (var i = arr.length - 1; i >= 0; i--) {
-          $rootScope.basicinfo.splice(arr[i], 1);
-        };
-        console.log($rootScope.basicinfo);
-        return $rootScope.basicinfo;
-      },
-
-      removefileArray: function(arr) {
-        for (var i = arr.length - 1; i >= 0; i--) {
-          $rootScope.uploadArray.splice(arr[i], 1);
-        };
-        console.log($rootScope.uploadArray);
-        return $rootScope.uploadArray;
-      },
-
-      loadArray: function() {
-        return $rootScope.uploadArray;
-      },
-
-      loadBasicArray: function() {
-        return $rootScope.basicinfo;
-      },
-
-    }
-  })
-  //-------------------------------------------------------------------------------------------------
-  //---------------------------------------------------------------------------------------------------
-  
-.factory('EstimateDetails', function($rootScope) {
-      $rootScope.EstimateArray = [];
-
-      return {
-         setArray: function(newVal) {
-            $rootScope.EstimateArray.push(newVal);
-            return $rootScope.EstimateArray;
-         },
-         removeArray: function(newVals) {
-            $rootScope.EstimateArray.splice(newVals, 1);
-            return $rootScope.EstimateArray;
-         },
-        
-      }
-   })

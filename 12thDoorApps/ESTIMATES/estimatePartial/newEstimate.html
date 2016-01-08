@@ -85,9 +85,7 @@
                         <label>Estimate No.</label>
                         <input ng-model="TDEstimate.estimateRefNo" ng-disabled="true">
                         </md-input-container>
-                       <!--  <div flex >
-                            <md-date-picker model="TDEstimate.Startdate"  label="Date" dialog-md-theme="datePickerTheme" />
-                        </div> -->
+                      
                          <md-datepicker ng-model="TDEstimate.Startdate" md-placeholder="Enter date" required flex style="margin-top:25px; width:230px;"></md-datepicker>
                     </div>
                     <div layout layout-sm="column" layout-margin>
@@ -106,10 +104,8 @@
                             </md-optgroup>
                         </md-select>
                     </md-input-container>
-                   <!--  <div flex >
-                        <md-date-picker model="TDEstimate.duedate"  label="Validity" dialog-md-theme="datePickerTheme" ng-disabled="Showdate" />
-                    </div> -->
-                    <md-datepicker ng-model="TDEstimate.duedate" md-placeholder="Validity" required flex style="margin-top:25px; width:230px;" ng-disabled="showdate" ></md-datepicker>
+                   
+                    <md-datepicker ng-model="TDEstimate.validity" md-placeholder="Validity" required flex style="margin-top:25px; width:230px;" ng-disabled="showdate" ></md-datepicker>
                 </div>
                 <div layout layout-sm="column" layout-margin>
                    <section-title> </section-title>
@@ -184,11 +180,15 @@
                                                    </span> 
                                                 </div>
 
-                                                 <div flex>
-                                                   <span style="color:#808080;">{{item.tax}}%
-                                                   <md-tooltip>Tax</md-tooltip>
-                                                   </span> 
-                                                </div>
+                                                 <div flex="35" >
+                                                <span style="color:#808080;">{{item.tax.taxname}}
+                                                <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                                                    <md-tooltip>Tax</md-tooltip>
+                                                </span>
+                                                 <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                                                    
+                                                </span>
+                                                 </div>
 
                                                 <div flex >
                                                    <span style="color:#808080;">{{item.amount|currency}}
@@ -205,8 +205,8 @@
                                                </div>
                                             </div>
                                        <md-divider></md-divider>
-                                                  <div layout layout-sm="column" layout-margin>
-                                
+                                       <div ng-if="testArray.val.length != 0">
+                                  <div layout layout-sm="column" layout-margin>
                                 <section-title title="Totals"> </section-title>
                             </div>
                             <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
@@ -239,41 +239,29 @@
                                 </div>
                                 <div flex="30" >
                                     <label>{{finaldiscount(TDEstimate.fdiscount) | currency}}</label>
+                                    <label style="display:none">{{CalculateTax()}}</label>
                                 </div>
                             </div>
-                            <div layout layout-sm="column" layout-margin style="overflow:hidden;">
+                            <div layout layout-sm="column" ng-repeat="tt in taxArr" layout-margin style="overflow:hidden;">
                                 <div flex="5"></div>
+                             
                                 <div flex="20" style="margin-top:35px;"></div>
                                 <div flex="10">
-                                    <label>Sales Tax</label>
+                                    <label>{{tt.taxName}}</label>
                                 </div>
                                 <md-input-container flex="20" >
-                                    <input type="text"  ng-model="TDEstimate.salesTax" aria-label="sales tax" style="margin-top:-12px;"/>
+                                    <input type="text"  ng-model="tt.rate" aria-label="sales tax" style="margin-top:-12px;"/>
                                 </md-input-container>
                                 <div flex="5">
                                     <label></label>
                                 </div>
                                 <div flex="30" >
-                                    <label>{{CalculateTax(TDEstimate.salesTax)|currency}}</label>
+                                    <label>{{tt.salesTax| currency}}</label>
+                                   <!--  <span style="display:none">{{CalculateTax()}}</span > -->
                                 </div>
                             </div>
-                            <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                                <div flex="5"></div>
-                                <div flex="20" style="margin-top:35px;"></div>
-                                <div flex="10">
-                                    <label>Another Tax</label>
-                                </div>
-                                <md-input-container flex="20" >
-                                    <input type="text" ng-model="TDEstimate.anotherTax" aria-label="Another Tax" style="margin-top:-12px;"/>
-                                </md-input-container>
-                                <div flex="5">
-                                    <label></label>
-                                </div>
-                                <div flex="30">
-                                    <label>{{CalculateOtherTax(TDEstimate.anotherTax)|currency}}</label>
-                                </div>
-                            </div>
-                            <div layout layout-sm="column" layout-margin style="overflow:hidden; height:50px;" ng-hide="shipping">
+                            
+                            <div layout layout-sm="column" layout-margin style="overflow:hidden; height:50px;" ng-show="DispalyShipping">
                                 <div flex="5"></div>
                                 <div flex="20" style="margin-top:35px;"></div>
                                 <div flex="10">
@@ -289,19 +277,7 @@
                                     <span >{{TDEstimate.shipping| currency}}</span>
                                 </div>
                             </div>
-                            <div layout layout-sm="column" layout-margin style="overflow:hidden; margin-top:-10px; height:30px;" >
-                                <div flex="5"></div>
-                                <div flex="20" style=""></div>
-                                <div flex="10"></div>
-                                <md-input-container flex="20" ></md-input-container>
-                                <div flex="5">
-                                    <label></label>
-                                </div>
-                                <div flex="20"></div>
-                                <div flex="5" style="margin-right:30px; ">
-                                    <md-switch ng-model="ShippingSwitch" aria-label="Switch 1" style="margin-top:-10px!important;"></md-switch>
-                                </div>
-                            </div>
+                            
                             <center>
                                 <md-divider style="width:60%"></md-divider>
                             </center>
@@ -328,13 +304,14 @@
                                     </md-button>
                                 </div>
                             </div>
+                            </div>
                                         <md-divider></md-divider>
                                         <div layout layout-sm="column" layout-margin  >
                                             
                                              <section-title title="Optional Details"> </section-title>
                                             <md-input-container flex >
                                                 <label>Notes</label>
-                                                <input ng-model="TDEstimate.notes">
+                                                <textarea ng-model="TDEstimate.notes" columns="1" md-maxlength="150"></textarea>
                                                 </md-input-container>
                                             </div>
                                             
@@ -354,14 +331,39 @@
                                                 </div>
                                             </div>
                                             
-                                            <div layout layout-sm="column" layout-margin>
-                                            <div flex="5"></div>
-                                            <div flex="20" style="margin-top:35px;"></div>
-                                              <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
-                                           <md-button href class="md-raised md-primary" style="height:5px; " ng-click="upload()"> upload</md-button>
-                                               </div>
-                                            </div>
+                                            <div layout layout-sm="column" layout-margin  >
+                                             <section-title > </section-title>
+                                              <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:0px;">
+                                                  <md-button href class=" md-primary" style="height:5px;" ng-click="upload()"> upload</md-button>
+                                              </div>
+                                          </div>
                                         <md-divider></md-divider>
+                                        <md-divider></md-divider>
+                                      <div layout layout-sm="column" layout-margin>
+                                     
+                                       <section-title title="Custom Fields"> </section-title>
+
+                                      <div layout layout-sm="column" layout-margin > 
+                                      <table>
+                                          <tr>
+                                              <th style="" flex>Name</th>
+                                              <th style=" padding-left:200px;" flex>Id</th>
+                                          </tr>
+                                          <tr ng-repeat="txt in CutomFields">
+                                              <td style=""flex>{{txt.labelshown}}</td>
+                                              <td style=" padding-left:200px;"  flex>
+                                              <md-input-container flex ng-if=" txt.type== 'textBox'" >
+                                              <input ng-model="txt.textBoxFields" ng-disabled="true">
+                                              </md-input-container>
+                                              <md-select ng-change="check(nn)" placeholder="id" ng-if=" txt.type == 'selectBox'" ng-model="nn" flex >
+                                                  <md-option ng-repeat="nn in txt.fields" value="{{nn}}">{{nn}}</md-option>
+                                          </md-select>
+                                              </td>
+                                          </tr>
+                                      </table>
+                                      </div>
+                                      </div>
+                                      <md-divider></md-divider>
                                          <div class="md-actions" layout="row" layout-sm="column" layout-align="end start" >
                                      <div style="margin-top:20px;">
                                             <md-button  class="md-raised md-primary" type="submit">
@@ -375,10 +377,10 @@
                                     </md-content>
                                 </form>
                             </md-whiteframe>
-                                                <!--WHITEFRAME END-->
-                                            </div>
-                                            <!--CARD CONTAINER END-->
-                                             <div  class="lock-size" layout="row" >
+                              <!--WHITEFRAME END-->
+                        </div>
+                        <!--CARD CONTAINER END-->
+                         <div  class="lock-size" layout="row" >
                     <md-button href class="md-fab" aria-label="Profile" ng-click="view()" style="position:fixed;top:270px;right:50px;background:#db4437">
                         <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
                         <md-tooltip md-direction="left">All Estimates</md-tooltip>

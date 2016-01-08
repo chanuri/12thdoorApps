@@ -10,12 +10,7 @@
         </md-toolbar>
         <md-dialog-content style="width:850px" >
 <div layout layout-sm="column" layout-margin>
-    <div flex="5">
-         <img src="img/material alperbert/avatar_tile_u_28.png" style="margin-top:22px;border-radius:20px"/>
-    </div>
-         <div flex="20" style="margin-top:35px;">
-           <label style="font-weight:700">Upload File</label>
-         </div>
+     <section-title title="Upload File"> </section-title>
             <div flex="25">
              <file-up-loader-invoice upload-type="image" label="Upload files"></file-up-loader-invoice>
           </div>
@@ -25,13 +20,8 @@
                         <br>
                         <br>
                         <div layout layout-sm="column" layout-margin>
-                <div flex="5">
-                  <img src="img/material alperbert/avatar_tile_f_28.png" style="margin-top:22px;border-radius:20px"/>
-                </div>
-                <div flex="20" style="margin-top:35px;">
-                  <label style="font-weight:700">File Details</label>
-                </div>
-
+                
+      <section-title title="File Details"> </section-title>
              <div flex="70" >
                               <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="uploadimages.val">
                               </md-table>

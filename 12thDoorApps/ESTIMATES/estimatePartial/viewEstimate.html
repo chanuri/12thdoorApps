@@ -10,31 +10,36 @@
 					<label ng-if="item.estimateNo != '-999'">{{item.estimateNo}}</label>
 				</div>
 						<div flex>
-                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid red;background-color: #FF0000; " ng-if="item.status == 'Unpaid'">
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #F4A460;background-color: #F4A460;" ng-if="item.status == 'Valid'">
                                 <b style=" width:70px; font-color:#FFFFFF;">
-                                    <font color="white">Unpaid</font>
+                                    <font color="white">Valid</font>
                                 </b>
                             </span>
-                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #D2691E;background-color: #D2691E;" ng-if="item.status == 'overdue'">
-                                <b style=" width:70px; font-color:#FFFFFF;">
-                                    <font color="white">Overdue</font>
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #FF0000;background-color: #FF0000; " ng-if="item.status == 'Expired'">
+                                <b style="width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Expired</font>
                                 </b>
                             </span>
-                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #FF4500;background-color: #FF4500;" ng-if="item.status == 'Partially Paid'">
-                                <b style=" width:70px; font-color:#FFFFFF;">
-                                    <font color="white">Partially Paid</font>
+                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #B22222;background-color: #B22222;" ng-if="item.status == 'Rejected'">
+                                <b style="width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Rejected</font>
                                 </b>
                             </span>
-                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000;background-color: #000000;" ng-if="item.status == 'Cancelled'">
-                                <b style=" width:70px; font-color:#FFFFFF;">
+                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #228B22;background-color: #228B22;" ng-if="item.status == 'Accepted'">
+                                <b style="width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Accepted</font>
+                                </b>
+                            </span>
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000; background-color: #000000;" ng-if="item.status == 'Cancelled'">
+                                <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Cancelled</font>
                                 </b>
                             </span>
                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="item.status == 'Draft'">
-                                <b style=" width:70px; font-color:#FFFFFF;">
+                                <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Draft</font>
                                 </b>
-                            </span>
+                            </span> 
                         </div>
                      <div  style="margin-top:-20px;">
                         	 <md-button ng-click="printDetails()" style="height:30px;" aria-label="change address" href>
@@ -45,7 +50,7 @@
                                     <md-icon md-svg-icon="img/ic_file_download_24px.svg" style="height:20px; width:20px;"></md-icon>
                                 </md-button>
                         
-                        	 <md-button ng-click="showListBottomSheet($event,item)" style="height:30px;" aria-label="change address" href>
+                        	 <md-button ng-click="sendMail(item)" style="height:30px;" aria-label="change address" href>
                                     <md-icon md-svg-icon="img/ic_email_24px.svg" style="height:20px; width:20px;"></md-icon>
                                </md-button>
                                <md-menu md-position-mode="target-right target" >
@@ -54,8 +59,20 @@
                             </md-button>
                             <md-menu-content width="4">
                             <md-menu-item >
-                                    <md-button href ng-click="enterPayment(item)">
-                                        <p>Enter Payments</p>
+                                    <md-button href ng-click="convertToInvoice(item)">
+                                        <p>Convert to Invoice</p>
+                                        <md-icon href md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                 <md-menu-item >
+                                    <md-button href ng-click="AcceptStatus(item)">
+                                        <p>Accepted by Customer</p>
+                                        <md-icon href md-menu-align-target ></md-icon>
+                                    </md-button>
+                                </md-menu-item>
+                                 <md-menu-item >
+                                    <md-button href ng-click="RejectedEstimate(item)">
+                                        <p>Rejected by Customer</p>
                                         <md-icon href md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
@@ -66,7 +83,7 @@
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item >
-                                    <md-button href ng-click="copyInvoice(item)">
+                                    <md-button href ng-click="copyEstimate(item)">
                                         <p>Copy</p>
                                         <md-icon md-menu-align-target ></md-icon>
                                     </md-button>
@@ -78,29 +95,12 @@
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item >
-                                    <md-button aria-label="delete" href ng-click="deleteInvoice(item)">
+                                    <md-button aria-label="delete" href ng-click="deleteRecord(item)">
                                         <p>Delete</p>
                                         <md-icon md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
-                                <md-menu-item >
-                                    <md-button href ng-click="CopyAsRecurringProfile(item)">
-                                        <p>Copy as Recurring</p>
-                                        <md-icon md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
-                                 <md-menu-item >
-                                    <md-button href ng-click="">
-                                        <p>Credit Note</p>
-                                        <md-icon md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
-                                <md-menu-item >
-                                    <md-button href ng-click="showListBottomSheet($event,item)">
-                                        <p>Send Reminder</p>
-                                        <md-icon md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
+                                
                             </md-menu-content>
                         </md-menu>
                         </div>
@@ -108,7 +108,7 @@
 
 				<md-divider></md-divider>
 				<div layout layout-sm="column" layout-margin flex>
-					<img src="img/image1.jpg">
+					<img style="margin-top:-5px;" src="img/image1.jpg">
 				</div>
 				<div layout layout-sm="column" layout-margin flex style="margin-top:-50px;">
 				<div flex="10" class="blankspace"></div>
@@ -119,12 +119,10 @@
 					<label ng-if="item.estimateNo == '-999'">{{item.estimateRefNo}}</label>
 					<label ng-if="item.estimateNo != '-999'">{{item.estimateNo}}</label>
 					<div flex="50" class="blankspace"></div>
-					
 				</div>
-				<div layout layout-sm="column" layout-margin style="margin-top:20px;" flex>
+				<div layout layout-sm="column" layout-margin style="margin-top:-18px;" flex>
 				<div flex="65" class="blankspace"></div>
 					<label>To:</label>
-					
 				</div>
 				<div layout layout-sm="column" layout-margin style="margin-top:10px;" flex>
 				<div flex="10" class="blankspace"></div>
@@ -132,24 +130,21 @@
 					<label flex="15"> {{item.Startdate|date}}</label>
 			<div flex="25" class="blankspace"></div>
 					<label><b>{{item.Name}}</b></label>
-					
 				</div>
-
 				<div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
 				<div flex="10" class="blankspace"></div>
 					<label flex="10">Due Date</label>
 					<label flex="15"> {{item.termtype}}</label>
 					<div flex="25" class="blankspace"></div>
 					<label>{{street}}</label>
-					
+		
 				</div>
 				<div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
 				<div flex="10" class="blankspace"></div>
-					<label flex="10">PO</label>
-					<label flex="15"> {{item.poNum}}</label>
+					<label flex="10">Customer Reference</label>
+					<label flex="15"> {{item.cusRef}}</label>
 					<div flex="25" class="blankspace"></div>
-					<label>{{city}}</label>
-					
+					<label>{{city}}</label>	
 				</div>
 				
 				<div layout layout-sm="column" layout-margin style="margin-top:-15px;"  flex>
@@ -158,17 +153,15 @@
 					<label flex="15">USD</label>
 					<div flex="25" class="blankspace"></div>
 					<label>{{country}}</label>
-					
 				</div>
 				<div layout layout-sm="column" layout-margin  flex>
 				<div flex="10" class="blankspace"></div>
 					<label flex="10">Comments</label>
 					<label flex>{{item.comments}}</label>
-					<!-- <div flex="50" class="blankspace"></div> -->
 				</div>
 				<div layout layout-sm="column" style="margin-top:30px;" layout-margin  flex>
 				<div flex="10" class="blankspace"></div>
-					<table >
+					<table>
 					<tr>
 						<th style=" width:450px;" flex="50">Description</th>
 						<th style="padding: 10px;" flex>Qty</th>
@@ -194,37 +187,37 @@
 				 <div layout layout-sm="column" layout-margin  flex>
 				 	<div flex="55" class="blankspace"></div>
 				 	<table>
-				 		<tr >
+				 		<tr>
 				 			<td style="padding-top:15px;" flex>Sub Total</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.total|currency}}</td>
 				 		</tr>
-				 		<tr >
+				 		<tr>
 				 			<td  style="padding-top:15px;" flex>Discount</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.discountAmount|currency}}</td>
 				 		</tr>
-				 		<tr >
+				 		<tr>
 				 			<td style="padding-top:15px;" flex>Tax</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.salesTaxAmount|currency}}</td>
 				 		</tr>
-				 		<tr >
+				 		<tr>
 				 			<td style="padding-top:15px;" flex> Other Tax</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.otherTaxAmount|currency}}</td>
 				 		</tr>
-				 		<tr >
+				 		<tr>
 				 			<td style="padding-top:15px;" flex> Shipping</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.shipping|currency}}</td>
 				 		</tr>
-				 		<tr >
+				 		<tr>
 				 			<td style="padding-top:15px;" flex> Total USD</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.finalamount|currency}}</td>
 				 		</tr>
-				 		<tr >
+				 		<tr>
 				 			<td style="padding-top:15px;" flex> Paid</td>
 				 			<td style="padding-left: 75px; padding-top:15px;" flex>
 				 			{{item.paidAMount|currency}}</td>
@@ -236,15 +229,6 @@
 				 		</tr>
 				 	</table>
 				 </div>
-
-				
-				<div layout layout-sm="column" layout-margin style="margin-top:-40px; " flex>
-				<div flex="5" class="blankspace"></div>
-				<label>Payment method</label>
-
-				<img ng-if="item.paymentMethod == 'PayPal'" src="img/paypal.png" width="80px" height="40px" style="margin-top:-20px; padding:10px;">
-				<img ng-if="item.paymentMethod == 'Stripe'" src="img/stripe.png" width="70px" height="35px" style="margin-top:-20px; padding:10px;">
-				</div>
 
 				<div layout layout-sm="column" layout-margin  flex>
 				<div flex="5" class="blankspace"></div>
@@ -276,7 +260,7 @@
 					          <li ng-repeat="todo in item.commentsAndHistory | orderBy:todo.date" style="padding:10px; margin-left:-48px;" flex>
 					            <img src="img/material alperbert/avatar_tile_h_28.png" />
 					            
-					              <font  color="#A9A9A9" >{{todo.date|date}} {{todo.text}}</font> 
+					              <font  color="#A9A9A9">{{todo.date|date}} {{todo.text}}</font> 
 					              <md-button href aria-label="delete" ng-mouseover="display:none;" ng-click="deleteComments(todo)" style="width:25px; height:10px; padding:15px;">
 					             <img src="img/ic_clear_24px.svg" style=" width:15px; height:15px; margin-top:5px;" /></md-button>
 					          </li>
@@ -290,33 +274,16 @@
                     </div>
 
 				<md-divider></md-divider>
-				<div layout layout-sm="column" layout-margin>
-                    <div flex="5">
-                       <img src="img/material alperbert/avatar_tile_p_28.png" style="margin-top:22px;border-radius:20px"/>
-                    </div>
-                    <div flex="20" style="margin-top:30px;">
-                        <label style="font-weight:700">Payment History</label>
-                    </div>
-					<table >
-					<tr>
-						<th flex style="padding: 30px;">Date</th>
-						<th style="padding: 30px;" flex>Doc Ref No</th>
-						<th style="padding: 30px;" flex>Payment Method</th>
-						<th style="padding: 30px;" flex>Paid Amount</th>
-						<md-divider></md-divider>
-						</tr>
-
-						<tr ng-repeat="cc in Payment">
-						<div ng-repeat="cd in paydate"><td style="padding: 30px;"  flex>{{cd.duedate|date}}</td></div>
-							<td style="padding: 30px;"flex>{{cc.paymentid}}</td>
-							<td style="padding: 30px;"flex>{{cc.paymentMethod}}</td>
-							<td style="padding: 30px;"flex>{{cc.total|currency}}</td>
-							 <!-- <md-divider></md-divider> -->
-						</tr>
-						<md-divider></md-divider>
-					</table>
+				
+				<div layout layout-sm="column" ng-show="item.displayShippingAddress" layout-margin>
+					<section-title title="Shipping Address"> </section-title>
+					<div layout layout-sm="column" layout-margin>
+					{{ShippingStreet}}<br>
+					{{ShippingCity}}<br>
+					{{ShippingCountry}}<br>
+					</div>
 				</div>
-            </md-content>
+				            </md-content>
             </form>
     </md-whiteframe>
     </div>
@@ -326,67 +293,4 @@
                 <md-tooltip md-direction="left">All Invoices</md-tooltip>
             </md-button>
 
-            <script type="text/ng-template" id="bottom-sheet-list-template.html">
-				<md-bottom-sheet class="md-list md-has-header" style="width:50%; height:400px;  overflow-x:hidden; " layout-align="start end" ng-cloak>
-				
-				 <md-toolbar  class="modal-header" style="width:105%; margin-left:-15px;">
-		            <div class="md-toolbar-tools">
-			                <h2>Email To Customer</h2>
-			                <span flex></span>
-			                <md-button href class="md-icon-button" ng-click="cancel()">
-			                    <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-			                </md-button>
-			            </div>
-			        </md-toolbar>
-			        <md-whiteframe class="md-whiteframe-z1" style="background-color:#FFFFFF;" style="overflow-y:auto;">
-					<div layout layout-sm="column" layout-margin ng-init="recipientCtrl()" >
-			            <md-content class="md-padding" layout="column"  flex>
-			             <md-chips flex
-			                ng-model="emailrec"
-			                readonly="readonly"
-			                delete-button-label="Remove Tag"
-			                delete-hint="Press delete to remove tag"
-			                secondary-placeholder="To">
-			                </md-chips>
-			            </md-content>
-			            </div>
-
-			          
-				      <div layout layout-sm="column" layout-margin style="margin-top:-30px; "> 
-                    <md-content class="md-padding" layout="column"  flex>
-                    <md-input-container flex >
-                        <label>Subject</label>
-                       <!--  <label>Invoice No.{{test.invoiceRefNo}}</label> -->
-                        <input ng-model="subject">
-                        </md-input-container>
-                        </md-content>
-                    </div>
-			            <div layout layout-sm="column" layout-margin >
-			           
-                   <md-card style="width:100%">
-                    <md-content class="md-padding" layout="column" >
-                   <md-card-content  flex>
-                  
-                    <p>
-                        Dear Customer,<br><br>
-                        Attached Invoice No. {{test.invoiceRefNo}}. <br><br>
-                        To pay or download click on the below link: <br><br>
-                        <a href="http://localhost/12thdoor/CustomerPortal.html#/customer_Portal/INo={{test.invoiceRefNo}}">
-                        //http:localhost/12thdoor/invoice.html#/contactView/INo={{test.invoiceRefNo}}</a><br>
-                        <br>Thank you for your business!<br><br>
-                        ABC Company 
-                        </p>
-                    </div>
-                     
-                    </md-card-content>	
-                    </md-content>
-                   </md-card>
-                    
-                    <div class="md-actions" layout="row">
-                <span flex></span>
-                <md-button href ng-click="sendmail()" class="md-raised md-primary">Send</md-button>
-            </div>		
-            </md-whiteframe>		  
-					</md-bottom-sheet>
-					</script>
-        </div>
+           

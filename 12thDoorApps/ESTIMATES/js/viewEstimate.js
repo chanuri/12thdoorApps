@@ -7,7 +7,193 @@ angular.module('mainApp')
     $scope.showTable = false;
     $scope.obtable = [];
 
-    var client = $objectstore.getClient("twethdoorEstimate");
+     $scope.sendMail = function(item) {
+   $mdDialog.show({
+               templateUrl: 'estimatePartial/email.html',
+               controller: 'emailCtrl',
+               locals: {
+                 invo: item
+               }
+            });
+  };
+
+  $scope.printDetails = function(){
+        window.print();
+      }
+
+      $scope.systemMessage = [];
+
+$scope.cancelStatus = function(obj, ev) {
+  var confirm = $mdDialog.confirm()
+          .title('Do you wish to cancel this Estimate'+ obj.estimateNo+'? This process is not reversible')
+          .content('')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('Yes')
+          .cancel('No');
+            $mdDialog.show(confirm).then(function() {
+         var client = $objectstore.getClient("Estimate12thdoor");
+         obj.estimateNo = obj.estimateNo.toString();
+         // if(obj.status != "Draft"){
+          $scope.systemMessage.push({text:"The Estimate was Cancelled by mr.Perera", done:false,  date:new Date()});
+          for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
+           obj.commentsAndHistory.push($scope.systemMessage[i]);
+          };
+           
+          obj.status = "Cancelled";
+         client.onComplete(function(data) {
+             $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('')
+               .content('Estimate Successfully Cancelled')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding cancelling Estimate')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(obj, {KeyProperty: "estimateNo"});
+       // }
+      })
+}
+
+$scope.RejectedEstimate = function(obj, ev) {
+  var confirm = $mdDialog.confirm()
+          .title('Do you wish to Reject this Estimate'+ obj.estimateNo+'? This process is not reversible')
+          .content('')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('Yes')
+          .cancel('No');
+            $mdDialog.show(confirm).then(function() {
+         var client = $objectstore.getClient("Estimate12thdoor");
+         obj.estimateNo = obj.estimateNo.toString();
+         // if(obj.status != "Draft"){
+          $scope.systemMessage.push({text:"The Estimate was Rejected by mr.Perera", done:false,  date:new Date()});
+          for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
+           obj.commentsAndHistory.push($scope.systemMessage[i]);
+          };
+           
+          obj.status = "Rejected";
+         client.onComplete(function(data) {
+             $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('')
+               .content('Estimate Successfully Rejected')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding cancelling Estimate')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(obj, {KeyProperty: "estimateNo"});
+       // }
+      })
+}
+
+$scope.AcceptStatus = function(obj, ev) {
+  var confirm = $mdDialog.confirm()
+          .title('Do you wish to Accepted this Estimate'+ obj.estimateNo+'?')
+          .content('')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('Yes')
+          .cancel('No');
+            $mdDialog.show(confirm).then(function() {
+         var client = $objectstore.getClient("Estimate12thdoor");
+         obj.estimateNo = obj.estimateNo.toString();
+         // if(obj.status != "Draft"){
+          $scope.systemMessage.push({text:"The Estimate was Accepted by mr.Perera", done:false,  date:new Date()});
+          for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
+           obj.commentsAndHistory.push($scope.systemMessage[i]);
+          };
+           
+          obj.status = "Accepted";
+         client.onComplete(function(data) {
+             $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('')
+               .content('Estimate Successfully Accepted')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding cancelling Estimate')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(obj, {KeyProperty: "estimateNo"});
+       // }
+      })
+}
+
+$scope.todos = [];
+  $scope.markAll = false;
+$scope.addTodo = function(todoText) {
+      if(event.keyCode == 13 ){
+          $scope.todos.push({text:todoText.addView, done:false,  date:new Date()});
+          
+         var client = $objectstore.getClient("Estimate12thdoor");
+         todoText.estimateNo = todoText.estimateNo.toString();
+
+             for (var i =  $scope.todos.length - 1; i >= 0; i--) {
+           todoText.commentsAndHistory.push($scope.todos[i]);
+         };
+         client.onComplete(function(data) {
+
+            todoText.addView = "";
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('successfull')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding comments')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(todoText, {KeyProperty: "estimateNo"});
+      }
+  };
+  
+      var client = $objectstore.getClient("Estimate12thdoorDraft");
     client.onGetMany(function(data) {
       if (data) {
         // $scope.TDEstimate = data;
@@ -19,10 +205,17 @@ angular.module('mainApp')
                if($stateParams.estimateNo == data[i].estimateNo){
                   EstimateDetails.removeArray(data[i], 1);
                    EstimateDetails.setArray(data[i]);
-                  $scope.Address = data[0].billingAddress.split(',');
+
+                   console.log(data[i])
+               $scope.Address = data[i].billingAddress.split(',');
                $scope.street = $scope.Address[0];
                $scope.city = $scope.Address[1]+$scope.Address[3];
                $scope.country = $scope.Address[2]+$scope.Address[4];
+
+               $scope.shippingAddress = data[i].shippingAddress.split(',');
+               $scope.ShippingStreet  = $scope.shippingAddress[0];
+               $scope.ShippingCity    = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+               $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
              }
       }
@@ -32,7 +225,48 @@ angular.module('mainApp')
       $mdDialog.show(
         $mdDialog.alert()
         .parent(angular.element(document.body))
-        .title('This is embarracing')
+        .title('')
+        .content('There was an error retreving the data.')
+        .ariaLabel('Alert Dialog Demo')
+        .ok('OK')
+        .targetEvent(data)
+      );
+    });
+    client.getByFiltering("*");
+
+
+      var client = $objectstore.getClient("Estimate12thdoor");
+    client.onGetMany(function(data) {
+      if (data) {
+        // $scope.TDEstimate = data;
+        for (var i = data.length - 1; i >= 0; i--) {
+              data[i].addView = "";
+               data[i].estimateNo = parseInt(data[i].estimateNo);
+               $scope.TDEstimate.push(data[i]);
+
+               if($stateParams.estimateNo == data[i].estimateNo){
+                  EstimateDetails.removeArray(data[i], 1);
+                   EstimateDetails.setArray(data[i]);
+
+               $scope.Address = data[i].billingAddress.split(',');
+               $scope.street = $scope.Address[0];
+               $scope.city = $scope.Address[1]+$scope.Address[3];
+               $scope.country = $scope.Address[2]+$scope.Address[4];
+
+               $scope.shippingAddress = data[i].shippingAddress.split(',');
+               $scope.ShippingStreet  = $scope.shippingAddress[0];
+               $scope.ShippingCity    = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+               $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
+               }
+             }
+      }
+    });
+
+    client.onError(function(data) {
+      $mdDialog.show(
+        $mdDialog.alert()
+        .parent(angular.element(document.body))
+        .title('')
         .content('There was an error retreving the data.')
         .ariaLabel('Alert Dialog Demo')
         .ok('OK')
@@ -42,7 +276,6 @@ angular.module('mainApp')
     client.getByFiltering("*");
 
     
-
     $scope.openOtherView = function(prn){
        EstimateDetails.removeArray(0, 1);
         EstimateDetails.setArray(prn);
@@ -50,8 +283,36 @@ angular.module('mainApp')
     }
 
     $scope.editestimate = function(est){
+      EstimateDetails.removeArray(est, 1);
+      EstimateDetails.setArray(est);
        $state.go('editEst', {'estimateNo': est.estimateRefNo});
+       console.log(est);
+       console.log($rootScope.EstimateArray);
     } 
+
+   
+    $scope.copyEstimate = function(InvoItem){
+        EstimateDetails.removeArray(InvoItem, 1);
+         $scope.InvoiceDetails = [];
+       var client = $objectstore.getClient("Estimate12thdoor");
+              client.onGetMany(function(data) {
+                 if (data) {
+                  $scope.EstimateDetails = data;
+
+                for (var i = $scope.EstimateDetails.length - 1; i >= 0; i--) {
+                  $scope.ID = $scope.EstimateDetails[i].maxCount;            
+            };
+            $scope.maxID = parseInt($scope.ID)+1;
+            InvoItem.estimateRefNo = $scope.maxID.toString();
+             //console.log( $scope.TDinvoice.invoiceRefNo);
+                 }
+              });
+              client.getByFiltering("select maxCount from domainClassAttributes where class='Estimate12thdoor'");
+
+      
+        EstimateDetails.setArray(InvoItem);
+        location.href = '#/copyEstimateDetails';
+      }
     
     $scope.deleteRecord = function(deleteform, ev) {
 
@@ -65,7 +326,7 @@ angular.module('mainApp')
         .targetEvent(ev);
 
       $mdDialog.show(confirm).then(function() {
-        var client = $objectstore.getClient("twethdoorEstimate");
+        var client = $objectstore.getClient("Estimate12thdoor");
 
         client.onComplete(function(data) {
 
@@ -196,3 +457,101 @@ angular.module('mainApp')
     }
 
   })
+
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+ //--------------------------------------------------------------------------------------------------------------
+   //--------------------------------------------------------------------------------------------------------------
+  .controller('emailCtrl', function($scope,$mdDialog, $rootScope, invo, $mdToast, $document) {
+    $scope.test = invo;
+    //console.log($scope.test)
+      $scope.subject = "invoice No."+ $scope.test.invoiceNo + " " +$scope.test.Name;
+
+  $scope.cancel = function() {
+         $mdDialog.cancel();
+      };
+
+       $scope.recipientCtrl = function($timeout, $q) {
+         var self = this;
+         $scope.Emailerror=false;
+         self.readonly = false;
+         // self.emailrecipient = [$scope.test.Email];
+         // $scope.emailrec = angular.copy(self.emailrecipient);
+         $scope.emailrec = [$scope.test.Email];
+         self.tags = [];
+         self.newVeg = function(chip) {
+            return {
+               name: chip,
+               type: 'unknown'
+            };
+         };
+       }
+
+        $scope.$watchCollection("emailrec", function() {
+         var re = /\S+@\S+\.\S+/;
+         $scope.Emailerror=false;
+         for (var i = $scope.emailrec.length - 1; i >= 0; i--) {
+
+          if(re.test($scope.emailrec[i]) == false){
+            $scope.show = $scope.emailrec[i];
+            $scope.Emailerror=true; 
+            $scope.emailrec.splice(i, 1);        
+            
+            $scope.showActionToast();
+          }    
+         };  
+     });
+
+      var last = {
+      bottom: false,
+      top: true,
+      left: false,
+      right: true
+    };
+
+  $scope.toastPosition = angular.extend({},last);
+  $scope.getToastPosition = function() {
+    sanitizePosition();
+    return Object.keys($scope.toastPosition)
+      .filter(function(pos) { return $scope.toastPosition[pos]; })
+      .join(' ');
+  };
+  
+  function sanitizePosition() {
+    var current = $scope.toastPosition;
+    if ( current.bottom && last.top ) current.top = false;
+    if ( current.top && last.bottom ) current.bottom = false;
+    if ( current.right && last.left ) current.left = false;
+    if ( current.left && last.right ) current.right = false;
+    last = angular.extend({},current);
+  }
+
+        $scope.showActionToast = function() {
+            $mdToast.show({
+          controller: 'ToastCtrl',
+          template: 'invalid',
+          parent : $document[0].querySelector('#toastBounds'),
+          hideDelay: 6000,
+          position: $scope.getToastPosition()
+        });
+      };
+      
+       $scope.bccCtrl = function($timeout, $q) {
+         var self = this;
+         self.readonly = false;
+         self.emailBCCrecipient = [$scope.test.adminEmail];
+         self.emailBCCrec = angular.copy(self.emailBCCrecipient);
+         self.tags = [];
+         self.newVeg = function(chip) {
+            return {
+               name: chip,
+               type: 'unknown'
+            };
+         };
+      }
+
+  $scope.listItemClick = function($index) {
+    var clickedItem = $scope.items[$index];
+    $mdBottomSheet.hide(clickedItem);
+  };
+})

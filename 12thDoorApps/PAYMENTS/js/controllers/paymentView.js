@@ -1,5 +1,5 @@
  /*________________________________________________AppCtrlGet_________________________________________*/
- rasm.controller('AppCtrlGet', function($scope, $state, $rootScope, $objectstore, $location, $mdDialog, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast, $log) {
+ rasm.controller('AppCtrlGet', function($scope, $state, $rootScope, $objectstore, $location, $mdDialog, uiInitilize, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast, $log) {
     $scope.payments = [];
     $scope.checkAbilityBtn = true;
     $scope.checkAbilityEditing = true;
@@ -72,6 +72,23 @@
       divider: false,
       close: false
     }];
+
+    setInterval(function interval(){
+        $scope.viewPortHeight = window.innerHeight;
+        $scope.viewPortHeight = $scope.viewPortHeight+"px";
+    }, 100);
+
+    $scope.toggles = {};
+    $scope.toggleOne = function($index){
+        for (ind in $scope.payments)
+            if ($scope.toggles[ind] && ind != $index)
+                $scope.toggles[ind] = false;
+
+            if (!$scope.toggles[$index])
+                $scope.toggles[$index] = true;
+        else $scope.toggles[$index] = !$scope.toggles[$index];
+    };
+   
 
     $scope.self = this;
     $scope.self.searchText = "";
@@ -260,11 +277,17 @@
         var client = $objectstore.getClient("payment");
         client.onGetMany(function(data) {
             if (data) {
-                $scope.payments = data;
+                $scope.payments = uiInitilize.insertIndex(data);
+                //$scope.payments = data;
                 if ($scope.PayArr) {
                     for(i=0; i<= $scope.payments.length-1; i++){
                         $scope.payments[i].settingsMethods = [];
                         $scope.payments[i].settingsMethods = $scope.PayArr;    
+                    }
+                }
+                for(i=0; i<= $scope.payments.length-1; i++){
+                    for(y=0; y<= $scope.payments[i].paidInvoice.length-1; y++){
+                        $scope.payments[i].paidInvoice[y].paidAmount = parseInt($scope.payments[i].paidInvoice[y].amount) - parseInt($scope.payments[i].paidInvoice[y].balance);
                     }
                 }
             }

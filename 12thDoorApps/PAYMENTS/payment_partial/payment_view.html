@@ -279,12 +279,34 @@
                            </div>
                            <!---END OF TABLE------>
                            <md-divider></md-divider>
-                           <div layout-gt-sm="row">
-                              <section-title></section-title>
-                           </div>
-                           <div class="md-actions" layout="row" layout-align="center center" style="display:none">
-                              <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
-                              </md-button>
+
+
+
+                           <div layout-gt-sm="row" ng-repeat="cust in payment.custField">
+                             
+                              <section-title ng-if="$index == '0'" title="Custom Fields"></section-title>
+                              <section-title ng-if="$index != '0'" ></section-title>
+
+                              <div  flex-gt-sm  style=" margin-top:35px;">
+                                 <label><b>{{cust.lable}}</b></label>
+                               </div>
+
+                              <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'textBox'" class="md-block" flex-gt-sm >
+                                 <label></label>
+                                 <input ng-model="cust.value" ng-disabled="true">
+                              </md-input-container>
+
+                               <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'selectBox'" class="md-block" flex-gt-sm >
+                                 <!-- <label></label>
+                                 <md-select  ng-model="cust.value" flex>
+                                    <md-optgroup label="">
+                                    <md-option ng-repeat="item in cust.fields" value="{{item}}">{{item}}</md-option>
+                                 </md-select> -->
+                                  <label></label>
+                                 <input ng-model="cust.value"  ng-disabled="true">
+                              </md-input-container>
+
+                              <div flex="40"></div>
                            </div>
                         </form>
                      </md-content>

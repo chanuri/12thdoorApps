@@ -1,4 +1,4 @@
-    rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, $mdDialog,UploaderService,$uploader, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast, $rootScope, invoiceDetails) {
+rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, $mdDialog,UploaderService,$uploader, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast, $rootScope, invoiceDetails) {
     $scope.payment = {}; //class name payment
     $scope.TDInvoice = {}; //class name for updating paid invoice
     $scope.advancedPayment = {};
@@ -21,6 +21,28 @@
     $scope.TDInvoice.updateInvoice = []; //updated invoice details will save here when u do a paymet
     $scope.allInvoiceArr = [];
     $scope.maxDate = new Date();
+
+
+     $scope.tests = [{
+        invono:"12",
+        sdate: new Date(),
+        duedate: new Date(),
+        famount: "1100",
+        mduedate: new Date(),
+        instalment: "200",
+        termtype: "new one ",
+        checked: false
+    },{
+        invono:"12",
+        sdate: new Date(),
+        duedate: new Date(),
+        famount: "1100",
+        mduedate: new Date(),
+        instalment: "200",
+        termtype: "new one ",
+        checked: false
+    }];
+
     /*______________________________________paymentID Genaration_____________________________________*/
     var client = $objectstore.getClient("domainClassAttributes");
     client.onGetMany(function(data) {
@@ -75,7 +97,7 @@
         $scope.payCustArr = [];
         var fieldArr = arr[0].preference.paymentpref.CusFiel;
         for (var l = 0; l <= fieldArr.length - 1; l++) {
-            $scope.payCustArr.push(fieldArr[l].name);
+            $scope.payCustArr.push(fieldArr[l]);
         }
     }
     // maxdate in the calander 
@@ -374,6 +396,15 @@
         $scope.payment.UploadImages = {
             val: []
         };
+        $scope.payment.custField = [];
+        for(j=0; j<= $scope.payCustArr.length-1; j++){
+            $scope.payment.custField.push({
+                lable : $scope.payCustArr[j].labelshown,
+                type : $scope.payCustArr[j].type,
+                value : $scope.payCustArr[j].inputType
+            })  
+        }
+        console.log($scope.payment.custField)
         $scope.payment.UploadImages.val = UploaderService.loadBasicArray();
         $scope.advancedPayment.advancedPayment_code = $scope.payment.customer +' '+ $rootScope.selectedItem1.Email;
         $scope.advancedPayment.customer = $scope.payment.customer;
@@ -595,7 +626,7 @@
             oldValue = 0;
         }
 
-        if (parseInt(obj.amount) > parseInt(obj.famount)) {
+        if (parseInt(obj.amount) > parseInt(obj.instalment)) {
            obj.amount = oldValue;
         }else{
 

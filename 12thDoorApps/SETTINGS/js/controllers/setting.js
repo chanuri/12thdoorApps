@@ -651,12 +651,12 @@ angular
 	// 	}
 	// });
 
-	client.getByFiltering("*");
+// client.getByFiltering("*");
 
-	$scope.submit = function() {
-		console.log($rootScope.Settings12thdoor);	
-		var client = $objectstore.getClient("Settings12thdoor");
-		client.onComplete(function(data) {
+$scope.submit = function() {
+	console.log($rootScope.Settings12thdoor);	
+	var client = $objectstore.getClient("Settings12thdoor");
+	client.onComplete(function(data) {
 				//$rootScope.Settings12thdoor=data;
 				console.log(data);
 				$mdDialog.show(
@@ -669,24 +669,24 @@ angular
 					);
 			});
 
-		client.onError(function(data) {
-			$mdDialog.show(
-				$mdDialog.alert()
-				.parent(angular.element(document.body))
-				.content('There was an error saving the data.')
-				.ariaLabel('Alert Dialog Demo')
-				.ok('OK')
-				.targetEvent(data)
-				);
+	client.onError(function(data) {
+		$mdDialog.show(
+			$mdDialog.alert()
+			.parent(angular.element(document.body))
+			.content('There was an error saving the data.')
+			.ariaLabel('Alert Dialog Demo')
+			.ok('OK')
+			.targetEvent(data)
+			);
 
-		});
+	});
 
-		$rootScope.Settings12thdoor.uniqueRecord = "35";
-		client.insert($rootScope.Settings12thdoor, {
-			KeyProperty: "uniqueRecord"
-		});
+	$rootScope.Settings12thdoor.uniqueRecord = "35";
+	client.insert($rootScope.Settings12thdoor, {
+		KeyProperty: "uniqueRecord"
+	});
 
-	}
+}
 
 })
 

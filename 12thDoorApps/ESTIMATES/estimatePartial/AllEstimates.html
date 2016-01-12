@@ -1,6 +1,6 @@
 <div class="header_container" >
 
-  <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:40px;">
+  <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 925px;height:40px;">
               <md-autocomplete flex
                       ng-keypress="enter($event)"
                       md-no-cache="$root.noCache"
@@ -57,7 +57,7 @@
 <div class="card_container" style="padding-top:70px;">
  <div class="ui-view-container">
     <!--START OF  COLLAPSE CARDS-->
-    <div  class="collapse-card" ng-repeat="tdi in TDEstimate  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch " ng-class="{ active: $active }" style="max-width:960px;">
+    <div  class="collapse-card" ng-repeat="tdi in TDEstimate  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch " ng-class="{ active: $active }" style="max-width:960px; margin-left:10px;">
         <!--START OF COLLAPSE CARD HEADING-->
         <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi)">
 
@@ -493,8 +493,8 @@
                                                     <div layout="row" layout-align="center center"  flex>
                                                         
                                                         <div flex="98" >
-                                                            <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="tdi.UploadImages.val">
-                                                             </md-table>
+                                                          <!--   <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="tdi.UploadImages.val">
+                                                             </md-table> -->
                                                         </div>
                                                     </div>
                                                 </div>

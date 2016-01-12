@@ -363,25 +363,25 @@ $scope.addTodo = function(todoText) {
       });
     }
 
-    $scope.$on('viewRecord', function(event, args) {
-      $scope.uploadimages.val.splice(args, 1);
+    // $scope.$on('viewRecord', function(event, args) {
+    //   $scope.uploadimages.val.splice(args, 1);
 
-    });
-    $scope.toggleSearch = false;
-    $scope.headers = [{
-      name: 'Name',
-      field: 'name'
-    }, {
-      name: 'Size',
-      field: 'size'
-    }];
-    $scope.custom = {
-      name: 'bold',
-      size: 'grey'
-    };
-    $scope.sortable = ['name', 'size'];
-    $scope.thumbs = 'thumb';
-    $scope.count = 3;
+    // });
+    // $scope.toggleSearch = false;
+    // $scope.headers = [{
+    //   name: 'Name',
+    //   field: 'name'
+    // }, {
+    //   name: 'Size',
+    //   field: 'size'
+    // }];
+    // $scope.custom = {
+    //   name: 'bold',
+    //   size: 'grey'
+    // };
+    // $scope.sortable = ['name', 'size'];
+    // $scope.thumbs = 'thumb';
+    // $scope.count = 3;
 
     $scope.add = function() {
         location.href = '#/estimate';

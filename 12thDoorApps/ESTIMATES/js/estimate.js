@@ -343,7 +343,7 @@ angular
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
-                         var client = $objectstore.getClient("12thproduct");
+                         var client = $objectstore.getClient("product12thdoor");
                          client.onComplete(function(data) {
                             $mdDialog.show(
                                $mdDialog.alert()
@@ -471,7 +471,7 @@ angular
                       $scope.SProductUnit = pUOM.ProductUnit;
                    }
 
-                  var client = $objectstore.getClient("12thproduct");
+                  var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            $scope.product = data;
@@ -504,7 +504,7 @@ angular
                $rootScope.proName = [];
 
                function loadpro() {
-                     var client = $objectstore.getClient("12thproduct");
+                     var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            for (i = 0, len = data.length; i < len; ++i) {
@@ -908,7 +908,7 @@ angular
 
       
      var client = $objectstore.getClient("Estimate12thdoorDraft");
-     $scope.TDEstimate.invoiceRefNo = $scope.refNo;
+     $scope.TDEstimate.estimateRefNo = $scope.refNo;
       $scope.TDEstimate.EstimateProducts = $rootScope.testArray.val;
       $scope.TDEstimate.total = $scope.total;
       $scope.TDEstimate.finalamount = $scope.famount;
@@ -936,6 +936,7 @@ angular
           .ok('OK')
           .targetEvent(data)
         );
+        location.href = '#/allEstimates';
       });
 
       client.onError(function(data) {
@@ -943,7 +944,7 @@ angular
           $mdDialog.alert()
           .parent(angular.element(document.body))
           .title('Sorry')
-          .content('Error saving credit Note ')
+          .content('Error saving Estimate ')
           .ariaLabel('Alert Dialog Demo')
           .ok('OK')
           .targetEvent(data)

@@ -190,7 +190,7 @@ if($state.current.name == 'copy') {
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
-                         var client = $objectstore.getClient("12thproduct");
+                         var client = $objectstore.getClient("product12thdoor");
                          client.onComplete(function(data) {
                             $mdDialog.show(
                                $mdDialog.alert()
@@ -305,7 +305,7 @@ if($state.current.name == 'copy') {
                       $scope.SProductUnit = pUOM.ProductUnit;
                    }
 
-                  var client = $objectstore.getClient("12thproduct");
+                  var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            $scope.product = data;
@@ -338,7 +338,7 @@ if($state.current.name == 'copy') {
                $rootScope.proName = [];
 
                function loadpro() {
-                     var client = $objectstore.getClient("12thproduct");
+                     var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            for (i = 0, len = data.length; i < len; ++i) {
@@ -427,6 +427,22 @@ for (var i = $rootScope.EstimateArray.length - 1; i >= 0; i--) {
   }
 };
 
+$scope.EstimateDetails = [];
+       var client = $objectstore.getClient("domainClassAttributes");
+        client.onGetMany(function(data) {
+           if (data) {
+            $scope.EstimateDetails = data;
+
+          for (var i = $scope.EstimateDetails.length - 1; i >= 0; i--) {
+            $scope.ID = $scope.EstimateDetails[i].maxCount;
+      };
+      $scope.maxID = parseInt($scope.ID)+1;
+      $scope.refNo = $scope.maxID.toString();
+       // console.log($scope.TDEstimate.estimateRefNo)
+           }
+        });
+        client.getByFiltering("select maxCount from domainClassAttributes where class='Estimate12thdoor'");
+
 $scope.savetoEstimate = function(obj) {
          var confirm = $mdDialog.confirm()
             .parent(angular.element(document.body))
@@ -437,8 +453,10 @@ $scope.savetoEstimate = function(obj) {
             .targetEvent(obj);
          $mdDialog.show(confirm).then(function() {
             var draftdelete = $objectstore.getClient("Estimate12thdoorDraft");
-            obj.status = "Unpaid";
+            
             draftdelete.onComplete(function(data) {
+              obj.estimateRefNo = $scope.refNo;
+            obj.status = "Valid";
                var newInsert = $objectstore.getClient("Estimate12thdoor");
                newInsert.onComplete(function(data) {
                   $mdDialog.show(
@@ -450,7 +468,7 @@ $scope.savetoEstimate = function(obj) {
                      .ok('OK')
                      .targetEvent(data)
                   );
-                  $state.go($state.current, {}, {
+                  $state.go('viewEst', {'estimateNo': $scope.refNo}, {
                      reload: true
                   });
                });

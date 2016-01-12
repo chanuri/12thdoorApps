@@ -89,7 +89,7 @@ angular
 	}
 
 	
-	$rootScope.Settings12thdoor= {
+	$rootScope.Settings12thdoor = {
 
 		profile : {
 			CusFiel:[],
@@ -100,6 +100,7 @@ angular
 		{
 			invoicepref:
 			{
+				appName:"invoice",
 				prefix:"",
 				allowPartialPayments:true,
 				enableDisscounts:true,
@@ -126,6 +127,7 @@ angular
 			},
 			estimatepref:
 			{
+				appName:"estimate",
 				displayshiptoaddressestimate:false,
 				sendpdfestimateAsattachment:true,
 				nofifyadminwhenviewedOraccepted:true,
@@ -138,23 +140,27 @@ angular
 			},
 			creditNotepref:
 			{
+				appName:"creditNote",
 				allowPartialPayments:true,
 				enableDisscounts:true,
 				CusFiel:[]
 			},
 			paymentpref:
 			{
+				appName:"payment",
 				CusFiel:[],
 				PaymentMethod:[{activate:true, paymentmethod:"Cash",paymentType:"Offline"},{activate:true, paymentmethod:"Cheque",paymentType:"Offline"},{activate:true, paymentmethod:"TT",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Transfer",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Draft",paymentType:"Offline"}]
 			},
 			expensepref:
 			{
+				appName:"expense",	
 				CusFiel:[],
 				expensecategories:[{activate:true, category:"Advertising"},{activate:true, category:"Petrol"},{activate:true, category:"Fuel"}],
 				billingexpensesincludetax:true
 			},
 			productpref:
 			{
+				appName:"product",
 				units:[{activate:true, unitsOfMeasurement:"each"}],
 				CusFiel:[],
 				Productbrands:[],
@@ -162,16 +168,19 @@ angular
 			},
 			inventorypref:
 			{
+				appName:"inventory",
 				ReciptCusFiel:[],
 				IssueCusFiel:[]
 			},
 			contactpref:
 			{
+				appName:"contact",
 				supplierCusFiel:[],
 				customerCusFiel:[]
 			},
 			project:
 			{
+				appName:"project",
 				task:[]
 			}
 
@@ -183,7 +192,9 @@ angular
 
 			roles:[
 			{
+				id:1,
 				rolename : "Super admin", 
+				type:"default",
 				appPermission:[
 				{
 					appName : "invoice",
@@ -314,7 +325,9 @@ angular
 				]
 			},
 			{
+				id:2,
 				rolename : "Manager",
+				type:"default",
 				appPermission:[
 				{
 					appName : "invoice",
@@ -445,7 +458,9 @@ angular
 				]
 			},
 			{
+				id:3,
 				rolename : "User", 
+				type:"default",
 				appPermission:[
 				{
 					appName : "invoice",
@@ -788,7 +803,7 @@ angular
 
 })
 
-.controller('twoCtrl', function ($scope,$state, $objectstore, $mdDialog, $rootScope, UploaderService, $window) {
+.controller('twoCtrl', function ($scope, $http, $state, $objectstore, $mdDialog, $rootScope, UploaderService, $window) {
 
 	$scope.toggles = {};
 
@@ -804,7 +819,28 @@ angular
 
 		//$rootScope.Settings12thdoor= {};
 
+		var baseUrl = "http://" + window.location.hostname;
+
 		$scope.submit = function() {
+
+			var appName=$rootScope.Settings12thdoor.preference.invoicepref.appName;
+			console.log(appName);
+			var prefix=$rootScope.Settings12thdoor.preference.invoicepref.invoicePrefix;
+			console.log(prefix);
+			var sequence=$rootScope.Settings12thdoor.preference.invoicepref.invoicesequence;
+			console.log(sequence);
+
+			$http.get( baseurl + "/payapi/setSequence/"+appName+"/"+prefix+"/"+sequence+" ")
+			// $http.get("http://duoworld.duoweb.info/payapi/setSequence/testing/TEST1/000")
+			.success(function(data)
+			{
+				$scope.setSequence=data;
+				console.log(data);
+
+			}).error(function(){
+				alert ("Erro Occured!!");
+			});
+
 			console.log($rootScope.Settings12thdoor);	
 			var client = $objectstore.getClient("Settings12thdoor");
 			client.onComplete(function(data) {
@@ -836,6 +872,7 @@ angular
 			client.insert($rootScope.Settings12thdoor, {
 				KeyProperty: "uniqueRecord"
 			});
+
 
 		}
 
@@ -2081,10 +2118,11 @@ $scope.sortableOptions = {
 
 	$scope.activepayment1=function(data){
 
+		console.log(data.name);
 		if(data.activate){
 			data.activate=false;
-			// var element = document.getElementById("SearchCardSub");
-			// element.setAttribute("class", "");
+			var element = document.getElementById(data.name);
+			element.setAttribute("class", "");
 			data.label="activate";
 			console.log(data.label);
 			console.log(data.activate);
@@ -2092,8 +2130,8 @@ $scope.sortableOptions = {
 
 		else{
 			data.activate=true;
-			// var element = document.getElementById("SearchCardSub");
-			// element.setAttribute("class", "tintImage");
+			var element = document.getElementById(data.name);
+			element.setAttribute("class", "tintImage");
 			data.label="Inactivate";
 			console.log(data.label);
 			console.log(data.activate);
@@ -3190,13 +3228,39 @@ function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootSco
  		$rootScope.Settings12thdoor.users.roles.push({
  			id:number,
  			rolename:$scope.rolename, 
- 			appPermission:$scope.appPermission
+ 			appPermission:$scope.appPermission,
+ 			type:"manual"
  		});
- 		console.log($rootScope.Settings12thdoor.users.roles);
 
+ 		console.log($rootScope.Settings12thdoor.users.roles);
 
  		$mdDialog.hide();
  		console.log($rootScope.Settings12thdoor.users.roles);
+
+ 	};
+
+ 	$scope.getDataPredefindRole = function(preRole){
+ 		console.log(preRole);
+
+ 		var rolesPre=JSON.parse(preRole);
+ 		console.log(rolesPre.appPermission[0]);
+
+ 		$scope.invoice=rolesPre.appPermission[0];
+ 		console.log($scope.invoice);
+ 		$scope.recurring=rolesPre.appPermission[1];
+ 		$scope.estimate=rolesPre.appPermission[2];
+ 		$scope.creditNotes=rolesPre.appPermission[3];
+ 		$scope.payments=rolesPre.appPermission[4];
+ 		$scope.expenses=rolesPre.appPermission[5];
+ 		$scope.product=rolesPre.appPermission[6];
+ 		$scope.inventoryR=rolesPre.appPermission[7];
+ 		$scope.inventoryI=rolesPre.appPermission[8];
+ 		$scope.project=rolesPre.appPermission[9];
+ 		$scope.timeSheets=rolesPre.appPermission[10];
+ 		$scope.contactsCustomer=rolesPre.appPermission[11];
+ 		$scope.contactsSuppliers=rolesPre.appPermission[12];
+ 		$scope.view360=rolesPre.appPermission[13];
+ 		$scope.reports=rolesPre.appPermission[14];
 
  	};
 
@@ -3317,7 +3381,7 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 			$rootScope.Settings12thdoor.taxes.multipletaxgroup=[];
 
 		$scope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
-		console.log($rootScope.individualtaxes);
+		console.log($scope.individualtaxes);
 
 		$scope.individualtaxes = new Array();
 
@@ -3353,7 +3417,6 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 			taxname:$scope.taxname,
 			individualtaxes:$scope.individualtaxes,
 			activate:true,
-			compound:$scope.compound,
 			type:"multipletaxgroup"
 		})
 
@@ -3381,8 +3444,9 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 	$scope.Settings12thdoor=angular.copy(multipletaxgroupedit);
 	console.log($scope.Settings12thdoor);
 
-	$rootScope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
-	$scope.selectedtaxes=[];
+	$scope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
+	console.log($scope.individualtaxes);
+	$scope.selectedtaxes = [];
 
 	$scope.individualtaxes = new Array();
 
@@ -3391,15 +3455,15 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 		// $scope.loadtax=$rootScope.Settings12thdoor.taxes.individualtaxes;
 		// console.log($scope.loadtax);
 		// console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
-		$scope.loadselctedtax=$rootScope.Settings12thdoor.taxes.individualtaxes;
-		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+		$scope.loadselctedtax=$scope.individualtaxes;
+		console.log($scope.individualtaxes);
 	} 
 	
 	$scope.selcetedtax=function(tax){
 		// $rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
 		// $rootScope.Settings12thdoor.taxes.individualtaxes.push(tax);
 		console.log(tax);
-		console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
+		console.log($scope.individualtaxes);
 		$scope.selectedtaxes.splice($scope.Settings12thdoor,1);
 		$scope.selectedtaxes.push(JSON.parse(tax));
 		console.log($scope.selectedtaxes);

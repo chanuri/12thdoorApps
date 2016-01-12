@@ -9,10 +9,10 @@
 			<div flex style="margin-top:35px;">
 				<label style="font-weight:700">Add Multiple Tax Groups</label>
 			</div>
-
 		</div>
+
 		<div layout layout-sm="column" layout-margin>
-			<div flex="40" style="margin-top: 27px;">
+			<div flex="50" style="margin-top: 27px;">
 				<md-input-container md-no-float>
 				<input ng-model="taxname" placeholder="Multiple Tax Groups Name" required>
 			</md-input-container>
@@ -24,10 +24,8 @@
 		</md-select>
 	</md-input-container>
 </div>
-<div flex="5" layout="row" layout-align="center center" style="font-size:13px;">
-	<md-checkbox ng-model="compound" aria-label="Checkbox 1" ng-init="compound=true">Compound</md-checkbox>
 </div>
-</div>
+
 <ul as-sortable="sortableOptions" style="width:20%" ng-model="individualtaxes">
 	<li ng-repeat="item in individualtaxes" as-sortable-item>
 		<div style="margin-left:-33px;" class="add-mdcard" as-sortable-item-handle>

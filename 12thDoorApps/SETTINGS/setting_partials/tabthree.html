@@ -23,7 +23,7 @@
 		<div flex="20" hide-sm></div>
 		<div layout="column" layout-align="center start" flex style="margin-top:-2px;">
 			<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="sd">
-				<li  as-sortable-item ng-repeat="item in $root.Settings12thdoor.users.roles">
+				<li as-sortable-item ng-repeat="item in $root.Settings12thdoor.users.roles | filter: {type: 'default'} ">
 					<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle >
 					<md-card-content>
 					<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
@@ -44,13 +44,41 @@
 						<md-icon md-menu-align-target ></md-icon>
 					</md-button>
 				</md-menu-item>
-				<md-menu-item>
-				<md-button ng-click="deleteinvoicecusfieldsrow(item, $index)">
-				<p>Delete</p>
-				<md-icon md-menu-align-target ></md-icon>
-			</md-button>
-		</md-menu-item>
-	</md-menu-content>
+			</md-menu-content>
+		</md-menu>
+	</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+<li  as-sortable-item ng-repeat="item in $root.Settings12thdoor.users.roles | filter: {type: 'manual'} ">
+	<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle >
+	<md-card-content>
+	<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+		<div flex>
+			<span style="color:#808080;font-size:15px;">{{item.rolename}}
+				<md-tooltip md-direction="right">Custom Fields name</md-tooltip>
+			</span>
+		</div>
+		<div flex="5">
+			<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+			<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+			<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+		</md-button>
+		<md-menu-content width="4">
+		<md-menu-item>
+		<md-button ng-click="editrolerow(item , $event)">
+		<p>Edit</p>
+		<md-icon md-menu-align-target ></md-icon>
+	</md-button>
+</md-menu-item>
+<md-menu-item>
+<md-button ng-click="deleteinvoicecusfieldsrow(item, $index)">
+<p>Delete</p>
+<md-icon md-menu-align-target ></md-icon>
+</md-button>
+</md-menu-item>
+</md-menu-content>
 </md-menu>
 </div>
 </div>

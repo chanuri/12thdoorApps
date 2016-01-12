@@ -2,22 +2,32 @@
 	<form id="form" name="editForm">
 		<md-content>
 		<md-divider></md-divider>
-
 		<div layout layout-sm="column" layout-margin>
 			<div flex="5" hide-sm>	
 			</div>
 			<div flex="20" hide-sm>
 			</div>
 			<md-input-container flex="30">
-			<label>Invoice Sequence</label>
-			<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.invoicesequence">
+			<label>Invoice Prefix</label>
+			<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.invoicePrefix">
 		</md-input-container>
-		<div layout="row" layout-align="start center">
-			<a href="#" class="tooltip" data-tooltip=" To update your name or email address 
-			please edit your personal profile">
-			<md-icon style="color:#A5A0A0" md-svg-src="img/ic_info_24px.svg" aria-label="Insert Drive Icon">
-		</md-icon>
-	</a>
+	</div>
+
+	<div layout layout-sm="column" layout-margin>
+		<div flex="5" hide-sm>	
+		</div>
+		<div flex="20" hide-sm>
+		</div>
+		<md-input-container flex="30">
+		<label>Invoice Sequence</label>
+		<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.invoicesequence">
+	</md-input-container>
+	<div layout="row" layout-align="start center">
+		<a href="#" class="tooltip" data-tooltip=" To update your name or email address 
+		please edit your personal profile">
+		<md-icon style="color:#A5A0A0" md-svg-src="img/ic_info_24px.svg" aria-label="Insert Drive Icon">
+	</md-icon>
+</a>
 </div>
 </div>
 

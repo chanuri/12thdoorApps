@@ -645,7 +645,12 @@ angular
 			$rootScope.Settings12thdoor=data[0];
 			console.log($rootScope.Settings12thdoor);
 		}
-	});
+		else{
+			$rootScope.Settings12thdoor=$rootScope.Settings12thdoor;
+		}
+	}
+
+	);
 
 	client.getByFiltering("*");
 
@@ -830,7 +835,7 @@ angular
 			var sequence=$rootScope.Settings12thdoor.preference.invoicepref.invoicesequence;
 			console.log(sequence);
 
-			$http.get( baseurl + "/payapi/setSequence/"+appName+"/"+prefix+"/"+sequence+" ")
+			$http.get( baseUrl + "/payapi/setSequence/"+appName+"/"+prefix+"/"+sequence+" ")
 			// $http.get("http://duoworld.duoweb.info/payapi/setSequence/testing/TEST1/000")
 			.success(function(data)
 			{

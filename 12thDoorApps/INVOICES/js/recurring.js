@@ -304,7 +304,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
-                         var client = $objectstore.getClient("12thproduct");
+                         var client = $objectstore.getClient("product12thdoor");
                          client.onComplete(function(data) {
                             $mdDialog.show(
                                $mdDialog.alert()
@@ -432,7 +432,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                       $scope.SProductUnit = pUOM.ProductUnit;
                    }
 
-                  var client = $objectstore.getClient("12thproduct");
+                  var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            $scope.product = data;
@@ -465,7 +465,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                $rootScope.proName = [];
 
                function loadpro() {
-                     var client = $objectstore.getClient("12thproduct");
+                     var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            for (i = 0, len = data.length; i < len; ++i) {
@@ -732,6 +732,12 @@ var client = $objectstore.getClient("Settings12thdoor");
          $scope.TDinvoice.salesTaxAmount = $scope.salesTax;
           $scope.TDinvoice.otherTaxAmount = $scope.otherTax;
           $scope.TDinvoice.status = "Active";
+          $scope.TDinvoice.commentsAndHistory=[];
+         $scope.TDinvoice.commentsAndHistory.push({
+              done: false,
+              text: "Invoice was created by Mr.dddd",
+              date:new Date()
+         });
          $scope.TDinvoice.favourite = false;
          $scope.TDinvoice.favouriteStarNo = 1;
          $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
@@ -825,18 +831,20 @@ var client = $objectstore.getClient("Settings12thdoor");
          };
 
          var client = $objectstore.getClient("twethdoorProfileDraft");
-         $scope.TDinvoice.invoiceProducts = $rootScope.prodArray.val;
+         $scope.TDinvoice.recurringProducts = $rootScope.prodArray.val;
          $scope.TDinvoice.total = $scope.total;
          $scope.TDinvoice.finalamount = $scope.famount;
+         $scope.TDinvoice.discountAmount = $scope.finalDisc;
+         $scope.TDinvoice.salesTaxAmount = $scope.salesTax;
+         $scope.TDinvoice.otherTaxAmount = $scope.otherTax;
          $scope.TDinvoice.status = "Draft";
          $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
          $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
          $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
         
-         $scope.TDinvoice.UploadImages = {
-            val: []
-         };
+         $scope.TDinvoice.UploadImages = {val: []};
          $scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
+         
          client.onComplete(function(data) {
             $mdDialog.show(
                $mdDialog.alert()
@@ -859,9 +867,9 @@ var client = $objectstore.getClient("Settings12thdoor");
                .targetEvent(data)
             );
          });
-          $scope.TDinvoice.invoiceNo = "-999";
+          $scope.TDinvoice.profileName = "-999";
          client.insert([$scope.TDinvoice], {
-            KeyProperty: "invoiceNo"
+            KeyProperty: "profileName"
          });
 
             }, function() {

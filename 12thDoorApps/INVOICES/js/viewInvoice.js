@@ -359,15 +359,11 @@ $scope.cancelStatus = function(obj, ev) {
          return $scope.salesTax;
          
       }
-      $scope.CalculateOtherTax = function(data) {
-         $scope.otherTax = 0;
-         $scope.otherTax = ($scope.total * data.anotherTax / 100);
-         return $scope.otherTax;
-      }
+      
       $scope.finalamount = function(data) {
         $rootScope.famount = 0;
          $rootScope.famount = parseInt($scope.total - $scope.finalDisc)+
-          parseInt($scope.salesTax)+parseInt($scope.otherTax)+parseInt(data.shipping);
+          parseInt($scope.salesTax)+parseInt(data.shipping);
          return $rootScope.famount;
       };
 

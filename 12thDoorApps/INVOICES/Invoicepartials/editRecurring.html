@@ -105,7 +105,7 @@
     <div layout layout-sm="row" layout-margin  >
         <section-title title="Invoice Items"> </section-title>
   <div>
-        <ul as-sortable="sortableOptions"  ng-model="prodArray.val"  flex>
+        <ul as-sortable="sortableOptions"  ng-model="TDinvoice.recurringProducts"  flex>
             <li ng-repeat="item in TDinvoice.recurringProducts" as-sortable-item flex style="margin-bottom:20px !important;">
              <md-card style="margin-left:-30px;" as-sortable-item-handle flex>
             <md-card-content >
@@ -162,9 +162,13 @@
                        </span> 
                     </div>
                      <div flex>
-                       <span style="color:#808080;">{{item.tax}}%
-                       <md-tooltip>Tax</md-tooltip>
-                       </span> 
+                       <span style="color:#808080;">{{item.tax.taxname}}
+                        <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                            <md-tooltip>Tax</md-tooltip>
+                        </span>
+                         <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                            <md-tooltip>Tax</md-tooltip>
+                        </span> 
                     </div>
                     <div flex >
                        <span style="color:#808080;">{{item.amount|currency}}
@@ -176,7 +180,7 @@
             </md-card></li>
           </ul>
             <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
-                             <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addproduct()">New Line</md-button>
+                             <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addprofProduct(TDinvoice.recurringProducts)">New Line</md-button>
                         </div>
                        </div>
                     </div>
@@ -234,22 +238,7 @@
                             <label>{{CalculateTax(TDinvoice)|currency}}</label>
                         </div>
                     </div>
-                    <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                        <div flex="5"></div>
-                        <div flex="20" style="margin-top:35px;"></div>
-                        <div flex="10">
-                            <label>Another Tax</label>
-                        </div>
-                        <md-input-container flex="20" >
-                            <input type="text" ng-model="TDinvoice.anotherTax" />
-                        </md-input-container>
-                        <div flex="5">
-                            <label></label>
-                        </div>
-                        <div flex="30">
-                            <label>{{CalculateOtherTax(TDinvoice)|currency}}</label>
-                        </div>
-                    </div>
+                    
                     <div layout layout-sm="column" layout-margin style="overflow:hidden;">
                         <div flex="5"></div>
                         <div flex="20" style="margin-top:35px;"></div>
@@ -339,6 +328,11 @@
                                   <span class="loginBtnLabel">Cancel</span>
                               </md-button>
                                       </div>
+                                       <div >
+                                <md-button flex  class="md-raised md-primary" ng-show="showSave" ng-click="savetoProfile(tdi)">
+                                  <span class="loginBtnLabel">Save</span>
+                              </md-button>
+                              </div>
                               </md-content>
                               
                           </form>

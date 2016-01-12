@@ -126,6 +126,7 @@ angular
               $scope.offlinePayments = $scope.Settings[i].preference.invoicepref.offlinePayments;
               $scope.EmailPermission = $scope.Settings[i].preference.invoicepref.copyadminallinvoices;
               $scope.mail = $scope.Settings[i].profile.adminEmail;
+              $scope.BaseCurrency = $scope.Settings[i].profile.baseCurrency;
 
              
               for (var z = $scope.Settings[i].users.roles.length - 1; z >= 0; z--) {
@@ -174,14 +175,14 @@ angular
         $scope.TDinvoice.comments = $scope.com;
         $scope.TDinvoice.notes = $scope.note;
         $scope.TDinvoice.termtype =  $scope.paymentTerm;
-        
+        $scope.TDinvoice.baseCurrency = $scope.BaseCurrency;
         $scope.TDinvoice.DiplayShipiingAddress = $scope.ShowShipAddress;
         $scope.TDinvoice.allowPartialPayments = $scope.partialPayment;
         $scope.AllTaxes = $scope.individualTax;
         $scope.UOM = $scope.UnitOfMeasure;
         $scope.CusFields = $scope.cusF;
         $scope.Displaydiscount = $scope.ShowDiscount;
-          //console.log($scope.TDinvoice.adminEmail)
+          console.log($scope.TDinvoice.baseCurrency)
       });
       client.onError(function(data) {
       });
@@ -565,7 +566,7 @@ angular
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
-                         var client = $objectstore.getClient("12thproduct");
+                         var client = $objectstore.getClient("product12thdoor");
                          client.onComplete(function(data) {
                             $mdDialog.show(
                                $mdDialog.alert()
@@ -682,7 +683,6 @@ angular
                                rate:$rootScope.taxType[i].rate, 
                                type: $rootScope.taxType[i].type, 
                                individualtaxes:$rootScope.taxType[i].individualtaxes});
-                           
                         }
                       };
                      $scope.Stax = $scope.Ptax;
@@ -693,7 +693,7 @@ angular
                       $scope.SProductUnit = pUOM.ProductUnit;
                    }
 
-                  var client = $objectstore.getClient("12thproduct");
+                  var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            $scope.product = data;
@@ -726,7 +726,7 @@ angular
                $rootScope.proName = [];
 
                function loadpro() {
-                     var client = $objectstore.getClient("12thproduct");
+                     var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            for (i = 0, len = data.length; i < len; ++i) {
@@ -952,7 +952,7 @@ angular
       
       $scope.productCode = [];
       //Retrieve product details
-      var client = $objectstore.getClient("12thproduct");
+      var client = $objectstore.getClient("product12thdoor");
       client.onGetMany(function(data) {
          if (data) {
             $scope.product = data;
@@ -1238,7 +1238,17 @@ angular
          $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
          $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
          $scope.TDinvoice.MultiDueDAtesArr = $scope.dateArray.value;
-        
+        if($scope.TDinvoice.termtype != "multipleDueDates"){
+         $scope.TDinvoice.MultiDueDAtesArr= [{
+                           DueDate: $scope.TDinvoice.duedate,
+                           Percentage: "0",
+                           dueDateprice: $scope.famount,
+                           paymentStatus:'Unpaid',
+                           balance :$scope.famount
+                        }];
+        }else{
+          $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.value;
+        }
          $scope.TDinvoice.UploadImages = {
             val: []
          };
@@ -1253,6 +1263,7 @@ angular
                .ok('OK')
                .targetEvent(data)
             );
+            location.href = '#/invoice_app';
          });
          client.onError(function(data) {
             $mdDialog.show(

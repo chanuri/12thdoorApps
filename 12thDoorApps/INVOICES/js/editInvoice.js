@@ -126,6 +126,21 @@ $scope.edit = function(updatedForm) {
          return $rootScope.famount;
       };
 
+      $scope.InvoiceDetails = [];   
+       var client = $objectstore.getClient("domainClassAttributes");
+              client.onGetMany(function(data) {
+                 if (data) {
+                  $scope.InvoiceDetails = data;
+
+                for (var i = $scope.InvoiceDetails.length - 1; i >= 0; i--) {
+                  $scope.ID = $scope.InvoiceDetails[i].maxCount;
+            };
+            $scope.maxID = parseInt($scope.ID)+1;
+            $scope.refNo = $scope.maxID.toString();
+                 }
+              });
+              client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoor'");
+
        $scope.savetoInvoices = function(obj) {
          var confirm = $mdDialog.confirm()
             .parent(angular.element(document.body))
@@ -136,8 +151,21 @@ $scope.edit = function(updatedForm) {
             .targetEvent(obj);
          $mdDialog.show(confirm).then(function() {
             var draftdelete = $objectstore.getClient("invoice12thdoorDraft");
-            obj.status = "Unpaid";
+            
             draftdelete.onComplete(function(data) {
+              if(obj.termtype != "multipleDueDates"){
+         obj.MultiDueDAtesArr= [{
+                           DueDate: $scope.TDinvoice.duedate,
+                           Percentage: "0",
+                           dueDateprice: $scope.famount,
+                           paymentStatus:'Unpaid',
+                           balance :$scope.famount
+                        }];
+        }else{
+          obj.MultiDueDAtesArr = $rootScope.dateArray.value;
+        }
+              obj.invoiceRefNo = $scope.refNo;
+            obj.status = "Unpaid";
                var newInsert = $objectstore.getClient("invoice12thdoor");
                newInsert.onComplete(function(data) {
                   $mdDialog.show(
@@ -149,7 +177,7 @@ $scope.edit = function(updatedForm) {
                      .ok('OK')
                      .targetEvent(data)
                   );
-                  $state.go($state.current, {}, {
+                  $state.go('view', {'invoiceNo': $scope.refNo}, {
                      reload: true
                   });
                });
@@ -296,7 +324,6 @@ $scope.edit = function(updatedForm) {
                             $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
                             $scope.prod.ProductCodeID = 1;
                           }
-
                        }
 
                        $scope.GetMaxNumber = function(obj,name,MaxID){
@@ -320,7 +347,7 @@ $scope.edit = function(updatedForm) {
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
-                         var client = $objectstore.getClient("12thproduct");
+                         var client = $objectstore.getClient("product12thdoor");
                          client.onComplete(function(data) {
                             $mdDialog.show(
                                $mdDialog.alert()
@@ -436,7 +463,7 @@ $scope.edit = function(updatedForm) {
                       $scope.SProductUnit = pUOM.ProductUnit;
                    }
 
-                  var client = $objectstore.getClient("12thproduct");
+                  var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            $scope.product = data;
@@ -469,7 +496,7 @@ $scope.edit = function(updatedForm) {
                $rootScope.proName = [];
 
                function loadpro() {
-                     var client = $objectstore.getClient("12thproduct");
+                     var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
                         if (data) {
                            for (i = 0, len = data.length; i < len; ++i) {
@@ -528,12 +555,13 @@ $scope.edit = function(updatedForm) {
         $rootScope.invoiceArray.splice(updatedForm, 1);
         invoiceDetails.setArray(updatedForm);
 
-         $scope.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
-         $scope.ProgressBar.PaymentScheme = $scope.TDinvoice.termtype;
-          $scope.ProgressBar.PaymentSchemeActive= "false";
-         $scope.ProgressBar.PaymentSchemeData.push($rootScope.dateArray.value);
-         $scope.TDinvoice.commentsAndHistory=[];
-         $scope.TDinvoice.commentsAndHistory.push({
+         updatedForm.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
+         updatedForm.ProgressBar.PaymentScheme = $scope.TDinvoice.termtype;
+          updatedForm.ProgressBar.PaymentSchemeActive= "false";
+
+         updatedForm.ProgressBar.PaymentSchemeData.push($rootScope.dateArray.value);
+         updatedForm.commentsAndHistory=[];
+         updatedForm.commentsAndHistory.push({
               done: false,
               text: "Invoice was created by Mr.dddd",
               date:new Date()
@@ -568,6 +596,7 @@ $scope.edit = function(updatedForm) {
          updatedForm.ProgressBarDetails = $scope.ProgressBar;
          //updatedForm.invoiceProducts = $rootScope.editProdArray.val;
          updatedForm.commentsAndHistory = {};
+         updatedForm.invoiceRefNo = $scope.refNo;
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
          updatedForm.discountAmount = $scope.finalDisc;
@@ -580,7 +609,7 @@ $scope.edit = function(updatedForm) {
             val: []
          };
 
-          if($scope.TDinvoice.termtype != "multipleDueDates"){
+          if(updatedForm.termtype != "multipleDueDates"){
         MultipleDudtesService.setDateArray({
                            DueDate: updatedForm.duedate,
                            Percentage: "0",
@@ -592,7 +621,7 @@ $scope.edit = function(updatedForm) {
         updatedForm.UploadImages.val = UploaderService.loadBasicArray();
          client.onComplete(function(data) {
           //location.href = '#/viewInvoice';
-          $state.go('view', {'invoiceno': updatedForm.invoiceRefNo});
+          $state.go('view', {'invoiceno': $scope.refNo});
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))

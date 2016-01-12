@@ -264,26 +264,24 @@
                                             </ul>
                                         </div>
                                         <md-divider></md-divider>
-                                        <div style="overflow:hidden;">
-                                            <div style="overflow:hidden;">
-                                                <div layout layout-sm="column" layout-margin>
+                                         <div layout layout-sm="column" layout-margin>
                                                     <section-title title="Totals"> </section-title>
                                                 </div>
-
                                                 <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
                                                     <div flex="5"></div>
                                                     <div flex="20" style=""></div>
                                                     <div flex="10">
                                                         <label>Sub Total</label>
                                                     </div>
-                                                    <md-input-container flex="20" >
-                                                        <input type="text"  ng-model="tdi.fdiscount" style="display:none" />
-                                                    </md-input-container>
+                                                        <md-input-container flex="20" >
+                                                            <input type="text" style="display:none" aria-label="sub-total"/>
+                                                        </md-input-container>
+                                                  
                                                     <div flex="5">
                                                         <label></label>
                                                     </div>
                                                     <div flex="30">
-                                                        <span>{{calculatetotal(tdi)|currency}}</span>
+                                                        <span>{{tdi.total | currency}}</span>
                                                     </div>
                                                 </div>
                                                 <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
@@ -292,14 +290,16 @@
                                                     <div flex="10">
                                                         <label>Discount</label>
                                                     </div>
-                                                    <md-input-container flex="20" >
-                                                        <input type="text"  ng-model="tdi.fdiscount" />
-                                                    </md-input-container>
+                                               
+                                                        <md-input-container flex="20" >
+                                                            <input type="text"  ng-model="tdi.fdiscount" ng-disabled="true" style="margin-top:-12px;" aria-label="discount"/>
+                                                        </md-input-container>
+                                                 
                                                     <div flex="5">
                                                         <label></label>
                                                     </div>
                                                     <div flex="30" >
-                                                        <label>{{finaldiscount(tdi) | currency}}</label>
+                                                        <label> - {{tdi.fdiscount | currency}}</label>
                                                     </div>
                                                 </div>
                                                 <div layout layout-sm="column" layout-margin style="overflow:hidden;">
@@ -308,51 +308,41 @@
                                                     <div flex="10">
                                                         <label>Sales Tax</label>
                                                     </div>
-                                                    <md-input-container flex="20" >
-                                                        <input type="text"  ng-model="tdi.salesTax" />
-                                                    </md-input-container>
+                                                    
+                                                        <md-input-container flex="20" >
+                                                            <input type="text"  ng-disabled="true" ng-model="tdi.salesTax" style="margin-top:-12px;" aria-label="Slaes_tax"/>
+                                                        </md-input-container>
+                                                    
                                                     <div flex="5">
                                                         <label></label>
                                                     </div>
                                                     <div flex="30" >
-                                                        <label>{{CalculateTax(tdi)|currency}}</label>
+                                                        <label>{{tdi.salesTaxAmount|currency}}</label>
                                                     </div>
                                                 </div>
-                                                <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                                                    <div flex="5"></div>
-                                                    <div flex="20" style="margin-top:35px;"></div>
-                                                    <div flex="10">
-                                                        <label>Another Tax</label>
-                                                    </div>
-                                                    <md-input-container flex="20" >
-                                                        <input type="text" ng-model="tdi.anotherTax" />
-                                                    </md-input-container>
-                                                    <div flex="5">
-                                                        <label></label>
-                                                    </div>
-                                                    <div flex="30">
-                                                        <label>{{CalculateOtherTax(tdi)|currency}}</label>
-                                                    </div>
-                                                </div>
+                                                
                                                 <div layout layout-sm="column" layout-margin style="overflow:hidden;">
                                                     <div flex="5"></div>
                                                     <div flex="20" style="margin-top:35px;"></div>
                                                     <div flex="10">
                                                         <label>Shipping</label>
                                                     </div>
-                                                    <md-input-container flex="20" >
-                                                        <input type="text" ng-model="tdi.shipping" />
-                                                    </md-input-container>
+                                                    
+                                                        <md-input-container flex="20" >
+                                                            <input type="text" ng-model="tdi.shipping" ng-disabled="true" style="margin-top:-12px;" aria-label="Shipping"/>
+                                                        </md-input-container>
+                                                    
                                                     <div flex="5">
                                                         <label></label>
                                                     </div>
                                                     <div flex="30">
-                                                        <span >{{finalamount(tdi)| currency}}</span>
+                                                        <span >{{tdi.shipping| currency}}</span>
                                                     </div>
                                                 </div>
                                                 <center>
                                                     <md-divider style="width:60%"></md-divider>
                                                 </center>
+
                                                 <div layout layout-sm="column" layout-margin style="overflow:hidden;">
                                                     <div flex="5"></div>
                                                     <div flex="20" style="margin-top:35px;"></div>
@@ -361,13 +351,16 @@
                                                             <b>Total USD</b>
                                                         </label>
                                                     </div>
-                                                    <md-input-container flex="20" ></md-input-container>
+                                                        <md-input-container flex="20" >
+                                                            
+                                                        </md-input-container>
+                                                    
                                                     <div flex="5">
                                                         <label></label>
                                                     </div>
                                                     <div flex="30">
                                                         <span ng-model="creditNote.totalUSD">
-                                                            <b>{{finalamount(tdi)| currency}}</b>
+                                                            <b>{{tdi.finalamount| currency}}</b>
                                                         </span>
                                                     </div>
                                                 </div>

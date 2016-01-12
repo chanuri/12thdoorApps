@@ -1,5 +1,5 @@
 
-<md-dialog style="max-width:960px;" aria-label="multiple due dates">
+<md-dialog style="max-width:850px;" aria-label="multiple due dates">
     <md-toolbar class="modal-header">
         <div class="md-toolbar-tools">
             <h2>Multiple Due Dates</h2>
@@ -9,14 +9,14 @@
             </md-button>
         </div>
     </md-toolbar>
-    <md-dialog-content style="width:850px;">
+    <md-dialog-content style="width:800px;">
     <div layout layout-sm="column" layout-margin>
-    <div flex="20"></div>
+    <div flex="5"></div>
         <h3>Invoice Total USD {{$root.famount|currency}}</h3>
     </div>
         <div layout layout-sm="column" layout-margin  >
-            
-            <section-title title="Due Date"> </section-title>
+            <div flex="5"></div>
+            <!-- <section-title title="Due Date"> </section-title> -->
             <div layout layout-sm="row" layout-margin >
                 <div class="table-responsive-vertical"  style="overflow-x:hidden; margin-left:-20px;" >
                     <table id="table" class="table table-hover table-mc-light-blue" >
@@ -42,8 +42,9 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <md-divider></md-divider>
+                           
                             <div layout layout-sm="column" layout-margin>
+                             <md-divider></md-divider>
                                 <md-button href class="md-mini md-primary" ng-click="addItem()" style="margin-left:-18px;">
                                     <md-icon md-svg-src="img/ic_add_circle_outline_24px.svg" class="iconColor" style="right:1px;right:90%;top:20px;" ></md-icon>
                                     <md-tooltip md-direction="left">Add another Date</md-tooltip>
@@ -54,8 +55,9 @@
                 </div>
                  <md-divider></md-divider>
                  <div layout layout-sm="column" layout-margin  >
-                    
-                    <section-title > </section-title>
+                      <div flex="5"></div>
+
+                   <!--  <section-title > </section-title> -->
                  <table id="table" class="table table-hover table-mc-light-blue" >
                         <tbody>
                             <tr animate ng-repeat="cc in aDatearr.value">

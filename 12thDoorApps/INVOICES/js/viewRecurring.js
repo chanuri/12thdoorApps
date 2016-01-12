@@ -157,7 +157,52 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
         $state.go('CopyRec')
       }
 
-      $scope.calAMount = function(data) {
+      $scope.systemMessage = [];
+$scope.cancelStatus = function(obj, ev) {
+  var confirm = $mdDialog.confirm()
+          .title('Do you wish to cancel this Invoice'+ obj.profileName+'? This process is not reversible')
+          .content('')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('Yes')
+          .cancel('No');
+            $mdDialog.show(confirm).then(function() {
+         var client = $objectstore.getClient("RecurringProfile");
+         obj.profileName = obj.profileName.toString();
+         // if(obj.status != "Draft"){
+          $scope.systemMessage.push({text:"The Invoice was Cancelled by mr.Perera", done:false,  date:new Date()});
+          for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
+           obj.commentsAndHistory.push($scope.systemMessage[i]);
+          };
+           
+          obj.status = "Cancelled";
+         client.onComplete(function(data) {
+             $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('')
+               .content('invoice Successfully Cancelled')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding cancelling Invoice')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(obj, {KeyProperty: "profileName"});
+       // }
+      })
+}
+
+     $scope.calAMount = function(data) {
          $scope.Amount = 0;
          $scope.Amount = (((data.price * data.quantity) - ((data.price * data.quantity) * data.discount / 100)) + ((data.price * data.quantity)) * data.tax / 100);
          return $scope.Amount;
@@ -187,21 +232,17 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
          return $scope.salesTax;
          
       }
-      $scope.CalculateOtherTax = function(data) {
-         $scope.otherTax = 0;
-         $scope.otherTax = ($scope.total * data.anotherTax / 100);
-         return $scope.otherTax;
-      }
+      
       $scope.finalamount = function(data) {
         $rootScope.famount = 0;
          $rootScope.famount = parseInt($scope.total - $scope.finalDisc)+
-          parseInt($scope.salesTax)+parseInt($scope.otherTax)+parseInt(data.shipping);
+          parseInt($scope.salesTax)+parseInt(data.shipping);
          return $rootScope.famount;
       };
+
       $scope.addProfile = function() {
             location.href = '#/NewRecurring_profile';
       }
-
 
       $scope.cancelProfile = function(obj){
          var client = $objectstore.getClient("RecurringProfile");
@@ -325,7 +366,7 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
 
       $scope.invoiceDetails = [];
 
-      var client = $objectstore.getClient("twelfthdoorInvoice");
+      var client = $objectstore.getClient("invoice12thdoor");
       client.onGetMany(function(data) {
          if (data) {
            // $scope.TDinvoice = data;
@@ -347,6 +388,47 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
          );
       });
       client.getByFiltering("*");
+
+      $scope.todos = [];
+  $scope.markAll = false;
+
+  $scope.addTodo = function(todoText) {
+      if(event.keyCode == 13 ){
+          $scope.todos.push({text:todoText.addView, done:false,  date:new Date()});
+
+          console.log(todoText.addView)
+          
+         var client = $objectstore.getClient("RecurringProfile");
+         todoText.invoiceNo = todoText.invoiceNo.toString();
+
+            for (var i =  $scope.todos.length - 1; i >= 0; i--) {
+           todoText.commentsAndHistory.push($scope.todos[i]);
+         };
+            todoText.addView = "";
+         client.onComplete(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('successfull')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding cancelling Invoice')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(todoText, {KeyProperty: "profileName"});
+      }
+  };
+
      
    }) //END OF viewCtrl
 //-----------------------------------------------------------------------------------------------
@@ -355,6 +437,7 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
       $rootScope.prodArray = {val: []};
       $rootScope.invoiceArray = [];
       $rootScope.fullArr = {val:[]};
+      $rootScope.editProdArray = {val: []};
       $rootScope.taxArr = [];
       $rootScope.correctArr = [];
 
@@ -378,7 +461,15 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
          seteditArrayView: function(vall, arry) {
             arry.push(vall);
             return arry;
-        },
+        }, 
+        setArray2: function(newVal) {
+            $rootScope.editProdArray.val.push(newVal);
+            return $rootScope.showprodArray;
+         },
+         removeArray2: function(newVals) {
+            $rootScope.editProdArray.val.splice(newVals, 1);
+            return $rootScope.showprodArray;
+         },
         setFullArr : function(obj){
           //console.log(obj.tax)
             this.setArray(obj);

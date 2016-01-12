@@ -101,7 +101,7 @@ angular
 			invoicepref:
 			{
 				appName:"invoice",
-				prefix:"",
+				invoicePrefix:"",
 				allowPartialPayments:true,
 				enableDisscounts:true,
 				enableTaxes:true,
@@ -638,25 +638,25 @@ angular
 
 	console.log($rootScope.Settings12thdoor);	
 
-	// var client = $objectstore.getClient("Settings12thdoor");
-
-	// client.onGetMany(function(data) {
-	// 	if (data) {
-	// 		$rootScope.Settings12thdoor=data[0];
-	// 		console.log($rootScope.Settings12thdoor);
-	// 	}
-	// 	else
-	// 	{
-	// 		$rootScope.Settings12thdoor = $rootScope.Settings12thdoor;
-	// 	}
-	// });
-
-// client.getByFiltering("*");
-
-$scope.submit = function() {
-	console.log($rootScope.Settings12thdoor);	
 	var client = $objectstore.getClient("Settings12thdoor");
-	client.onComplete(function(data) {
+
+	client.onGetMany(function(data) {
+		if (data) {
+			$rootScope.Settings12thdoor=data[0];
+			console.log($rootScope.Settings12thdoor);
+		}
+		else
+		{
+			$rootScope.Settings12thdoor = $rootScope.Settings12thdoor;
+		}
+	});
+
+	client.getByFiltering("*");
+
+	$scope.submit = function() {
+		console.log($rootScope.Settings12thdoor);	
+		var client = $objectstore.getClient("Settings12thdoor");
+		client.onComplete(function(data) {
 				//$rootScope.Settings12thdoor=data;
 				console.log(data);
 				$mdDialog.show(
@@ -669,24 +669,24 @@ $scope.submit = function() {
 					);
 			});
 
-	client.onError(function(data) {
-		$mdDialog.show(
-			$mdDialog.alert()
-			.parent(angular.element(document.body))
-			.content('There was an error saving the data.')
-			.ariaLabel('Alert Dialog Demo')
-			.ok('OK')
-			.targetEvent(data)
-			);
+		client.onError(function(data) {
+			$mdDialog.show(
+				$mdDialog.alert()
+				.parent(angular.element(document.body))
+				.content('There was an error saving the data.')
+				.ariaLabel('Alert Dialog Demo')
+				.ok('OK')
+				.targetEvent(data)
+				);
 
-	});
+		});
 
-	$rootScope.Settings12thdoor.uniqueRecord = "35";
-	client.insert($rootScope.Settings12thdoor, {
-		KeyProperty: "uniqueRecord"
-	});
+		$rootScope.Settings12thdoor.uniqueRecord = "35";
+		client.insert($rootScope.Settings12thdoor, {
+			KeyProperty: "uniqueRecord"
+		});
 
-}
+	}
 
 })
 
@@ -3098,6 +3098,9 @@ function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootSco
 
  function DialogrolesController($scope, $mdDialog, $rootScope) {
 
+ 	if(!$rootScope.Settings12thdoor.users.roles)
+ 		$rootScope.Settings12thdoor.users.roles=[];
+
  	$scope.appCollection = ["Invoice","Recurring","Estimate","Credit Notes","Payment","Expense","Product","Inventory Receipts","Inventory Issues","Project","TimeSheets","Contacts Customer","Contacts Suppliers","360 View","Reports"];
  	console.log($scope.appCollection[0]);
 
@@ -3119,8 +3122,7 @@ function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootSco
  	$scope.view360={add:false,view:false,edit:false,cancel:false,deletee:false};
  	$scope.reports={add:false,view:false,edit:false,cancel:false,deletee:false};
 
- 	if(!$rootScope.Settings12thdoor.users.roles)
- 		$rootScope.Settings12thdoor.users.roles=[];
+
 
  	$scope.submit = function() {
  		

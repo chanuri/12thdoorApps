@@ -860,7 +860,8 @@ angular
 
 		var baseUrl = "http://" + window.location.hostname;
 
-		$scope.submit = function() {
+		$scope.enter =function() {
+
 
 			var appName=$rootScope.Settings12thdoor.preference.invoicepref.appName;
 			console.log(appName);
@@ -879,6 +880,11 @@ angular
 			}).error(function(){
 				alert ("Erro Occured!!");
 			});
+
+		}
+
+		$scope.submit = function() {
+
 
 			console.log($rootScope.Settings12thdoor);	
 			var client = $objectstore.getClient("Settings12thdoor");

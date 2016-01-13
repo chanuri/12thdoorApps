@@ -182,7 +182,6 @@ angular
         $scope.UOM = $scope.UnitOfMeasure;
         $scope.CusFields = $scope.cusF;
         $scope.Displaydiscount = $scope.ShowDiscount;
-          console.log($scope.TDinvoice.baseCurrency)
       });
       client.onError(function(data) {
       });

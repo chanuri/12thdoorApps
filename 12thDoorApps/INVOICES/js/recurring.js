@@ -2,6 +2,7 @@ angular.module('mainApp')
 .controller('newRecurringCtrl', function($scope, $state, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
       $scope.list = [];
       $scope.TDinvoice = {};
+      $scope.invoicDEtails = {};
       $scope.total = 0;
       $scope.product = {};
       $scope.TDinvoice.profileRefName = 'N/A'
@@ -691,14 +692,47 @@ var client = $objectstore.getClient("Settings12thdoor");
       }
 
       $scope.viewRec = function() {
-               // location.href = '#/settings/AllRecurring_Invoices';
                $state.go('settings.AllRecurring_Invoices');
          }
+
+          $scope.InvoiceDetails1 = [];   
+       var client = $objectstore.getClient("domainClassAttributes");
+              client.onGetMany(function(data) {
+                 if (data) {
+                  $scope.InvoiceDetails1 = data;
+
+                for (var i = $scope.InvoiceDetails1.length - 1; i >= 0; i--) {
+                  $scope.ID = $scope.InvoiceDetails1[i].maxCount;
+            };
+            $scope.maxID = parseInt($scope.ID)+1;
+            $scope.invoicDEtails.invoiceRefNo = $scope.maxID.toString();
+                 }
+              });
+              client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoor'");
+
+      $scope.ss=[];
+      $scope.getPayement = function(pay){
+         for (var i = $scope.paymentMethod.length - 1; i >= 0; i--) {
+        if(pay ==  $scope.paymentMethod[i].paymentmethod){
+          $scope.ss.push({
+            sc:$scope.paymentMethod[i].paymentmethod,
+            dd:$scope.paymentMethod[i].paymentType
+          })
+          
+          if($scope.paymentMethod[i].paymentType == "Offline"){
+          // $scope.TDinvoice.OfflinePaymentDetails = $scope.offlinePayments;
+          $scope.invoicDEtails.OfflinePaymentDetails = $scope.offlinePayments;
+          }
+        }
+      };
+      //console.log($scope.TDinvoice.OfflinePaymentDetails)
+      }
+
          //save invoice details
       $scope.submit = function() {
-          $rootScope.invoiceArray.splice($scope.TDinvoice, 1);
+        $rootScope.invoiceArray.splice($scope.TDinvoice, 1);
         recurringInvoiceService.setArray1($scope.TDinvoice);
-        console.log($rootScope.invoiceArray);
+        //console.log($rootScope.invoiceArray);
 
          $scope.imagearray = UploaderService.loadArray();
          if ($scope.imagearray.length > 0) {
@@ -725,6 +759,8 @@ var client = $objectstore.getClient("Settings12thdoor");
             }
          };
          var client = $objectstore.getClient("RecurringProfile");
+         var invo = $objectstore.getClient("invoice12thdoor")
+
          $scope.TDinvoice.recurringProducts = $rootScope.prodArray.val;
          $scope.TDinvoice.total = $scope.total;
           $scope.TDinvoice.finalamount = $scope.famount;
@@ -744,10 +780,90 @@ var client = $objectstore.getClient("Settings12thdoor");
          $scope.TDinvoice.Email = $rootScope.selectedItem1.value.Email;
          $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
          $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
-         $scope.TDinvoice.MultiDueDAtesArr = $scope.dateArray.value;
+         // $scope.TDinvoice.MultiDueDAtesArr = $scope.dateArray.value;
          $scope.TDinvoice.UploadImages = {
             val: []
          };
+
+         $scope.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
+         $scope.ProgressBar.PaymentScheme = "Recurring Profile";
+          $scope.ProgressBar.PaymentSchemeActive= "false";
+          $scope.ProgressBar.PaymentSchemeData.push( $scope.invoicDEtails.MultiDueDAtesArr);
+         
+         $scope.invoicDEtails.status = "Pending"
+         $scope.invoicDEtails.favourite = false;
+         $scope.invoicDEtails.favouriteStarNo = 1;
+         $scope.invoicDEtails.Name = $rootScope.selectedItem1.display;
+         $scope.invoicDEtails.Email = $rootScope.selectedItem1.value.Email;
+         $scope.invoicDEtails.billingAddress = $rootScope.selectedItem1.BillingValue;
+         $scope.invoicDEtails.shippingAddress = $rootScope.selectedItem1.shippingValue;
+         // $scope.invoicDEtails.MultiDueDAtesArr = $scope.dateArray.value;
+         $scope.invoicDEtails.UploadImages = {
+            val: []
+         };
+          $scope.invoicDEtails.invoiceProducts = $rootScope.prodArray.val;
+         $scope.invoicDEtails.total = $scope.total;
+          $scope.invoicDEtails.finalamount = $scope.famount;
+         $scope.invoicDEtails.discountAmount = $scope.finalDisc;
+         $scope.invoicDEtails.salesTaxAmount = $scope.salesTax;
+          $scope.invoicDEtails.otherTaxAmount = $scope.otherTax;
+          $scope.invoicDEtails.RecurringProfileNo = $scope.TDinvoice.profileRefName;
+          // $scope.invoicDEtails.RecurringProfileNo$scope.TDinvoice.billingFrequency
+          $scope.invoicDEtails.paymentMethod = $scope.TDinvoice.paymentMethod;
+           $scope.invoicDEtails.comments = $scope.TDinvoice.comments;
+           $scope.invoicDEtails.Startdate =  $scope.TDinvoice.Startdate;
+           $scope.invoicDEtails.commentsAndHistory=[];
+           // $scope.invoicDEtails.DueDate = 
+           $scope.invoicDEtails.ProgressBarDetails = $scope.ProgressBar;
+
+           // if( == "")
+            switch($scope.TDinvoice.billingFrequency) {
+                    case "weekly":
+                        $scope.sevenDays= $scope.invoicDEtails.Startdate;
+                        $scope.sevenDays.setDate($scope.sevenDays.getDate() + 7);
+                        $scope.invoicDEtails.duedate =$scope.sevenDays;
+                        break;
+                    case "2weeks":
+                        $scope.twoWeeks= $scope.invoicDEtails.Startdate;
+                        $scope.twoWeeks.setDate($scope.twoWeeks.getDate() + 14);
+                        $scope.invoicDEtails.duedate =$scope.twoWeeks;
+                        break;
+                    case "4weeks":
+                        $scope.fourWeeks= $scope.invoicDEtails.Startdate;
+                        $scope.fourWeeks.setDate($scope.fourWeeks.getDate() + 28);
+                        $scope.invoicDEtails.duedate =$scope.fourWeeks;
+                        break;
+                    case "Monthly":
+                        $scope.monthly= $scope.invoicDEtails.Startdate;
+                        $scope.monthly.setDate($scope.monthly.getDate() + 30);
+                        $scope.invoicDEtails.duedate =$scope.monthly;
+                        break;
+                    case "2Months":
+                        $scope.2Months= $scope.invoicDEtails.Startdate;
+                        $scope.2Months.setDate($scope.2Months.getDate() + 60);
+                        $scope.invoicDEtails.duedate =$scope.2Months;
+                        break;
+                    case "3Months":
+                        $scope.3Months= $scope.invoicDEtails.Startdate;
+                        $scope.3Months.setDate($scope.3Months.getDate() + 60);
+                        $scope.invoicDEtails.duedate =$scope.3Months;
+                        break;
+                    default:
+                        console.log($scope.invoicDEtails.Startdate);
+                }
+
+         $scope.invoicDEtails.commentsAndHistory.push({
+              done: false,
+              text: "Invoice was created by Mr.dddd",
+              date:new Date()
+         });
+         $scope.invoicDEtails.MultiDueDAtesArr= [{
+                           DueDate: $scope.invoicDEtails.duedate,
+                           Percentage: "0",
+                           dueDateprice: $scope.famount,
+                           paymentStatus:'Unpaid',
+                           balance :$scope.famount
+                        }];
 
          if($rootScope.prodArray.val.length >0){
          $scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
@@ -757,7 +873,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                $mdDialog.alert()
                .parent(angular.element(document.body))
                .title('')
-               .content('invoioce Successfully Saved')
+               .content('profile Successfully Saved')
                .ariaLabel('Alert Dialog Demo')
                .ok('OK')
                .targetEvent(data)
@@ -768,6 +884,8 @@ var client = $objectstore.getClient("Settings12thdoor");
             KeyProperty: "profileName"
          });
 
+          $scope.invoicDEtails.invoiceNo = "-999";
+         invo.insert([$scope.invoicDEtails],{KeyProperty: "invoiceNo"});
       }else{
          
         $mdDialog.show(
@@ -791,7 +909,8 @@ var client = $objectstore.getClient("Settings12thdoor");
                .targetEvent(data)
             );
          });
-      
+     
+
          
       }
 

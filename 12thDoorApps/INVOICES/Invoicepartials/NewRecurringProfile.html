@@ -329,19 +329,12 @@
                               <div layout layout-sm="column" layout-margin>
                                  
                                   <section-title> </section-title>
-                                   <md-input-container flex required>
-                            <label>Payment Method</label>
-                                  <md-select  ng-model="TDinvoice.paymentMethod" flex>
-                                      <md-optgroup label="Online Payment Method">
-                                         <md-option value="PayPal">PayPal</md-option>
-                                         <md-option value="Stripe ">Stripe </md-option>
-                                      </md-optgroup>
-                                      <md-optgroup label="Offline Payment Method">
-                                           <md-option value="cash">Cash </md-option>
-                                           <md-option value="Cheque">Cheque </md-option>
-                                      </md-optgroup>
-                                  </md-select>
-                                  </md-input-container>
+                                   <md-select placeholder="Payment Method" ng-model="TDinvoice.paymentMethod" flex ng-change="getPayement(TDinvoice.paymentMethod)">
+                                        <md-optgroup >
+                                            <md-option ng-repeat="pay in paymentMethod" value="{{pay.paymentmethod}}">{{pay.paymentmethod}}</md-option>
+                                            <!-- <md-option value="Stripe ">Stripe </md-option> -->
+                                        </md-optgroup>
+                                    </md-select>
                               </div>
                               <div layout layout-sm="column" layout-margin>
                                  

@@ -314,12 +314,12 @@
                                   <md-divider></md-divider>
                               <div class="md-actions" layout="row" layout-sm="column" layout-align="end start" >
                                <div style="margin-top:20px;">
-                              <md-button id="" class="md-raised md-primary" style="" ng-click="editRecurring(TDinvoice)">
-                                  <span class="loginBtnLabel">Edit</span>
+                              <md-button id="" class="md-raised md-primary" style="" ng-show="editInvoiceB" ng-click="editRecurring(TDinvoice)">
+                                  <span class="loginBtnLabel">Update</span>
                               </md-button>
                               </div>
                               <div style="padding-left:20px; margin-top:20px;">
-                              <md-button id="" class="md-raised md-primary" style="" ng-click="saveRecurring(TDinvoice)">
+                              <md-button id="" class="md-raised md-primary" style="" ng-show="saveInvoiceB" ng-click="saveRecurring(TDinvoice)">
                                   <span class="loginBtnLabel">Save</span>
                               </md-button>
                               </div>
@@ -327,14 +327,13 @@
                                <md-button href class="md-raised md-primary" ng-click="cancelrec()">
                                   <span class="loginBtnLabel">Cancel</span>
                               </md-button>
-                                      </div>
-                                       <div >
-                                <md-button flex  class="md-raised md-primary" ng-show="showSave" ng-click="savetoProfile(tdi)">
+                                </div>
+                                 <div style="padding-left:20px; margin-top:20px;">
+                                <md-button flex  class="md-raised md-primary" ng-show="showSave" ng-click="savetoProfile(TDinvoice)">
                                   <span class="loginBtnLabel">Save</span>
                               </md-button>
                               </div>
                               </md-content>
-                              
                           </form>
                       </md-whiteframe>
 

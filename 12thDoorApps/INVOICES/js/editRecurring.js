@@ -1,6 +1,19 @@
 angular.module('mainApp').
 controller('editRecurring', function($scope, $mdDialog, $objectstore, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
 
+for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
+  if($rootScope.invoiceArray[i].status == "Draft"){
+    $scope.showSave = true;
+  }
+};
+if($state.current.name == 'CopyRec') {
+        $scope.saveInvoiceB = true;
+     }else if($state.current.name == 'estimateInvoice'){
+      $scope.saveInvoiceB = true;
+     }else{
+        $scope.editInvoiceB = true;
+     }
+
 	 $scope.calAMount = function(data) {
          $scope.Amount = 0;
          $scope.Amount = (((data.price * data.quantity) - ((data.price * data.quantity) * data.discount / 100)) + ((data.price * data.quantity)) * data.tax / 100);
@@ -114,11 +127,12 @@ controller('editRecurring', function($scope, $mdDialog, $objectstore, $window, $
          var client = $objectstore.getClient("RecurringProfile");
          $scope.TDinvoice.recurringProducts = updatedForm.recurringProducts;
          $scope.TDinvoice.total = $scope.total;
+         $scope.TDinvoice.profileRefName = $scope.refNo;
          $scope.TDinvoice.finalamount = $scope.famount;
          $scope.TDinvoice.discountAmount = $scope.finalDisc;
          $scope.TDinvoice.salesTaxAmount = $scope.salesTax;
-          $scope.TDinvoice.otherTaxAmount = $scope.otherTax;
-          $scope.TDinvoice.status = "Active";
+         $scope.TDinvoice.otherTaxAmount = $scope.otherTax;
+         $scope.TDinvoice.status = "Active";
          $scope.TDinvoice.favourite = false;
          $scope.TDinvoice.favouriteStarNo = 1;
          $scope.TDinvoice.Name = updatedForm.Name;
@@ -131,7 +145,7 @@ controller('editRecurring', function($scope, $mdDialog, $objectstore, $window, $
 
          //$scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
          client.onComplete(function(data) {
-         $state.go('viewProfile', {'profileName': $scope.TDinvoice.profileRefName});
+        $state.go('viewProfile', {'profileName': $scope.refNo});
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
@@ -459,6 +473,84 @@ $scope.deleteEditproduct = function(name){
                }
             }
          })
+      }
+
+       $scope.InvoiceDetails = [];   
+       var client = $objectstore.getClient("domainClassAttributes");
+              client.onGetMany(function(data) {
+                 if (data) {
+                  $scope.InvoiceDetails = data;
+
+                for (var i = $scope.InvoiceDetails.length - 1; i >= 0; i--) {
+                  $scope.ID = $scope.InvoiceDetails[i].maxCount;
+            };
+            $scope.maxID = parseInt($scope.ID)+1;
+            $scope.refNo = $scope.maxID.toString();
+                 }
+              });
+              client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoorDraft'");
+
+      $scope.savetoProfile = function(obj) {
+         console.log(obj)
+         var confirm = $mdDialog.confirm()
+            .parent(angular.element(document.body))
+            .title('')
+            .content('Are You Sure You Want To save it?')
+            .ok('Save')
+            .cancel('Cancel')
+            .targetEvent(obj);
+         $mdDialog.show(confirm).then(function() {
+            var draftdelete = $objectstore.getClient("twethdoorProfileDraft");
+            
+            draftdelete.onComplete(function(data) {
+          
+              obj.profileRefName = $scope.refNo;
+            obj.status = "Active";
+               var newInsert = $objectstore.getClient("RecurringProfile");
+               newInsert.onComplete(function(data) {
+                  $mdDialog.show(
+                     $mdDialog.alert()
+                     .parent(angular.element(document.body))
+                     .title('')
+                     .content('invoice Successfully Saved')
+                     .ariaLabel('Alert Dialog Demo')
+                     .ok('OK')
+                     .targetEvent(data)
+                  );
+                  $state.go('viewProfile', {'profileName': $scope.refNo}, {
+                     reload: true
+                  });
+               });
+               newInsert.onError(function(data) {
+                  $mdDialog.show(
+                     $mdDialog.alert()
+                     .parent(angular.element(document.body))
+                     .title('Sorry')
+                     .content('Error saving invoice')
+                     .ariaLabel('Alert Dialog Demo')
+                     .ok('OK')
+                     .targetEvent(data)
+                  );
+               });
+               obj.profileName = "-999";
+               newInsert.insert(obj, {
+                  KeyProperty: "profileName"
+               });
+            });
+            draftdelete.onError(function(data) {
+               $mdDialog.show(
+                  $mdDialog.alert()
+                  .parent(angular.element(document.body))
+                  .content('Error Deleting from Draft')
+                  .ariaLabel('')
+                  .ok('OK')
+                  .targetEvent(data)
+               );
+            });
+            draftdelete.deleteSingle(obj.profileName.toString(), "profileName");
+         }, function() {
+            $mdDialog.hide();
+         });
       }
 
 })

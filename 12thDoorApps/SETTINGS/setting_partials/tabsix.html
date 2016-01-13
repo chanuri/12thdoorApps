@@ -14,8 +14,8 @@
 			<div layout layout-sm="row" layout-margin layout-wrap layout-align="center center">
 				<md-card  ng-repeat="onlinePay in pay" style="width:280px;">
 				<div class="SearchCard">
-					<div id="{{onlinePay.name}}"></div>
-					<div>
+					<div id="{{onlinePay.name}}" ng-class="{'tintImage': onlinePay.activate == true}"></div>
+					<div >
 						<img ng-src="{{onlinePay.url}}" class="md-card-image" alt="Washed Out">
 					</div>
 				</div>

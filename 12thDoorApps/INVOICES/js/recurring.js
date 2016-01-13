@@ -864,6 +864,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                         $scope.threeYears= $scope.invoicDEtails.Startdate;
                         $scope.threeYears.setDate($scope.threeYears.getDate() + 365);
                         $scope.invoicDEtails.duedate =$scope.threeYears;
+                        console.log($scope.invoicDEtails.duedate);
                         break;
                     default:
                         console.log($scope.invoicDEtails.Startdate);

@@ -3,7 +3,7 @@ rasm.controller('ViewScreen', function ($scope, $stateParams, $state,$DownloadPd
 
 	$scope.BillCustomer = function(obj){
 		//window.location.replace("/admin/products/view.php?id='"+obj.expense_code+"'");
-		window.location.href = window.location.protocol + "//" + window.location.host + "/12thdoor/invoice.html#/estimateInvoice/IName=:"+obj.expense_code+"";
+		window.location.href = window.location.protocol + "//" + window.location.host + "/fullapps/12thdoorApps/INVOICES/INVOICES.html#/estimateInvoice/IName=:"+obj.expense_code+"";
 	}
 	//cancell function 
 	$scope.viewExpense = function(){

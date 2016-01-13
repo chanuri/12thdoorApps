@@ -39,7 +39,7 @@
           <div layout="row" layout-sm="column" layout-align="space-around">
                     <md-progress-circular id="loader" md-mode="indeterminate"></md-progress-circular>
                   </div>
-  <div  class="collapse-card"  ng-repeat="expense in testExpenses | filter:ctrl.searchText || undefined | orderBy: 
+  <div  class="collapse-card"  ng-repeat="expense in expenses | filter:ctrl.searchText || undefined | orderBy: 
   [prodSearch,Latest]" ng-class="{ active: $active }">
                <!--START OF COLLAPSE CARD HEADING-->
                <div class="collapse-card__heading" layout="row" layout-align="start start">
@@ -358,7 +358,7 @@
                 </md-button>
             </div> -->
 
-            <md-paging paging-gap="6" full-arr="expenses" paging-arr="testExpenses"> </md-paging>
+            <!-- <md-paging paging-gap="6" full-arr="expenses" paging-arr="testExpenses"> </md-paging> -->
                 
             </footer>
          </div>

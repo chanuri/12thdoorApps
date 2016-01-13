@@ -839,14 +839,34 @@ var client = $objectstore.getClient("Settings12thdoor");
                         $scope.invoicDEtails.duedate =$scope.monthly;
                         break;
                     case "2Months":
-                        $scope.2Months= $scope.invoicDEtails.Startdate;
-                        $scope.2Months.setDate($scope.2Months.getDate() + 60);
-                        $scope.invoicDEtails.duedate =$scope.2Months;
+                        $scope.twoMonths= $scope.invoicDEtails.Startdate;
+                        $scope.twoMonths.setDate($scope.twoMonths.getDate() + 60);
+                        $scope.invoicDEtails.duedate =$scope.twoMonths;
                         break;
                     case "3Months":
-                        $scope.3Months= $scope.invoicDEtails.Startdate;
-                        $scope.3Months.setDate($scope.3Months.getDate() + 60);
-                        $scope.invoicDEtails.duedate =$scope.3Months;
+                        $scope.threeMonths= $scope.invoicDEtails.Startdate;
+                        $scope.threeMonths.setDate($scope.threeMonths.getDate() + 90);
+                        $scope.invoicDEtails.duedate =$scope.threeMonths;
+                        break;
+                    case "6Months":
+                        $scope.sixMonths= $scope.invoicDEtails.Startdate;
+                        $scope.sixMonths.setDate($scope.sixMonths.getDate() + 180);
+                        $scope.invoicDEtails.duedate =$scope.sixMonths;
+                        break;
+                    case "Yearly":
+                        $scope.Yearly= $scope.invoicDEtails.Startdate;
+                        $scope.Yearly.setDate($scope.Yearly.getDate() + 365);
+                        $scope.invoicDEtails.duedate =$scope.Yearly;
+                        break;
+                    case "2Years":
+                        $scope.twoYears= $scope.invoicDEtails.Startdate;
+                        $scope.twoYears.setDate($scope.twoYears.getDate() + 365);
+                        $scope.invoicDEtails.duedate =$scope.twoYears;
+                        break;
+                    case "3Years":
+                        $scope.threeYears= $scope.invoicDEtails.Startdate;
+                        $scope.threeYears.setDate($scope.threeYears.getDate() + 365);
+                        $scope.invoicDEtails.duedate =$scope.threeYears;
                         break;
                     default:
                         console.log($scope.invoicDEtails.Startdate);

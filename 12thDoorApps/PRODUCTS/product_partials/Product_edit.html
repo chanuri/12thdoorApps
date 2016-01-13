@@ -32,11 +32,9 @@
                         </md-input-container>
                                 <md-input-container flex>
                         <label>Unit</label>
-                        <md-select ng-model="product.ProductUnit" ng-disabled="checkAbility" >
+                        <md-select ng-model="product.ProductUnit" >
                            <md-optgroup label="Unit">
-                           <md-option value="Months">Months</md-option>
-                           <md-option value="Days">Days</md-option>
-                           <md-option value="Units">Units</md-option>
+                           <md-option ng-repeat="unit in ProUnits" value="{{unit}}">{{unit}}</md-option>
                         </md-select>
                      </md-input-container>
                      </div>
@@ -50,8 +48,7 @@
                            <label>Tax</label>
                            <md-select ng-model="product.producttax"  >
                               <md-optgroup label="Tax">
-                              <md-option value="10">10</md-option>
-                              <md-option value="20">20</md-option>
+                              <md-option ng-repeat="tax in taxesArr" value="{{tax}}">{{tax.taxname}}</md-option>
                            </md-select>
                         </md-input-container>
                      </div>
@@ -78,17 +75,15 @@
                            <label>Product Brand</label>
                            <md-select ng-model="product.brand" class="required"  >
                               <md-optgroup label="Brand">
-                              <md-option value="Brand 1">Brand 1</md-option>
-                              <md-option value="Brand 2">Brand 2</md-option>
-                           </md-select>
+                              <md-option  ng-repeat="brand in ProBrandArray " value="{{brand}}">{{brand}}</md-option>
+                          </md-select>
                         </md-input-container >
                         <md-input-container flex>
                            <label>Product Category</label>     
                            <md-select placeholder="Product Category" ng-model="product.ProductCategory"   >
                               <md-optgroup label="Product Category">
-                              <md-option value="Product">Product</md-option>
-                              <md-option value="Package">Package</md-option>
-                           </md-select>
+                              <md-option ng-repeat="cat in CategoryArray" value="{{cat}}">{{cat}}</md-option>
+                            </md-select>
                         </md-input-container>
                      </div>
                      <div layout layout-sm="column" layout-margin >

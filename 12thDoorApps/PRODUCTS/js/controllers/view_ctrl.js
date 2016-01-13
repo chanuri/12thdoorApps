@@ -293,7 +293,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 		}
 	}
 	//load all products 
-	var client = $objectstore.getClient("12thproduct");
+	var client = $objectstore.getClient("product12thdoor");
 	client.onGetMany(function(data){
 		$scope.ViewExpense = data;
 		$scope.ViewExpense[0].Commentstxt = ""; // ADD empty field to comment 
@@ -310,7 +310,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 	client.onError(function(data){
 		console.log("error Loading data")
 	});
-	client.getByFiltering("select * from 12thproduct where ProductCode = '"+$stateParams.productID+"'");
+	client.getByFiltering("select * from product12thdoor where ProductCode = '"+$stateParams.productID+"'");
 
 	$scope.EditProduct = function(obj){
 		$state.go('Edit_Product', {
@@ -320,7 +320,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 
 	$scope.ChangeStatus = function(obj){
 
-		var client = $objectstore.getClient("12thproduct");
+		var client = $objectstore.getClient("product12thdoor");
 		client.onComplete(function(data){
 			$mdDialog.show(
               $mdDialog.alert()
@@ -366,7 +366,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
           .cancel('Cancel');
 	    $mdDialog.show(confirm).then(function() {
 	      
-	      var client  = $objectstore.getClient("12thproduct");
+	      var client  = $objectstore.getClient("product12thdoor");
 	      client.onComplete(function(data){
 	      	$mdDialog.show(
 	          $mdDialog.alert()

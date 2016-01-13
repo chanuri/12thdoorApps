@@ -1,7 +1,7 @@
 rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope, $objectstore, $auth, $EditUploadData, $uploader, $mdDialog, $objectstoreAccess, UploaderService) {
 	console.log($stateParams.Eobject);
 
-	$objectstoreAccess.LoadOneDetails("12thproduct", $stateParams.Eobject, function (data) {
+	$objectstoreAccess.LoadOneDetails("product12thdoor", $stateParams.Eobject, function (data) {
 		$scope.product_edit = [];
 		$scope.product_edit.push(data);	 
 
@@ -49,7 +49,7 @@ rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope, $
             .targetEvent()
           );
     }else{
-        var client = $objectstore.getClient("12thproduct");
+        var client = $objectstore.getClient("product12thdoor");
         client.onComplete(function(data){
           $state.go('home');
           $mdDialog.show(
@@ -120,17 +120,85 @@ rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope, $
   }
 
   $scope.GetMaxNumber = function(obj,name,MaxID){
+      $scope.FinalNumber = MaxID +1;
+      $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
+      $scope.Zerros="";
+      for(i=0; i<4-$scope.FinalNumberLength; i++ ){
+        var str = "0";
+        $scope.Zerros = $scope.Zerros + str;
+      }
+      $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
+      obj.ProductCodeID = $scope.FinalNumber;
+      obj.ProductCode = name +'-'+ $scope.Zerros;
+  }
 
-    $scope.FinalNumber = MaxID +1;
-    $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
-    $scope.Zerros="";
-    for(i=0; i<4-$scope.FinalNumberLength; i++ ){
-      var str = "0";
-      $scope.Zerros = $scope.Zerros + str;
+  var settingClient = $objectstore.getClient("Settings12thdoor");
+  settingClient.onGetMany(function(data){
+
+    getProductBrand(data,function(){
+      getProductCategory(data,function(){
+        getAllUnits(data,function(){
+          getProTaxes(data);
+        });        
+      })
+    })
+  });
+  settingClient.onError(function(data){
+    console.log("error loading seetting data")
+  });
+  settingClient.getByFiltering("*");
+
+  function getProductBrand(arr,callback){
+      $scope.ProBrandArray = [];
+      var BrandArray = arr[0].preference.productpref.Productbrands;      
+      for (var i = BrandArray.length - 1; i >= 0; i--) {
+         if (BrandArray[i].activate) {
+            $scope.ProBrandArray.push(BrandArray[i].productbrand);
+         }
+      }
+      callback();
+  }
+
+
+
+  function getProductCategory(arr,callback){
+      $scope.CategoryArray = [];
+      var CatArray = arr[0].preference.productpref.Productcategories;      
+      for (var i = CatArray.length - 1; i >= 0; i--) {
+         if (CatArray[i].activate) {
+            $scope.CategoryArray.push(CatArray[i].productcategory);
+         }
+      }
+      callback();
+  }
+
+  function getProTaxes(arr){
+      $scope.taxesArr = [];      
+      var individualTaxes = arr[0].taxes.individualtaxes; 
+      var multiplelTaxes = arr[0].taxes.multipletaxgroup; 
+
+      for(i=0; i<=individualTaxes.length-1; i++){
+        if(individualTaxes[i].activate){
+          $scope.taxesArr.push(individualTaxes[i]);
+        }
+      }
+      for(j=0; j<=multiplelTaxes.length-1; j++){
+        if(multiplelTaxes[j].activate){
+          $scope.taxesArr.push(multiplelTaxes[j]);
+        }
+      }
+
     }
-    $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
-    obj.ProductCodeID = $scope.FinalNumber;
-    obj.ProductCode = name +'-'+ $scope.Zerros;
-   }
+
+  function getAllUnits(arr,callback){
+      $scope.ProUnits = [];
+        var ProductUnits = arr[0].preference.productpref.units;
+        for(i=0; i<= ProductUnits.length -1; i++){
+          if(ProductUnits[i].activate){
+              $scope.ProUnits.push(ProductUnits[i].unitsOfMeasurement);      
+          }
+      }
+      callback();
+  }
 
 });

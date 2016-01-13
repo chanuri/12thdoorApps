@@ -119,7 +119,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       $scope.FirstLetters = obj.Productname.substring(0, 3).toUpperCase();
     };
         
-    var client = $objectstore.getClient("12thproduct");
+    var client = $objectstore.getClient("product12thdoor");
     client.onGetMany(function(data){
       $rootScope.FullArray = data;
       if (data.length>0) {
@@ -376,7 +376,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       $location.path(route);
     }
     $scope.favouriteFunction = function (obj) {
-      var client = $objectstore.getClient("12thproduct");
+      var client = $objectstore.getClient("product12thdoor");
       client.onComplete(function (data) {
         if (obj.favouriteStar) {
           var toast = $mdToast.simple()
@@ -485,7 +485,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       $scope.loadallarray = [];
       $scope.products = [];
       $scope.packages = [];
-      var client = $objectstore.getClient("12thproduct");
+      var client = $objectstore.getClient("product12thdoor");
       client.onGetMany(function (data) {
         if (data) {
           $scope.loadallarray = data;
@@ -702,7 +702,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               });
             }
           };
-          var client = $objectstore.getClient("12thproduct");
+          var client = $objectstore.getClient("product12thdoor");
           client.onComplete(function (data) {
             $mdDialog.show(
               $mdDialog.alert()
@@ -714,7 +714,8 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent(data)
             );
             $scope.newItems.push($scope.product);
-            window.location.href = window.location.protocol + "//" + window.location.host + "/12thDoorApps/EXPENSES/EXPENSES.html";
+            //window.location.href = window.location.protocol + "//" + window.location.host + "/12thdoor/expenses.html";
+            $state.go("home");
 
           });
           client.onError(function (data) {
@@ -754,7 +755,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       }
     }
     $scope.updateproduct = function (updatedForm, prod) {
-      var client = $objectstore.getClient("12thproduct");
+      var client = $objectstore.getClient("product12thdoor");
       console.log(updatedForm.stocklevel);
       client.onComplete(function (data) {
         $scope.newItems.push($scope.product);
@@ -784,7 +785,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       });
     }
     $scope.deleteproduct = function (deleteform) {
-      var client = $objectstore.getClient("12thproduct");
+      var client = $objectstore.getClient("product12thdoor");
       client.onComplete(function (data) {
         $mdDialog.show(
           $mdDialog.alert()

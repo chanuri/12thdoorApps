@@ -1,7 +1,7 @@
 rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $DownloadPdf, $objectstore, $auth, $mdDialog){
 	console.log($stateParams.productID);
 
-	var client = $objectstore.getClient("12thproduct");
+	var client = $objectstore.getClient("product12thdoor");
 	client.onGetMany(function(data){
 		if (data.length > 0) {
 			$scope.product_copy = data;
@@ -14,7 +14,7 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
 	client.onError(function(data){
 		console.log("error Loading data")
 	});
-	client.getByFiltering("select * from 12thproduct where ProductCode = "+$stateParams.productID+"");	 
+	client.getByFiltering("select * from product12thdoor where ProductCode = "+$stateParams.productID+"");	 
 
 	function ChangeProductCode(obj){ // call to prouce new product code
 		var Pnumbers = obj[0].ProductCode.substring(4,8);
@@ -86,7 +86,7 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
 
 	        if (!$scope.AlreadyExsist){
 
-				var client = $objectstore.getClient("12thproduct");
+				var client = $objectstore.getClient("product12thdoor");
 				client.onComplete(function(data){
 					$state.go('home');
 					$mdDialog.show(
@@ -121,6 +121,72 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
         $scope.stockdisabledview = false;
       };
     }
+
+	var settingClient = $objectstore.getClient("Settings12thdoor");
+	settingClient.onGetMany(function(data){
+		getProductBrand(data,function(){
+		  getProductCategory(data,function(){
+		    getAllUnits(data,function(){
+		      getProTaxes(data);
+		    });        
+		  })
+		})
+	});
+	settingClient.onError(function(data){
+		console.log("error loading seetting data")
+	});
+	settingClient.getByFiltering("*");
+
+	function getProductBrand(arr,callback){
+	  $scope.ProBrandArray = [];
+	  var BrandArray = arr[0].preference.productpref.Productbrands;      
+	  for (var i = BrandArray.length - 1; i >= 0; i--) {
+	     if (BrandArray[i].activate) {
+	        $scope.ProBrandArray.push(BrandArray[i].productbrand);
+	     }
+	  }
+	  callback();
+	}
+	
+	function getProductCategory(arr,callback){
+	  $scope.CategoryArray = [];
+	  var CatArray = arr[0].preference.productpref.Productcategories;      
+	  for (var i = CatArray.length - 1; i >= 0; i--) {
+	     if (CatArray[i].activate) {
+	        $scope.CategoryArray.push(CatArray[i].productcategory);
+	     }
+	  }
+	  callback();
+	}
+
+	function getProTaxes(arr){
+	  $scope.taxesArr = [];      
+	  var individualTaxes = arr[0].taxes.individualtaxes; 
+	  var multiplelTaxes = arr[0].taxes.multipletaxgroup; 
+
+	  for(i=0; i<=individualTaxes.length-1; i++){
+	    if(individualTaxes[i].activate){
+	      $scope.taxesArr.push(individualTaxes[i]);
+	    }
+	  }
+	  for(j=0; j<=multiplelTaxes.length-1; j++){
+	    if(multiplelTaxes[j].activate){
+	      $scope.taxesArr.push(multiplelTaxes[j]);
+	    }
+	  }
+
+	}
+
+	function getAllUnits(arr,callback){
+	  $scope.ProUnits = [];
+	    var ProductUnits = arr[0].preference.productpref.units;
+	    for(i=0; i<= ProductUnits.length -1; i++){
+	      if(ProductUnits[i].activate){
+	          $scope.ProUnits.push(ProductUnits[i].unitsOfMeasurement);      
+	      }
+	  }
+	  callback();
+	}
 });
 
 

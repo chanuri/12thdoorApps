@@ -42,7 +42,7 @@
       <div class="card_container"  >
       <div class="ui-view-container">
          <!--START OF  COLLAPSE CARDS-->
-         <div  class="collapse-card" ng-repeat="product in testProducts | filter:ctrl.searchText||undefined 
+         <div  class="collapse-card" ng-repeat="product in products | filter:ctrl.searchText||undefined 
          | orderBy: [prodSearch,Latest] " ng-class="{ active: $active }">
             <!--START OF COLLAPSE CARD HEADING-->
             <div class="collapse-card__heading" layout="row" layout-align="start start"
@@ -62,7 +62,8 @@
                 </div>
 
 
-               <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%; height:70px;" ng-click="$active = !$active;" layout-sm="row">
+               <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%;"
+                ng-click="$active = !$active;" layout-sm="row">
                  
 <!--  WITHOUT RESPONSIVE -->
                     <div layout-sm="row" flex style="margin-left: 15px;">
@@ -91,68 +92,7 @@
                              </span>
                         
                         </div>
-                       <!--  <div layout-sm="column" style="margin-top:10px;" flex>
-                            <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;"> {{product.ProductCode}}</span>
-                            <span style="padding-right: 15px;  border-right-style: solid; padding-left: 15px;  border-width:1px; font-size:13px; ">{{product.status}}</span>
-                            <span style="padding-right: 15px;  border-right-style: solid; padding-left: 15px;  border-width:1px; font-size:13px; ">{{product.brand}}</span>
-                            <span style="padding-right: 15px;  border-right-style: solid; padding-left: 15px;  border-width:1px; font-size:13px; ">{{product.ProductCategory}}</span>
-                            <span style="padding-right: 15px;  padding-left: 15px;  border-width:1px; font-size:13px; ">{{product.stocklevel}}</span>
-                        </div> -->
                     </div>
-                  <!--   <div>
-                        <span style="padding-right: 10px; margin-left:120px;">
-                            <md-icon md-svg-icon="img/ic_visibility_24px.svg" style="height:20px; width:20px;"></md-icon>
-                        </span>
-                        <br>
-                            <br>
-                                <span style="padding-right: 10px; margin-left:120px;">
-                                    <md-icon md-svg-icon="img/ic_drafts_24px.svg" style="height:20px; width:20px;"></md-icon>
-                                </span>
-                            </div>
-                        -->
-
- 
-<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////// 
-WITH RESPONSIVE -->
-
-    <!--         <div layout= "row" layout-sm="column" flex style="width: 25%">
-             
-              <div flex>
-                <span style="padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b style="padding-left: 20px;">{{product.Productname}}</b></span>
-              
-              </div>
-              <div flex>
-                 <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px; border-right-style: solid; border-width:1px;"><b style="padding-left: 20px;">{{product.productprice}}</b></span>
-             
-              </div>
-
-            </div>
-
-            <div layout ="row" layout-sm="column" flex style="width: 55%" class="blankspace">
-              <div flex = "15">
-                 <span style="padding-right: 15px; padding-left: 15px;  border-right-style: solid; border-width:1px; font-size:13px; ">{{product.ProductCode}}</span>
-                 
-              </div>
-                <div flex = "20">
-                 <span style="padding-right: 15px; padding-left: 15px;  border-right-style: solid;  border-width:1px; font-size:13px; ">{{product.status}} </span>
-                 
-              </div>
-                <div flex = "20">
-                 <span style="padding-right: 15px; padding-left: 15px;  border-right-style: solid; border-width:1px; font-size:13px; ">{{product.brand}}</span>
-                 
-              </div>
-               <div flex = "20">
-                 <span style="padding-right: 15px; padding-left: 15px;  border-right-style: solid; border-width:1px; font-size:13px; "> {{product.ProductCategory}}</span>
-                 
-              </div>
-              <div flex = "20">
-                 <span style="padding-right: 15px; padding-left: 15px;  border-right-style: solid; border-width:1px; font-size:13px; "> {{product.stocklevel}}</span>
-                 
-              </div>
-            </div> -->
-
-
-
                </div>
                <!--END OF CARD OPEN SECTION-->
                <!--START OF CARD CONTROLS SECTION-->
@@ -345,7 +285,7 @@ WITH RESPONSIVE -->
            <footer flex>
            
 
-            <md-paging paging-gap="2" full-arr="products" paging-arr="testProducts"> </md-paging>
+            <!-- <md-paging paging-gap="2" full-arr="products" paging-arr="testProducts"> </md-paging> -->
                 
             </footer>
       </div>
@@ -377,7 +317,7 @@ WITH RESPONSIVE -->
                   <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon>
                   <md-tooltip md-direction="left">Add product</md-tooltip>
                </md-button>
-            </div>
+          </div>
           <!--   <div style="padding:5px;">
                <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="viewPackage()" style="background-color:#3498db;">
                   <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>

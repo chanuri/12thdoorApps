@@ -925,7 +925,7 @@ angular
       //   val: []
       // };
       // $scope.TDEstimate.UploadImages.val = UploaderService.loadBasicArray();
-
+  console.log( $scope.TDEstimate.Email)
       client.onComplete(function(data) {
         $mdDialog.show(
           $mdDialog.alert()

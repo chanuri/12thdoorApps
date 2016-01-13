@@ -808,15 +808,12 @@ var client = $objectstore.getClient("Settings12thdoor");
          $scope.invoicDEtails.salesTaxAmount = $scope.salesTax;
           $scope.invoicDEtails.otherTaxAmount = $scope.otherTax;
           $scope.invoicDEtails.RecurringProfileNo = $scope.TDinvoice.profileRefName;
-          // $scope.invoicDEtails.RecurringProfileNo$scope.TDinvoice.billingFrequency
           $scope.invoicDEtails.paymentMethod = $scope.TDinvoice.paymentMethod;
            $scope.invoicDEtails.comments = $scope.TDinvoice.comments;
            $scope.invoicDEtails.Startdate =  $scope.TDinvoice.Startdate;
            $scope.invoicDEtails.commentsAndHistory=[];
-           // $scope.invoicDEtails.DueDate = 
            $scope.invoicDEtails.ProgressBarDetails = $scope.ProgressBar;
 
-           // if( == "")
             switch($scope.TDinvoice.billingFrequency) {
                     case "weekly":
                         $scope.sevenDays= $scope.invoicDEtails.Startdate;

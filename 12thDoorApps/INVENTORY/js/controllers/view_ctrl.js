@@ -172,6 +172,10 @@ rasm.controller('viewctrl', function($scope, $location, dialogsvc,$DownloadPdf, 
         backup.sort(function(a,b){
          return new Date(b.date) - new Date(a.date);
         });
+        
+        arr.sort(function(a,b){
+         return new Date(b.date) - new Date(a.date);
+        });
 
         //prepend backup array to fullarray 
         for (var i = backup.length - 1; i >= 0; i--) {
@@ -288,11 +292,11 @@ rasm.controller('viewctrl', function($scope, $location, dialogsvc,$DownloadPdf, 
         });
       });
       if (obj.favouriteStarNo == 1 ) {
-              obj.favouriteStarNo = 0;
-          }
-          else if (obj.favouriteStarNo == 0){
-              obj.favouriteStarNo = 1;
-          };
+          obj.favouriteStarNo = 0;
+      }
+      else if (obj.favouriteStarNo == 0){
+          obj.favouriteStarNo = 1;
+      };
       obj.inventoryFavourite = !obj.inventoryFavourite;
       client.insert(obj, {
         KeyProperty: "inventory_code"

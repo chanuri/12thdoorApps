@@ -44,20 +44,27 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     }];
 
     /*______________________________________paymentID Genaration_____________________________________*/
-    var client = $objectstore.getClient("domainClassAttributes");
-    client.onGetMany(function(data) {
-        if (data) {
-            $scope.paymentDetails = data;
-            for (var i = $scope.paymentDetails.length - 1; i >= 0; i--) {
-                $scope.ID = $scope.paymentDetails[i].maxCount;
-                // $scope.payment.uAmount=$scope.paymentDetails[i].uAmount;
-                // console.log($scope.payment.uAmount);
-            };
-            $scope.maxID = parseInt($scope.ID) + 1;
-            $scope.payment.paymentref = $scope.maxID.toString();
-        }
-    });
-    client.getByFiltering("select maxCount from domainClassAttributes where class='payment");
+    
+    function loadMaxPaymentNum(){
+        var client = $objectstore.getClient("domainClassAttributes");
+        client.onGetMany(function(data) {
+            if (data) {
+                if(data.length == 0){
+                    $scope.payment.paymentref = "1";
+                }else{
+                    $scope.paymentDetails = data;
+                    for (var i = $scope.paymentDetails.length - 1; i >= 0; i--) {
+                        $scope.ID = $scope.paymentDetails[i].maxCount;
+                        // $scope.payment.uAmount=$scope.paymentDetails[i].uAmount;
+                        // console.log($scope.payment.uAmount);
+                    };
+                    $scope.maxID = parseInt($scope.ID) + 1;
+                    $scope.payment.paymentref = $scope.maxID.toString();
+                }
+            }
+        });
+        client.getByFiltering("select maxCount from domainClassAttributes where class='payment");
+    }
     $rootScope.self = this;
     $rootScope.self.tenants = loadAll();
     $rootScope.selectedItem1 = null;
@@ -220,6 +227,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         var paymentClient = $objectstore.getClient("advancedPayment");
         paymentClient.onGetMany(function(data) {
             $scope.paymentDetails = data;
+            loadMaxPaymentNum();
         });
         paymentClient.onError(function(data) {
             console.log("error loading payment details ")

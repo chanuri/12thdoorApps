@@ -129,8 +129,8 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           for(i=0; i<=data.length-1; i++){
             if (data[i].ProductCode.substring(0, 3) === $scope.FirstLetters) {
               $scope.CurrendID = data[i].ProductCodeID;
-              if ($scope.CurrendID > $scope.MaxID) {
-                $scope.MaxID = $scope.CurrendID;
+              if (parseInt($scope.CurrendID) > $scope.MaxID) {
+                $scope.MaxID = parseInt($scope.CurrendID);
               };
                $scope.PatternExsist = true;
             };
@@ -155,7 +155,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
 
    $scope.GetMaxNumber = function(obj,name,MaxID){
 
-    $scope.FinalNumber = MaxID +1;
+    $scope.FinalNumber = parseInt(MaxID) +1;
     $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
     $scope.Zerros="";
     for(i=0; i<4-$scope.FinalNumberLength; i++ ){

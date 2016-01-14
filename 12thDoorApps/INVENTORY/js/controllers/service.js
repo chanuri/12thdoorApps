@@ -45,7 +45,7 @@ rasm.service('dialogsvc', function($mdDialog) {
     $scope.productNames = [];
 
     function loadAll() {
-      var client = $objectstore.getClient("12thproduct");
+      var client = $objectstore.getClient("product12thdoor");
       client.onGetMany(function(data) {
         if (data) {
           for (i = 0, len = data.length; i < len; ++i) {
@@ -132,7 +132,7 @@ rasm.service('dialogsvc', function($mdDialog) {
     $scope.productNames = [];
 
     function loadAll() {
-      var client = $objectstore.getClient("12thproduct");
+      var client = $objectstore.getClient("product12thdoor");
       client.onGetMany(function(data) {
         if (data) {
           for (i = 0, len = data.length; i < len; ++i) {

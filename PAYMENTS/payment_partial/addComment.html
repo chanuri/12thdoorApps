@@ -1,0 +1,28 @@
+<md-dialog style="max-width:960px;">
+   <md-toolbar>
+      <div class="md-toolbar-tools">
+         <h2>Add Comment</h2>
+         <span flex></span>
+         <md-button href class="md-icon-button" ng-click="cancel()">
+            <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+         </md-button>
+      </div>
+   </md-toolbar>
+   <md-dialog-content style="width:850px" >
+      <div layout layout-sm="column" layout-margin>
+         <div flex="5">
+            <img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:22px;border-radius:20px"/>
+         </div>
+         <div flex="20" style="margin-top:35px;">
+            <label style="font-weight:700">Comment</label>
+         </div>
+         <md-input-container flex>
+            <label>Comment</label>
+            <textarea ng-model="payment.comment" columns="1" md-maxlength="150"></textarea>
+         </md-input-container>
+      </div>
+   </md-dialog-content>
+   <div class="md-actions" layout="row">
+      <md-button href ng-click="AddImage()" class="md-primary">Add</md-button>
+   </div>
+</md-dialog>

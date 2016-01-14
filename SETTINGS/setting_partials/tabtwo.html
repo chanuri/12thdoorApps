@@ -1,0 +1,40 @@
+<!--START OF COLLAPSE CARDS-->
+<div  class="collapse-card" ng-repeat="accordian in accordians" ng-class="{'active': toggles[$index]}">
+	<!--START OF COLLAPSE CARD HEADING| filter:ctrl.actionSearchText||undefined-->
+	<div class="collapse-card__heading" layout="row" layout-align="start start" >
+		<!--END OF CARD CONTROLS SECTION-->
+		<!--START OF CARD OPEN SECTION-->
+		<div class="collapse-card_header_content_info" layout="row" layout-sm="column" layout-align="start center" layout-align-sm="center center" flex="90" ng-click="toggleOne($index);">
+			<div flex="10"><div style="height:36px;width:36px;background: url(img/sprite.png) {{accordian.spritePosition}} 0;list-style: none;" /></div>
+			<div flex="85">
+				<h4 class="collapse-card__title" style="margin-top:8px;">
+					<span>{{accordian.title}}</span>
+				</h4>
+			</div>
+			<div flex="5"></div>
+		</div>
+	</div>
+	<!--END OF COLLAPSE CARD HEADING-->
+	<!--START OF CARD BODY-->
+	<div class="collapse-card__body">
+		<div ng-include="accordian.url"></div>
+	</div>
+
+	<!--END OF CARD BODY-->
+</div>
+<!--END OF COLLAPSE CARDS-->
+</div>
+
+<div class="lock-size" layout="row">
+	<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+	ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+	<md-fab-trigger>
+	<md-button aria-label="menu" class="md-fab " style="background-color:#db4437;" ng-click="submit()">
+	<md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+</md-button>
+</md-fab-trigger>
+<md-fab-actions>
+</md-fab-actions>
+</md-fab-speed-dial>
+</div>
+

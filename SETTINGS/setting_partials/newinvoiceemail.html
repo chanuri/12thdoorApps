@@ -1,0 +1,63 @@
+<md-dialog aria-label="Mango (Fruit)" style="width:570px;">
+<div class="card-container" style="padding:20px; overflow-y:auto; overflow-x:hidden;">
+	<form style="width:100%;" ng-submit="submit()">
+		<md-content flex>
+		<!-- <div layout layout-sm="column" layout-margin>
+			<div flex="5">
+				<img src="img/material alperbert/avatar_tile_e_28.png" style="margin-top:22px;border-radius:20px"/>
+			</div>
+			<div flex="22" style="margin-top:35px;"> 
+				<label style="font-weight:700">Email to Customer</label>
+			</div>
+		</div> -->
+		<div layout layout-sm="column" layout-margin>
+			<div flex="10"><p>To</p></div>
+			<div flex>
+				<md-chips ng-model="selectedCustomers" md-autocomplete-snap md-require-match="true">
+				<md-autocomplete
+				md-selected-item="selectedItem"
+				md-search-text="searchText"
+				md-items="item in querySearch(searchText)"
+				md-item-text="item.name"
+				placeholder="Customer Name">
+				<span md-highlight-text="searchText">{{item.name}}</span>
+			</md-autocomplete>
+			<md-chip-template>
+			<span>
+				<strong>{{$chip.name}}</strong>
+			</span>
+		</md-chip-template>
+	</md-chips>
+</div>
+</div>
+<md-divider></md-divider>
+<div layout layout-sm="column" layout-margin>
+	<div flex="10"><p>Subject</p></div>
+	<div flex style="margin-top:20px;">
+		<md-input-container flex md-no-float>
+		<input type="text" ng-model="subject" placeholder="" value="Invoice No. {{no}} | {{CompanyName}}" required>
+	</md-input-container>
+</div>
+</div>
+<textarea rows="25" cols="80" style="width: 524px; height: 200px; border: 1px solid #E1E1E1;" class="textarea">
+	Dear Customer, 
+
+	Attached invoice No.#no#. To pay online or download click on the below link :#accounturl#  
+
+	Thank You for your business!  
+
+	#companyName#
+</textarea>
+</md-content>
+</form>
+</div>
+<div class="md-actions" layout="row">
+	<span flex></span>
+	<md-button ng-click="cancel()" style="margin-right:20px;" >
+	Cancel
+</md-button>
+<md-button ng-click="submit()" >
+Send
+</md-button>
+</div>
+</md-dialog>

@@ -1,0 +1,117 @@
+<form id="form" name="editForm">
+	<md-content>
+	<div layout layout-sm="column" layout-margin>
+		<div flex="5" hide-sm>	
+		</div>
+		<div flex="20" hide-sm>
+		</div>
+		<md-input-container flex="30">
+		<label>Default Billing Method </label>
+		<md-select ng-model="$root.Settings12thdoor.preference.project.defaultbillingmethod">
+		<md-option>Hourly Staff Rate</md-option>
+		<md-option>Hourly Task Rate</md-option>
+		<md-option>Hourly Project Rate</md-option>
+		<md-option>Hourly Project Amount</md-option>
+	</md-select>
+</md-input-container>
+</div>
+
+<div layout layout-sm="column" layout-margin>
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<md-switch flex="30" class="md-primary" ng-model="$root.Settings12thdoor.preference.project.edittimesheets" aria-label="Switch 1">
+	Edit Time Sheets 
+</md-switch>
+</div>
+<div layout layout-sm="column" layout-margin>
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<md-switch flex="30" class="md-primary" ng-model="$root.Settings12thdoor.preference.project.deletetimesheets" aria-label="Switch 1">
+	Delete Time Sheets 
+</md-switch>
+</div>
+
+<div layout layout-sm="column" layout-margin style="margin-top:20px;">
+
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<div layout="column" layout-align="center start" flex style="margin-top: -10px; margin-bottom:21px;">
+		<ul as-sortable="sortableOptions" style="width:60%;margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
+			<li ng-repeat="item in $root.Settings12thdoor.preference.project.task" as-sortable-item>
+				<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
+				<md-card-content>
+
+				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.task}}
+							<md-tooltip md-direction="right">Task</md-tooltip>
+						</span>
+					</div>
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.rate}}
+							<md-tooltip md-direction="right">Hourly Rate</md-tooltip>
+						</span>
+					</div>
+					<div flex="5">
+						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+					</md-button>
+					<md-menu-content width="4">
+					<md-menu-item>
+					<md-button ng-click="edittaskProjectrow(item , $event)">
+					<p>Edit</p>
+					<md-icon md-menu-align-target ></md-icon>
+				</md-button>
+			</md-menu-item>
+			<md-menu-item>
+			<md-button ng-click="deletetaskProject(item, $index)">
+			<p>Delete</p>
+			<md-icon md-menu-align-target ></md-icon>
+		</md-button>
+	</md-menu-item>
+	<md-menu-item>
+	<md-button ng-click="jhg(item, $index)">
+	<p>Inactivate</p>
+	<md-icon md-menu-align-target ></md-icon>
+</md-button>
+</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+</ul>
+<div flex layout="row" layout-align="start end" style=" margin-top:-33px;" >
+	<md-button  class="md-raised" ng-click="addtaskProject($event)">
+	Add Tasks
+</md-button>
+</div>
+</div>
+</div>
+
+<div layout layout-sm="column" layout-margin style="margin-top:-35px;">
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<md-input-container flex="30">
+	<label>Billing Customer Default</label>
+	<md-select ng-model="$root.Settings12thdoor.preference.project.billingcustomerdefault">
+	<md-option>Individual Items</md-option>
+	<md-option>Merge all as one line item</md-option>
+</md-select>
+</md-input-container>
+</div>
+
+
+</md-content>
+</form>

@@ -1,0 +1,229 @@
+<form id="form" name="editForm">
+	<md-content>
+	<div layout layout-sm="column" layout-margin>
+		<div flex="5" hide-sm>	
+		</div>
+		<div flex="20" hide-sm>
+		</div>
+		<div layout="column" layout-align="center start" flex style="margin-bottom: 17px;">
+			<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
+				<li ng-repeat="item in $root.Settings12thdoor.preference.productpref.units" as-sortable-item>
+					<md-card ng-class="item.activate ? '' : 'inactivate'" style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
+					<md-card-content>
+					<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+						<div flex>
+							<span style="color:#808080;font-size:15px;">{{item.unitsOfMeasurement}}
+								<md-tooltip md-direction="right">Unit Of Measure</md-tooltip>
+							</span>
+						</div>
+						<div flex="5">
+							<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+							<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+							<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+						</md-button>
+						<md-menu-content width="4">
+						<md-menu-item>
+						<md-button ng-click="editunitsrow(item , $event)">
+						<p>Edit</p>
+						<md-icon md-menu-align-target ></md-icon>
+					</md-button>
+				</md-menu-item>
+				<md-menu-item>
+				<md-button ng-click="deleteUnits(item, $index)">
+				<p>Delete</p>
+				<md-icon md-menu-align-target ></md-icon>
+			</md-button>
+		</md-menu-item>
+		<md-menu-item>
+		<md-button ng-click="inactivateUnitsOfMeasure(item)">
+		<p>{{inactivateUnitsOfMeasurelabel}}</p>
+		<md-icon md-menu-align-target ></md-icon>
+	</md-button>
+</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+</ul>
+<div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
+	<md-button style="width: 212px;" class="md-raised" ng-click="addUnits($event)">
+	Add Units Of Measure
+</md-button>
+</div>
+</div>
+</div>
+
+<md-divider></md-divider>
+<div layout layout-sm="column" layout-margin>
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<div layout="column" layout-align="center start" flex style="margin-bottom: 17px;">
+		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
+			<li ng-repeat="item in $root.Settings12thdoor.preference.productpref.Productbrands" as-sortable-item>
+				<md-card ng-class="item.activate ? '' : 'inactivate'" style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
+				<md-card-content>
+				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.productbrand}}
+							<md-tooltip md-direction="right">Product Brand</md-tooltip>
+						</span>
+					</div>
+					<div flex="5">
+						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+					</md-button>
+					<md-menu-content width="4">
+					<md-menu-item>
+					<md-button ng-click="editproductBrandrow(item , $event)">
+					<p>Edit</p>
+					<md-icon md-menu-align-target ></md-icon>
+				</md-button>
+			</md-menu-item>
+			<md-menu-item>
+			<md-button ng-click="deleteproductBrand(item, $index)">
+			<p>Delete</p>
+			<md-icon md-menu-align-target ></md-icon>
+		</md-button>
+	</md-menu-item>
+	<md-menu-item>
+	<md-button ng-click="inactivateproductbrand(item)">
+	<p>{{inactivateproductbrandlabel}}</p>
+	<md-icon md-menu-align-target ></md-icon>
+</md-button>
+</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+</ul>
+<div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
+	<md-button style="width: 212px;" class="md-raised" ng-click="addProductbrand($event)">
+	Add Product Brands
+</md-button>
+</div>
+</div>
+</div>
+<md-divider></md-divider>
+
+<div layout layout-sm="column" layout-margin>
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+
+	<div layout="column" layout-align="center start" flex style="margin-bottom: 17px;">
+		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px; " ng-model="asdc">
+			<li ng-repeat="item in $root.Settings12thdoor.preference.productpref.Productcategories" as-sortable-item>
+				<md-card ng-class="item.activate ? '' : 'inactivate'" style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
+				<md-card-content>
+				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.productcategory}}
+							<md-tooltip md-direction="right">Product Category</md-tooltip>
+						</span>
+					</div>
+					<div flex="5">
+						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+					</md-button>
+					<md-menu-content width="4">
+					<md-menu-item>
+					<md-button ng-click="editProductcaterow(item , $event)">
+					<p>Edit</p>
+					<md-icon md-menu-align-target ></md-icon>
+				</md-button>
+			</md-menu-item>
+			<md-menu-item>
+			<md-button ng-click="deleteProductcaterow(item, $index)">
+			<p>Delete</p>
+			<md-icon md-menu-align-target ></md-icon>
+		</md-button>
+	</md-menu-item>
+	<md-menu-item>
+	<md-button ng-click="inactivateproductcate(item, $index)">
+	<p>{{inactivateproductcatelabel}}</p>
+	<md-icon md-menu-align-target ></md-icon>
+</md-button>
+</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+</ul>
+<div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
+	<md-button  style="width: 212px;" class="md-raised" ng-click="addProductcategory($event)">
+	Add Product Categories
+</md-button>
+</div>
+</div>
+</div>
+<md-divider></md-divider>
+<div layout layout-sm="column" layout-margin style="margin-top:30px;">
+	<div flex="5" hide-sm>	
+	</div>
+	<div flex="20" hide-sm>
+	</div>
+	<div layout="column" layout-align="center start" flex style="margin-top: -17px; margin-bottom: 17px;">
+		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
+			<li ng-repeat="item in $root.Settings12thdoor.preference.productpref.CusFiel" as-sortable-item>
+				<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
+				<md-card-content>
+				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.labelshown}}
+							<md-tooltip md-direction="right">Custom Fields Label</md-tooltip>
+						</span>
+					</div>
+					<div flex>
+						<span style="color:#808080;font-size:15px;">{{item.type}}
+							<md-tooltip md-direction="right">Fields Type</md-tooltip>
+						</span>
+					</div>
+					<div flex="5">
+						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
+						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+					</md-button>
+					<md-menu-content width="4">
+					<md-menu-item>
+					<md-button ng-click="editcusFieldsproductrow(item , $event)">
+					<p>Edit</p>
+					<md-icon md-menu-align-target ></md-icon>
+				</md-button>
+			</md-menu-item>
+			<md-menu-item>
+			<md-button ng-click="deletcusfieldsproduct(item, $index)">
+			<p>Delete</p>
+			<md-icon md-menu-align-target ></md-icon>
+		</md-button>
+	</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</div>
+</md-card-content>
+</md-card>
+</li>
+</ul>
+<div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
+	<md-button style="width: 212px;" class="md-raised" ng-click="addcusfieldsProduct($event)">
+	Add Custom Fields
+</md-button>
+</div>
+</div>
+</div>
+</md-content>
+</form>

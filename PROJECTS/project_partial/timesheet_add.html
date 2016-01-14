@@ -1,0 +1,246 @@
+ 
+<!--CARD CONTAINER START-->
+<md-background-banner color="#235b91" height="300px"> </md-background-banner>
+
+<div ng-controller="AppCtrlAddTimesheet as ctrl">
+    
+    <!--WHITEFRAME START-->
+    
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;width:960px;margin:0 auto">
+        
+<!--
+        <div id="view" class="fab_button_animation" style="background:#3498db;"></div>
+        
+        <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+            ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+            
+            <md-fab-trigger>
+                
+                
+                <div style="padding:0px;">
+                    
+                    <md-button aria-label="menu" class="md-fab md-warn" style="background-color:red;">
+                        
+                        <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+                        
+                    </md-button>
+                    
+                </div>
+                
+            </md-fab-trigger>
+            
+            <md-fab-actions>
+                
+                <div style="padding:5px;">
+                    
+                    <md-button aria-label="twitter" class="md-fab md-raised md-mini" ng-click="save()" style="background-color:#3498db;">
+                        
+                        <md-icon md-svg-src="img/ic_save_24px.svg" ></md-icon>
+                        <md-tooltip md-direction="left">Save</md-tooltip>
+                        
+                    </md-button>
+                    
+                </div>
+                
+                <div style="padding:5px;">
+                    
+                    <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="Customerview()" style="background-color:#9b59b6;">
+                        
+                        <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>
+                        <md-tooltip md-direction="left">View Project</md-tooltip>
+                        
+                    </md-button>
+                    
+                </div>
+                
+            </md-fab-actions>
+            
+        </md-fab-speed-dial>
+-->
+        
+        <!--FORM START-->
+        
+        <form name="editForm" ng-submit="submit();" style="width:100%">
+            
+            <md-content flex>
+                
+                <div layout layout-sm="column" layout-margin>
+                    
+                    <div flex="5">
+                        
+                        <img src="img/material alperbert/avatar_tile_l_28.png" style="margin-top:22px;border-radius:20px"/>
+                        
+                    </div>
+                    
+                    <div flex="20" style="margin-top:35px;">
+                        
+                        <label style="font-weight:700">Log Details</label>
+                        
+                    </div>
+                     <div flex>
+                        
+                        <md-date-picker model="time.date" label="Date" dialog-md-theme="datePickerTheme"/>
+                        
+                    </div>
+                    <div flex>
+                    <md-input-container>
+                        
+                        <label>Hours</label>
+                        <input ng-model="time.hours" required>
+                        
+                    </md-input-container>
+                    </div>  
+                    
+<!--
+                    <md-autocomplete flex="" required="" md-input-name="autocompleteField" md-no-cache="$root.noCache" md-selected-item="$root.selectedItem1" md-search-text="ctrl.searchText" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.display" md-floating-label="Customer" md-autofocus="true" md-selected-item-change="selectedItemChange($root.selectedItem1)">
+                        <md-item-template>
+                            <span  md-highlight-text="ctrl.searchText"  md-highlight-flags="^i">{{item.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+-->
+                        
+                   
+                </div>
+                    
+                <div layout layout-sm="column" layout-margin>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                    
+                    <div flex="5" class="blankspace">
+                    </div>
+                    
+                    <div flex="20" class="blankspace">
+                    </div>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                    
+                     <md-input-container flex >
+                         
+                        <label>Project</label>
+                        <md-select  ng-model="time.project" flex>
+                            <md-optgroup label="Project">
+                            <md-option value="project-1">Project-1</md-option>
+                            <md-option value="project-2">Project-2</md-option>
+                            <md-option value="project-3">Project-3</md-option>
+                            <md-option value="project-4">Project-4</md-option>
+                        </md-select>
+                    
+                     </md-input-container>
+                         
+                     <md-input-container flex >
+                         
+                        <label>Task</label>
+                        <md-select  ng-model="time.task" flex>
+                            <md-optgroup label="Task">
+                            <md-option value="task-1">Task-1</md-option>
+                            <md-option value="task-2">Task-2</md-option>
+                            <md-option value="task-3">Task-3</md-option>
+                            <md-option value="task-4">Task-4</md-option>
+                        </md-select>
+                    
+                     </md-input-container>
+                
+                </div>
+                    
+                <div layout layout-sm="column" layout-margin>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                    
+                    <div flex="5" class="blankspace">
+                    </div>
+                    
+                    <div flex="20" class="blankspace">
+                    </div>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                     <md-input-container flex >
+                         
+                        <label>Status</label>
+                        <md-select  ng-model="time.status" flex>
+                            <md-optgroup label="Status">
+                            <md-option value="status-1">Status-1</md-option>
+                            <md-option value="status-2">Status-2</md-option>
+                        </md-select>
+                    
+                     </md-input-container>
+              
+                    <md-input-container flex >
+                         
+                        <label>User</label>
+                        <md-select  ng-model="time.user" flex>
+                            <md-optgroup label="Status">
+                            <md-option value="user-1">User-1</md-option>
+                            <md-option value="user-2">User-2</md-option>
+                        </md-select>
+                    
+                     </md-input-container>
+                </div>
+                    
+                <md-divider></md-divider>
+                    
+                <div layout layout-sm="column" layout-margin>
+                    
+                    <div flex="5">
+                        
+                        <img src="img/material alperbert/avatar_tile_o_28.png" style="margin-top:22px;border-radius:20px"/>
+                        
+                    </div>
+                    
+                    <div flex="20" style="margin-top:35px;">
+                        
+                        <label style="font-weight:700">Optional Details</label>
+                        
+                    </div>
+                    
+                    <md-input-container flex>
+                        
+                        <label>Notes</label>
+                        <textarea ng-model="time.notes" ></textarea>
+                        
+                    </md-input-container>
+                    
+                </div>
+                         
+                <div layout layout-sm="column" layout-margin>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                    
+                    <div flex="5" class="blankspace">
+                    </div>
+                    
+                    <div flex="20" class="blankspace">
+                    </div>
+                    
+                    <!--KEEP BLANK SPACE - ask why-->
+                    <div style="margin-left:55%;">
+                        <md-button href class="md-raised md-primary" style="height:5px; " ng-click="save()">Save</md-button>
+                        
+                    </div>
+                      <div style="margin-left:2%;">
+                        <md-button href class="md-raised md-primary" style="height:5px; "ng-click="Customerview()">Cancel</md-button>
+                        
+                    </div>
+                   
+                </div>
+                    
+                <div class="md-actions" layout="row" layout-align="center center" style="display:none">
+                    
+                    <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
+                        
+                    </md-button>
+                    
+                </div>
+                    
+            </md-content>
+                    
+        </form>
+                
+    </md-whiteframe>
+            
+    <br><br>
+            
+    <!--WHITEFRAME END-->
+            
+</div>
+        
+<!--CARD CONTAINER END-->

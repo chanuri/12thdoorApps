@@ -1,0 +1,385 @@
+<!--Background banner with parallax effect-->
+<style>
+   .md-datepicker-input-container
+   {
+   width:80%
+   }
+</style>
+<!--CARD CONTAINER START-->
+<div class="card-container" style="padding:20px;" ng-controller="AppCtrlAdd as ctrl" ng-init="loadAllInvoiceDetails()">
+   <!--WHITEFRAME START-->
+   <md-whiteframe class="md-whiteframe-2dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout layout-align="center center" style="margin:0 auto;max-width:960px"> 
+      <!--FORM START-->
+
+      <md-content layout-padding style="width:100%">
+
+      <form name="editForm" ng-submit="submit()">
+            <div layout-gt-sm="row">
+               <section-title title="Payment Details"></section-title>
+                        
+               <md-autocomplete flex="" required="" md-input-name="autocompleteField" md-no-cache="$root.noCache"
+                  md-selected-item="$root.selectedItem1" md-search-text="ctrl.searchText" 
+                  md-items="item in ctrl.querySearch(ctrl.searchText, $event)" md-item-text="item.display" 
+                  md-floating-label="Customer" md-autofocus="true"
+                  md-selected-item-change="selectedItemChange(item.display)" 
+                  ng-keyup="keyPressAutoComplete($event)" >
+                  <md-item-template>
+                            <span class="item-title">
+                                <span>{{item.display}}</span>
+                            </span>
+                            <span class="item-metadata">
+                                <span class="item-metastat">
+                                    <strong>{{item.Email}}</strong>
+                                </span>
+                                <md-divider></md-divider>
+                            </span>
+                        </md-item-template>
+               </md-autocomplete>
+            </div>
+            <div layout-gt-sm="row">
+               <!--KEEP BLANK SPACE - ask why-->
+               <section-title></section-title>
+               <!--KEEP BLANK SPACE - ask why-->
+               <md-input-container class="md-block" flex-gt-sm >
+                  <label>Payment Number</label>
+                  <input ng-model="payment.paymentref" required>
+               </md-input-container class="md-block" flex-gt-sm>
+               <div flex style="margin-top:19px;">
+                  <md-datepicker ng-model="payment.date" date-disabled="disabled(payment.date, mode)" md-placeholder="Enter date"
+                     md-max-date="maxDate"  ></md-datepicker>
+               </div>
+            </div>
+            <div layout-gt-sm="row">
+               <!--KEEP BLANK SPACE - ask why-->
+               <section-title></section-title>
+               <!--KEEP BLANK SPACE - ask why-->
+               <md-input-container class="md-block" flex-gt-sm >
+                  <label>Payment method</label>
+                  <md-select  ng-model="payment.paymentMethod" flex>
+                     <md-optgroup label="Payment Method">
+                     <md-option ng-repeat="item in PayArr" value="{{item}}">{{item}}</md-option>
+                  </md-select>
+               </md-input-container>
+               <md-input-container class="md-block" flex-gt-sm >
+                  <label>Amount Received</label>
+                  <input ng-model="payment.amountReceived" required ng-change="netAmount()">
+               </md-input-container>
+            </div>
+            <div layout-gt-sm="row">
+               <!--KEEP BLANK SPACE - ask why-->
+               <section-title></section-title>
+               <!--KEEP BLANK SPACE - ask why-->
+               <md-input-container class="md-block" flex-gt-sm >
+                  <label>Bank Charges</label>
+                  <input ng-model="payment.bankCharges">
+               </md-input-container>
+               <md-input-container class="md-block" flex-gt-sm >
+                  <label>comment</label>
+                  <input ng-model="payment.comments">
+               </md-input-container>
+            </div>
+            <div layout-gt-sm="row" style="overflow:hidden;">
+               <section-title></section-title>
+               <div layout="row" layout-sm="column" layout-align="start start" flex>                  
+                  <div flex layout="row" layout-sm="row" flex-sm="100" style="width: 100%;" >
+                     <div flex>
+                        <label><b>Unapplied Advances :</b></label>                        
+                     </div>
+                     <div flex>
+                         <span><b>{{payment.uAmount | currency}}</b></span>
+                     </div>
+                  </div>
+                  <div flex layout="row" layout-sm="row" flex-sm="100" style="width: 100%;">
+                     <div flex>
+                        <label><b>Total Available :</b></label>                     
+                     </div>
+                     <div flex>                        
+                        <span><b>{{nAmount | currency}}</b></span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          <!--   <md-divider></md-divider>
+            <div layout-gt-sm="row">
+               <section-title title="Invoice Details"></section-title>
+               <div style="padding-left:40px;" flex>
+                  <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#FFFFFF; margin-top:32px;height:40px; border-bottom:1px #f1f1f1 solid;     margin-left: 5px;">
+                     <div layout="row" layout-sm="column" style="height:40px;width:101%;font-size:12px;">
+                        <div flex="25" style="max-width: 152px;padding-left: 2px; padding-left: 2px;" >
+                           <label><b>Date</b></label>
+                        </div>
+                        <div flex>
+                           <label><b>Invoice no</b></label>
+                        </div>
+                        <div flex >
+                           <label><b>Due date</b></label> 
+                        </div>
+                        <div flex>
+                           <label><b>Amount</b></label> 
+                        </div>
+                        <div flex >
+                           <lable><b>Balance</b></lable>
+                        </div>
+                        <div flex >
+                           <lable><b>Paid amount</b></lable>
+                        </div>
+                        <div flex >
+                           <lable></lable>
+                        </div>
+                     </div>
+                  </md-whiteframe>
+               </div>
+            </div>
+            <div layout-gt-sm="row" style="margin-top:-20px;"ng-repeat="invo in outstandingInvoices track by $index">
+               <section-title></section-title>
+               <div style="padding-left:40px;" flex>
+                  <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#ffffff; margin-top:12px;height:40px;">
+                     <div layout="row" layout-sm="column" flex style="height:20px;margin-top:10px;width:101%;font-size:12px;">
+                        <div layout="row" flex="20" style="margin-top:-10px;">
+                           <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="checkbox[$index]" class="md-primary" ng-change="checkItem($index,invo)"></md-checkbox>
+                           <input type="checkbox" ng-model="checkbox[$index]"  ng-change="checkItem($index,invo)"> 
+                           <span style="margin-top: 10px;"><label>{{invo.sdate|date}}</label></span> 
+                        </div>
+                        <div flex style="margin-left:20px;">
+                           <label>{{invo.invono}}</label>
+                        </div>
+                        <div  flex>
+                           <label >{{invo.mduedate|date}}</label> 
+                        </div>
+                        <div flex>
+                           <lable>{{invo.famount|currency}}</lable>
+                        </div>
+                        <div flex>
+                           <div >
+                              <label >{{invo.instalment|currency}}</label>
+                           </div>
+                        </div>
+                        <div style="margin-top:-1.5%;"flex >
+                           <md-input-container flex md-no-float>
+                              <input placeholder="Paid Amount" ng-disabled="!invo.checked" ng-model="invo.amount" 
+                              ng-change="getPaidAmount(invo, '{{invo.amount}}', $event)">
+                           </md-input-container>
+                        </div>
+                        <div flex >
+                           <md-menu>
+                              <div style="margin-top: -18%; margin-right:0px;">
+                                 <md-button type="button"   aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                                    <md-icon  md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+                                 </md-button>
+                              </div>
+                              <md-menu-content>
+                                 <md-menu-item>
+                                    <md-button href ng-click="history(invo)">
+                                       <p>View History</p>
+                                       <md-icon md-menu-align-target></md-icon>
+                                    </md-button>
+                                 </md-menu-item>
+                              </md-menu-content>
+                           </md-menu>
+                        </div>
+                     </div>
+                  </md-whiteframe>
+               </div>
+            </div> -->
+
+            <md-divider></md-divider>
+               <div layout-gt-sm="row">
+                  <section-title title="invoice details"></section-title>
+                  
+                  <div layout="column" layout-align="center start" flex>
+                     <div layout="row" hide-sm layout-align="start center" flex style="width:100%">
+                        <md-whiteframe class="md-whiteframe" flex layout="row"> 
+                        <div flex="5" hide-sm></div>
+                           <div flex >
+                              <label style="font-size: 12px;"><b>Date</b></label>
+                           </div>
+                           <div flex>
+                              <label style="font-size: 12px;"><b>Invoice no</b></label>
+                           </div>
+                           <div flex >
+                              <label style="font-size: 12px;"><b>Due date</b></label> 
+                           </div>
+                           <div flex>
+                              <label style="font-size: 12px;"><b>Amount</b></label> 
+                           </div>
+                           <div flex >
+                              <lable style="font-size: 12px;"><b>Balance</b></lable>
+                           </div>
+                           <div flex >
+                              <lable style="font-size: 12px;"><b>Paid amount</b></lable>
+                           </div>
+                           <div flex >
+                              <lable style="font-size: 12px;"></lable>
+                           </div>
+                        </md-whiteframe>
+                     </div>                                 
+                  </div>
+               </div>
+
+
+               <div layout-gt-sm="row" ng-repeat="invo in outstandingInvoices track by $index">
+                  <section-title></section-title>
+                  <div layout="column" layout-align="center start" flex>
+                     <div layout="row" layout-align="start center" flex style="width:100%">
+                        <md-whiteframe class="md-whiteframe" flex layout="row" layout-sm="column"> 
+                           <div flex="5">
+                              <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="checkbox[$index]" class="md-primary" ng-change="checkItem($index,invo)" style="margin-top: -6px; margin-left: 0px;"></md-checkbox>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>date</b></label>
+                              </div>
+                              <div flex>
+                                <label style="font-size: 12px;">{{invo.sdate|date}}</label>
+                              </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Invoice no</b></label>
+                              </div>
+                              <div flex>
+                                 <label  style="font-size: 12px;">{{invo.invono}}</label>
+                              </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Due date</b></label>
+                              </div>
+                           <div  flex>
+                              <label  style="font-size: 12px;" >{{invo.mduedate|date}}</label> 
+                           </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25"hide-gt-sm >
+                                <label style="font-size: 12px;"><b>Amount</b></label>
+                              </div>
+                           <div flex>
+                              <lable  style="font-size: 12px;">{{invo.famount|currency}}</lable>
+                           </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Balance</b></label>
+                              </div>
+                              <div flex>
+                                 <label style="font-size: 12px;" >{{invo.instalment|currency}}</label>
+                              </div>
+                           </div> 
+
+                           <div flex hide-gt-sm style="height:10px">
+                              
+                           </div> 
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Paid Amount</b></label>
+                              </div>                                                     
+                         
+                              <div flex >
+                                 <md-input-container flex md-no-float>
+                                    <input placeholder="Paid Amount" ng-disabled="!invo.checked" ng-model="invo.amount" 
+                                    ng-change="getPaidAmount(invo, '{{invo.amount}}', $event)" style="height: 20px; font-size: 13px;    margin-top: -9px;">
+                                 </md-input-container>
+                              </div>
+                           </div> 
+                           <div layout="row" layout-align="start start" flex flex-sm="50" >
+                              <md-menu>
+                                 <div style="margin-top: -18%; margin-right:0px;">
+                                    <md-button type="button"   aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                                       <md-icon  md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
+                                    </md-button>
+                                 </div>
+                                 <md-menu-content>
+                                    <md-menu-item>
+                                       <md-button href ng-click="history(invo)">
+                                          <p>View History</p>
+                                          <md-icon md-menu-align-target></md-icon>
+                                       </md-button>
+                                    </md-menu-item>
+                                 </md-menu-content>
+                              </md-menu>
+                           </div>
+                        </md-whiteframe>
+                     </div>                                 
+                  </div>
+
+               </div>
+               <md-divider></md-divider>
+            <!---END OF TABLE------>
+
+            <div layout-gt-sm="row" style="overflow:hidden;">
+               <section-title></section-title>
+
+               <div layout="row" layout-sm="column" layout-align="start center" flex>                  
+                  <div flex layout="row" layout-sm="row" flex-sm="100" style="width: 100%;" >
+                    
+                  </div>
+                  <div flex layout="row" layout-sm="row" flex-sm="100" style="width: 100%;">
+                     <div flex>
+                        <label><b>Total Payments Applied :</b></label>
+                     </div>
+                     <div flex flex-gt-sm="40">
+                        <span ><b>{{payment.total|currency}}</b></span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+           <!--  <div flex  style="margin-left:425px; margin-top:2%">
+               <label><b>Total Payments Applied :</b></label>
+               <span style="margin-left:31%;"><b>{{payment.total|currency}}</b></span>
+            </div> -->
+            <md-divider></md-divider>
+            <div layout-gt-sm="row" layout-sm="row">
+               
+               <section-title title="Optional Details"></section-title>
+               <div style="margin-left:1%;margin-top:3%;">
+                  <md-button href class="md-raised md-primary" style="height:5px; " ng-click="upload()">Upload File</md-button>
+               </div>
+            </div>
+           
+            <div layout-gt-sm="row" ng-repeat="cust in payCustArr" ng-init="cust.value == cust.inputType">
+               <!--KEEP BLANK SPACE - ask why-->
+               <section-title ng-if="$index == '0'" title="Custom Fields"></section-title>
+               <section-title ng-if="$index != '0'" ></section-title>
+
+               <div  flex-gt-sm  style=" margin-top:35px;">
+                  <label><b>{{cust.labelshown}}</b></label>
+                </div>
+
+               <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'textBox'" class="md-block" flex-gt-sm >
+                  <label></label>
+                  <input ng-model="cust.inputType">
+               </md-input-container>
+
+                <md-input-container  ng-if="cust.type == 'selectBox'" class="md-block" flex-gt-sm >
+                  <label>select a field</label>
+                  <md-select  ng-model="cust.inputType" flex>
+                     <md-option ng-repeat="item in cust.fields" value="{{item}}">{{item}}</md-option>
+                  </md-select>
+               </md-input-container>
+
+               <div flex="40"></div>
+            </div>
+            <md-divider></md-divider>
+            <div layout-gt-sm="row">
+               <!--KEEP BLANK SPACE - ask why-->
+               <section-title></section-title>
+               <!--KEEP BLANK SPACE - ask why-->
+               <div style="margin-left:55%; margin-top: 1%;">
+                  <md-button class="md-raised md-warn" href class="md-raised md-primary" style="height:5px; "ng-click="cancelFunc()">Cancel</md-button>
+               </div>
+               <div style="margin-left:2%;margin-top: 1%;">
+                  <md-button href class="md-raised md-primary" style="height:5px; " ng-click="save()">Save</md-button>
+               </div>
+            </div>
+            <div class="md-actions" layout="row" layout-align="center center" style="display:none">
+               <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
+               </md-button>
+            </div>
+         </form>
+      </md-content>
+   </md-whiteframe>
+   <br><br>
+   <!--WHITEFRAME END-->
+</div>
+<!--CARD CONTAINER END-->

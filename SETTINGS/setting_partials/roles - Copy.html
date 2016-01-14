@@ -1,0 +1,298 @@
+<md-dialog aria-label="Mango (Fruit)" style="width:800px;">
+<div class="card-container" style="padding:20px; overflow-y:auto; overflow-x:hidden;">
+	<form style="width:100%;">
+		<md-content flex>
+		<div layout layout-sm="column" layout-margin>
+			<div flex="5">
+				<img src="img/material alperbert/avatar_tile_a_28.png" style="margin-top:22px;border-radius:20px"/>
+			</div>
+			<div flex="20" style="margin-top:35px;">
+				<label style="font-weight:700">Add/Edit Role</label>
+			</div>
+			<md-input-container flex="40">
+			<label>Role Name</label>
+			<input ng-model="appPermission.roleName">
+		</md-input-container>
+	</div>
+	<md-divider></md-divider>
+	<div layout layout-margin>
+		<div flex="20"><span>Modules</span></div>
+		<div flex layout="row" layout-align="center center"><span>Add</span></div>
+		<div flex layout="row" layout-align="center center"><span>View</span></div>
+		<div flex layout="row" layout-align="center center"><span>Edit</span></div>
+		<div flex layout="row" layout-align="center center"><span>Cancel</span></div>
+		<div flex layout="row" layout-align="center center"><span>Delete</span></div>
+	</div>
+
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Invoices</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="appPermission.add" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="view" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="edit" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="cancel" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="delete" class="md-primary">
+		</md-checkbox></div>
+	</div>
+
+<!-- 	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Recurring</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="recu2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="recu3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="recu4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="recu5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="recu6" class="md-primary">
+		</md-checkbox></div>
+	</div> -->
+	<!-- <div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Estimates</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="esti2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="esti3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="esti4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="esti5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="esti6" class="md-primary">
+		</md-checkbox></div>
+	</div> -->
+	<!-- <div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Credit Notes</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="credit2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="credit3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="credit4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="credit5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="credit6" class="md-primary">
+		</md-checkbox></div>
+	</div> -->
+	<!-- <div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Payments</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="paym2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="paym3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="paym4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="paym5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="paym6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Expenses</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="expe2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="expe3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="expe4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="expe5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="expe6" class="md-primary">
+		</md-checkbox></div>
+	</div> -->
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Products</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="product.pAdd" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="product.pView" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="product.pEdit" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="product.pCancel" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="product.pDelete" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<!-- <div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Inventory Receipts</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenR2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenR3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenR4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenR5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenR6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Inventory Issues</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenI2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenI3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenI4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenI5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="invenI6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Project</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="proj2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="proj3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="proj4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="proj5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="proj6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>TimeSheets</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="timesh2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="timesh3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="timesh4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="timesh5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="timesh6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Contacts Customers</label></div>
+		<div flex layout="row" layout-align="start center"><md-checkbox md-no-ink ng-model="contcus1" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contcus2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contcus3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contcus4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contcus5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contcus6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Contacts Suppliers</label></div>
+		<div flex layout="row" layout-align="start center"><md-checkbox md-no-ink ng-model="contsup1" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contsup2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contsup3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contsup4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contsup5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="contsup6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>360 View</label></div>
+		<div flex layout="row" layout-align="start center"><md-checkbox md-no-ink ng-model="v1" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="v2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="v3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="v4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="v5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="v6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Reports</label></div>
+		<div flex layout="row" layout-align="start center"><md-checkbox md-no-ink ng-model="repo1" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="repo2" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="repo3" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="repo4" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="repo5" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="repo6" class="md-primary">
+		</md-checkbox></div>
+	</div>
+	<md-divider></md-divider> -->
+	<div layout layout-margin>
+		<div flex="20"><span>Other Functions</span></div>
+		<div flex layout="row" layout-align="center center"><span>Allow</span></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+	</div>
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Dashboard</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="i" class="md-primary">
+		</md-checkbox></div>
+		<!-- <div flex hide-sm> -->
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+	</div>
+	<!-- <div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Induvidual Reports</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="j" class="md-primary">
+		</md-checkbox></div>
+		<div flex hide-sm>
+		</div>
+	</div> -->
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Settings</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="k" class="md-primary">
+		</md-checkbox></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+		<div flex></div>
+	</div>
+	<!-- <div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Log Time</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="l" class="md-primary">
+		</md-checkbox></div>
+		<div flex hide-sm>
+		</div>
+	</div> -->
+	<div layout layout-margin>
+		<div flex="20" layout="row" layout-align="start center"><label>Customize</label></div>
+		<div flex layout="row" layout-align="center center"><md-checkbox md-no-ink ng-model="l" class="md-primary">
+		</md-checkbox></div>
+		<div flex layout="row" layout-align="center center"></div>
+		<div flex layout="row" layout-align="center center"></div>
+		<div flex layout="row" layout-align="center center"></div>
+		<div flex layout="row" layout-align="center center"></div>
+		<div flex layout="row" layout-align="center center"></div>
+	</div>
+</md-content>
+</form>
+</div>
+<div class="md-actions" layout="row">
+	<span flex></span>
+	<md-button ng-click="cancel()" style="margin-right:20px;" >
+	Cancel
+</md-button>
+<md-button ng-click="submit()" >
+Add
+</md-button>
+</div>
+</md-dialog>

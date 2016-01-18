@@ -78,6 +78,17 @@ ng-controller="viewCtrl as ctrl">
                                     <font color="white">Draft</font>
                                 </b>
                             </span>
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="tdi.status == 'Pending'">
+                                <b style="width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Pending</font>
+                                </b>
+                            </span>
+                            <span style="padding-right: 15px; padding-left: 15px;"> </span>
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="tdi.status == 'Pending'">
+                                <b style="width:70px; font-color:#FFFFFF;">
+                                    <font color="white">{{tdi.RecurringProfileNo}}</font>
+                                </b>
+                            </span>
                         </div>
                     </div>
                     <div>

@@ -1,0 +1,54 @@
+ 
+<!--CARD CONTAINER START-->
+<md-background-banner color="#235b91" height="300px"> </md-background-banner>
+
+<div ng-controller="AppCtrlAdd as ctrl">
+    
+    <!--WHITEFRAME START-->
+    
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;width:960px;margin:0 auto">        
+        <!--FORM START-->
+        
+        <form name="editForm" ng-submit="submit();" style="width:100%">
+            
+            <md-content flex>           
+
+            <button ng-click="catche()" href type="button">xsdsd </button>
+
+            {{eventSources}}                
+                 
+
+                <!-- <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div> -->
+            <calendar-md flex layout layout-fill
+              calendar-direction="direction"
+              on-prev-month="prevMonth"
+              on-next-month="nextMonth"
+              on-day-click="dayClick"
+              title-format="'MMMM y'"
+              ng-model='selectedDate'
+              week-starts-on="firstDayOfWeek"
+              data-start-month
+              data-start-year
+              tooltips="tooltips"
+              day-format="dayFormat"
+              day-label-format="'EEE'"
+              day-label-tooltip-format="'EEEE'"
+              day-tooltip-format="'fullDate'"
+              day-content="setDayContent"
+              disable-future-selection="false">
+            </calendar-md>
+                
+                    
+            </md-content>
+                    
+        </form>
+                
+    </md-whiteframe>
+            
+    <br><br>
+            
+    <!--WHITEFRAME END-->
+            
+</div>
+        
+<!--CARD CONTAINER END-->

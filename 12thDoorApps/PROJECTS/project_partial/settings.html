@@ -150,8 +150,6 @@
 		<!--START OF SECOND CARD CONTAINER-->
 </div>		
 <div  class="lock-size" layout="row">
-    <div id="add" class="fab_button_animation" style="background:#2980b9;"></div>
-    <div id="viewDrafts" class="fab_button_animation" style="background:#f1c40f;"></div>
 
     <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
             ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;"ng-if="showaddProject == true">
@@ -215,6 +213,13 @@
          <div style="padding:5px;">
      <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="addweeklyTimesheet()" style="background-color:blue;">
       <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon><md-tooltip md-direction="left">New Timesheet(Weekly)</md-tooltip>
+     </md-button>
+    
+    </div>
+
+         <div style="padding:5px;">
+     <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="addTimeTrack()" style="background-color:blue;">
+      <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon><md-tooltip md-direction="left">time log</md-tooltip>
      </md-button>
     
     </div>

@@ -69,7 +69,7 @@
                                                 </md-input-container>
                                     <md-input-container flex style="margin-top:-15px; padding-left:5px;" >
                                             <label>Percentage</label>
-                                            <input ng-model="cc.Percentage" style="margin-top:5px;" ng-keyup="DueAmount(cn,$index)">
+                                            <input ng-model="cc.Percentage" style="margin-top:5px;" ng-change="DueAmount(cn,$index)">
                                             </md-input-container>
                                             <md-input-container flex style="margin-top:-15px; padding-left:10px;">
                                                 <label>Amount</label>

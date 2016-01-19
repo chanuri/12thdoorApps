@@ -720,19 +720,16 @@ var client = $objectstore.getClient("Settings12thdoor");
           })
           
           if($scope.paymentMethod[i].paymentType == "Offline"){
-          // $scope.TDinvoice.OfflinePaymentDetails = $scope.offlinePayments;
           $scope.invoicDEtails.OfflinePaymentDetails = $scope.offlinePayments;
           }
         }
       };
-      //console.log($scope.TDinvoice.OfflinePaymentDetails)
       }
 
          //save invoice details
       $scope.submit = function() {
         $rootScope.invoiceArray.splice($scope.TDinvoice, 1);
         recurringInvoiceService.setArray1($scope.TDinvoice);
-        //console.log($rootScope.invoiceArray);
 
          $scope.imagearray = UploaderService.loadArray();
          if ($scope.imagearray.length > 0) {
@@ -806,8 +803,7 @@ var client = $objectstore.getClient("Settings12thdoor");
            $scope.invoicDEtails.comments = $scope.TDinvoice.comments;
            $scope.invoicDEtails.Startdate =  $scope.TDinvoice.Startdate;
            $scope.invoicDEtails.commentsAndHistory=[];
-           $scope.invoicDEtails.ProgressBarDetails = $scope.ProgressBar;
-
+           
              $scope.changeDate = angular.copy($scope.TDinvoice.Startdate);
 
               
@@ -823,10 +819,13 @@ var client = $objectstore.getClient("Settings12thdoor");
                            paymentStatus:'Unpaid',
                            balance :$rootScope.famount
                         }];
+
+          $scope.invoicDEtails.ProgressBarDetails = $scope.ProgressBar;
+         
           $scope.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
          $scope.ProgressBar.PaymentScheme = "Recurring Profile";
           $scope.ProgressBar.PaymentSchemeActive= "false";
-          $scope.ProgressBar.PaymentSchemeData.push( $scope.invoicDEtails.MultiDueDAtesArr);
+          $scope.ProgressBar.PaymentSchemeData.push($scope.invoicDEtails.MultiDueDAtesArr);
 
          if($rootScope.prodArray.val.length >0){
          $scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
@@ -850,11 +849,15 @@ var client = $objectstore.getClient("Settings12thdoor");
          $scope.invoicCount = parseInt($scope.TDinvoice.occurences);
           $scope.invoDetails = [];
           $scope.invoicDEtails.invoiceNo = "-999";
+          $scope.tryLogic = angular.copy($scope.invoicDEtails);
 
           for (var i = $scope.invoicCount- 1; i >= 0; i--) {
+            $scope.invoicDEtails = {};
+            $scope.invoicDEtails = angular.copy($scope.tryLogic);
+
             switch($scope.TDinvoice.billingFrequency) {
                     case "weekly":
-                        $scope.sevenDays= $scope.changeDate;
+                        $scope.sevenDays = $scope.changeDate;
                         $scope.sevenDays.setDate($scope.sevenDays.getDate() + 7);
                         $scope.invoicDEtails.duedate = $scope.sevenDays;
                         break;
@@ -871,7 +874,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                     case "Monthly":
                         var now = $scope.changeDate;
                           current = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-                        //$scope.invoicDEtails.duedate = current;
+                        $scope.invoicDEtails.duedate = current;
                         break;
                     case "2Months":
                          var now = $scope.changeDate;
@@ -885,7 +888,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                         break;
                     case "6Months":
                         var now = $scope.changeDate;
-                          current = new Date(now.getFullYear(), now.getMonth()+6, now.getDate());
+                        current = new Date(now.getFullYear(), now.getMonth()+6, now.getDate());
                         $scope.invoicDEtails.duedate = current;
                         break;
                     case "Yearly":
@@ -906,8 +909,11 @@ var client = $objectstore.getClient("Settings12thdoor");
                         break;
                     default:
                 }
-                $scope.invoDetails.push({$scope.invoicDEtails, current})
-            //$scope.changeDate = angular.copy($scope.invoicDEtails.duedate);
+
+                console.log($scope.invoicDEtails)
+                $scope.invoDetails.push($scope.invoicDEtails)
+                $scope.changeDate = $scope.invoicDEtails.duedate;
+                console.log( $scope.invoDetails)
           };
 
         var invo = $objectstore.getClient("invoice12thdoor");

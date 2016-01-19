@@ -340,6 +340,7 @@ angular
                controller: 'AppCtrl'
             })
          }
+
          //pops a dialog box which enble the user to add Multiple du dates
       $scope.MultiDuDates = function(data) {
          $scope.showdate = true;
@@ -383,23 +384,32 @@ angular
                         });
                      };
                      $scope.aDatearr = angular.copy($rootScope.dateArray);
-
                     $mdDialog.hide();
                   }
-                  $scope.addItem = function() {
 
-                     $scope.testarr.push({
+                  $scope.addItem = function() {
+                    $scope.arrr = [];
+                    $scope.perCount = 0;
+                     
+                       for (var i = $scope.testarr.length - 1; i >= 0; i--){
+                      $scope.perCount += parseInt($scope.testarr[i].percentage);
+                       console.log($scope.perCount)
+                      if( $scope.perCount >= 100 ){
+                        console.log("you cannot add any other dates")
+                      }else if($scope.perCount < 100){
+                         $scope.testarr.push({
                         duedate: '',
                         percentage: '',
                         duDatePrice: parseInt($rootScope.famount-$scope.newfamount),
                         paymentStatus:'Unpaid',
                         balance : parseInt($rootScope.famount-$scope.newfamount)
-                     });
-                     // console.log(parseInt($rootScope.famount-$scope.newfamount));
+                        });
+                      }
+                    };
                   };
 
                   $scope.rmoveDate = function(index){
-                     $scope.aDatearr.value.splice( $scope.aDatearr.value.indexOf(index), 1 );
+                     $rootScope.dateArray.value.splice($rootScope.dateArray.value.indexOf(index), 1 );
                   }
                   $scope.removeItem = function(index) {
                       $scope.testarr.splice( $scope.testarr.indexOf(index), 1 );

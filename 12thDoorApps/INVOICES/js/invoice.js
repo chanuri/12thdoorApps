@@ -341,7 +341,7 @@ angular
             })
          }
 
-         //pops a dialog box which enble the user to add Multiple du dates
+      //pops a dialog box which enble the user to add Multiple du dates
       $scope.MultiDuDates = function(data) {
          $scope.showdate = true;
          $scope.TDinvoice.termtype = "multipleDueDates";
@@ -353,7 +353,7 @@ angular
                $scope.aDatearr = {value:[]};
                $scope.aDatearr = angular.copy($rootScope.dateArray);
                $scope.duePaymenet = angular.copy($rootScope.famount);
-                  $scope.newfamount = angular.copy($rootScope.famount)
+               $scope.newfamount = angular.copy($rootScope.famount)
 
                   $scope.testarr = [{
                      duedate: '',
@@ -374,26 +374,43 @@ angular
                   };
 
                   $scope.AddDueDates = function() {
+                    $scope.calc = 0;
+                    $rootScope.checkArr = [];
+                    $rootScope.checkArr = angular.copy($scope.testarr);
                      for (var i = $scope.testarr.length - 1; i >= 0; i--) {
-                        MultipleDudtesService.setDateArray({
+                      $scope.calc += parseInt($scope.testarr[i].percentage);
+                      // if($scope.calc <= 100){
+                        MultipleDudtesService.calDateArray({
                            DueDate: $scope.testarr[i].duedate,
                            Percentage: $scope.testarr[i].percentage,
                            dueDateprice: $scope.testarr[i].duDatePrice,
                            paymentStatus:"Unpaid",
                            balance :$scope.testarr[i].duDatePrice
                         });
+                      // }
                      };
-                     $scope.aDatearr = angular.copy($rootScope.dateArray);
+                     
+                     if($scope.calc == 100){
+                      $scope.aDatearr = angular.copy($rootScope.dateArray);
                     $mdDialog.hide();
+                     }
+                    
                   }
 
                   $scope.addItem = function() {
                     $scope.arrr = [];
                     $scope.perCount = 0;
                      
-                       for (var i = $scope.testarr.length - 1; i >= 0; i--){
-                      $scope.perCount += parseInt($scope.testarr[i].percentage);
-                       console.log($scope.perCount)
+                    //    for (var i = $scope.testarr.length - 1; i >= 0; i--){
+                    //   $scope.perCount += parseInt($scope.testarr[i].percentage);
+                    //   MultipleDudtesService.calDateArray({
+                    //        DueDate: $scope.testarr[i].duedate,
+                    //        Percentage: $scope.testarr[i].percentage,
+                    //        dueDateprice: $scope.testarr[i].duDatePrice,
+                    //        paymentStatus:"Unpaid",
+                    //        balance :$scope.testarr[i].duDatePrice
+                    //     });
+                    // };
                       if( $scope.perCount >= 100 ){
                         console.log("you cannot add any other dates")
                       }else if($scope.perCount < 100){
@@ -405,11 +422,11 @@ angular
                         balance : parseInt($rootScope.famount-$scope.newfamount)
                         });
                       }
-                    };
+                       
                   };
 
                   $scope.rmoveDate = function(index){
-                     $rootScope.dateArray.value.splice($rootScope.dateArray.value.indexOf(index), 1 );
+                     $scope.aDatearr.value.splice($scope.aDatearr.value.indexOf(index), 1 );
                   }
                   $scope.removeItem = function(index) {
                       $scope.testarr.splice( $scope.testarr.indexOf(index), 1 );
@@ -421,7 +438,16 @@ angular
                    $scope.duecost = 0;
                    
                   $scope.DueAmount = function(cn,index) {
+                    $scope.cal = 0;
+                    for (var i = $scope.testarr.length - 1; i >= 0; i--){
+                    
+                    $scope.cal += parseInt($scope.testarr[i].percentage);
+                    console.log($scope.cal)
 
+                    if($scope.cal>100){
+                      console.log("percentage is exeeding")
+                    }
+                  }
                     $scope.newfamount =(parseInt($rootScope.famount*cn.percentage)/100);
                      $scope.testarr[index] = { 
                      duedate: cn.duedate,
@@ -465,7 +491,6 @@ angular
                $scope.AllUnitOfMeasures = [];
 
                $scope.addproductToarray = function(item,ev) {
-                 // console.log(item)
                   $scope.promoItems[0] = {
                       productName: $scope.SproductName,
                       price : $scope.Sprice,

@@ -114,7 +114,6 @@ angular.module('mainApp')
             return arry;
         },
         setFullArr : function(obj){
-          //console.log(obj.tax)
             this.setArray(obj);
             $rootScope.correctArr = [];
             $rootScope.multiTax = [];
@@ -133,12 +132,8 @@ angular.module('mainApp')
 
                    angular.forEach($rootScope.multiTax, function(tdIinvoice) {
                      $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
-
                      return $rootScope.total
                    })
-
-
-                      console.log($rootScope.total)
 
                    $rootScope.taxArr.push({
                        taxName: obj.tax.taxname,
@@ -163,7 +158,6 @@ angular.module('mainApp')
 
                         sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l+1].salesTax;
                         $rootScope.taxArr.splice(l,2);
-                        //$rootScope.taxArr.splice(l+1,1);
                         $rootScope.taxArr.push({
                            taxName : txtName,
                            rate : rate,
@@ -177,11 +171,43 @@ angular.module('mainApp')
                      };
                   };                  
                }
-              // console.log($rootScope.taxArr)
             }
+        } 
+      }
+   })
+//------------------------------------------------------------------------------------------------
+   //------------------------------------------------------------------------------------------------
+   .factory('MultipleDudtesService', function($rootScope) {
+      $rootScope.dateArray = {value: []};
+      $rootScope.getDateArr = {val:[]};
+      return {
+         setDateArray: function(newVal) {
+            $rootScope.dateArray.value.push(newVal);
+            return $rootScope.dateArray;
+         },
+         removeDateArray: function(newVals) {
+            $rootScope.dateArray.value.splice(newVals, 1);
+            return $rootScope.dateArray;
+         },
 
-        }    
-
+         calDateArray:function(val){
+          
+          $rootScope.calPercentatge = 0;
+          for (var i = $rootScope.checkArr.length - 1; i >= 0; i--) {
+            $rootScope.calPercentatge += parseInt($rootScope.checkArr[i].percentage);
+           console.log($rootScope.calPercentatge);
+          };
+          if($rootScope.calPercentatge == 100){
+            this.setDateArray(val);
+          }else{
+            alert("please cover the percentage")
+          }
+          
+          
+          
+          
+          //console.log(val)
+         }
       }
    })
    //-----------------------------------------------------------------------------------------------
@@ -208,23 +234,7 @@ angular.module('mainApp')
          }
       }
    })
-   //------------------------------------------------------------------------------------------------
-   //------------------------------------------------------------------------------------------------
-   .factory('MultipleDudtesService', function($rootScope) {
-      $rootScope.dateArray = {
-         value: []
-      };
-      return {
-         setDateArray: function(newVal) {
-            $rootScope.dateArray.value.push(newVal);
-            return $rootScope.dateArray;
-         },
-         removeDateArray: function(newVals) {
-            $rootScope.dateArray.value.splice(newVals, 1);
-            return $rootScope.dateArray;
-         }
-      }
-   })
+
    //-----------------------------------------------------------------------------------------------------------------
    //-----------------------------------------------------------------------------------------------------------------
 

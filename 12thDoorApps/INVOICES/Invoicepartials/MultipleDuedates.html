@@ -42,7 +42,6 @@
                                     </tr>
                                 </tbody>
                             </table>
-                           
                             <div layout layout-sm="column" layout-margin>
                              <md-divider></md-divider>
                                 <md-button href class="md-mini md-primary" ng-click="addItem()" style="margin-left:-18px;">
@@ -64,20 +63,20 @@
                                 <td data-title="Item Detail" >
                                     <div layout layout-sm="column" layout-margin>
                                     <md-input-container flex style="margin-top:-15px; padding-left:10px;">
-                                                <label>Date</label>
-                                                <input ng-model="cc.DueDate|date" style="margin-top:5px;">
-                                                </md-input-container>
+                                    <label>Date</label>
+                                    <input ng-model="cc.DueDate|date" style="margin-top:5px;">
+                                    </md-input-container>
                                     <md-input-container flex style="margin-top:-15px; padding-left:5px;" >
-                                            <label>Percentage</label>
-                                            <input ng-model="cc.Percentage" style="margin-top:5px;" ng-change="DueAmount(cn,$index)">
-                                            </md-input-container>
-                                            <md-input-container flex style="margin-top:-15px; padding-left:10px;">
-                                                <label>Amount</label>
-                                                <input ng-model="cc.dueDateprice" style="margin-top:5px;">
-                                                </md-input-container>
-                                                <md-button href class="md-mini md-primary" ng-click="rmoveDate(cc)" style="height:30px;margin-left:-18px;top:10px;">
-                                                    <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
-                                                    <md-tooltip md-direction="left">Delete</md-tooltip>
+                                    <label>Percentage</label>
+                                    <input ng-model="cc.Percentage" style="margin-top:5px;" ng-change="DueAmount(cn,$index)">
+                                    </md-input-container>
+                                    <md-input-container flex style="margin-top:-15px; padding-left:10px;">
+                                    <label>Amount</label>
+                                    <input ng-model="cc.dueDateprice" style="margin-top:5px;">
+                                    </md-input-container>
+                                    <md-button href class="md-mini md-primary" ng-click="rmoveDate(cc)" style="height:30px;margin-left:-18px;top:10px;">
+                                    <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
+                                    <md-tooltip md-direction="left">Delete</md-tooltip>
                                                 </md-button>
                                             </div>
                                         </td>

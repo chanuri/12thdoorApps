@@ -2,22 +2,6 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope, $state, $objectstore,
 	// sort function variable start
 
 
-
-
-	$window.onbeforeunload = function (evt) {
-		// var testObject = [{
-		// 	name : 'sachilaRanawaka',
-		// 	stopTime : $scope.stopTime 
-		// }];
-	 //    localStorage.setItem('sachilaRanawaka', JSON.stringify(testObject));
-	 	var testObject = [{
-			name : $rootScope.catchName,
-			endTime: new Date()
-		}];
-	    localStorage.setItem($scope.catchName, JSON.stringify(testObject));
-
-	}
-
 	$scope.sortarr = [{
 		name: "Starred",
 		id: "Starred",

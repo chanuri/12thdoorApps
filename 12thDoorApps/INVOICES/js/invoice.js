@@ -127,18 +127,11 @@ angular
               $scope.EmailPermission = $scope.Settings[i].preference.invoicepref.copyadminallinvoices;
               $scope.mail = $scope.Settings[i].profile.adminEmail;
               $scope.BaseCurrency = $scope.Settings[i].profile.baseCurrency;
-
              
-              for (var z = $scope.Settings[i].users.roles.length - 1; z >= 0; z--) {
-                 $scope.roles.push($scope.Settings[i].users.roles[z].rolename);
-                 $scope.permission.push($scope.Settings[i].users.roles[z]) ;  
-              };
-             //console.log($scope.permission);
 
                $scope.cusF = $scope.Settings[i].preference.invoicepref.CusFiel
 
                for (var x = $scope.Settings[i].taxes.individualtaxes.length - 1; x >= 0; x--) {
-                 
                  $scope.individualTax.push($scope.Settings[i].taxes.individualtaxes[x]);
                };
                for (var y = $scope.Settings[i].taxes.multipletaxgroup.length - 1; y >= 0; y--) {
@@ -172,12 +165,7 @@ angular
          if($scope.EmailPermission == true){
           $scope.TDinvoice.adminEmail = $scope.mail;
          }
-        $scope.TDinvoice.comments = $scope.com;
-        $scope.TDinvoice.notes = $scope.note;
-        $scope.TDinvoice.termtype =  $scope.paymentTerm;
-        $scope.TDinvoice.baseCurrency = $scope.BaseCurrency;
-        $scope.TDinvoice.DiplayShipiingAddress = $scope.ShowShipAddress;
-        $scope.TDinvoice.allowPartialPayments = $scope.partialPayment;
+        
         $scope.AllTaxes = $scope.individualTax;
         $scope.UOM = $scope.UnitOfMeasure;
         $scope.CusFields = $scope.cusF;
@@ -346,7 +334,8 @@ angular
          $scope.showdate = true;
          $scope.TDinvoice.termtype = "multipleDueDates";
           $scope.TDinvoice.duedate = null;
-
+          $scope.showPercentage = false;
+            $rootScope.showmsg = false;
             $mdDialog.show({
                templateUrl: 'Invoicepartials/MultipleDuedates.html',
                controller: function addMultipleDueDates($scope, $mdDialog) {
@@ -394,25 +383,17 @@ angular
                       $scope.aDatearr = angular.copy($rootScope.dateArray);
                     $mdDialog.hide();
                      }
-                    
                   }
 
                   $scope.addItem = function() {
                     $scope.arrr = [];
                     $scope.perCount = 0;
                      
-                    //    for (var i = $scope.testarr.length - 1; i >= 0; i--){
-                    //   $scope.perCount += parseInt($scope.testarr[i].percentage);
-                    //   MultipleDudtesService.calDateArray({
-                    //        DueDate: $scope.testarr[i].duedate,
-                    //        Percentage: $scope.testarr[i].percentage,
-                    //        dueDateprice: $scope.testarr[i].duDatePrice,
-                    //        paymentStatus:"Unpaid",
-                    //        balance :$scope.testarr[i].duDatePrice
-                    //     });
-                    // };
+                       for (var i = $scope.testarr.length - 1; i >= 0; i--){
+                      $scope.perCount += parseInt($scope.testarr[i].percentage);
+                    };
                       if( $scope.perCount >= 100 ){
-                        console.log("you cannot add any other dates")
+                        //alert("you cannot add more dates")
                       }else if($scope.perCount < 100){
                          $scope.testarr.push({
                         duedate: '',
@@ -421,8 +402,7 @@ angular
                         paymentStatus:'Unpaid',
                         balance : parseInt($rootScope.famount-$scope.newfamount)
                         });
-                      }
-                       
+                      }  
                   };
 
                   $scope.rmoveDate = function(index){
@@ -438,14 +418,16 @@ angular
                    $scope.duecost = 0;
                    
                   $scope.DueAmount = function(cn,index) {
+                    $scope.showPercentage = false;
                     $scope.cal = 0;
                     for (var i = $scope.testarr.length - 1; i >= 0; i--){
-                    
+                    $scope.showPercentage = false;
                     $scope.cal += parseInt($scope.testarr[i].percentage);
-                    console.log($scope.cal)
+                    //console.log($scope.cal)
 
                     if($scope.cal>100){
-                      console.log("percentage is exeeding")
+                      $scope.showPercentage = true;
+                      //alert("percentage is exeeding")
                     }
                   }
                     $scope.newfamount =(parseInt($rootScope.famount*cn.percentage)/100);
@@ -501,8 +483,6 @@ angular
                       olp: $scope.olp,
                       status:$scope.Sstatus
                   }
-                  // console.log($scope.promoItems)
-                  // console.log($scope.discount)
                   for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
 
                     if($scope.promoItems[i].qty == null){
@@ -551,7 +531,7 @@ angular
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
                          $scope.prod.producttax = $scope.promoItems[i].tax;                       
                          
-                         console.log($scope.promoItems[i].tax);
+                         //console.log($scope.promoItems[i].tax);
                          $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
                           if ($scope.product.length>0) {
                             //if array is not empty
@@ -576,7 +556,6 @@ angular
                             $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
                             $scope.prod.ProductCodeID = 1;
                           }
-
                        }
 
                        $scope.GetMaxNumber = function(obj,name,MaxID){
@@ -630,7 +609,6 @@ angular
                       }, function() {
                       });
                         }
-                        //console.log($rootScope.testArray.val)
                          $mdDialog.hide();
                      }
                     }
@@ -845,7 +823,6 @@ angular
                               shippingValue: $scope.contact.saddress.s_street + ', ' + $scope.contact.saddress.s_city + ', ' + $scope.contact.saddress.s_zip + ', ' + $scope.contact.saddress.s_state + ', ' +
                               $scope.contact.saddress.s_country
                            });
-                           
                               var self = this;
                              for (var i = $rootScope.customerNames.length - 1; i >= 0; i--) {
                                if ($rootScope.customerNames[i].display == $scope.contact.Name ) {
@@ -911,7 +888,6 @@ angular
                               shippingValue: cusform.saddress.s_street + ', ' + cusform.saddress.s_city + ', ' + cusform.saddress.s_zip + ', ' + cusform.saddress.s_state + ', ' +
                              cusform.saddress.s_country
                            });
-                           
                               var self = this;
                              for (var i = $rootScope.customerNames.length - 1; i >= 0; i--) {
                                if ($rootScope.customerNames[i].display == cusform.Name ) {
@@ -1015,7 +991,6 @@ angular
            $scope.TDinvoice.CuSFields = ({name:  $scope.CusFields[i].labelshown,
                                                  id: cc});
           };
-         console.log($scope.TDinvoice.CuSFields)
          }
 
 
@@ -1044,7 +1019,7 @@ angular
           $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.value;
         }
 
-    $scope.ProgressBar.PaymentSchemeData.push($rootScope.dateArray.value);
+    $scope.ProgressBar.PaymentSchemeData.push($scope.TDinvoice.MultiDueDAtesArr);
 
          $scope.imagearray = UploaderService.loadArray();
          if ($scope.imagearray.length > 0) {
@@ -1180,10 +1155,10 @@ angular
       $scope.CalculateTax = function() {
          $scope.salesTax=0;
          for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
+          console.log($rootScope.taxArr[i])
             $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
           }
            return $scope.salesTax;
-       
       }
      
       $scope.finalamount = function() {
@@ -1219,9 +1194,7 @@ angular
             };
             $scope.maxNo = parseInt($scope.ID)+1;
             $scope.RefNo = $scope.maxNo.toString();
-
                  }
-                  
               });
               client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoorDraft'");
               

@@ -230,29 +230,10 @@ ng-controller="viewCtrl as ctrl">
                 <md-card style="margin-left:-40px; width:630px; margin-bottom:20px !important;" as-sortable-item-handle>
                     <md-card-content >
                         <div style="margin-top:0px;">
-                            <span >
-                  {{item.Productname}} 
+                            <span>
+                                {{item.Productname}} 
                                 <md-tooltip>Product Name</md-tooltip>
                             </span>
-                            <md-menu md-position-mode="target-right target" layout="row" flex-sm="100" flex="5" layout-align="center center" style="margin-top:-30px; margin-left:550px">
-                                <md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-                                    <md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
-                                </md-button>
-                                <md-menu-content width="4">
-                                    <md-menu-item>
-                                        <md-button href ng-click="viewSavedProducts(item)">
-                                            <p>view</p>
-                                            <md-icon md-menu-align-target ></md-icon>
-                                        </md-button>
-                                    </md-menu-item>
-                                    <md-menu-item>
-                                        <md-button href ng-click="deleteproduct(item)">
-                                            <p>Delete</p>
-                                            <md-icon md-menu-align-target ></md-icon>
-                                        </md-button>
-                                    </md-menu-item>
-                                </md-menu-content>
-                            </md-menu>
                             <md-divider></md-divider>
                         </div>
                         <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;">
@@ -278,7 +259,6 @@ ng-controller="viewCtrl as ctrl">
                                     <md-tooltip>Discount</md-tooltip>
                                 </span>
                             </div>
-                           
                             <div flex="35" >
                             <span style="color:#808080;">{{item.tax.taxname}}
                         <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>

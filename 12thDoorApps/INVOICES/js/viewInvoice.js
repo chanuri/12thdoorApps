@@ -518,7 +518,7 @@ $scope.cancelStatus = function(obj, ev) {
                  if($stateParams.invoiceno == data[i].paidInvoice[x].invono){
                 
                  $scope.Payment.push(data[i]);
-                 console.log($scope.Payment);
+                 //console.log($scope.Payment);
                }
                };
                

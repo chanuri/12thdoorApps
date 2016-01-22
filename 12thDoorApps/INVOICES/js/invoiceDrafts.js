@@ -1,7 +1,32 @@
 angular.module('mainApp')
- .controller('testCtrl', function($scope, $mdDialog, $rootScope, InvoiceService, item) {
+ .controller('testCtrl', function($scope, $mdDialog, $rootScope,$objectstore, $uploader,$state, InvoiceService, item) {
+  $scope.settings = {};
+  $scope.UnitOfMeasure = [];
+  $scope.taxType = []
+   var client = $objectstore.getClient("Settings12thdoor");
+      client.onGetMany(function(data) {
+         if (data) {
+           $scope.settings = data;
+             for (var i =  $scope.settings.length - 1; i >= 0; i--) {
+               for (var z = $scope.settings[i].preference.productpref.units.length - 1; z >= 0; z--) {
+                  $scope.UnitOfMeasure.push($scope.settings[i].preference.productpref.units[z])
+                };
+
+             }
+            }
+             $scope.UOM = $scope.UnitOfMeasure;
+        });
+      client.onError(function(data) {
+      });
+      client.getByFiltering("*");
+
+       $scope.taxType = $scope.UOM;
+      console.log( $scope.taxType)
+
       $scope.test = item;
-      console.log(item);
+      
+     
+
       $scope.cancel = function() {
          $mdDialog.cancel();
       };
@@ -80,6 +105,13 @@ angular.module('mainApp')
       $rootScope.fullArr = {val:[]};
       $rootScope.taxArr = [];
       $rootScope.correctArr = [];
+      $rootScope.compoundcal=[];
+
+      $rootScope.setTempArr= {val:[]};
+      $rootScope.calTax = [];
+      $rootScope.correctArr1 = [];
+      $rootScope.calCompound = [];
+
       return {
          setArray: function(newVal) {
             $rootScope.testArray.val.push(newVal);
@@ -118,36 +150,42 @@ angular.module('mainApp')
             $rootScope.correctArr = [];
             $rootScope.multiTax = [];
                $rootScope.total = 0;
+                $rootScope.compoundcal=[];
            // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
             if(obj.tax.type == "individualtaxes"){
                $rootScope.taxArr.push({
                  taxName: obj.tax.taxname,
                  rate: obj.tax.rate,
-                 salesTax: parseInt(obj.amount*obj.tax.rate/100)
+                 salesTax: parseInt(obj.amount*obj.tax.rate/100),
+                 compoundCheck: obj.tax.compound
                })
                }else if(obj.tax.type == "multipletaxgroup"){
                   for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
-                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate); 
+                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate);
+                     //$rootScope.compoundcal = obj.tax.individualtaxes[i].compound;
+                     $rootScope.compoundcal.push({
+                      taxname:obj.tax.individualtaxes[i].taxname,
+                      rate:obj.tax.individualtaxes[i].rate,
+                      compound: obj.tax.individualtaxes[i].compound
+                     })
+                    // if()          
                   }; 
-
                    angular.forEach($rootScope.multiTax, function(tdIinvoice) {
                      $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
                      return $rootScope.total
                    })
-
                    $rootScope.taxArr.push({
                        taxName: obj.tax.taxname,
                        rate:$rootScope.multiTax ,
-                       salesTax: $rootScope.total
+                       salesTax: $rootScope.total,
+                       compoundCheck: $rootScope.compoundcal
                      })
-                   console.log( $rootScope.taxArr)
                }
-            
             $rootScope.taxArr = $rootScope.taxArr.sort(function(a,b){
-                                     return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
-                                 });
+              return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                 });
+
             if($rootScope.taxArr.length > 1){
-            
                for(l=0; l<=$rootScope.taxArr.length-1; l++){
                   if ($rootScope.taxArr[l+1]) {
 
@@ -155,16 +193,88 @@ angular.module('mainApp')
                         var sumSalesTax = 0;
                         var txtName = $rootScope.taxArr[l].taxName;
                         var rate = $rootScope.taxArr[l].rate;
-
+                        var compound = $rootScope.taxArr[l].compoundCheck
+                        
                         sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l+1].salesTax;
+
                         $rootScope.taxArr.splice(l,2);
                         $rootScope.taxArr.push({
                            taxName : txtName,
                            rate : rate,
-                           salesTax : sumSalesTax
+                           salesTax : sumSalesTax,
+                           compoundCheck: compound
                         })
                         
                         $rootScope.taxArr.sort(function(a,b){
+                            return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                        });
+                      
+                     };
+                  };                  
+               }
+            }
+        },
+        setTempArr : function(obj){
+            this.setArray2(obj);
+            $rootScope.correctArr1 = [];
+            $rootScope.multiTax = [];
+               $rootScope.total = 0;
+                $rootScope.calCompound=[];
+           // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
+            if(obj.tax.type == "individualtaxes"){
+               $rootScope.calTax.push({
+                 taxName: obj.tax.taxname,
+                 rate: obj.tax.rate,
+                 salesTax: parseInt(obj.amount*obj.tax.rate/100),
+                 compoundCheck: obj.tax.compound
+               })
+               }else if(obj.tax.type == "multipletaxgroup"){
+                  for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
+                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate);
+                     //$rootScope.calCompound = obj.tax.individualtaxes[i].compound;
+                     $rootScope.calCompound.push({
+                      taxname:obj.tax.individualtaxes[i].taxname,
+                      rate:obj.tax.individualtaxes[i].rate,
+                      compound: obj.tax.individualtaxes[i].compound
+                     })
+                    // if()          
+                  }; 
+                   angular.forEach($rootScope.multiTax, function(tdIinvoice) {
+                     $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
+                     return $rootScope.total
+                   })
+                   $rootScope.calTax.push({
+                       taxName: obj.tax.taxname,
+                       rate:$rootScope.multiTax ,
+                       salesTax: $rootScope.total,
+                       compoundCheck: $rootScope.calCompound
+                     })
+               }
+            $rootScope.calTax = $rootScope.calTax.sort(function(a,b){
+              return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                 });
+
+            if($rootScope.calTax.length > 1){
+               for(l=0; l<=$rootScope.calTax.length-1; l++){
+                  if ($rootScope.calTax[l+1]) {
+
+                     if ($rootScope.calTax[l].taxName == $rootScope.calTax[l+1].taxName) {
+                        var sumSalesTax = 0;
+                        var txtName = $rootScope.calTax[l].taxName;
+                        var rate = $rootScope.calTax[l].rate;
+                        var compound = $rootScope.calTax[l].compoundCheck;
+
+                        sumSalesTax = $rootScope.calTax[l].salesTax + $rootScope.calTax[l+1].salesTax;
+
+                        $rootScope.calTax.splice(l,2);
+                        $rootScope.calTax.push({
+                           taxName : txtName,
+                           rate : rate,
+                           salesTax : sumSalesTax,
+                           compoundCheck: $rootScope.calCompound
+                        })
+                        
+                        $rootScope.calTax.sort(function(a,b){
                             return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
                         });
                       
@@ -180,6 +290,7 @@ angular.module('mainApp')
    .factory('MultipleDudtesService', function($rootScope) {
       $rootScope.dateArray = {value: []};
       $rootScope.getDateArr = {val:[]};
+      $rootScope.showmsg = false;
       return {
          setDateArray: function(newVal) {
             $rootScope.dateArray.value.push(newVal);
@@ -191,7 +302,7 @@ angular.module('mainApp')
          },
 
          calDateArray:function(val){
-          
+          $rootScope.showmsg = false;
           $rootScope.calPercentatge = 0;
           for (var i = $rootScope.checkArr.length - 1; i >= 0; i--) {
             $rootScope.calPercentatge += parseInt($rootScope.checkArr[i].percentage);
@@ -200,7 +311,8 @@ angular.module('mainApp')
           if($rootScope.calPercentatge == 100){
             this.setDateArray(val);
           }else{
-            alert("please cover the percentage")
+            $rootScope.showmsg = true;
+            // alert("please check the percentage")
           }
           
           

@@ -198,7 +198,7 @@ $scope.edit = function(updatedForm) {
          })
          return $scope.finalDisc;
       }
-      $scope.CalculateTax = function(data) {
+      $scope.CalculateTax = function() {
          $scope.salesTax = 0;
 
          for (var i = $rootScope.getTax.length - 1; i >= 0; i--) {
@@ -312,10 +312,10 @@ $scope.edit = function(updatedForm) {
       }
 
       $scope.deleteEditproduct = function(name,index ){
-        for (var i = $rootScope.invoiceArray[0].invoiceProducts.length - 1; i >= 0; i--) {
-          $rootScope.invoiceArray[0].invoiceProducts[i].splice(name,1);
-        };
+         $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name),1);
          
+           console.log($rootScope.getTax)
+         $scope.CalculateTax();
       }
 
       $scope.addProductArray = function(ev,arr){
@@ -481,7 +481,6 @@ $scope.edit = function(updatedForm) {
                        $rootScope.getTax.push($rootScope.calTax[i])
                      };
                      };
-                     
                          $mdDialog.hide();
                      }
                     }

@@ -525,8 +525,7 @@ angular
                          $scope.prod.costprice = $scope.promoItems[i].price;
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
                          $scope.prod.producttax = $scope.promoItems[i].tax;                       
-                         
-                         //console.log($scope.promoItems[i].tax);
+
                          $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
                           if ($scope.product.length>0) {
                             //if array is not empty
@@ -987,8 +986,6 @@ angular
                                                  id: cc});
           };
          }
-
-
          for (var i = $scope.CusFields.length - 1; i >= 0; i--) {
           if($scope.CusFields[i].type== 'textBox'){
            $scope.TDinvoice.CuSFields = ({name:  $scope.CusFields[i].type,

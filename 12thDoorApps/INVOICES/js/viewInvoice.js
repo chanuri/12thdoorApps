@@ -108,7 +108,6 @@ $scope.cancelStatus = function(obj, ev) {
             $mdDialog.show(confirm).then(function() {
          var client = $objectstore.getClient("invoice12thdoor");
          obj.invoiceNo = obj.invoiceNo.toString();
-         // if(obj.status != "Draft"){
           $scope.systemMessage.push({text:"The Invoice was Cancelled by mr.Perera", done:false,  date:new Date()});
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            obj.commentsAndHistory.push($scope.systemMessage[i]);
@@ -137,7 +136,6 @@ $scope.cancelStatus = function(obj, ev) {
             );
          });
         client.insert(obj, {KeyProperty: "invoiceNo"});
-       // }
       })
 }
       $scope.$watch('selectedIndex', function(current, old) {

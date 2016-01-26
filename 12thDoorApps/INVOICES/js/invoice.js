@@ -50,7 +50,7 @@ angular
          })
 
          .state('copy',{
-            url: '/copyInvoiceDetails',
+            url: '/copyInvoiceDetails/INo=:invoiceno',
             templateUrl: 'Invoicepartials/editInvoice.html',
             controller: 'editCtrl'
          })
@@ -96,7 +96,7 @@ angular
        $scope.totalSection = false;
       $scope.ShippingSwitch = false;
       $scope.TDinvoice.fdiscount = 0;
-      $scope.TDinvoice.salesTax = 0;
+      $scope.TDinvoice.salesTaxAmount = 0;
       $scope.TDinvoice.anotherTax = 0;
       $scope.TDinvoice.shipping = 0;
        $scope.AllTaxes = [];
@@ -194,7 +194,6 @@ angular
           }
         }
       };
-      //console.log($scope.TDinvoice.OfflinePaymentDetails)
       }
           
       $scope.selectedItemChange = function(c) {
@@ -393,7 +392,6 @@ angular
                       $scope.perCount += parseInt($scope.testarr[i].percentage);
                     };
                       if( $scope.perCount >= 100 ){
-                        //alert("you cannot add more dates")
                       }else if($scope.perCount < 100){
                          $scope.testarr.push({
                         duedate: '',
@@ -423,11 +421,9 @@ angular
                     for (var i = $scope.testarr.length - 1; i >= 0; i--){
                     $scope.showPercentage = false;
                     $scope.cal += parseInt($scope.testarr[i].percentage);
-                    //console.log($scope.cal)
 
                     if($scope.cal>100){
                       $scope.showPercentage = true;
-                      //alert("percentage is exeeding")
                     }
                   }
                     $scope.newfamount =(parseInt($rootScope.famount*cn.percentage)/100);
@@ -514,8 +510,7 @@ angular
                         amount: $scope.Amount,
                         status:$scope.promoItems[i].status,
                      });
-                      // console.log($scope.promoItems[i].discount)
-                      // $rootScope.calculatetotal(); 
+                      
                       if($scope.promoItems[i].status == 'notavailable'){
                            var confirm = $mdDialog.confirm()
                             .title('Would you like to save this product for future use?')
@@ -1058,7 +1053,6 @@ angular
          $scope.TDinvoice.finalamount = $scope.famount;
          $scope.TDinvoice.discountAmount = $scope.finalDisc;
          $scope.TDinvoice.salesTaxAmount = $scope.salesTax;
-         $scope.TDinvoice.otherTaxAmount = $scope.otherTax;
          $scope.TDinvoice.status = "Unpaid";
          $scope.TDinvoice.favourite = false;
          $scope.TDinvoice.favouriteStarNo = 1;

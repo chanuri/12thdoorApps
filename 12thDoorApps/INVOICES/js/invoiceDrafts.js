@@ -60,7 +60,6 @@ angular.module('mainApp')
     $scope.cancel = function() {
          $mdDialog.cancel();
       }
-
  })
 //-------------------------------------------------------------------------------------------------------  
 //------------------------------------------------------------------------------------------------------
@@ -216,6 +215,7 @@ angular.module('mainApp')
         },
         setTempArr : function(obj){
             this.setArray2(obj);
+            console.log(obj);
             $rootScope.correctArr1 = [];
             $rootScope.multiTax = [];
                $rootScope.total = 0;

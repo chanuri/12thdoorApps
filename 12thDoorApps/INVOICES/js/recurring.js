@@ -17,6 +17,10 @@ angular.module('mainApp')
       // $scope.TDinvoice.anotherTax = 0;
       $scope.TDinvoice.shipping = 0;
       $scope.InvoiceDetailss = [];
+      $scope.invoicDEtails.shipping = 0;
+      $scope.invoicDEtails.fdiscount = 0;
+      $scope.invoicDEtails.salesTax = 0;
+
 
        var client = $objectstore.getClient("domainClassAttributes");
               client.onGetMany(function(data) {
@@ -803,7 +807,7 @@ var client = $objectstore.getClient("Settings12thdoor");
            $scope.invoicDEtails.comments = $scope.TDinvoice.comments;
            $scope.invoicDEtails.Startdate =  $scope.TDinvoice.Startdate;
            $scope.invoicDEtails.commentsAndHistory=[];
-           
+           $scope.invoicDEtails.roFruitNames = angular.copy($scope.TDinvoice.roFruitNames);
              $scope.changeDate = angular.copy($scope.TDinvoice.Startdate);
 
               
@@ -909,11 +913,8 @@ var client = $objectstore.getClient("Settings12thdoor");
                         break;
                     default:
                 }
-
-                console.log($scope.invoicDEtails)
                 $scope.invoDetails.push($scope.invoicDEtails)
                 $scope.changeDate = $scope.invoicDEtails.duedate;
-                console.log( $scope.invoDetails)
           };
 
         var invo = $objectstore.getClient("invoice12thdoor");
@@ -945,8 +946,6 @@ var client = $objectstore.getClient("Settings12thdoor");
                .targetEvent(data)
             );
          });
-     
-
          
       }
 
@@ -1097,8 +1096,6 @@ var client = $objectstore.getClient("Settings12thdoor");
          return $rootScope.famount;
          console.log($rootScope.famount)
       };
-
-
 
       var client = $objectstore.getClient("contact");
       client.onGetMany(function(data) {

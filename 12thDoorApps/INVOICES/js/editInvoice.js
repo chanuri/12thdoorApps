@@ -110,17 +110,14 @@ $scope.edit = function(updatedForm) {
 
         if(updatedForm.status == "Draft"){
           var client = $objectstore.getClient("invoice12thdoorDraft");
-        //updatedForm.invoiceProducts = $rootScope.showprodArray.val;
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
-         // for (var i = $rootScope.editProdArray.val.length - 1; i >= 0; i--) {
-         //   updatedForm.invoiceProducts.push($rootScope.editProdArray.val[i]);
-         // };
-          //  $scope.systemMessage.push({text:"The Invoice was Edited by mr.Perera", done:false,  date:new Date()});
-          // for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
-          //  updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
-          // };
-         console.log(updatedForm);
+         updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
+          $scope.systemMessage.push({text:"The Invoice was Edited by mr.Perera", done:false,  date:new Date()});
+          for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
+           updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
+          };
+         //console.log(updatedForm);
          client.onComplete(function(data) {
             $mdDialog.show(
                $mdDialog.alert()
@@ -146,7 +143,7 @@ $scope.edit = function(updatedForm) {
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
           };
-         console.log(updatedForm.invoiceProducts);
+         //console.log(updatedForm.invoiceProducts);
          client.onComplete(function(data) {
            $state.go('view', {'invoiceno': updatedForm.invoiceRefNo});
             $mdDialog.show(
@@ -171,6 +168,20 @@ $scope.edit = function(updatedForm) {
          return $scope.Amount;
       }
 
+      $scope.ss=[];
+      $scope.getPayement = function(pay){
+         for (var i = $scope.paymentMethod.length - 1; i >= 0; i--) {
+        if(pay ==  $scope.paymentMethod[i].paymentmethod){
+          $scope.ss.push({
+            sc:$scope.paymentMethod[i].paymentmethod,
+            dd:$scope.paymentMethod[i].paymentType
+          })
+          if($scope.paymentMethod[i].paymentType == "Offline"){
+          $scope.OfflinePaymentDetails = $scope.offlinePayments;
+          }
+        }
+      };
+      }
       $scope.calculatetotal = function(data) {
          $scope.total = 0;
          angular.forEach(data.invoiceProducts, function(tdIinvoice) {
@@ -190,9 +201,10 @@ $scope.edit = function(updatedForm) {
       $scope.CalculateTax = function(data) {
          $scope.salesTax = 0;
 
-         angular.forEach(data.invoiceProducts.tax, function(tdIinvoice) {
-            $scope.salesTax += parseInt($scope.total*tdIinvoice.rate/100);
-         })
+         for (var i = $rootScope.getTax.length - 1; i >= 0; i--) {
+          //console.log($rootScope.getTax[i].salesTax)
+            $scope.salesTax += parseInt($rootScope.getTax[i].salesTax);
+          }
          return $scope.salesTax;
          
       }
@@ -227,7 +239,7 @@ $scope.edit = function(updatedForm) {
             .targetEvent(obj);
          $mdDialog.show(confirm).then(function() {
             var draftdelete = $objectstore.getClient("invoice12thdoorDraft");
-            
+            obj.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
             draftdelete.onComplete(function(data) {
               if(obj.termtype != "multipleDueDates"){
          obj.MultiDueDAtesArr= [{
@@ -242,6 +254,7 @@ $scope.edit = function(updatedForm) {
         }
               obj.invoiceRefNo = $scope.refNo;
             obj.status = "Unpaid";
+            obj.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
                var newInsert = $objectstore.getClient("invoice12thdoor");
                newInsert.onComplete(function(data) {
                   $mdDialog.show(
@@ -288,7 +301,6 @@ $scope.edit = function(updatedForm) {
             $mdDialog.hide();
          });
       }
-
        $scope.viewSavedProducts = function(obj) {
          $mdDialog.show({
             templateUrl: 'Invoicepartials/showproduct.html',
@@ -299,8 +311,11 @@ $scope.edit = function(updatedForm) {
          });
       }
 
-      $scope.deleteEditproduct = function(name){
-         InvoiceService.removeArray2(name);
+      $scope.deleteEditproduct = function(name,index ){
+        for (var i = $rootScope.invoiceArray[0].invoiceProducts.length - 1; i >= 0; i--) {
+          $rootScope.invoiceArray[0].invoiceProducts[i].splice(name,1);
+        };
+         
       }
 
       $scope.addProductArray = function(ev,arr){
@@ -309,7 +324,6 @@ $scope.edit = function(updatedForm) {
           $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
           $rootScope.discounts = angular.copy($scope.dis);
           $rootScope.DisplayTaxes =  angular.copy($scope.ShowTaxes);
-          // console.log($rootScope.taxType);
             if($rootScope.Showdiscount == true){
               if($rootScope.discounts == "Individual Items"){
                 $rootScope.displayDiscountLine = true;
@@ -368,9 +382,7 @@ $scope.edit = function(updatedForm) {
                         amount: $scope.Amount,
                         status:$scope.promoItems[i].status,
                      });
-                    
-                      // console.log($scope.promoItems[i].discount)
-                      // $rootScope.calculatetotal(); 
+ 
                       if($scope.promoItems[i].status == 'notavailable'){
                            var confirm = $mdDialog.confirm()
                             .title('Would you like to save this product for future use?')
@@ -386,11 +398,10 @@ $scope.edit = function(updatedForm) {
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
                          $scope.prod.producttax = $scope.promoItems[i].tax;                       
                          
-                         //console.log($scope.promoItems[i].tax);
                          $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
                           if ($scope.product.length>0) {
                             //if array is not empty
-                             $scope.PatternExsist = false; // use to check pattern match the object of a array 
+                             $scope.PatternExsist = false; 
                              $scope.MaxID = 0;
                               for(y=0; y<=$scope.product.length-1; y++){
                                 if ($scope.product[y].ProductCode.substring(0, 3) === $scope.FirstLetters) {
@@ -466,7 +477,11 @@ $scope.edit = function(updatedForm) {
                         }
                          for (var i =  $rootScope.editProdArray.val.length - 1; i >= 0; i--) {
                        $rootScope.invoiceArray[0].invoiceProducts.push($rootScope.editProdArray.val[i]);
+                       for (var i = $rootScope.calTax.length - 1; i >= 0; i--) {
+                       $rootScope.getTax.push($rootScope.calTax[i])
                      };
+                     };
+                     
                          $mdDialog.hide();
                      }
                     }
@@ -543,7 +558,6 @@ $scope.edit = function(updatedForm) {
                       $scope.Sprice = pd.price;
                    }
                    $scope.setTax = function(pDis){
-                    // if(pDis.status == "notavailable"){
                       for (var i = $rootScope.taxType.length - 1; i >= 0; i--) {
                        if($rootScope.taxType[i].taxname == pDis.tax.taxname){
                             $scope.Ptax = ({
@@ -556,8 +570,6 @@ $scope.edit = function(updatedForm) {
                         }
                       };
                      $scope.Stax = $scope.Ptax;
-                     // console.log($scope.Stax);
-
                    }
                    $scope.setUOM = function(pUOM){
                       $scope.SProductUnit = pUOM.ProductUnit;
@@ -611,19 +623,19 @@ $scope.edit = function(updatedForm) {
                      });
                      client.getByFiltering("*");
                   }
-
-                  //calculate the invoice amount for each product
+              //calculate the invoice amount for each product
                $scope.calAMount = function() {
                   $scope.Amount = 0;
-                  // angular.forEach($scope.promoItems, function(tdIinvoice) {
                      $scope.Amount = $scope.Sprice * $scope.Sqty;
-                  // })
                   return $scope.Amount;
                }
             }
          })
       }
-
+      $scope.getTotal = 0;
+      $rootScope.getTax = [];
+      $scope.groupTax = [];
+      $scope.calTotal = 0;
 
         $scope.TDinvoice =[];
      var client = $objectstore.getClient("invoice12thdoor");
@@ -636,6 +648,68 @@ $scope.edit = function(updatedForm) {
                if($stateParams.invoiceno == data[i].invoiceNo){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
+                  
+             
+               for (var x = data[i].invoiceProducts.length - 1; x >= 0; x--) {
+                  $scope.getTotal = angular.copy(data[i].invoiceProducts[x].amount);
+                    if(data[i].invoiceProducts[x].tax.type == "individualtaxes"){
+                      $rootScope.getTax.push({
+                      taxName: data[i].invoiceProducts[x].tax.taxname,
+                       rate: data[i].invoiceProducts[x].tax.rate,
+                       salesTax: parseInt($scope.getTotal*data[i].invoiceProducts[x].tax.rate/100),
+                       compoundCheck: data[i].invoiceProducts[x].tax.compound
+                          })
+                    }
+                    else if(data[i].invoiceProducts[x].tax.type == "multipletaxgroup"){
+                      for (var y = data[i].invoiceProducts[x].tax.individualtaxes.length - 1; y >= 0; y--) {
+                         $scope.groupTax.push(data[i].invoiceProducts[x].tax.individualtaxes[y].rate)
+                      };
+                      angular.forEach($scope.groupTax, function(tdIinvoice) {
+                       $scope.calTotal += parseInt($scope.getTotal*tdIinvoice/100)
+                       return $scope.calTotal
+                      })
+
+                      $rootScope.getTax.push({
+                       taxName:data[i].invoiceProducts[x].tax.taxname,
+                       rate:$scope.groupTax,
+                       salesTax: $scope.total,
+                       compoundCheck: $scope.compoundcal
+                     })
+
+                    }
+                    $rootScope.getTax = $rootScope.getTax.sort(function(a,b){
+                  return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                 });
+                  
+                  if($rootScope.getTax.length > 1){
+               for(l=0; l<=$rootScope.getTax.length-1; l++){
+                  if ($rootScope.getTax[l+1]) {
+
+                     if ($rootScope.getTax[l].taxName == $rootScope.getTax[l+1].taxName) {
+                        var sumSalesTax = 0;
+                        var txtName = $rootScope.getTax[l].taxName;
+                        var rate = $rootScope.getTax[l].rate;
+                        var compound = $rootScope.getTax[l].compoundCheck
+                        
+                        sumSalesTax = $rootScope.getTax[l].salesTax + $rootScope.getTax[l+1].salesTax;
+
+                        $rootScope.getTax.splice(l,2);
+                        $rootScope.getTax.push({
+                           taxName : txtName,
+                           rate : rate,
+                           salesTax : sumSalesTax,
+                           compoundCheck: compound
+                        })
+                        
+                        $rootScope.getTax.sort(function(a,b){
+                            return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                        });
+                      
+                     };
+                  };                  
+               }
+            }  
+                 };
                }
             };
          }
@@ -655,9 +729,9 @@ $scope.edit = function(updatedForm) {
        $scope.saveInvoice = function(updatedForm) {
         $rootScope.invoiceArray.splice(updatedForm, 1);
         invoiceDetails.setArray(updatedForm);
-
+        updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
          updatedForm.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
-         updatedForm.ProgressBar.PaymentScheme = $scope.TDinvoice.termtype;
+         updatedForm.ProgressBar.PaymentScheme = updatedForm.termtype;
           updatedForm.ProgressBar.PaymentSchemeActive= "false";
 
          updatedForm.ProgressBar.PaymentSchemeData.push($rootScope.dateArray.value);
@@ -667,7 +741,6 @@ $scope.edit = function(updatedForm) {
               text: "Invoice was created by Mr.dddd",
               date:new Date()
          });
-         console.log($scope.ProgressBar);
 
          $scope.imagearray = UploaderService.loadArray();
          if ($scope.imagearray.length > 0) {
@@ -695,7 +768,6 @@ $scope.edit = function(updatedForm) {
          };
          var client = $objectstore.getClient("invoice12thdoor");
          updatedForm.ProgressBarDetails = $scope.ProgressBar;
-         //updatedForm.invoiceProducts = $rootScope.editProdArray.val;
          updatedForm.commentsAndHistory = {};
          updatedForm.invoiceRefNo = $scope.refNo;
          updatedForm.total = $scope.total;
@@ -710,18 +782,18 @@ $scope.edit = function(updatedForm) {
             val: []
          };
 
-          if(updatedForm.termtype != "multipleDueDates"){
+      if(updatedForm.termtype != "multipleDueDates"){
         MultipleDudtesService.setDateArray({
                            DueDate: updatedForm.duedate,
                            Percentage: "0",
-                           dueDateprice: "0",
-                           paymentStatus:'Unpaid'
+                           dueDateprice: $scope.famount,
+                           paymentStatus:'Unpaid',
+                           balance :$scope.famount
                         });
         }
 
         updatedForm.UploadImages.val = UploaderService.loadBasicArray();
          client.onComplete(function(data) {
-          //location.href = '#/viewInvoice';
           $state.go('view', {'invoiceno': $scope.refNo});
             $mdDialog.show(
                $mdDialog.alert()
@@ -739,8 +811,6 @@ $scope.edit = function(updatedForm) {
             KeyProperty: "invoiceNo"
          });
 
-     
-
        client.onError(function(data) {
             $mdDialog.show(
                $mdDialog.alert()
@@ -756,7 +826,6 @@ $scope.edit = function(updatedForm) {
 
       $scope.cancelinvoice = function(obj, ev){
          if($state.current.name == 'copy') {
-        //$scope.saveInvoiceB = true;
         var confirm = $mdDialog.confirm()
           .title('Would you like save this to draft?')
           .content('')
@@ -767,9 +836,9 @@ $scope.edit = function(updatedForm) {
             $mdDialog.show(confirm).then(function() {
 
          var client = $objectstore.getClient("invoice12thdoorDraft");
-         // $scope.TDinvoice.invoiceProducts = $rootScope.testArray.val;
-         // $scope.TDinvoice.total = $scope.total;
-         // $scope.TDinvoice.finalamount = $scope.famount;
+         obj.invoiceProducts = $rootScope.testArray.val;
+         obj.total = $scope.total;
+         obj.finalamount = $scope.famount;
          obj.status = "Draft";
          // $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
          // $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
@@ -799,60 +868,28 @@ $scope.edit = function(updatedForm) {
                .targetEvent(data)
             );
          });
-         console.log(obj);
+         //console.log(obj);
           obj.invoiceNo = "-999";
          client.insert([obj], {
             KeyProperty: "invoiceNo"
          });
-
             }, function() {
               $rootScope.invoiceArray.splice(obj, 1);
               $state.go('settings.invoice_app');
-         
             });
      }else{
         $state.go('view', {'invoiceno': obj.invoiceRefNo});
-     }
-         
+     }  
       }
-
-       $scope.DemoCtrl1 = function($timeout, $q) {
-         var self = this;
-         self.readonly = false;
-         self.invoice.roFruitNames = $scope.TDinvoice.roFruitNames;
-         self.tags = [];
-         self.newVeg = function(chip) {
-            return {
-               name: chip,
-               type: 'unknown'
-            };
-         };
-      }
-
-      $scope.DemoCtrl2 = function($timeout, $q) {
-         var self = this;
-         self.readonly = false;
-         self.invoice.roFruitNames1 = angular.copy($scope.TDinvoice.roFruitNames);
-         self.tags = [];
-         self.newVeg = function(chip) {
-            return {
-               name: chip,
-               type: 'unknown'
-            };
-         };
-      }
-
 })
 .controller('estimateCtrl', function($scope, $mdDialog, $objectstore, $window, $stateParams,$rootScope,invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService,MultipleDudtesService) {
      
      $scope.editInvoiceB = false;
      $scope.saveInvoiceB = true;
 
-
       var client = $objectstore.getClient("invoice12thdoor");
       client.onGetMany(function(data) {
          if (data) {
-           // $scope.TDinvoice = data;
             for (var i = data.length - 1; i >= 0; i--) {
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDinvoice.push(data[i]);
@@ -866,5 +903,4 @@ $scope.edit = function(updatedForm) {
       });
       client.onError(function(data) {});
       client.getByFiltering("*");
-
   })

@@ -8,7 +8,6 @@ angular.module('mainApp')
       $scope.obtable = [];
       var vm = this;
       $scope.Makepayment = false;
-      $scope.multipleDueDAtes = false;
       
         if ($state.current.name == 'settings.invoice_app') {
                 $rootScope.showinvoice = true;
@@ -326,7 +325,8 @@ $scope.cancelStatus = function(obj, ev) {
 
       
         invoiceDetails.setArray(InvoItem);
-        location.href = '#/copyInvoiceDetails';
+        // location.href = '#/copyInvoiceDetails';
+       $state.go('copy', {'invoiceno': InvoItem.invoiceRefNo});
       }
 
       $scope.calAMount = function(data) {
@@ -431,12 +431,6 @@ $scope.cancelStatus = function(obj, ev) {
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDinvoice.push(data[i]);
 
-               for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
-
-                   if(data[i].termtype == "multipleDueDates"){
-                    $scope.multipleDueDAtes = true;
-                   }
-                 };
                if($stateParams.invoiceno == data[i].invoiceNo){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
@@ -450,6 +444,7 @@ $scope.cancelStatus = function(obj, ev) {
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
+
             };
          }
       });
@@ -466,6 +461,7 @@ $scope.cancelStatus = function(obj, ev) {
       client.getByFiltering("*");
 
       
+
       var client = $objectstore.getClient("invoice12thdoor");
       client.onGetMany(function(data) {
          if (data) {
@@ -474,13 +470,7 @@ $scope.cancelStatus = function(obj, ev) {
               data[i].addView = "";
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDinvoice.push(data[i]);
-               //console.log($scope.TDinvoice)
-               for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
-
-                   if(data[i].termtype == "multipleDueDates"){
-                    $scope.multipleDueDAtes = true;
-                   }
-                 };
+               
                if($stateParams.invoiceno == data[i].invoiceNo){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
@@ -494,6 +484,7 @@ $scope.cancelStatus = function(obj, ev) {
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
+ 
             };
          }
       });

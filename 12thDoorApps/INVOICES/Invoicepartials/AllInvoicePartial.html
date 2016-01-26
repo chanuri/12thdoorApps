@@ -419,7 +419,7 @@ ng-controller="viewCtrl as ctrl">
                         </div>
                     </div>
                     <md-divider></md-divider>
-                     <div layout layout-sm="column" ng-show="multipleDueDAtes" layout-margin>
+                     <div layout layout-sm="column" ng-if="tdi.termtype == 'multipleDueDates'"layout-margin>
                     <section-title title="Multiple Due dates Details"> </section-title>
                         <table >
                             <tr>
@@ -430,7 +430,7 @@ ng-controller="viewCtrl as ctrl">
                             <tr ng-repeat="mutidate in tdi.MultiDueDAtesArr">
                                 <td style="padding: 30px;" flex>{{mutidate.DueDate|date}}</td>
                                 <td style="padding: 30px;" flex>{{mutidate.Percentage}} % </td>
-                                <td style="padding: 30px;" flex> {{mutidate.dueDateprice}} </td>
+                                <td style="padding: 30px;" flex> {{mutidate.dueDateprice|currency}} </td>
                             </tr>
                         </table>                      
                     </div>

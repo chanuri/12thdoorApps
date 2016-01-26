@@ -23,7 +23,7 @@ angular
 
 })
 
-.controller('AppCtrl', function($scope, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
+.controller('AppCtrl', function($scope, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, creditNoteService, $filter, $location, UploaderService, MultipleDudtesService) {
 
     $scope.list = [];
     $scope.TDCreditNote = {};
@@ -51,57 +51,53 @@ angular
       $scope.Shippingaddress = !$scope.Shippingaddress;
     }
 
-    //Autocomplete stuff
-    $rootScope.self = this;
-    $rootScope.self.tenants = loadAll();
-    $rootScope.selctedName = null;
-    $rootScope.self.searchText = null;
-    $rootScope.self.querySearch = querySearch;
-
-    function querySearch(query) {
+    //Autocomplete to get client details
+      $rootScope.self = this;
+      $rootScope.self.tenants = loadAll();
+      $rootScope.selectedItem1 = null;      
+      $rootScope.self.querySearch = querySearch; 
+      $rootScope.searchText = null;
 
       $scope.enter = function(keyEvent) {
-          if (keyEvent.which === 13) {
-            if ($rootScope.selctedName === null) {
-              $rootScope.selctedName = query;
-              console.log($rootScope.results);
-            } else {
-              console.log($rootScope.selctedName);
+               if (keyEvent.which == 40) {
+                  if ($rootScope.selectedItem1 === null) {
+                     $rootScope.selectedItem1 = query;
+                  } else {}
+               }
             }
-          }
-        }
-        //Custom Filter
-      $rootScope.results = [];
-      for (i = 0, len = $scope.customerNames.length; i < len; ++i) {
-        if ($scope.customerNames[i].display.indexOf(query) != -1) {
-          $rootScope.results.push($scope.customerNames[i]);
-        }
+      function querySearch(query) {
+         $scope.enter = function(keyEvent) {
+               if (keyEvent.which == 40) {
+               }
+            }
+            //Custom Filter
+         $rootScope.results = [];
+         for (i = 0, len = $rootScope.customerNames.length; i < len; ++i) {
+            if ($rootScope.customerNames[i].display.indexOf(query) != -1) {
+               $rootScope.results.push($rootScope.customerNames[i]);
+            }
+         }
+         return $rootScope.results;
       }
-      return $rootScope.results;
-    }
-    $scope.customerNames = [];
-
-    function loadAll() {
-
-      var client = $objectstore.getClient("contact");
-      client.onGetMany(function(data) {
-        if (data) {
-          // $scope.contact =data;
-          for (i = 0, len = data.length; i < len; ++i) {
-            $scope.customerNames.push({
-              display: data[i].Name.toLowerCase(),
-              value: data[i],
-              BillingAddress: data[i].baddress.street + ', ' + data[i].baddress.city + ', ' + data[i].baddress.zip + ', ' + data[i].baddress.state + ', ' + data[i].baddress.country,
-              ShippingAddress: data[i].saddress.s_street + ', ' + data[i].saddress.s_city + ', ' + data[i].saddress.s_zip + ', ' + data[i].saddress.s_state + ', ' +
-                data[i].saddress.s_country
-            });
-          }
-        }
-      });
-      client.onError(function(data) {});
-      client.getByFiltering("*");
-    }
-
+      function loadAll() {
+         var client = $objectstore.getClient("contact");
+         client.onGetMany(function(data) {
+            if (data) {
+                $rootScope.customerNames = [];
+               for (i = 0, len = data.length; i < len; ++i) {
+                  $rootScope.customerNames.push({
+                     display: data[i].Name.toLowerCase(),
+                     value: data[i],
+                     BillingAddress: data[i].baddress.street + ', ' + data[i].baddress.city + ', ' + data[i].baddress.zip + ', ' + data[i].baddress.state + ', ' + data[i].baddress.country,
+                     ShippingAddress: data[i].saddress.s_street + ', ' + data[i].saddress.s_city + ', ' + data[i].saddress.s_zip + ', ' + data[i].saddress.s_state + ', ' +
+                        data[i].saddress.s_country
+                  });
+               }
+            }
+         });
+         client.onError(function(data) {});
+         client.getByFiltering("*");
+      }
     //dialog box pop up to add product
     $scope.addproduct = function(ev) {
       $mdDialog.show({
@@ -111,7 +107,7 @@ angular
         controller: function addProductController($scope, $mdDialog) {
           //add product to the invoice
           $scope.addproductToarray = function() {
-              InvoiceService.setArray({
+              creditNoteService.setArray({
 
                 Productname: $rootScope.selectedProduct.valuep.Productname,
                 price: $rootScope.selectedProduct.valuep.costprice,
@@ -197,7 +193,7 @@ angular
 
     //Delete added products
     $scope.deleteproduct = function(name) {
-      InvoiceService.removeArray(name);
+      creditNoteService.removeArray(name);
     }
 
     //dialog box pop up to add customer through invoice
@@ -205,61 +201,70 @@ angular
         $mdDialog.show({
 
           templateUrl: 'creditNotePartial/addCustomer.html',
-          controller: function DialogController($scope, $mdDialog) {
-            $scope.addTask = "";
-            $scope.email = "";
-            $scope.baddress = {};
-            $scope.saddress = {};
-            $scope.showShipping = $scope.showShipping;
-            $scope.showBilling = !$scope.showBilling;
+             controller: function DialogController($scope, $mdDialog) {
+                  $scope.addTask = "";
+                  $scope.email = "";
+                  $scope.contact={};
+                  $scope.baddress = {};
+                  $scope.saddress = {};
+                  $scope.showShipping = $scope.showShipping;
+                  $scope.showBilling = !$scope.showBilling;
 
-            $scope.closeDialog = function() {
-              $mdDialog.hide();
-            }
-
-            $scope.addressChange = function() {
-              $scope.showShipping = !$scope.showShipping;
-              $scope.showBilling = !$scope.showBilling;
-            }
-
-            $scope.AddCus = function() {
+                  $scope.closeDialog = function() {
+                     $mdDialog.hide();
+                  }
+                  $scope.addressChange = function() {
+                     $scope.showShipping = !$scope.showShipping;
+                     $scope.showBilling = !$scope.showBilling;
+                  }
+                 $scope.AddCus = function() {
               var client = $objectstore.getClient("contact");
-              client.onComplete(function(data) {
-                $mdDialog.show(
-                  $mdDialog.alert()
-                  .parent(angular.element(document.body))
-                  .title('')
-                  .content('Customer Successfully Saved')
-                  .ariaLabel('Alert Dialog Demo')
-                  .ok('OK')
-                  .targetEvent(data)
-                );
-              });
+                       client.onComplete(function(data) {
+                        $mdDialog.show(
+                          $mdDialog.alert()
+                          .parent(angular.element(document.body))
+                          .content('Customer Registed Successfully Saved.')
+                          .ariaLabel('Alert Dialog Demo')
+                          .ok('OK')
+                          .targetEvent(data)
+                         );
+                        });
+                        client.onError(function(data) {
+                         $mdDialog.show(
+                          $mdDialog.alert()
+                          .parent(angular.element(document.body))
+                          .content('There was an error saving the data.')
+                          .ariaLabel('Alert Dialog Demo')
+                          .ok('OK')
+                          .targetEvent(data)
+                         );
+                        });
 
-              client.onError(function(data) {
-                $mdDialog.show(
-                  $mdDialog.alert()
-                  .parent(angular.element(document.body))
-                  .title('Sorry')
-                  .content('Error saving Customer')
-                  .ariaLabel('Alert Dialog Demo')
-                  .ok('OK')
-                  .targetEvent(data)
-                );
+                           $scope.contact.favoritestar = false;
+                           $scope.contact.customerid = "-999";
+                           client.insert($scope.contact, {
+                            KeyProperty: "customerid"
+                     });
 
-              });
-
-              $scope.contact.customerid = "-999";
-              client.insert([$scope.contact], {
-                KeyProperty: "customerid"
-              });
-              $mdDialog.hide();
-            }
-          }
-        })
-      }
-      // end of Add Contact function
-
+                           $rootScope.customerNames.push({
+                              display: $scope.contact.Name.toLowerCase(),
+                              value: $scope.contact,
+                              BillingAddress: $scope.contact.baddress.street + ', ' + $scope.contact.baddress.city + ', ' + $scope.contact.baddress.zip + ', ' + $scope.contact.baddress.state + ', ' + $scope.contact.baddress.country,
+                              ShippingAddress: $scope.contact.saddress.s_street + ', ' + $scope.contact.saddress.s_city + ', ' + $scope.contact.saddress.s_zip + ', ' + $scope.contact.saddress.s_state + ', ' +
+                              $scope.contact.saddress.s_country
+                           });
+                           
+                              var self = this;
+                             for (var i = $rootScope.customerNames.length - 1; i >= 0; i--) {
+                               if ($rootScope.customerNames[i].display == $scope.contact.Name ) {
+                                 $rootScope.selectedItem1 = $rootScope.customerNames[i];
+                               }; 
+                             };
+                     $mdDialog.hide();
+                  }
+               }
+            })
+         }
     $scope.editContact = function() {
       $mdDialog.show({
         templateUrl: 'creditNotePartial/editCustomer.html',
@@ -488,218 +493,10 @@ angular
   //-------------------------------------------------------------------------------------------------------
   //--------------------------------------------------------------------------------------------------------
 
-.controller('viewCtrl', function($scope, $mdDialog, $objectstore, $window, $rootScope, InvoiceService, $filter, $state, $location, UploaderService) {
 
-    $scope.TDCreditNote = {};
-    $scope.newItems = [];
-    $scope.show = false;
-    $scope.showTable = false;
-    $scope.obtable = [];
-
-    var client = $objectstore.getClient("twethdoorCreditNote");
-    client.onGetMany(function(data) {
-      if (data) {
-        $scope.TDCreditNote = data;
-      }
-    });
-
-    client.onError(function(data) {
-      $mdDialog.show(
-        $mdDialog.alert()
-        .parent(angular.element(document.body))
-        .title('This is embarracing')
-        .content('There was an error retreving the data.')
-        .ariaLabel('Alert Dialog Demo')
-        .ok('OK')
-        .targetEvent(data)
-      );
-    });
-    client.getByFiltering("*");
-
-    $scope.$on('viewRecord', function(event, args) {
-      $scope.uploadimages.val.splice(args, 1);
-
-    });
-    $scope.toggleSearch = false;
-    $scope.headers = [{
-      name: 'Name',
-      field: 'name'
-    }, {
-      name: 'Size',
-      field: 'size'
-    }];
-    $scope.custom = {
-      name: 'bold',
-      size: 'grey'
-    };
-    $scope.sortable = ['name', 'size'];
-    $scope.thumbs = 'thumb';
-    $scope.count = 3;
-
-    $scope.add = function() {
-        location.href = '#/creditNoteApp';
-    }
-
-     $scope.DemoCtrl1 = function($timeout, $q) {
-      var self = this;
-      self.readonly = false;
-      self.TDCreditNote.roFruitNames = $scope.TDCreditNotes.roFruitNames;
-
-      self.newVeg = function(chip) {
-        return {
-          name: chip,
-          type: 'unknown'
-        };
-      };
-    }
-
-    $scope.viewSavedProducts = function(obj) {
-      console.log('hit');
-      $mdDialog.show({
-        templateUrl: 'creditNotePartial/editproduct.html',
-        controller: 'testCtrl',
-        locals: {
-          item: obj
-        }
-      });
-    }
-    $scope.calAMount = function(data) {
-      $scope.Amount = 0;
-      $scope.Amount = (((data.price * data.quantity) - ((data.price * data.quantity) * data.discount / 100)) + ((data.price * data.quantity)) * data.tax / 100);
-
-      return $scope.Amount;
-      console.log($scope.Amount);
-    }
-
-    $scope.calculatetotal = function(data) {
-      $scope.total = 0;
-      angular.forEach(data.table, function(tdIinvoice) {
-
-        $scope.total += (((tdIinvoice.price * tdIinvoice.quantity) - ((tdIinvoice.price * tdIinvoice.quantity) * tdIinvoice.discount / 100)) + ((tdIinvoice.price * tdIinvoice.quantity)) * tdIinvoice.tax / 100);
-
-      })
-      return $scope.total;
-      console.log($scope.total);
-    };
-
-    $scope.finaldiscount = function(data) {
-      $scope.finalDisc = 0;
-      $scope.finalDisc = $scope.total - ($scope.total * data.fdiscount / 100);
-      return $scope.finalDisc;
-    }
-
-    $scope.CalculateTax = function(data) {
-      $scope.salesTax = 0;
-      $scope.salesTax = $scope.finalDisc + ($scope.total * data.salesTax / 100);
-      return $scope.salesTax;
-    }
-
-    $scope.CalculateOtherTax = function(data) {
-      $scope.otherTax = 0;
-      $scope.otherTax = $scope.salesTax + ($scope.total * data.anotherTax / 100);
-      return $scope.otherTax;
-    }
-
-    $scope.finalamount = function(data) {
-
-      $scope.famount = 0;
-
-      $scope.famount = parseInt($scope.otherTax) + parseInt(data.shipping);
-
-      return $scope.famount;
-    };
-
-    $scope.edit = function(updatedForm) {
-      var client = $objectstore.getClient("twethdoorCreditNote");
-
-      $scope.TDCreditNote.table = $rootScope.testArray.val;
-      $scope.TDCreditNote.total = $scope.total;
-      $scope.TDCreditNote.finalamount = $scope.famount;
-      $scope.TDCreditNote.status = "N";
-
-
-      client.onComplete(function(data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          .title('')
-          .content('invoice Successfully Saved')
-          .ariaLabel('Alert Dialog Demo')
-          .ok('OK')
-          .targetEvent(data)
-        );
-
-      });
-      client.onError(function(data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          .title('Sorry')
-          .content('Error Saving invoice')
-          .ariaLabel('Alert Dialog Demo')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.insert(updatedForm, {
-        KeyProperty: "creditNoteNo"
-      });
-    }
-
-    $scope.deleteRecord = function(deleteform, ev) {
-
-      var confirm = $mdDialog.confirm()
-        .parent(angular.element(document.body))
-        .title('')
-        .content('Are You Sure You Want To Delete This Record?')
-
-      .ok('Delete')
-        .cancel('Cancel')
-        .targetEvent(ev);
-
-      $mdDialog.show(confirm).then(function() {
-        var client = $objectstore.getClient("twethdoorCreditNote");
-
-        client.onComplete(function(data) {
-
-          $mdDialog.show(
-            $mdDialog.alert()
-            .parent(angular.element(document.body))
-            .content('Record Successfully Deleted')
-            .ariaLabel('')
-            .ok('OK')
-            .targetEvent(data)
-          );
-
-          $state.go($state.current, {}, {
-            reload: true
-          });
-        });
-
-        client.onError(function(data) {
-          $mdDialog.show(
-            $mdDialog.alert()
-            .parent(angular.element(document.body))
-            //.title('This is embarracing')
-            .content('Error Deleting Record')
-            .ariaLabel('')
-            .ok('OK')
-            .targetEvent(data)
-          );
-        });
-
-        client.deleteSingle(deleteform.creditNoteNo, "creditNoteNo");
-      }, function() {
-
-        $mdDialog.hide();
-
-      });
-    }
-
-  })
   //-------------------------------------------------------------------------------------------------------
   //--------------------------------------------------------------------------------------------------------
-  .controller('testCtrl', function($scope, $mdDialog, $rootScope, InvoiceService, item) {
+  .controller('testCtrl', function($scope, $mdDialog, $rootScope, creditNoteService, item) {
 
     $scope.test = item;
 
@@ -760,7 +557,7 @@ angular
 //-------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------
 
-.factory('InvoiceService', function($rootScope) {
+.factory('creditNoteService', function($rootScope) {
     $rootScope.testArray = {
       val: []
     };

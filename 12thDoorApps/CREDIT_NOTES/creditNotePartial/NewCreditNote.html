@@ -5,25 +5,29 @@
         <form name="editForm" ng-submit="submit()" style="width:960px;"  >
             <md-content flex>
                 <div layout layout-sm="column" layout-margin  >
-                    <div flex="5">
-                        <img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:22px;border-radius:20px"/>
-                    </div>
-                    <div flex="20" style="margin-top:35px;">
-                        <label style="font-weight:700">Customer Details</label>
-                    </div>
-                    <md-autocomplete flex="67" required="" 
-                    md-input-name="autocompleteField"
-                         md-no-cache="ctrl.noCache" 
-                         md-selected-item="$root.selctedName" 
-                         md-search-text="ctrl.searchText"
-                          md-items="item in ctrl.querySearch(ctrl.searchText)" 
+                    <section-title title="Customer Details"> </section-title>
+                    <md-autocomplete flex="70" required="" 
+                          ng-keydown="enter($event)"
+                          ng-disabled="ctrl.isDisabled" 
+                          md-no-cache="ctrl.noCache" 
+                          md-selected-item="$root.selectedItem1" 
+                          md-search-text-change="ctrl.searchTextChange($root.searchText)"
+                          md-search-text="$root.searchText"
+                          md-items="item in ctrl.querySearch($root.searchText)" 
                           md-item-text="item.display" 
                           md-floating-label="Customer"
                           md-autofocus="true"
-                           md-selected-item-change="selectedItemChange($root.selctedName)"
-                          >
+                          md-selected-item-change="selectedItemChange($root.selectedItem1)" >
                         <md-item-template>
-                            <span  md-highlight-text="ctrl.searchText"  md-highlight-flags="^i">{{item.display}}</span>
+                           <span class="item-title">
+                                <span>{{item.display}}</span>
+                            </span>
+                            <span class="item-metadata">
+                                <span class="item-metastat">
+                                    <strong><{{item.value.Email}}></strong>
+                                </span>
+                                <md-divider></md-divider>
+                            </span>
                         </md-item-template>
                     </md-autocomplete>
                     <!-- <custom-input button="newOption()" button-icon="switch"></custom-input> -->
@@ -50,16 +54,15 @@
                     </div>
                 </div>
                 <div layout layout-sm="column" layout-margin>
-                    <div flex="5" class="blankspace"></div>
-                    <div flex="20" class="blankspace"></div>
+                    <section-title> </section-title>
                      
-                    <md-input-container flex="67" ng-show="Billingaddress">
+                     <md-input-container flex="73" ng-show="Billingaddress">
                         <label>Billing Address</label>
-                        <input  ng-model="$root.selctedName.BillingAddress " ng-disabled="true"/>
+                        <input  ng-model="$root.selectedItem1.BillingAddress " ng-disabled="true"/>
                     </md-input-container>
-                    <md-input-container flex="67" ng-show="Shippingaddress" >
+                    <md-input-container flex="73" ng-show="Shippingaddress" >
                         <label>Shipping Address</label>
-                        <input  ng-model="$root.selctedName.ShippingAddress " ng-disabled="true"/>
+                        <input  ng-model="$root.selectedItem1.ShippingAddress " ng-disabled="true"/>
                     </md-input-container>
 
                       <div style="height:30px;width:30px;margin-top:35px;"> 
@@ -71,8 +74,7 @@
 
                 <div layout layout-sm="column" layout-margin>
                    
-                    <div flex="5" class="blankspace"></div>
-                    <div flex="20" class="blankspace"></div>
+                    <section-title> </section-title>
                    
                     <md-input-container flex >
                         <label>Credit Note No.</label>
@@ -85,9 +87,7 @@
 
                     <div layout layout-sm="column" layout-margin>
                        
-                        <div flex="5" class="blankspace"></div>
-                        <div flex="20" class="blankspace"></div>
- 
+                        <section-title> </section-title>
 
                 <md-autocomplete flex=""  
                           ng-keypress="enter($event)"
@@ -109,8 +109,7 @@
                 </div>
                 <div layout layout-sm="column" layout-margin>
                    
-                    <div flex="5" class="blankspace"></div>
-                    <div flex="20" class="blankspace"></div>
+                    <section-title> </section-title>
                    
                     <md-input-container flex >
                         <label>Internal Note.</label>
@@ -121,12 +120,8 @@
                         <md-divider></md-divider>
                         <div >
                             <div layout layout-sm="row" layout-margin  >
-                                <div flex="5">
-                                    <img src="img/material alperbert/avatar_tile_i_28.png" style="margin-top:22px;border-radius:20px"/>
-                                </div>
-                                <div flex="20" style="margin-top:35px;">
-                                    <label style="font-weight:700">Item Details</label>
-                                </div>
+                            <section-title title="Item Details"> </section-title>
+                               
                                         <div>
                                               <ul as-sortable="sortableOptions"  ng-model="testArray.val"  flex>
                                                   <li ng-repeat="item in testArray.val" as-sortable-item flex style="margin-bottom:20px !important;">
@@ -211,12 +206,7 @@
                                        <md-divider></md-divider>             
                                                      
                                                       <div layout layout-sm="column" layout-margin>
-                                                      <div flex="5">
-                                                          <img src="img/material alperbert/avatar_tile_t_28.png" style="margin-top:22px;border-radius:20px"/>
-                                                      </div>
-                                                      <div flex="20" style="margin-top:35px;">
-                                                          <label style="font-weight:700">Totals</label>
-                                                      </div>
+                                                      <section-title title="Totals"> </section-title>
                                                       
                                                       </div>
                                                        <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
@@ -344,12 +334,8 @@
 
                                                     <md-divider></md-divider>
                                                     <div layout layout-sm="column" layout-margin>
-                                                        <div flex="5">
-                                                            <img src="img/material alperbert/avatar_tile_o_28.png" style="margin-top:22px;border-radius:20px"/>
-                                                        </div>
-                                                        <div flex="20" style="margin-top:35px;">
-                                                            <label style="font-weight:700">Optional Details</label>
-                                                        </div>
+                                                        
+                                                        <section-title title="Optional Details"> </section-title>
                                                         <md-input-container flex >
                                                             <label>Notes</label>
                                                             <input ng-model="TDCreditNote.notes">
@@ -357,8 +343,7 @@
                                                         </div>
                                                         
                                                         <div layout layout-sm="column" layout-margin>
-                                                            <div flex="5" class="blankspace"></div>
-                                                            <div flex="20" class="blankspace"></div>
+                                                            <section-title> </section-title>
                                                             <div ng-init="DemoCtrl()" layout="column" class="chipsdemoBasicUsage" flex>
                                                                 <md-content class="md-padding" layout="column" style="margin-left:-15px;">
                                                                     <md-chips
@@ -374,11 +359,10 @@
                                                         </div>
                                                    
                                                      <div layout layout-sm="column" layout-margin  >
-                                                        <div flex="5"></div>
-                                                        <div flex="20" style="margin-top:35px;"></div>
-                                                          <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
-                                                       <md-button href class="md-raised md-primary" style="height:5px; " ng-click="upload()"> upload</md-button>
-                                                           </div>
+                                                         <section-title > </section-title>
+                                                          <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:0px;">
+                                                          <md-button href class=" md-primary" style="height:5px; " ng-click="upload()"> upload </md-button>
+                                                      </div>
                                                         </div>
                                                         <md-divider></md-divider>
                                                  <div class="md-actions" layout="row" layout-sm="column" layout-align="end start" >

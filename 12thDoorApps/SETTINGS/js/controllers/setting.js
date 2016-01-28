@@ -638,20 +638,20 @@ angular
 
 	console.log($rootScope.Settings12thdoor);	
 
-	// var client = $objectstore.getClient("Settings12thdoor");
+	var client = $objectstore.getClient("Settings12thdoor");
 
-	// client.onGetMany(function(data) {
-	// 	if (data) {
-	// 		$rootScope.Settings12thdoor=data[0];
-	// 		console.log($rootScope.Settings12thdoor);
-	// 	}
-	// 	else
-	// 	{
-	// 		$rootScope.Settings12thdoor = $rootScope.Settings12thdoor;
-	// 	}
-	// });
+	client.onGetMany(function(data) {
+		if (data) {
+			$rootScope.Settings12thdoor=data[0];
+			console.log($rootScope.Settings12thdoor);
+		}
+		else
+		{
+			$rootScope.Settings12thdoor = $rootScope.Settings12thdoor;
+		}
+	});
 
-	// client.getByFiltering("*");
+	client.getByFiltering("*");
 
 	$scope.submit = function() {
 		console.log($rootScope.Settings12thdoor);	

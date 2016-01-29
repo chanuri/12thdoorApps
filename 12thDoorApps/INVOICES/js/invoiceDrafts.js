@@ -288,7 +288,7 @@ angular.module('mainApp')
 //------------------------------------------------------------------------------------------------
    //------------------------------------------------------------------------------------------------
    .factory('MultipleDudtesService', function($rootScope) {
-      $rootScope.dateArray = {value: []};
+      $rootScope.dateArray = {value:[]};
       $rootScope.getDateArr = {val:[]};
       $rootScope.showmsg = false;
       return {

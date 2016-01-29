@@ -2,6 +2,11 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope, $state, $objectstore,
 	// sort function variable start
 
 
+
+	$scope.openProject = function(proId){
+		$state.go("viewScreen", {'projectid' : proId});
+	}
+
 	$scope.sortarr = [{
 		name: "Starred",
 		id: "Starred",
@@ -25,28 +30,28 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope, $state, $objectstore,
 	$scope.self = this;
 	$scope.indexno = 1;
 	$scope.starfunc = function(item, index) {
-			if (item.id === "Starred") {
-				$scope.self.searchText = "true";
-				console.log(JSON.stringify($scope.self))
+		if (item.id === "Starred") {
+			$scope.self.searchText = "true";
+			console.log(JSON.stringify($scope.self))
+		} else {
+			if (item.upstatus == false && item.downstatus == false) {
+				item.upstatus = !item.upstatus;
+				$scope.sortarr[$scope.indexno].upstatus = false;
+				$scope.sortarr[$scope.indexno].downstatus = false;
+				$scope.indexno = index;
 			} else {
-				if (item.upstatus == false && item.downstatus == false) {
-					item.upstatus = !item.upstatus;
-					$scope.sortarr[$scope.indexno].upstatus = false;
-					$scope.sortarr[$scope.indexno].downstatus = false;
-					$scope.indexno = index;
-				} else {
-					item.upstatus = !item.upstatus;
-					item.downstatus = !item.downstatus;
-				}
-				self.searchText = null;
-				if (item.upstatus) {
-					$rootScope.prodSearch = item.id;
-				}
-				if (item.downstatus) {
-					$rootScope.prodSearch = '-' + item.id;
-				}
+				item.upstatus = !item.upstatus;
+				item.downstatus = !item.downstatus;
+			}
+			self.searchText = null;
+			if (item.upstatus) {
+				$rootScope.prodSearch = item.id;
+			}
+			if (item.downstatus) {
+				$rootScope.prodSearch = '-' + item.id;
 			}
 		}
+	}
 		//sort function variable end 
 	$scope.projects = [];
 	$scope.checkAbilityBtn = true;
@@ -58,7 +63,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope, $state, $objectstore,
 		$scope.selectedIndex = 1;
 	};
 	$scope.loadAllprojects = function() {
-		var client = $objectstore.getClient("project");
+		var client = $objectstore.getClient("project12thdoor");
 		client.onGetMany(function(data) {
 			if (data) {
 				$scope.projects = data;
@@ -80,88 +85,6 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope, $state, $objectstore,
 		});
 		client.getByFiltering("*");
 	};
-	$scope.updateProject = function(updatedform, pid) {
-		var client = $objectstore.getClient("project");
-		client.onComplete(function(data) {
-			$mdDialog.show($mdDialog.alert()
-				.parent(angular
-					.element(document.body))
-				.content(
-					'Project details updated Successfully'
-				)
-				.ariaLabel('Alert Dialog Demo')
-				.ok(
-					'OK')
-				.targetEvent(data));
-		});
-		client.onError(function(data) {
-			$mdDialog.show($mdDialog.alert()
-				.parent(angular
-					.element(document.body))
-				.title(
-					'This is embarracing')
-				.content(
-					'There was an error updating the project details.'
-				)
-				.ariaLabel('Alert Dialog Demo')
-				.ok(
-					'OK')
-				.targetEvent(data));
-		});
-		updatedform.projectid = pid;
-		client.insert(updatedform, {
-			KeyProperty: "projectid"
-		});
-	}
-	$scope.deleteProject = function(deleteform, ev) {
-		var confirm = $mdDialog.confirm()
-			.parent(angular.element(
-				document.body))
-			.title('')
-			.content(
-				'Are You Sure You Want To Delete This Record?')
-			.ok(
-				'Delete')
-			.cancel('Cancel')
-			.targetEvent(ev);
-		$mdDialog.show(confirm)
-			.then(function() {
-				var client = $objectstore.getClient("project");
-				client.onComplete(function(data) {
-					$mdDialog.show($mdDialog.alert()
-						.parent(
-							angular.element(
-								document.body))
-						.content(
-							'Record Successfully Deleted'
-						)
-						.ariaLabel('')
-						.ok('OK')
-						.targetEvent(
-							data));
-					$state.go($state.current, {}, {
-						reload: true
-					});
-				});
-				client.onError(function(data) {
-					$mdDialog.show($mdDialog.alert()
-						.parent(
-							angular.element(
-								document.body))
-						.content(
-							'Error Deleting Record'
-						)
-						.ariaLabel('')
-						.ok('OK')
-						.targetEvent(
-							data));
-				});
-				client.deleteSingle(deleteform.projectid,
-					"projectid");
-			}, function() {
-				$mdDialog.hide();
-			});
-	}
 	$scope.favouriteFunction = function(obj) {
 		var client = $objectstore.getClient("project");
 		client.onComplete(function(data) {
@@ -324,8 +247,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope, $state, $objectstore,
      $scope.sunDate=moment(sunDate).format('MMM DD');  
      
    
-    $scope.changeDateFront=function(wtime){
-        
+    $scope.changeDateFront=function(wtime){        
        
         var date=new Date(wtime.ssdate);
         
@@ -348,11 +270,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope, $state, $objectstore,
         wtime.weddate=moment(wtime.weddate).format('MMM DD');
         wtime.thudate=moment(wtime.thudate).format('MMM DD');
         wtime.fridate=moment(wtime.fridate).format('MMM DD');
-        wtime.satdate=moment(wtime.satdate).format('MMM DD');
-       
-        
-        
-                
+        wtime.satdate=moment(wtime.satdate).format('MMM DD');            
     }
     $scope.changeDateBack=function(wtime){
          var date=new Date(wtime.ssdate);

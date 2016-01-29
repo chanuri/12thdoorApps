@@ -61,7 +61,7 @@ rasm.controller('timeTrack',function($scope,$state,$mdDialog,$projectEvent,$inte
     // OLD CALANDER
     
 
-	// $scope.uiConfig = {
+ //     $scope.uiConfig = {
  //      calendar:{
  //        height: 500,
  //        editable: true,
@@ -124,7 +124,7 @@ rasm.controller('timeTrack',function($scope,$state,$mdDialog,$projectEvent,$inte
 				$rootScope.calendarArr[obj.date].push(obj)
 				$scope.eventTime = obj.time;
 				$scope.eventName = obj.name;
-				$scope.bil = obj.billStatus
+				//$scope.bil = obj.billStatus
 				$scope.newObj = {};
 				$scope.newObj = obj;
 				MaterialCalendarData.setDayContent(obj.fullDate, $interpolate('<p> {{eventTime}}</p>	<div style="margin-top: -15px;"><md-checkbox ng-checked="{{newObj.billStatus}}" style="margin-left: 0px;" aria-label="Bilable"><span style="margin-left:10px;">Bilable</span> </md-checkbox></div>')($scope));

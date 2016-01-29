@@ -1,239 +1,55 @@
 rasm.controller('AppCtrlGetTimesheet', function($scope, $rootScope, $state, $objectstore, $location, $mdDialog, $window, $objectstore, $auth, $q,
-	$http, $compile, $timeout, $mdToast) {
-	$rootScope.prodSearch = "date";
-	$scope.self = this;
-	$scope.indexnosort = 1;
-	$scope.sortarrtimesheet = [{
-		name: "Starred",
-		id: "Starred",
-		src: "img/ic_grade_48px.svg",
-		upstatus: false,
-		downstatus: false
-	}, {
-		name: "Date",
-		id: "date",
-		src: "img/ic_add_shopping_cart_48px.svg",
-		upstatus: true,
-		downstatus: false
-	}, {
-		name: "Time",
-		id: "hours",
-		src: "img/ic_add_shopping_cart_48px.svg",
-		upstatus: false,
-		downstatus: false
-	}, {
-		name: " Task Name",
-		id: "task",
-		src: "img/ic_add_shopping_cart_48px.svg",
-		upstatus: false,
-		downstatus: false
-	}]
-	$scope.starfunc = function(item, index) {
-			if (item.id === "Starred") {
-				$scope.self.searchText = "true";
-				console.log(JSON.stringify($scope.self))
-			} else {
-				if (item.upstatus == false && item.downstatus == false) {
-					item.upstatus = !item.upstatus;
-					$scope.sortarrtimesheet[$scope.indexnosort].upstatus = false;
-					$scope.sortarrtimesheet[$scope.indexnosort].downstatus = false;
-					$scope.indexnosort = index;
-				} else {
-					item.upstatus = !item.upstatus;
-					item.downstatus = !item.downstatus;
-				}
-				self.searchText = null;
-				if (item.upstatus) {
-					$rootScope.prodSearch = item.id;
-				}
-				if (item.downstatus) {
-					$rootScope.prodSearch = '-' + item.id;
-				}
+	$http, $compile, $timeout, $mdToast) { 
+
+	$scope.Timesheets = [];
+	$scope.loadAllTimesheets = function() {
+		var client = $objectstore.getClient("timeSheet12thdoor");
+		client.onGetMany(function(data) {
+			if (data) {
+				$scope.Timesheets = data;
+				loadAllProject();
 			}
-		}
+		});
+		client.onError(function(data) {
+			$mdDialog.show($mdDialog.alert().parent(angular
+				.element(document.body)).title('This is embarracing')
+				.content('There was an error retreving the data.')
+				.ariaLabel('Alert Dialog Demo')
+				.ok('OK')
+				.targetEvent(data));
+		});
+		client.getByFiltering("*");
+	};
+
+	function loadAllProject(){
+		var projectClient = $objectstore.getClient("project12thdoor");
+		projectClient.onGetMany(function(data){
+			$scope.projectArr = [];
+			for(k=0; k <= data.length-1; k++){
+				$scope.projectArr.push({
+					proName : data[k].name,
+					proId : data[k].projectid
+				})			
+			}
+			for(p=0; p <= $scope.Timesheets.length-1; p++){
+				$scope.Timesheets[p].allProject = [];
+				$scope.Timesheets[p].allProject = $scope.projectArr;
+			}
+			
+		});
+		projectClient.onError(function(data){
+			console.log("error loading project data")
+		});
+		projectClient.getByFiltering("*");
+	}
+ 
 		//sort function variable end 
 	$rootScope.showaddProject = false;
 	$scope.Timesheets = [];
 	$scope.checkAbilityBtn = true;
 	$scope.checkAbilityEditing = true;
 	$scope.proSearch = "";
-	$scope.loadAllTimesheets = function() {
-		var client = $objectstore.getClient("time");
-		client.onGetMany(function(data) {
-			if (data) {
-				$scope.Timesheets = data;
-			}
-		});
-		client.onError(function(data) {
-			$mdDialog.show($mdDialog.alert()
-				.parent(angular
-					.element(document.body))
-				.title(
-					'This is embarracing')
-				.content(
-					'There was an error retreving the data.'
-				)
-				.ariaLabel('Alert Dialog Demo')
-				.ok(
-					'OK')
-				.targetEvent(data));
-		});
-		client.getByFiltering("*");
-	};
-	$scope.updateTimesheet = function(updatedform, pid) {
-		var client = $objectstore.getClient("time");
-		client.onComplete(function(data) {
-			$mdDialog.show($mdDialog.alert()
-				.parent(angular
-					.element(document.body))
-				.content(
-					'Timesheet updated Successfully'
-				)
-				.ariaLabel('Alert Dialog Demo')
-				.ok(
-					'OK')
-				.targetEvent(data));
-		});
-		client.onError(function(data) {
-			$mdDialog.show($mdDialog.alert()
-				.parent(angular
-					.element(document.body))
-				.title(
-					'This is embarracing')
-				.content(
-					'There was an error updating the Timesheet.'
-				)
-				.ariaLabel('Alert Dialog Demo')
-				.ok(
-					'OK')
-				.targetEvent(data));
-		});
-		updatedform.projectid = pid;
-		client.insert(updatedform, {
-			KeyProperty: "timesheetid"
-		});
-	}
-	$scope.deleteTimesheet = function(deleteform, ev) {
-		var confirm = $mdDialog.confirm()
-			.parent(angular.element(
-				document.body))
-			.title('')
-			.content(
-				'Are You Sure You Want To Delete This Record?')
-			.ok(
-				'Delete')
-			.cancel('Cancel')
-			.targetEvent(ev);
-		$mdDialog.show(confirm)
-			.then(function() {
-				var client = $objectstore.getClient("time");
-				client.onComplete(function(data) {
-					$mdDialog.show($mdDialog.alert()
-						.parent(
-							angular.element(
-								document.body))
-						.content(
-							'Record Successfully Deleted'
-						)
-						.ariaLabel('')
-						.ok('OK')
-						.targetEvent(
-							data));
-					$state.go($state.current, {}, {
-						reload: true
-					});
-				});
-				client.onError(function(data) {
-					$mdDialog.show($mdDialog.alert()
-						.parent(
-							angular.element(
-								document.body))
-						.content(
-							'Error Deleting Record'
-						)
-						.ariaLabel('')
-						.ok('OK')
-						.targetEvent(
-							data));
-				});
-				client.deleteSingle(deleteform.projectid,
-					"timesheetid");
-			}, function() {
-				$mdDialog.hide();
-			});
-	}
-	$scope.favouriteFunction = function(obj) {
-		var client = $objectstore.getClient("time");
-		client.onComplete(function(data) {
-			if (obj.favoritestar) {
-				var toast = $mdToast.simple()
-					.content(
-						'Add To Favourite')
-					.action('OK')
-					.highlightAction(
-						false)
-					.position("bottom right");
-				$mdToast.show(toast)
-					.then(function() {});
-			} else if (!(obj.favoritestar)) {
-				var toast = $mdToast.simple()
-					.content(
-						'Remove from Favourite')
-					.action(
-						'OK')
-					.highlightAction(false)
-					.position(
-						"bottom right");
-				$mdToast.show(toast)
-					.then(function() {});
-			};
-		});
-		client.onError(function(data) {
-			$mdDialog.show($mdDialog.alert()
-				.parent(angular
-					.element(document.body))
-				.content(
-					'Error Occure while Adding to Favourite'
-				)
-				.ariaLabel('')
-				.ok('OK')
-				.targetEvent(
-					data));
-		});
-		obj.favoritestar = !obj.favoritestar;
-		client.insert(obj, {
-			KeyProperty: "timesheetid"
-		});
-	}
-	$scope.sortFunciton = function(name) {
-		$scope.projectSearch = name;
-		self.searchText = null;
-	}
-	$scope.testfunc = function() {
-		self.searchText = "true"
-	}
-	$scope.addStaffupdate = function(add) {
-		add.push({
-			sno: add.length + 1,
-			staffname: "",
-			shr: "",
-			removebtnDisable: true
-		})
-	}
-	$scope.removeStaffupdate = function(index, proj) {
-		$scope.projects[index].staffs.splice(proj, 1);
-	}
-	$scope.addTaskupdate = function(add) {
-		add.push({
-			tno: add.length + 1,
-			taskName: "",
-			thr: "",
-			removebtnDisable: true
-		})
-	}
-	$scope.removeTaskupdate = function(index, proj) {
-		$scope.projects[index].tasks.splice(proj, 1);
-	}
+ 
 	$scope.onChangeEditing = function(cbState, state) {
 		if (cbState == true) {
 			$scope.checkAbilityEditing = false;

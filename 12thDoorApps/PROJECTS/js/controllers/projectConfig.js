@@ -36,6 +36,11 @@ rasm.config(function($stateProvider, $urlRouterProvider) {
 			templateUrl: 'project_partial/projectTimelog.html',
 			controller: 'timeTrack'
 		})
+		.state('viewScreen', {
+			url: '/viewScreen/proID=:projectid',
+			templateUrl: 'project_partial/project_view_screen.html',
+			controller: 'viewScreen'
+		})
 });
 rasm.config(function($mdThemingProvider) {
 	$mdThemingProvider.theme('datePickerTheme')

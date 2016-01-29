@@ -288,16 +288,16 @@ angular.module('mainApp')
 //------------------------------------------------------------------------------------------------
    //------------------------------------------------------------------------------------------------
    .factory('MultipleDudtesService', function($rootScope) {
-      $rootScope.dateArray = {value:[]};
+      $rootScope.dateArray = {val:[]};
       $rootScope.getDateArr = {val:[]};
       $rootScope.showmsg = false;
       return {
          setDateArray: function(newVal) {
-            $rootScope.dateArray.value.push(newVal);
+            $rootScope.dateArray.val.push(newVal);
             return $rootScope.dateArray;
          },
          removeDateArray: function(newVals) {
-            $rootScope.dateArray.value.splice(newVals, 1);
+            $rootScope.dateArray.val.splice(newVals, 1);
             return $rootScope.dateArray;
          },
 

@@ -14,7 +14,7 @@
     <div flex="5"></div>
         <h3>Invoice Total USD {{$root.famount|currency}}</h3>
     </div>
-        <div layout layout-sm="column" layout-margin  ng-if="aDatearr.value.length == 0">
+        <div layout layout-sm="column" layout-margin  ng-if="aDatearr.val.length == 0">
             <div flex="5"></div>
             <div layout layout-sm="row" layout-margin >
                 <div class="table-responsive-vertical"  style="overflow-x:hidden; margin-left:-20px;" >
@@ -67,7 +67,7 @@
                    <!--  <section-title > </section-title> -->
                  <table id="table" class="table table-hover table-mc-light-blue" >
                         <tbody>
-                            <tr animate ng-repeat="cc in aDatearr.value">
+                            <tr animate ng-repeat="cc in aDatearr.val">
                                 <td data-title="Item Detail" >
                                     <div layout layout-sm="column" layout-margin>
                                     <md-input-container flex style="margin-top:-15px; padding-left:10px;">

@@ -338,7 +338,7 @@ angular
             $mdDialog.show({
                templateUrl: 'Invoicepartials/MultipleDuedates.html',
                controller: function addMultipleDueDates($scope, $mdDialog) {
-               $scope.aDatearr = {value:[]};
+               $scope.aDatearr = {val:[]};
                $scope.aDatearr = angular.copy($rootScope.dateArray);
                $scope.duePaymenet = angular.copy($rootScope.famount);
                $scope.newfamount = angular.copy($rootScope.famount)
@@ -404,7 +404,7 @@ angular
                   };
 
                   $scope.rmoveDate = function(index){
-                     $scope.aDatearr.value.splice($scope.aDatearr.value.indexOf(index), 1 );
+                     $scope.aDatearr.val.splice($scope.aDatearr.val.indexOf(index), 1 );
                   }
                   $scope.removeItem = function(index) {
                       $scope.testarr.splice( $scope.testarr.indexOf(index), 1 );
@@ -1008,7 +1008,7 @@ angular
                            balance :$scope.famount
                         }];
         }else{
-          $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.value;
+          $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.val;
         }
 
     $scope.ProgressBar.PaymentSchemeData.push($scope.TDinvoice.MultiDueDAtesArr);
@@ -1245,7 +1245,7 @@ angular
                            balance :$scope.famount
                         }];
         }else{
-          $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.value;
+          $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.val;
         }
          $scope.TDinvoice.UploadImages = {
             val: []
@@ -1281,7 +1281,7 @@ angular
 
             }, function() {
                $rootScope.testArray.val = "";
-                $rootScope.dateArray.value = "";
+                $rootScope.dateArray.val = "";
                  $scope.total = "";
                  $scope.famount="";
                  $rootScope.selectedItem1.display="";

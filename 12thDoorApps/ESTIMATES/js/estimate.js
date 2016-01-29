@@ -533,8 +533,9 @@ angular
       }
 //---------------------------------------------------------------------------------------
     //Delete added products
-    $scope.deleteproduct = function(name) {
-      InvoiceService.removeArray(name);
+    $scope.deleteproduct = function(name,index) {
+      // InvoiceService.removeArray(name);
+      $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(name), 1);
     }
 //----------------------------------------------------------------------------------------
     //dialog box pop up to add customer through invoice
@@ -925,7 +926,7 @@ angular
       //   val: []
       // };
       // $scope.TDEstimate.UploadImages.val = UploaderService.loadBasicArray();
-  console.log( $scope.TDEstimate.Email)
+
       client.onComplete(function(data) {
         $mdDialog.show(
           $mdDialog.alert()

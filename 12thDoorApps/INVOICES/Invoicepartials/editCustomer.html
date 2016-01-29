@@ -42,6 +42,7 @@
             <div layout layout-sm="column" layout-margin >
                 
                  <section-title title="Billing Address"> </section-title>
+                 <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
                 <md-input-container id="accContainer" flex >
                     <label>Street</label>
                     <input id="accNo" ng-model="$root.selectedItem1.value.baddress.street" required></input>
@@ -81,6 +82,7 @@
                 <div layout layout-sm="column" layout-margin >
                 
                     <section-title title="Shipping Address"> </section-title>
+                    <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
                     <md-input-container id="accContainer" flex >
                         <label>Street</label>
                         <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_street"></input>

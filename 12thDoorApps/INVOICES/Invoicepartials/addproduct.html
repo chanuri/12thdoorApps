@@ -33,7 +33,9 @@
                     <label>Quantity</label>
                     <input type="number" ng-model="qty" ng-change="setSelectedClient($root.searchTextt)" required/>
                 </md-input-container>
+                <!-- {{$root.AllUnitOfMeasures}} -->
                 <div flex ng-repeat="pim in promoItems" >
+
                     <md-input-container >
                         <label>Unit</label>
                             <md-select ng-model="pim.ProductUnit" ng-change="setUOM(pim)" flex required/>

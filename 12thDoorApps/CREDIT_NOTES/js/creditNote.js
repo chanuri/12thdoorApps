@@ -21,21 +21,102 @@ angular
     controller: 'viewCtrl'
   })
 
+  .state('view', {
+    url: '/viewcreditNotes/CnNo=:Cnno',
+    templateUrl: 'creditNotePartial/viewCNote.html',
+    controller: 'viewCtrl'
+  })
+
 })
 
-.controller('AppCtrl', function($scope, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, creditNoteService, $filter, $location, UploaderService, MultipleDudtesService) {
-
+.controller('AppCtrl', function($scope, $objectstore,$state, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, creditNoteService, $filter, $location, UploaderService) {
+ $scope.Settings = {};
     $scope.list = [];
     $scope.TDCreditNote = {};
     $scope.total = 0;
     $scope.product = {};
     $scope.TDCreditNote.creditNoteNo = 'N/A'
     $scope.Showdate = false;
-    $scope.TDCreditNote.date = $filter("date")(Date.now(), 'yyyy-MM-dd');
+    $scope.TDCreditNote.date = new Date();
     $scope.showEditCustomer = false;
     $scope.dueDtaesShow = false;
     $scope.Billingaddress = true;
     $scope.Shippingaddress = false;
+    
+     $scope.totalSection = false;
+      $scope.ShippingSwitch = false;
+      $scope.TDCreditNote.fdiscount = 0;
+      $scope.TDCreditNote.salesTaxAmount = 0;
+      $scope.TDCreditNote.anotherTax = 0;
+      $scope.TDCreditNote.shipping = 0;
+       $scope.AllTaxes = [];
+       $scope.individualTax = [];
+       $scope.UnitOfMeasure = [];
+       $scope.CusFields = [];
+       $scope.roles = [];
+       $scope.permission = [];
+
+     $scope.InvoiceDetails = [];   
+       var client = $objectstore.getClient("domainClassAttributes");
+      client.onGetMany(function(data) {
+         if (data) {
+          $scope.InvoiceDetails = data;
+
+        for (var i = $scope.InvoiceDetails.length - 1; i >= 0; i--) {
+          $scope.ID = $scope.InvoiceDetails[i].maxCount;
+    };
+    $scope.maxID = parseInt($scope.ID)+1;
+    $scope.TDCreditNote.creditNoteRefNo = $scope.maxID.toString();
+         }
+      });
+      client.getByFiltering("select maxCount from domainClassAttributes where class='CNote12thdoor'");
+
+      var client = $objectstore.getClient("Settings12thdoor");
+      client.onGetMany(function(data) {
+         if (data) {
+           $scope.Settings = data;
+            for (var i =  $scope.Settings.length - 1; i >= 0; i--) {
+                
+              $scope.dis = $scope.Settings[i].preference.invoicepref.disscountItemsOption;
+              $scope.ShippingCharges= $scope.Settings[i].preference.invoicepref.enableshipping;
+              $scope.partialPayment =  $scope.Settings[i].preference.invoicepref.allowPartialPayments;
+              $scope.ShowDiscount = $scope.Settings[i].preference.invoicepref.enableDisscounts;
+              $scope.ShowShipAddress = $scope.Settings[i].preference.invoicepref.displayshipaddress;
+              $scope.ShowTaxes = $scope.Settings[i].preference.invoicepref.enableTaxes;
+              $scope.offlinePayments = $scope.Settings[i].preference.invoicepref.offlinePayments;
+              $scope.EmailPermission = $scope.Settings[i].preference.invoicepref.copyadminallinvoices;
+              $scope.mail = $scope.Settings[i].profile.adminEmail;
+              $scope.BaseCurrency = $scope.Settings[i].profile.baseCurrency;
+             
+
+               $scope.cusF = $scope.Settings[i].preference.invoicepref.CusFiel
+
+               for (var x = $scope.Settings[i].taxes.individualtaxes.length - 1; x >= 0; x--) {
+                 $scope.individualTax.push($scope.Settings[i].taxes.individualtaxes[x]);
+               };
+               for (var y = $scope.Settings[i].taxes.multipletaxgroup.length - 1; y >= 0; y--) {
+                $scope.individualTax.push($scope.Settings[i].taxes.multipletaxgroup[y]); 
+               };
+               
+                for (var z = $scope.Settings[i].preference.productpref.units.length - 1; z >= 0; z--) {
+                  $scope.UnitOfMeasure.push($scope.Settings[i].preference.productpref.units[z])
+                };
+                
+            };
+         }
+
+      
+        
+        $scope.AllTaxes = $scope.individualTax;
+        $scope.UOM = $scope.UnitOfMeasure;
+        $scope.CusFields = $scope.cusF;
+        $scope.Displaydiscount = $scope.ShowDiscount;
+      });
+      client.onError(function(data) {
+      });
+      client.getByFiltering("*");
+
+
 
     //checks whether the use has selected a name or not. if the name is selecter the it enebles the user to edit the customer details
     $scope.selectedItemChange = function(c) {
@@ -52,7 +133,7 @@ angular
     }
 
     //Autocomplete to get client details
-      $rootScope.self = this;
+       $rootScope.self = this;
       $rootScope.self.tenants = loadAll();
       $rootScope.selectedItem1 = null;      
       $rootScope.self.querySearch = querySearch; 
@@ -79,11 +160,12 @@ angular
          }
          return $rootScope.results;
       }
+      $rootScope.customerNames = [];
       function loadAll() {
          var client = $objectstore.getClient("contact");
          client.onGetMany(function(data) {
             if (data) {
-                $rootScope.customerNames = [];
+                
                for (i = 0, len = data.length; i < len; ++i) {
                   $rootScope.customerNames.push({
                      display: data[i].Name.toLowerCase(),
@@ -98,108 +180,373 @@ angular
          client.onError(function(data) {});
          client.getByFiltering("*");
       }
+
     //dialog box pop up to add product
     $scope.addproduct = function(ev) {
+       $rootScope.AllUnitOfMeasures = [];
+       $rootScope.taxType = angular.copy($scope.AllTaxes);
+          $rootScope.AllUnitOfMeasures = angular.copy($scope.UOM)
+          $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
+          $rootScope.discounts = angular.copy($scope.dis);
+          $rootScope.DisplayTaxes =  angular.copy($scope.ShowTaxes);
+          //console.log($rootScope.AllUnitOfMeasures.unitsOfMeasurement);
+            if($rootScope.Showdiscount == true){
+              if($rootScope.discounts == "Individual Items"){
+                $rootScope.displayDiscountLine = true;
+              }
+            }
       $mdDialog.show({
 
         templateUrl: 'creditNotePartial/addproduct.html',
         targetEvent: ev,
         controller: function addProductController($scope, $mdDialog) {
-          //add product to the invoice
-          $scope.addproductToarray = function() {
-              creditNoteService.setArray({
+           $scope.prducatsAdd = {};
+               $scope.prod = {};
+               $scope.promoItems = [];
+               $scope.taxType = [];
+               $scope.AllUnitOfMeasures = [];
 
-                Productname: $rootScope.selectedProduct.valuep.Productname,
-                price: $rootScope.selectedProduct.valuep.costprice,
-                quantity: $scope.tdIinvoice.qty,
-                ProductUnit: $rootScope.selectedProduct.valuep.ProductUnit,
-                discount: $scope.tdIinvoice.MaxDiscount,
-                tax: $rootScope.selectedProduct.valuep.producttax,
-                olp: $scope.tdIinvoice.olp,
-                amount: $scope.Amount
-              });
-              console.log($rootScope.testArray);
-              $mdDialog.hide();
+               $scope.addproductToarray = function(item,ev) {
+                  $scope.promoItems[0] = {
+                      productName: $scope.SproductName,
+                      price : $scope.Sprice,
+                      tax : $scope.Stax,
+                      ProductUnit : $scope.SProductUnit,
+                      qty : $scope.Sqty,
+                      discount: $scope.discount,
+                      olp: $scope.olp,
+                      status:$scope.Sstatus
+                  }
+                  for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
+
+                    if($scope.promoItems[i].qty == null){
+                       $scope.showActionToast = function() {
+                        var toast = $mdToast.simple()
+                              .content('Action Toast!')
+                              .action('OK')
+                              .highlightAction(false)
+                              .position($scope.getToastPosition());
+                        $mdToast.show(toast).then(function(response) {
+                          if ( response == 'ok' ) {
+                            alert('You clicked \'OK\'.');
+                          }
+                        });
+                      };
+                     }else if($scope.promoItems[i].ProductUnit == null){
+
+                    }else if($scope.promoItems[i].price == null){
+
+                    }else{
+                     creditNoteService.setFullArr({
+                        Productname: $scope.promoItems[i].productName,
+                        price: $scope.promoItems[i].price,
+                        quantity: $scope.promoItems[i].qty,
+                        ProductUnit: $scope.promoItems[i].ProductUnit,
+                        discount: $scope.promoItems[i].discount,
+                        tax: $scope.promoItems[i].tax,
+                        olp: $scope.promoItems[i].olp,
+                        amount: $scope.Amount,
+                        status:$scope.promoItems[i].status,
+                     });
+                      
+                      if($scope.promoItems[i].status == 'notavailable'){
+                           var confirm = $mdDialog.confirm()
+                            .title('Would you like to save this product for future use?')
+                            .content('')
+                            .ariaLabel('Lucky day')
+                            .targetEvent(ev)
+                            .ok('save')
+                            .cancel('cancel');
+                      $mdDialog.show(confirm).then(function(item) {
+                        for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
+                        $scope.prod.Productname = $scope.promoItems[i].productName;
+                         $scope.prod.costprice = $scope.promoItems[i].price;
+                         $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
+                         $scope.prod.producttax = $scope.promoItems[i].tax;                       
+
+                         $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
+                          if ($scope.product.length>0) {
+                             $scope.PatternExsist = false; // use to check pattern match the object of a array 
+                             $scope.MaxID = 0;
+                              for(y=0; y<=$scope.product.length-1; y++){
+                                if ($scope.product[y].ProductCode.substring(0, 3) === $scope.FirstLetters) {
+                                  $scope.CurrendID = $scope.product[y].ProductCodeID;
+                                  if ($scope.CurrendID > $scope.MaxID) {
+                                    $scope.MaxID = $scope.CurrendID;
+                                  };
+                                   $scope.PatternExsist = true;
+                                };
+                              }
+                              if (!$scope.PatternExsist) {
+                                $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                                $scope.prod.ProductCodeID = 1;
+                              }else if($scope.PatternExsist){
+                                $scope.GetMaxNumber($scope.prod,$scope.FirstLetters,$scope.MaxID)
+                              }       
+                          }else{
+                            $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                            $scope.prod.ProductCodeID = 1;
+                          }
+                       }
+
+                       $scope.GetMaxNumber = function(obj,name,MaxID){
+                        $scope.FinalNumber = MaxID +1;
+                        $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
+                        $scope.Zerros="";
+                        for(i=0; i<4-$scope.FinalNumberLength; i++ ){
+                          var str = "0";
+                          $scope.Zerros = $scope.Zerros + str;
+                        }
+                        $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
+                        obj.ProductCodeID = $scope.FinalNumber;
+                        obj.ProductCode = name +'-'+ $scope.Zerros;
+                       }
+
+                       $scope.prod.ProductCategory = "Product";
+                       $scope.prod.progressshow = "false"
+                       $scope.prod.favouriteStar = false;
+                       $scope.prod.favouriteStarNo = 1;
+                       $scope.prod.tags = [];
+                       $scope.prod.todaydate = new Date();
+                       $scope.prod.UploadImages = {val: []};
+                       $scope.prod.UploadBrochure = {val: []};
+                         var client = $objectstore.getClient("product12thdoor");
+                         client.onComplete(function(data) {
+                            $mdDialog.show(
+                               $mdDialog.alert()
+                               .parent(angular.element(document.body))
+                               .title('')
+                               .content('product Successfully Saved')
+                               .ariaLabel('Alert Dialog Demo')
+                               .ok('OK')
+                               .targetEvent(data)
+                            );
+                         });
+                         client.onError(function(data) {
+                            $mdDialog.show(
+                               $mdDialog.alert()
+                               .parent(angular.element(document.body))
+                               .title('Sorry')
+                               .content('Error saving product')
+                               .ariaLabel('Alert Dialog Demo')
+                               .ok('OK')
+                               .targetEvent(data)
+                            );
+                         });
+                         $scope.prod.product_code = "-999";
+                         client.insert([$scope.prod], {
+                            KeyProperty: "product_code"
+                         });
+                      }, function() {
+                      });
+                        }
+                         $mdDialog.hide();
+                     }
+                    }
+                  }
+                  //close dialog box
+               $scope.cancel = function() {
+                     $mdDialog.cancel();
+                  }
+                   
+                   $scope.promoItems.push({
+                     productName:'',
+                     price : '',
+                     tax : '',
+                     ProductUnit :'',
+                     qty:'',
+                     discount:'',
+                     olp:'',
+                     status:''
+                   });
+                  $scope.TaxDisabled = false;
+                  $scope.setSelectedClient = function (package){
+                         $scope.promoItems.tax = 0;
+                        $scope.discount = 0;
+
+                       for (var i = 0; i < $scope.product.length; i++) {
+                        
+                           if($scope.product[i].Productname.toLowerCase() === package.toLowerCase()){
+                              $scope.SproductName = package;
+                              $scope.Sprice = $scope.product[i].costprice;
+                              $scope.SProductUnit = $scope.product[i].ProductUnit;
+                              $scope.Sqty = $scope.qty;
+                              $scope.Solp = $scope.olp;
+                              $scope.Stax = $scope.product[i].producttax;
+                              $scope.Sstatus = "available"
+                              $scope.promoItems.splice(0,1)
+                               $scope.promoItems.push({
+                                     productName: package,
+                                     price : $scope.product[i].costprice,
+                                     tax : $scope.product[i].producttax,
+                                     ProductUnit : $scope.product[i].ProductUnit,
+                                     qty : $scope.qty,
+                                     discount: $scope.discount,
+                                     olp: $scope.olp,
+                                     status:"available"
+                             });
+                              $scope.TaxDisabled = false;
+                              break;
+                           }
+                           else if($scope.product[i].Productname.toLowerCase() != package.toLowerCase()){
+                              $scope.SproductName = package;
+                              $scope.Sprice = $scope.productPrice;
+                              $scope.SProductUnit = $scope.promoItems.ProductUnit;
+                              $scope.Sqty = $scope.qty;
+                              $scope.Solp = $scope.olp;
+                              $scope.Stax = $scope.Ptax;
+                              $scope.Sstatus = "notavailable"
+                              $scope.promoItems.splice(0,1)
+                              $scope.promoItems.push({
+                                  productName:'',
+                                  price : '',
+                                  tax :'',
+                                  qty : '',
+                                  discount: '',
+                                  ProductUnit :"each",
+                                  olp: '',
+                                 status:"notavailable"
+                             });
+                              $scope.TaxDisabled = false;
+                           }
+                       }
+                   };
+
+                   $scope.setprice = function(pd){
+                      $scope.Sprice = pd.price;
+                   }
+                   $scope.setTax = function(pDis){
+                      for (var i = $rootScope.taxType.length - 1; i >= 0; i--) {
+                       if($rootScope.taxType[i].taxname == pDis.tax.taxname){
+                            $scope.Ptax = ({
+                               taxname:$rootScope.taxType[i].taxname,
+                               activate: $rootScope.taxType[i].activate, 
+                               compound:$rootScope.taxType[i].compound,
+                               rate:$rootScope.taxType[i].rate, 
+                               type: $rootScope.taxType[i].type, 
+                               individualtaxes:$rootScope.taxType[i].individualtaxes});
+                        }
+                      };
+                     $scope.Stax = $scope.Ptax;
+                   }
+                   $scope.setUOM = function(pUOM){
+                      $scope.SProductUnit = pUOM.ProductUnit;
+                   }
+
+                  var client = $objectstore.getClient("product12thdoor");
+                     client.onGetMany(function(data) {
+                        if (data) {
+                           $scope.product = data;
+                        }
+                     });
+                     client.getByFiltering("*");
+
+               //Uses auto complete to get the product details 
+               $rootScope.proload = loadpro();
+               $rootScope.selectedItemm = null;
+               $rootScope.searchTextt = null;
+               $rootScope.querySearchh = querySearchh;
+
+               function querySearchh(query) {
+                  $scope.enter = function(keyEvent) {
+                     if (keyEvent.which === 13) {
+                        if ($rootScope.selectedItemm === null) {
+                           $rootScope.selectedItemm = query;
+                        } else {}
+                     }
+                  }
+                  $rootScope.results = [];
+                  for (i = 0, len = $rootScope.proName.length; i < len; ++i) {
+                     if ($rootScope.proName[i].dis.indexOf(query) != -1) {
+                        $rootScope.results.push($rootScope.proName[i]);
+                     }
+                  }
+                  return $rootScope.results;
+               }
+               $rootScope.proName = [];
+
+               function loadpro() {
+                     var client = $objectstore.getClient("product12thdoor");
+                     client.onGetMany(function(data) {
+                        if (data) {
+                           for (i = 0, len = data.length; i < len; ++i) {
+                              $rootScope.proName.push({
+                                 dis: data[i].Productname.toLowerCase(),
+                                 valuep: data[i]
+                              });
+                           }
+                        }
+                     });
+                     client.onError(function(data) {
+                     });
+                     client.getByFiltering("*");
+                  }
+
+                  //calculate the invoice amount for each product
+               $scope.calAMount = function() {
+                  $scope.Amount = 0;
+                  // angular.forEach($scope.promoItems, function(tdIinvoice) {
+                     $scope.Amount = $scope.Sprice * $scope.Sqty;
+                  // })
+                  return $scope.Amount;
+               }
             }
-            //close dialog box
-          $scope.cancel = function() {
-            $mdDialog.cancel();
-          }
-
-          //Uses auto complete to get the product details 
-          $rootScope.proload = loadpro();
-          $rootScope.selectedProduct = null;
-          $rootScope.searchTextt = null;
-          $rootScope.querySearchh = querySearchh;
-
-          function querySearchh(query) {
-            $scope.enter = function(keyEvent) {
-              if (keyEvent.which === 13) {
-                if ($rootScope.selectedProduct === null) {
-                  $rootScope.selectedProduct = query;
-                  console.log($rootScope.results);
-                } else {
-                  console.log($rootScope.selectedProduct);
-                }
-              }
-            }
-            $rootScope.results = [];
-            for (i = 0, len = $rootScope.proName.length; i < len; ++i) {
-              if ($rootScope.proName[i].dis.indexOf(query) != -1) {
-                $rootScope.results.push($rootScope.proName[i]);
-              }
-            }
-            return $rootScope.results;
-          }
-          $rootScope.proName = [];
-
-          function loadpro() {
-            var client = $objectstore.getClient("12thproduct");
-            client.onGetMany(function(data) {
-              if (data) {
-                // $scope.contact =data;
-                for (i = 0, len = data.length; i < len; ++i) {
-                  $rootScope.proName.push({
-                    dis: data[i].Productname.toLowerCase(),
-                    valuep: data[i]
-                  });
-                }
-              }
-            });
-            client.onError(function(data) {
-              $mdDialog.show(
-                $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .title('Sorry')
-                .content('There is no products available')
-                .ariaLabel('Alert Dialog Demo')
-                .ok('OK')
-                .targetEvent(data)
-              );
-            });
-            client.getByFiltering("*");
-          }
-
-          //calculate the invoice amount for each product
-          $scope.calAMount = function() {
-            $scope.Amount = 0;
-            $scope.Amount = ((($rootScope.selectedProduct.valuep.costprice * $scope.tdIinvoice.qty) - (($rootScope.selectedProduct.valuep.costprice * $scope.tdIinvoice.qty) * $scope.tdIinvoice.MaxDiscount / 100)) + (($rootScope.selectedProduct.valuep.costprice * $scope.tdIinvoice.qty)) * $rootScope.selectedProduct.valuep.producttax / 100);
-
-            return $scope.Amount;
-          }
-        }
-      })
-    }
+         })
+      }
 
     //Delete added products
     $scope.deleteproduct = function(name) {
       creditNoteService.removeArray(name);
     }
 
+    $rootScope.loadInv = INVload();
+    $rootScope.selectedNo = null;
+     $rootScope.searchText1 = null;
+    $rootScope.self.querySearch1 = querySearch1;
+
+    function querySearch1(query) {
+
+      $scope.enter = function(keyEvent) {
+          if (keyEvent.which === 13) {
+            if ($rootScope.selectedNo === null) {
+              $rootScope.selectedNo = query;
+              console.log($rootScope.results);
+            } else {
+              console.log($rootScope.selectedNo);
+            }
+          }
+        }
+        //Custom Filter
+      $rootScope.results = [];
+      for (i = 0, len = $rootScope.invoiceNombures.length; i < len; ++i) {
+            if ($rootScope.invoiceNombures[i].display.indexOf(query) != -1) {
+               $rootScope.results.push($rootScope.invoiceNombures[i]);
+            }
+         }
+      return $rootScope.results;
+    }
+    $scope.invoiceNombures = [];
+
+    function INVload() {
+
+      var client = $objectstore.getClient("invoice12thdoor");
+      client.onGetMany(function(data) {
+        if (data) {
+        $rootScope.invoiceNombures = [];
+               for (i = 0, len = data.length; i < len; ++i) {
+                  $rootScope.invoiceNombures.push({
+                     display: data[i].invoiceNo.toLowerCase(),
+                  });
+               }
+        }
+      });
+      client.onError(function(data) {});
+      client.getByFiltering("*");
+    }
+
     //dialog box pop up to add customer through invoice
     $scope.addCustomer = function() {
         $mdDialog.show({
-
           templateUrl: 'creditNotePartial/addCustomer.html',
              controller: function DialogController($scope, $mdDialog) {
                   $scope.addTask = "";
@@ -239,13 +586,11 @@ angular
                           .targetEvent(data)
                          );
                         });
-
                            $scope.contact.favoritestar = false;
                            $scope.contact.customerid = "-999";
                            client.insert($scope.contact, {
                             KeyProperty: "customerid"
                      });
-
                            $rootScope.customerNames.push({
                               display: $scope.contact.Name.toLowerCase(),
                               value: $scope.contact,
@@ -253,7 +598,6 @@ angular
                               ShippingAddress: $scope.contact.saddress.s_street + ', ' + $scope.contact.saddress.s_city + ', ' + $scope.contact.saddress.s_zip + ', ' + $scope.contact.saddress.s_state + ', ' +
                               $scope.contact.saddress.s_country
                            });
-                           
                               var self = this;
                              for (var i = $rootScope.customerNames.length - 1; i >= 0; i--) {
                                if ($rootScope.customerNames[i].display == $scope.contact.Name ) {
@@ -311,9 +655,23 @@ angular
                 .targetEvent(data)
               );
             });
-            client.insert(cusform, {
-              KeyProperty: "customerid"
-            });
+            client.insert(cusform, {KeyProperty: "customerid"});
+            $rootScope.customerNames.splice( $rootScope.customerNames.indexOf($rootScope.selectedItem1), 1 );
+                     $rootScope.customerNames.push({
+                    display: cusform.Name.toLowerCase(),
+                    value: cusform,
+                     BillingAddress: cusform.baddress.street + ', ' + cusform.baddress.city + ', ' + cusform.baddress.zip + ', ' + cusform.baddress.state + ', ' + cusform.baddress.country,
+                    ShippingAddress: cusform.saddress.s_street + ', ' + cusform.saddress.s_city + ', ' + cusform.saddress.s_zip + ', ' + cusform.saddress.s_state + ', ' +
+                   cusform.saddress.s_country
+                 });
+                    var self = this;
+                   for (var i = $rootScope.customerNames.length - 1; i >= 0; i--) {
+                     if ($rootScope.customerNames[i].display == cusform.Name ) {
+                       $rootScope.selectedItem1 = $rootScope.customerNames[i];
+                        $rootScope.selectedItem1.Billingaddress = $rootScope.customerNames[i].Billingaddress;
+                        $rootScope.selectedItem1.ShippingAddress = $rootScope.customerNames[i].ShippingAddress;
+                     }; 
+              };
           }
         }
       })
@@ -338,12 +696,10 @@ angular
               .highlightAction(false)
               .position("bottom right");
             $mdToast.show(toast).then(function() {
-              //whatever
             });
           });
 
           $uploader.onError(function(e, data) {
-
             var toast = $mdToast.simple()
               .content('There was an error, please upload!')
               .action('OK')
@@ -354,19 +710,16 @@ angular
 
         }
       };
-      var client = $objectstore.getClient("twethdoorCreditNote");
-
-      $scope.TDCreditNote.table = $rootScope.testArray.val;
+      var client = $objectstore.getClient("CNote12thdoor");
+      $scope.TDCreditNote.productTB = $rootScope.testArray.val;
       $scope.TDCreditNote.total = $scope.total;
       $scope.TDCreditNote.finalamount = $scope.famount;
-      $scope.TDCreditNote.status = "N";
-      $scope.TDCreditNote.Name = $rootScope.selctedName.display;
-      $scope.TDCreditNote.billingAddress = $rootScope.selctedName.BillingAddress;
-      $scope.TDCreditNote.shippingAddress = $rootScope.selctedName.ShippingAddress;
-      // $scope.TDCreditNote.MultiDueDAtesArr = $scope.dateArray.value;
-      $scope.TDCreditNote.UploadImages = {
-        val: []
-      };
+      $scope.TDCreditNote.status = "unapplied";
+      $scope.TDCreditNote.Name = $rootScope.selectedItem1.display;
+      $scope.TDCreditNote.billingAddress = $rootScope.selectedItem1.BillingAddress;
+      $scope.TDCreditNote.shippingAddress = $rootScope.selectedItem1.ShippingAddress;
+     $scope.TDCreditNote.InvoiceRefNo = $rootScope.selectedNo.display;
+      $scope.TDCreditNote.UploadImages = {val: []};
       $scope.TDCreditNote.UploadImages.val = UploaderService.loadBasicArray();
 
       client.onComplete(function(data) {
@@ -379,6 +732,9 @@ angular
           .ok('OK')
           .targetEvent(data)
         );
+        $rootScope.CNoteArray.splice(0,1);
+        creditNoteService.setCNArr($scope.TDCreditNote);
+        $state.go('view', {'Cnno': $scope.TDCreditNote.creditNoteRefNo});
       });
 
       client.onError(function(data) {
@@ -435,41 +791,44 @@ angular
       $mdDialog.cancel();
     }
 
-    $scope.calculatetotal = function() {
-      $scope.total = 0;
-      angular.forEach($rootScope.testArray.val, function(TdiCreditNote) {
+    $rootScope.calculatetotal = function() {     
+         $scope.total = 0;
+         angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
+            $scope.total += parseInt(tdIinvoice.price * tdIinvoice.quantity);
+         })
+         return $scope.total;
+      };
+  
+      $scope.finaldiscount = function() {
+         $scope.finalDisc = 0;
+         $scope.Discount = 0;
+         if($scope.dis == "SubTotal Items" ){
+            $scope.finalDisc = parseInt($scope.total*$scope.TDinvoice.fdiscount/100)
+         }else if ($scope.dis == "Individual Items" ){
+            angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
+            $scope.Discount +=   parseInt(tdIinvoice.discount);
+            $scope.finalDisc = parseInt($scope.total*$scope.Discount/100);
+         })
+       }
+       return $scope.finalDisc;
+      }
 
-        $scope.total += (((TdiCreditNote.price * TdiCreditNote.quantity) - ((TdiCreditNote.price * TdiCreditNote.quantity) * TdiCreditNote.discount / 100)) + ((TdiCreditNote.price * TdiCreditNote.quantity)) * TdiCreditNote.tax / 100);
-      })
+      $scope.CalculateTax = function() {
+         $scope.salesTax=0;
+         for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
+          console.log($rootScope.taxArr[i])
+            $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
+          }
+           return $scope.salesTax;
+      }
+     
+      $scope.finalamount = function() {
+         $rootScope.famount = 0;
+         $rootScope.famount = parseInt($scope.total - $scope.finalDisc)+parseInt($scope.salesTax)+
+         parseInt($scope.TDCreditNote.shipping);
 
-      return $scope.total;
-      console.log($scope.total);
-    };
-
-    $scope.finaldiscount = function() {
-      $scope.finalDisc = 0;
-      $scope.finalDisc = $scope.total - ($scope.total * $scope.TDCreditNote.fdiscount / 100);
-      return $scope.finalDisc;
-    }
-
-    $scope.CalculateTax = function() {
-      $scope.salesTax = 0;
-      $scope.salesTax = $scope.finalDisc + ($scope.total * $scope.TDCreditNote.salesTax / 100);
-      return $scope.salesTax;
-    }
-
-    $scope.CalculateOtherTax = function() {
-      $scope.otherTax = 0;
-      $scope.otherTax = $scope.salesTax + ($scope.total * $scope.TDCreditNote.anotherTax / 100);
-      return $scope.otherTax;
-    }
-
-    $scope.finalamount = function() {
-      $scope.famount = 0;
-      $scope.famount = parseInt($scope.otherTax) + parseInt($scope.TDCreditNote.shipping);
-      return $scope.famount;
-    };
-
+         return $rootScope.famount;
+      };
     $scope.view = function() {
         location.href = '#/AllcreditNotes';
     }
@@ -477,7 +836,6 @@ angular
      $scope.DemoCtrl = function($timeout, $q) {
       var self = this;
       self.readonly = false;
-      // Lists of tags names and Vegetable objects
       self.fruitNames = [];
       self.TDCreditNote.roFruitNames = angular.copy(self.fruitNames);
       self.tags = [];
@@ -490,259 +848,7 @@ angular
       };
     }
   })
-  //-------------------------------------------------------------------------------------------------------
-  //--------------------------------------------------------------------------------------------------------
-
-
-  //-------------------------------------------------------------------------------------------------------
-  //--------------------------------------------------------------------------------------------------------
-  .controller('testCtrl', function($scope, $mdDialog, $rootScope, creditNoteService, item) {
-
-    $scope.test = item;
-
-    $scope.cancel = function() {
-      $mdDialog.cancel();
-    };
-
-    $scope.edit = function() {
-      $mdDialog.cancel();
-    };
-
-    $scope.calAMount = function() {
-      $scope.Amount = 0;
-      $scope.Amount = (((item.price * item.quantity) - ((item.price * item.quantity) * item.discount / 100)) + ((item.price * item.quantity)) * item.tax / 100);
-
-      return $scope.Amount;
-    }
-
-  })
-
-//-------------------------------------------------------------------------------------------------------  
-//------------------------------------------------------------------------------------------------------
-.controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService) {
-
-  $scope.uploadimages = {
-    val: []
-  };
-  $scope.uploadimages.val = UploaderService.loadBasicArray();
-
-  $scope.$on('viewRecord', function(event, args) {
-    $scope.uploadimages.val.splice(args, 1);
-  });
-  $scope.toggleSearch = false;
-  $scope.headers = [{
-    name: 'Name',
-    field: 'name'
-  }, {
-    name: 'Size',
-    field: 'size'
-  }];
-  $scope.custom = {
-    name: 'bold',
-    size: 'grey'
-  };
-  $scope.sortable = ['name', 'size'];
-  $scope.thumbs = 'thumb';
-  $scope.count = 3;
-
-  $scope.AddImage = function() {
-    $scope.uploadimages.val = UploaderService.loadBasicArray();
-  }
-
-  $scope.cancel = function() {
-    $mdDialog.cancel();
-  };
-})
-
-//-------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------
-
-.factory('creditNoteService', function($rootScope) {
-    $rootScope.testArray = {
-      val: []
-    };
-
-    return {
-
-      setArray: function(newVal) {
-        $rootScope.testArray.val.push(newVal);
-
-        return $rootScope.testArray;
-      },
-      removeArray: function(newVals) {
-
-        $rootScope.testArray.val.splice(newVals, 1);
-        return $rootScope.testArray;
-      }
-    }
-  })
-  //-----------------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------------------
-  .factory('UploaderService', function($rootScope) {
-    $rootScope.uploadArray = [];
-    $rootScope.basicinfo = [];
-    return {
-
-      setFile: function(val) {
-        $rootScope.uploadArray.push(val);
-        return $rootScope.uploadArray;
-      },
-
-      BasicArray: function(name, size) {
-        $rootScope.basicinfo.push({
-          'name': name,
-          'size': size
-        });
-        console.log($rootScope.basicinfo);
-        return $rootScope.basicinfo;
-      },
-
-      removebasicArray: function(arr) {
-        for (var i = arr.length - 1; i >= 0; i--) {
-          $rootScope.basicinfo.splice(arr[i], 1);
-        };
-        console.log($rootScope.basicinfo);
-        return $rootScope.basicinfo;
-      },
-
-      removefileArray: function(arr) {
-        for (var i = arr.length - 1; i >= 0; i--) {
-          $rootScope.uploadArray.splice(arr[i], 1);
-        };
-        console.log($rootScope.uploadArray);
-        return $rootScope.uploadArray;
-      },
-
-      loadArray: function() {
-        return $rootScope.uploadArray;
-      },
-
-      loadBasicArray: function() {
-        return $rootScope.basicinfo;
-      },
-
-    }
-  })
+  
   //-------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------
-  .factory('MultipleDudtesService', function($rootScope) {
-    $rootScope.dateArray = {
-      value: []
-    };
-    return {
-
-      setDateArray: function(newVal) {
-        $rootScope.dateArray.value.push(newVal);
-
-        return $rootScope.dateArray;
-      },
-      removeDateArray: function(newVals) {
-
-        $rootScope.dateArray.value.splice(newVals, 1);
-        return $rootScope.dateArray;
-      }
-
-    }
-  })
-  //-----------------------------------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------------------------------
-
-.directive('fileUpLoaderInvoice', ['$uploader', "$rootScope", "$mdToast", 'UploaderService', function($uploader, $rootScope, $mdToast, UploaderService) {
-  return {
-    restrict: 'E',
-    template: "<div class='content' ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><text style='font-size:12px;margin-left:10px'>{{label}}<text></div></div></div>",
-    scope: {
-      label: '@',
-      uploadType: '@'
-    },
-    link: function(scope, element) {
-
-        // Makes sure the dataTransfer information is sent when we
-        // Drop the item in the drop box.
-        jQuery.event.props.push('dataTransfer');
-
-
-        // file/s on a single drag and drop
-        var files;
-
-        // total of all the files dragged and dropped
-        var filesArray = [];
-        var sampleArray = [];
-
-        // Bind the drop event to the dropzone.
-        element.find("#drop-files").bind('drop', function(e) {
-
-          // Stop the default action, which is to redirect the page
-          // To the dropped file
-          files = e.dataTransfer.files || e.dataTransfer.files;
-
-          for (indexx = 0; indexx < files.length; indexx++) {
-
-            filesArray.push(files[indexx]);
-            UploaderService.setFile(files[indexx]);
-            UploaderService.BasicArray(filesArray[indexx].name, filesArray[indexx].size);
-            sampleArray.push({
-              'name': filesArray[indexx].name,
-              'size': filesArray[indexx].size
-            });
-            console.log(filesArray);
-          }
-
-
-          var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
-
-          for (var i = 0; i < filesArray.length; i++) {
-            var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
-              filesArray[i].type + "</td><td class='upload-table'>" +
-              filesArray[i].size + " bytes" + "</td></tr>";
-            newHtml += tableRow;
-          }
-
-          element.find("#Tabulate").html(newHtml);
-
-          $rootScope.$apply(function() {
-            scope.showUploadButton = true;
-            scope.showDeleteButton = true;
-            scope.showUploadTable = true;
-          })
-
-        });
-
-        function restartFiles() {
-
-          // We need to remove all the images and li elements as
-          // appropriate. We'll also make the upload button disappear
-          $rootScope.$apply(function() {
-            scope.showUploadButton = false;
-            scope.showDeleteButton = false;
-            scope.showUploadTable = false;
-          })
-          UploaderService.removefileArray(filesArray);
-          UploaderService.removebasicArray(sampleArray);
-          // And finally, empty the array
-          filesArray = [];
-
-          return false;
-        }
-
-        // Just some styling for the drop file container.
-        element.find('#drop-files').bind('dragenter', function() {
-          $(this).css({
-            'box-shadow': 'inset 0px 0px 20px rgba(0, 0, 0, 0.1)',
-            'border': '2px dashed rgb(255,64,129)'
-          });
-          return false;
-        });
-
-        element.find('#drop-files').bind('drop', function() {
-          $(this).css({
-            'box-shadow': 'none',
-            'border': '2px dashed rgba(0,0,0,0.2)'
-          });
-          return false;
-        });
-        element.find('#deletebtn').click(restartFiles);
-
-      } //end of link
-  };
-}])
+  

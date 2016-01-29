@@ -1,16 +1,37 @@
 angular.module('mainApp')
-.controller('viewCtrl', function($scope, $mdDialog, $objectstore, $window, $rootScope, creditNoteService, $filter, $state, $location, UploaderService) {
+.controller('viewCtrl', function($scope, $mdDialog,$state,$stateParams, $objectstore, $window, $rootScope, creditNoteService, $filter, $state, $location, UploaderService) {
 
-    $scope.TDCreditNote = {};
+    $scope.TDCreditNote = [];
     $scope.newItems = [];
     $scope.show = false;
     $scope.showTable = false;
     $scope.obtable = [];
 
-    var client = $objectstore.getClient("twethdoorCreditNote");
+    var client = $objectstore.getClient("CNote12thdoor");
     client.onGetMany(function(data) {
       if (data) {
-        $scope.TDCreditNote = data;
+        // $scope.TDCreditNote = data;
+        for (var i = data.length - 1; i >= 0; i--) {
+              // loading_spinner.remove();
+              data[i].addView = "";
+               data[i].invoiceNo = parseInt(data[i].invoiceNo);
+               $scope.TDCreditNote.push(data[i]);
+
+               if($stateParams.Cnno == data[i].creditNoteNo){
+                 $rootScope.CNoteArray.splice(data[i],1);
+        creditNoteService.setCNArr(data[i]);
+                  $scope.Address = data[i].billingAddress.split(',');
+               $scope.street = $scope.Address[0];
+               $scope.city = $scope.Address[1]+$scope.Address[3];
+               $scope.country = $scope.Address[2]+$scope.Address[4];
+
+               $scope.shippingAddress = data[i].shippingAddress.split(',');
+               $scope.ShippingStreet = $scope.shippingAddress[0];
+               $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
+               $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
+               }
+
+            };
       }
     });
 
@@ -49,6 +70,12 @@ angular.module('mainApp')
 
     $scope.add = function() {
         location.href = '#/creditNoteApp';
+    }
+
+    $scope.gotoOpenMode = function(val){
+      $rootScope.CNoteArray.splice(0,1);
+        creditNoteService.setCNArr(val);
+        $state.go('view', {'Cnno': val.creditNoteRefNo});
     }
 
      $scope.DemoCtrl1 = function($timeout, $q) {
@@ -121,7 +148,7 @@ angular.module('mainApp')
     };
 
     $scope.edit = function(updatedForm) {
-      var client = $objectstore.getClient("twethdoorCreditNote");
+      var client = $objectstore.getClient("CNote12thdoor");
 
       $scope.TDCreditNote.table = $rootScope.testArray.val;
       $scope.TDCreditNote.total = $scope.total;
@@ -169,7 +196,7 @@ angular.module('mainApp')
         .targetEvent(ev);
 
       $mdDialog.show(confirm).then(function() {
-        var client = $objectstore.getClient("twethdoorCreditNote");
+        var client = $objectstore.getClient("CNote12thdoor");
 
         client.onComplete(function(data) {
 

@@ -440,8 +440,8 @@ angular
          }
 
       //Delete added products
-      $scope.deleteproduct = function(name) {
-             $rootScope.testArray.val.splice(name, 1);
+      $scope.deleteproduct = function(name, index) {
+             $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(name), 1);
          }
        
       //dialog box pop up to add product

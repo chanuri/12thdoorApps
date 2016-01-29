@@ -88,7 +88,34 @@
               </div>
 
                <div layout-sm="column" style="margin-top:10px;" flex>
-                <span style="padding-right: 15px;  border-width:1px; font-size:13px;">Invoice Ref {{tdi.invoiceRef}}</span>
+                <span style="padding-right: 15px;  border-width:1px; font-size:13px;">Invoice Ref {{tdi.InvoiceRefNo}}</span>
+                <!-- <div flex> -->
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #FFD700;background-color: #FFD700; " ng-if="tdi.status == 'unapplied'">
+                                <b style=" width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Unapplied</font>
+                                </b>
+                            </span>
+                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #32CD32;background-color: #32CD32;" ng-if="tdi.status == 'Fully Applied'">
+                                <b style=" width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Fully Applied</font>
+                                </b>
+                            </span>
+                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #D2691E;background-color: #D2691E;" ng-if="tdi.status == 'Partially Applied'">
+                                <b style=" width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Partially Applied</font>
+                                </b>
+                            </span>
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000;background-color: #000000;" ng-if="tdi.status == 'Cancelled'">
+                                <b style=" width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Cancelled</font>
+                                </b>
+                            </span>
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="item.status == 'Draft'">
+                                <b style=" width:70px; font-color:#FFFFFF;">
+                                    <font color="white">Draft</font>
+                                </b>
+                            </span>
+                       <!--  </div> -->
                  <!-- <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">Due Date {{tdi.duedate|date}}</span> -->
                <!--  <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid green;background-color: #4CAF50;"><b style=" width:70px; font-color:#FFFFFF;"><font color="white">Paid</font></b></span> -->   
             </div>
@@ -113,24 +140,28 @@
                         <md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
                     </md-button>
                     <md-menu-content width="4">
+                    <md-menu-item >
+                            <md-button ng-click="gotoOpenMode(tdi)">
+                            <!-- <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon> -->
+                                <p>Open</p>
+                            </md-button>
+                        </md-menu-item>
                         <md-menu-item >
                             <md-button ng-click="deleteRecord(tdi)">
-                            <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon>
+                           <!--  <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon> -->
                                 <p>Delete</p>
-                                
                             </md-button>
                         </md-menu-item>
                         <md-menu-item >
                             <md-button ng-click="edit(tdi)">
-                            <md-icon md-svg-icon="img/ic_save_24px.svg" ></md-icon>
+                            <!-- <md-icon md-svg-icon="img/ic_save_24px.svg" ></md-icon> -->
                                 <p>Edit</p>
-                                
                             </md-button>
                         </md-menu-item>
                         <md-divider ng-if="tdi.Status == 'Pending'"></md-divider>
                         <md-menu-item>
                             <md-button ng-click="printDetails($index)">
-                            <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                            <!-- <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon> -->
                                 <p>Print Request</p>
                                 
                             </md-button>
@@ -188,7 +219,7 @@
                        
                         <md-input-container flex required>
                             <label>Invoice Reference</label>
-                             <input ng-model="tdi.invoiceRef" >
+                             <input ng-model="tdi.InvoiceRefNo" >
                     </md-input-container>
 
                      <md-input-container flex >
@@ -210,7 +241,7 @@
                                              <section-title title="Item Details"> </section-title>
 
                                                  <ul as-sortable="sortableOptions" style=" width:600px" ng-model="tdi.table">
-                                                  <li ng-repeat="item in tdi.table" as-sortable-item  style=" width:600px">
+                                                  <li ng-repeat="item in tdi.productTB" as-sortable-item  style=" width:600px">
                                                    <md-card style="margin-left:-40px; width:630px; margin-bottom:20px !important;" as-sortable-item-handle>
                                                   <md-card-content >
 

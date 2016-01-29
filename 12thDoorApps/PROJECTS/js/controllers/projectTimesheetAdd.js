@@ -26,7 +26,7 @@ rasm.controller('AppCtrlAddTimesheet', function($scope, $state,$mdDialog, $objec
 			console.log("error loading logged data");
 		});
 
-		timesheetClient.getByFiltering("select * from loggedHour12thdoor where projectId == '"+obj.proId+"'");
+		timesheetClient.getByFiltering("select * from loggedHour12thdoor where projectId = '"+obj.proId+"'");
 	}
 
 	$scope.submit = function() {
@@ -57,7 +57,7 @@ rasm.controller('AppCtrlAddTimesheet', function($scope, $state,$mdDialog, $objec
 		timesheetClient.onError(function(data){
 			console.log("error loading logged data");
 		});
-		timesheetClient.getByFiltering("select * from loggedHour12thdoor where projectId == '"+$scope.testObj.proId+"'");
+		timesheetClient.getByFiltering("select * from loggedHour12thdoor where projectId = '"+$scope.testObj.proId+"'");
 	}
 
 	function updateLogClass(callback){

@@ -25,14 +25,14 @@ rasm.controller("viewScreen", function($scope,$state,$stateParams,$objectstore,$
 			$scope.timesheetArr = [];	 
 			if (data.length > 0) {
 			 	for(i=0; i<= data.length-1; i++){
-					if (data[i].projectArr[0].proName == proObj.name &&  data[i].projectArr[0].proId == proObj.projectid) {
+					if (data[i].selectProject.proName == proObj.name &&  data[i].selectProject.proId == proObj.projectid) {
 						$scope.timesheetArr.push({
 							user : data[i].user,
 							logged : data[i].hours,
 							billed : data[i].billed,
 							Pending : data[i].Pending,
 							billable : proObj.bhours,
-							proName : data[i].projectArr[0].proName						
+							proName : data[i].selectProject.proName						
 						})
 					}
 				}
@@ -41,7 +41,8 @@ rasm.controller("viewScreen", function($scope,$state,$stateParams,$objectstore,$
 		timesheetClient.onError(function(data){
 			console.log("Error loading timeSheet data")
 		});
-		timesheetClient.getByFiltering("*");
+		console.log("select * from timeSheet12thdoor where proName = '"+ proObj.name+ "' and proId = '" +proObj.projectid+ "'")
+		timesheetClient.getByFiltering("select * from timeSheet12thdoor where proName = '"+ proObj.name+ "' and proId = '" +proObj.projectid+ "'");
 	}
 
 
@@ -49,17 +50,13 @@ rasm.controller("viewScreen", function($scope,$state,$stateParams,$objectstore,$
 		$scope.expenseArr = [];
 		var expensClient = $objectstore.getClient("expense12th");
 		expensClient.onGetMany(function(data){
-			for(i=0; i<= data.length-1; i++){
-				if (data[i].assignType == 'project' && proObj.projectid == data[i].assignId) {
-					$scope.expenseArr.push(data[i])
-				}
-			}
-			console.log($scope.expenseArr)
+			console.log(data)
+			$scope.expenseArr = data;
 		});
 		expensClient.onError(function(data){
 			console.log("Error loading expense data")
 		});
-		expensClient.getByFiltering("*");
+		expensClient.getByFiltering("select * from expense12th where assignType = 'project' and assignId = '"+proObj.projectid+"'");
 	}
 
 	function billCustomerCtrl($scope){

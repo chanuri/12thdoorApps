@@ -5,7 +5,7 @@ rasm.controller('AppCtrlGetTimesheet', function($scope, $rootScope, $state, $obj
 	$scope.loadAllTimesheets = function() {
 		var client = $objectstore.getClient("timeSheet12thdoor");
 		client.onGetMany(function(data) {
-			if (data) {
+			if (data) {				 
 				$scope.Timesheets = data;
 				loadAllProject();
 			}

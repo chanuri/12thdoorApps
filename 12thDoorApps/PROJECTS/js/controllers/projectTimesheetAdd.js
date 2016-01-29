@@ -3,9 +3,9 @@ rasm.controller('AppCtrlAddTimesheet', function($scope, $state,$mdDialog, $objec
 
 	var projectClient = $objectstore.getClient("project12thdoor");
 	projectClient.onGetMany(function(data){
-		$scope.timeSheet.projectArr = [];
+		$scope.projectArr = [];
 		for(k=0; k <= data.length-1; k++){
-			$scope.timeSheet.projectArr.push({
+			$scope.projectArr.push({
 				proName : data[k].name,
 				proId : data[k].projectid
 			})			
@@ -82,6 +82,7 @@ rasm.controller('AppCtrlAddTimesheet', function($scope, $state,$mdDialog, $objec
 				.ariaLabel('Alert Dialog Demo')
 				.ok('OK')
 				.targetEvent(data));
+			$state.go("settings.timesheet")
 		});
 		client.onError(function(data) {
 			$mdDialog.show($mdDialog.alert()
@@ -97,6 +98,11 @@ rasm.controller('AppCtrlAddTimesheet', function($scope, $state,$mdDialog, $objec
 
 		$scope.timeSheet.favoritestar = false;
 		$scope.timeSheet.timesheetid = "-999";
+		$scope.timeSheet.selectProject = JSON.parse($scope.timeSheet.selectProject)
+		$scope.timeSheet.proName = $scope.timeSheet.selectProject.proName;
+		$scope.timeSheet.proId = $scope.timeSheet.selectProject.proId;
+
+
 		client.insert($scope.timeSheet, {KeyProperty: "timesheetid"})
 	}
 

@@ -9,43 +9,14 @@
 <link rel="stylesheet" href="css/fullcalendar.css">
 <link rel="stylesheet" href="css/angular-material-calendar.css">
 
-
-    
-
 </head>
 
 <body ng-cloak>
-
-	<!--Background banner with parallax effect-->
 	<md-background-banner color="#235b91" height="300px"> </md-background-banner>
-	
-	
-	
-	<!--START OF ALL CONTENT-->
 	<div id="md-childApp-contentContainerSection" >
-			
-		<!--START OF FIRST CARD CONTAINER-->
-		
-			
 		<div ui-view></div>
-	<!-- 	<form style="width:100%">
-            
-            <md-content flex>  
-				<div>
-			        <label>{{timeStatus | timerFilter }}</label>
-			    </div>
-
-			    <div >
-			         <md-button type="button" class="md-raised"   ng-click="startTimer()" autofocus>Start</md-button>
-			         <md-button type="button" class="md-raised"   ng-click="stopTimer()" >Stop</md-button>
-			         <md-button type="button" class="md-raised"   ng-click="resetTimer()">Reset</md-button>
-			         <md-button type="button" class="md-raised"   ng-click="lapTimer()" >Lap</md-button>
-			    </div>
-			</md-content>
-		</form> -->
 		<time-tracker time-status="stopTime" start-time="newStartTime" catch-name="catchName"></time-tracker>
 	</div>
-
 		
 <script src="../../js/jquery-2.1.4.min.js"></script>
 <script src="js/moment.js"></script>
@@ -73,11 +44,6 @@
 <script src="js/controllers/projectTimeTrack.js"></script>
 <script src="js/controllers/projectUpload.js"></script>
 <script src="js/controllers/projectViewScreen.js"></script>
-
-
-
-   <!-- // <script src="js/controllers/project.js"></script> -->
-    
 <script type="text/javascript">	
 </script>
 

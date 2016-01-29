@@ -29,8 +29,9 @@
       <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();">
          <div layout-sm="row" flex>
             <div layout-sm="column" flex>
-               <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>   {{time.date}}</b></span>
-               <span ng-repeat="item in time.projectArr" style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{item.proName}}</b></span>
+               <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title">
+               <b>{{time.date}}</b></span>
+               <span style="padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{time.selectProject.proName}}</b></span>
                <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-width:1px;"><b>{{time.hours}} </b></span>
             </div>
             <div layout-sm="column" style="margin-top:10px;" flex>

@@ -107,7 +107,6 @@ rasm.controller('AppCtrlAdd', function ($scope, $state, $objectstore, $location,
 	$scope.project.fpAmount = "";
 
 	$scope.submit = function () {
-
 		var client = $objectstore.getClient("project12thdoor");
 		client.onComplete(function (data) {
 			saveToLoggedClass(data.Data[0].ID);
@@ -140,7 +139,6 @@ rasm.controller('AppCtrlAdd', function ($scope, $state, $objectstore, $location,
 		client.insert($scope.project, {
 			KeyProperty: "projectid"
 		})
-
 	}
 
 	function saveToLoggedClass(proId){		 
@@ -153,10 +151,10 @@ rasm.controller('AppCtrlAdd', function ($scope, $state, $objectstore, $location,
 		$scope.logArr.Pending = $scope.project.bhours;
 		$scope.logArr.logged_code = '-999';
 
-
 		var loggedClient = $objectstore.getClient("loggedHour12thdoor");
 		loggedClient.onComplete(function(data){
-			console.log("inserted to logged hour class")
+			console.log("inserted to logged hour class");
+			$state.go("settings.project")
 		});
 		loggedClient.onError(function(data){
 			console.log("error saving to logged hour class")
@@ -191,7 +189,6 @@ rasm.controller('AppCtrlAdd', function ($scope, $state, $objectstore, $location,
 				$scope.showbilMethodDiv = false;
 			};
 		}
-
 
 	$scope.addstaffs = [];
 	$scope.addstaff = function () {
@@ -242,8 +239,7 @@ rasm.controller('AppCtrlAdd', function ($scope, $state, $objectstore, $location,
 		}
 	});
 
-
-	$scope.Customerview = function () {location.href = '#/settings/project';}
+	$scope.Customerview = function () {location.href = '#/settings/project'}
 
 	$scope.save = function () {
 		$timeout(function() {

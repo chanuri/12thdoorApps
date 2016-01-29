@@ -24,7 +24,7 @@
                   <label>Project</label>
                   <md-select  ng-model="timeSheet.selectProject" flex ng-change="projectSelect(timeSheet.selectProject)">
                      <md-optgroup label="Project">
-                     <md-option value="{{item}}" ng-repeat="item in timeSheet.projectArr">{{item.proName}}</md-option>
+                     <md-option value="{{item}}" ng-repeat="item in projectArr">{{item.proName}}</md-option>
                   </md-select>
                </md-input-container>
                <md-input-container flex >

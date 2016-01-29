@@ -146,26 +146,32 @@
                                 <p>Open</p>
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item >
-                            <md-button ng-click="deleteRecord(tdi)">
-                           <!--  <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon> -->
-                                <p>Delete</p>
+                        <md-menu-item>
+                            <md-button ng-click="printDetails($index)">
+                            <!-- <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon> -->
+                                <p>Print</p>
                             </md-button>
                         </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="email($index)">
+                            <!-- <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon> -->
+                                <p>Email</p>
+                            </md-button>
+                        </md-menu-item>
+                        <!-- <md-menu-item >
+                            <md-button ng-click="deleteRecord(tdi)">
+                            <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon>
+                                <p>Delete</p>
+                            </md-button>
+                        </md-menu-item> -->
                         <md-menu-item >
                             <md-button ng-click="edit(tdi)">
                             <!-- <md-icon md-svg-icon="img/ic_save_24px.svg" ></md-icon> -->
                                 <p>Edit</p>
                             </md-button>
                         </md-menu-item>
-                        <md-divider ng-if="tdi.Status == 'Pending'"></md-divider>
-                        <md-menu-item>
-                            <md-button ng-click="printDetails($index)">
-                            <!-- <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon> -->
-                                <p>Print Request</p>
-                                
-                            </md-button>
-                        </md-menu-item>
+                       <!--  <md-divider ng-if="tdi.Status == 'Pending'"></md-divider> -->
+                        
                     </md-menu-content>
                 </md-menu>
             </div>
@@ -240,7 +246,7 @@
                                         <div layout layout-sm="column" layout-margin>
                                              <section-title title="Item Details"> </section-title>
 
-                                                 <ul as-sortable="sortableOptions" style=" width:600px" ng-model="tdi.table">
+                                                 <ul as-sortable="sortableOptions" style=" width:600px" ng-model="tdi.productTB">
                                                   <li ng-repeat="item in tdi.productTB" as-sortable-item  style=" width:600px">
                                                    <md-card style="margin-left:-40px; width:630px; margin-bottom:20px !important;" as-sortable-item-handle>
                                                   <md-card-content >

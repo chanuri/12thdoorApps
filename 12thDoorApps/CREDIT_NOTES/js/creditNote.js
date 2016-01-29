@@ -27,6 +27,12 @@ angular
     controller: 'viewCtrl'
   })
 
+  .state('edit', {
+    url: '/editcreditNotes/CnNo=:Cnno',
+    templateUrl: 'creditNotePartial/editCNote.html',
+    controller: 'editCtrl'
+  })
+
 })
 
 .controller('AppCtrl', function($scope, $objectstore,$state, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, creditNoteService, $filter, $location, UploaderService) {

@@ -19,7 +19,7 @@ angular.module('mainApp')
 
                if($stateParams.Cnno == data[i].creditNoteNo){
                  $rootScope.CNoteArray.splice(data[i],1);
-        creditNoteService.setCNArr(data[i]);
+                  creditNoteService.setCNArr(data[i]);
                   $scope.Address = data[i].billingAddress.split(',');
                $scope.street = $scope.Address[0];
                $scope.city = $scope.Address[1]+$scope.Address[3];
@@ -147,41 +147,10 @@ angular.module('mainApp')
       return $scope.famount;
     };
 
-    $scope.edit = function(updatedForm) {
-      var client = $objectstore.getClient("CNote12thdoor");
-
-      $scope.TDCreditNote.table = $rootScope.testArray.val;
-      $scope.TDCreditNote.total = $scope.total;
-      $scope.TDCreditNote.finalamount = $scope.famount;
-      $scope.TDCreditNote.status = "N";
-
-
-      client.onComplete(function(data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          .title('')
-          .content('invoice Successfully Saved')
-          .ariaLabel('Alert Dialog Demo')
-          .ok('OK')
-          .targetEvent(data)
-        );
-
-      });
-      client.onError(function(data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          .title('Sorry')
-          .content('Error Saving invoice')
-          .ariaLabel('Alert Dialog Demo')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.insert(updatedForm, {
-        KeyProperty: "creditNoteNo"
-      });
+    $scope.EditCNnote = function(val){
+        $rootScope.CNoteArray.splice(0,1);
+        creditNoteService.setCNArr(val);
+        $state.go('edit', {'Cnno': val.creditNoteRefNo});
     }
 
     $scope.deleteRecord = function(deleteform, ev) {

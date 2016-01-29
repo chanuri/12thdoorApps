@@ -55,21 +55,15 @@
                             </md-button>
                             <md-menu-content width="4">
                             <md-menu-item >
-                                    <md-button href ng-click="enterPayment(item)">
-                                        <p>Enter Payments</p>
+                                    <md-button href ng-click="applyInvoice(item)">
+                                        <p>Apply</p>
                                         <md-icon href md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item >
-                                    <md-button href ng-click="EditInvoice(item)">
+                                    <md-button href ng-click="EditCNnote(item)">
                                         <p>Edit</p>
                                         <md-icon href md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
-                                <md-menu-item >
-                                    <md-button href ng-click="copyInvoice(item)">
-                                        <p>Copy</p>
-                                        <md-icon md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item >
@@ -84,24 +78,6 @@
                                         <md-icon md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
-                                <md-menu-item >
-                                    <md-button href ng-click="CopyAsRecurringProfile(item)">
-                                        <p>Copy as Recurring</p>
-                                        <md-icon md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
-                                 <md-menu-item >
-                                    <md-button href ng-click="">
-                                        <p>Credit Note</p>
-                                        <md-icon md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
-                                <md-menu-item >
-                                    <md-button href ng-click="showListBottomSheet($event,item)">
-                                        <p>Send Reminder</p>
-                                        <md-icon md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
                             </md-menu-content>
                         </md-menu>
                         </div>
@@ -109,7 +85,7 @@
 
 				<md-divider></md-divider>
 				<div layout layout-sm="column" layout-margin flex>
-					<img src="img/image1.jpg">
+					<img src="img/image1.jpg" style="margin-top:-5px; width:180px;margin-left:100px; height:180px;">
 				</div>
 				<div layout layout-sm="column" layout-margin flex style="margin-top:-50px;">
 				<div flex="10" class="blankspace"></div>
@@ -146,8 +122,8 @@
 				</div>
 				<div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
 				<div flex="10" class="blankspace"></div>
-					<label flex="10"></label>
-					<label flex="15"> {{item.poNum}}</label>
+					<label flex="10">Currency</label>
+					<label flex="15">USD</label>
 					<div flex="25" class="blankspace"></div>
 					<label>{{city}}</label>
 					
@@ -155,16 +131,17 @@
 				
 				<div layout layout-sm="column" layout-margin style="margin-top:-15px;"  flex>
 				<div flex="10" class="blankspace"></div>
-					<label flex="10">Currency</label>
-					<label flex="15">USD</label>
+					
+					<label flex="10">Comments</label>
+					<label flex="15">{{item.comments}}</label>
 					<div flex="25" class="blankspace"></div>
 					<label>{{country}}</label>
 					
 				</div>
 				<div layout layout-sm="column" layout-margin  flex>
 				<div flex="10" class="blankspace"></div>
-					<label flex="10">Comments</label>
-					<label flex>{{item.comments}}</label>
+					<label flex="10">Internal Note</label>
+					<label flex>{{item.internalNote}}</label>
 					<!-- <div flex="50" class="blankspace"></div> -->
 				</div>
 				<div layout layout-sm="column" style="margin-top:30px;" layout-margin  flex>

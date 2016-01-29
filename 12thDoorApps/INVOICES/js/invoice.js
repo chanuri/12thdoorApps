@@ -1146,7 +1146,7 @@ angular
       $scope.CalculateTax = function() {
          $scope.salesTax=0;
          for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
-          console.log($rootScope.taxArr[i])
+          //console.log($rootScope.taxArr[i])
             $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
           }
            return $scope.salesTax;

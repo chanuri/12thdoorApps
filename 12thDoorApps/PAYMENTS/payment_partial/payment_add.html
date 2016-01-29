@@ -208,8 +208,7 @@
                            <div flex >
                               <lable style="font-size: 12px;"><b>Paid amount</b></lable>
                            </div>
-                           <div flex >
-                              <lable style="font-size: 12px;"></lable>
+                           <div flex>
                            </div>
                         </md-whiteframe>
                      </div>                                 
@@ -266,9 +265,7 @@
                               </div>
                            </div> 
 
-                           <div flex hide-gt-sm style="height:10px">
-                              
-                           </div> 
+                             
                            <div layout-sm="row" flex>
                               <div flex-sm="25" hide-gt-sm>
                                 <label style="font-size: 12px;"><b>Paid Amount</b></label>
@@ -277,11 +274,11 @@
                               <div flex >
                                  <md-input-container flex md-no-float>
                                     <input placeholder="Paid Amount" ng-disabled="!invo.checked" ng-model="invo.amount" 
-                                    ng-change="getPaidAmount(invo, '{{invo.amount}}', $event)" style="height: 20px; font-size: 13px;    margin-top: -9px;">
+                                    ng-change="getPaidAmount(invo, '{{invo.amount}}', $event)" style="height: 20px; font-size: 13px;    margin-top: -9px; width: 100%;">
                                  </md-input-container>
                               </div>
                            </div> 
-                           <div layout="row" layout-align="start start" flex flex-sm="50" >
+                           <div  layout-sm="row"  layout="row" layout-align="start start" flex flex-sm="50" >
                               <md-menu>
                                  <div style="margin-top: -18%; margin-right:0px;">
                                     <md-button type="button"   aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
@@ -298,6 +295,7 @@
                                  </md-menu-content>
                               </md-menu>
                            </div>
+ 
                         </md-whiteframe>
                      </div>                                 
                   </div>

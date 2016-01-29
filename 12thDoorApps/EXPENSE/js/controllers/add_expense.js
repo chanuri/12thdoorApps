@@ -104,12 +104,14 @@ rasm.controller('AppCtrl', function ($scope, $mdToast, $uploader, $rootScope, Up
 	$scope.fullarr = [];
 
 	function loadAll() {
-		$objectstoreAccess.LoadAllDetails("project", function (data) {
+		$objectstoreAccess.LoadAllDetails("project12thdoor", function (data) {
 			$scope.projectarr = [];
 			for (var i = data.length - 1; i >= 0; i--) {
 				$scope.projectarr.push({
 					display: data[i].name
 					, value: data[i].name.toLowerCase()
+					, id : data[i].projectid
+					, type : 'project'
 					, image: "img/ic_shopping_cart_24px.svg"
 				});
 			};
@@ -123,6 +125,8 @@ rasm.controller('AppCtrl', function ($scope, $mdToast, $uploader, $rootScope, Up
 					$scope.customerarr.push({
 						display: data[i].CustomerFname + ' ' + data[i].CustomerLname
 						, value: data[i].CustomerFname.toLowerCase() + ' ' + data[i].CustomerLname.toLowerCase()
+						, id : data[i].customerid
+						, type : 'contact'
 						, image: "img/ic_supervisor_account_24px.svg"
 					});
 				};
@@ -206,6 +210,9 @@ rasm.controller('AppCtrl', function ($scope, $mdToast, $uploader, $rootScope, Up
 		};
 		$scope.expense.UploadImages.val = UploaderService.loadBasicArray();
 		$scope.expense.Assigncustomer = self.selectedItem.display;
+		$scope.expense.assignType = self.selectedItem.type;
+		$scope.expense.assignId = self.selectedItem.id;
+
 		client.insert($scope.expense, {
 			KeyProperty: "expense_code"
 		});

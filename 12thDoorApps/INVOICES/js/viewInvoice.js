@@ -96,6 +96,35 @@ angular.module('mainApp')
             KeyProperty: "invoiceNo"
          });
       }
+
+      $scope.Approve = function(obj){
+        var client = $objectstore.getClient("invoice12thdoor");
+         obj.invoiceNo = obj.invoiceNo.toString();
+         obj.status = "Unpaid";
+         client.onComplete(function(data) {
+             $mdDialog.show(
+               // $mdDialog.alert()
+               // .parent(angular.element(document.body))
+               // .title('')
+               // .content('invoice Successfully Cancelled')
+               // .ariaLabel('Alert Dialog Demo')
+               // .ok('OK')
+               // .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding Invoice')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(obj, {KeyProperty: "invoiceNo"});
+      }
+      
 $scope.systemMessage = [];
 $scope.cancelStatus = function(obj, ev) {
   var confirm = $mdDialog.confirm()
@@ -129,7 +158,7 @@ $scope.cancelStatus = function(obj, ev) {
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
-               .content('Error Occure while Adding cancelling Invoice')
+               .content('Error Occure while cancelling Invoice')
                .ariaLabel('')
                .ok('OK')
                .targetEvent(data)

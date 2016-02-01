@@ -784,8 +784,12 @@ var client = $objectstore.getClient("Settings12thdoor");
          $scope.TDinvoice.UploadImages = {
             val: []
          };
+         if($scope.TDinvoice.saveOption == "saveAsPending"){
+          $scope.invoicDEtails.status = "Pending";
+         }else{
+          $scope.invoicDEtails.status = "Unpaid";
+         }
          
-         $scope.invoicDEtails.status = "Pending"
          $scope.invoicDEtails.favourite = false;
          $scope.invoicDEtails.favouriteStarNo = 1;
          $scope.invoicDEtails.Name = $rootScope.selectedItem1.display;
@@ -1004,7 +1008,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                $mdDialog.alert()
                .parent(angular.element(document.body))
                .title('')
-               .content('invoice Saved to drafts')
+               .content('recurring profile Saved to drafts')
                .ariaLabel('Alert Dialog Demo')
                .ok('OK')
                .targetEvent(data)

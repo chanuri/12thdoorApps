@@ -110,7 +110,7 @@
                                     <font color="white">Cancelled</font>
                                 </b>
                             </span>
-                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="item.status == 'Draft'">
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="tdi.status == 'Draft'">
                                 <b style=" width:70px; font-color:#FFFFFF;">
                                     <font color="white">Draft</font>
                                 </b>
@@ -142,36 +142,24 @@
                     <md-menu-content width="4">
                     <md-menu-item >
                             <md-button ng-click="gotoOpenMode(tdi)">
-                            <!-- <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon> -->
                                 <p>Open</p>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="printDetails($index)">
-                            <!-- <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon> -->
+                            <md-button ng-click="printDetails(tdi)">
                                 <p>Print</p>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="email($index)">
-                            <!-- <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon> -->
+                            <md-button ng-click="email(tdi)">
                                 <p>Email</p>
                             </md-button>
                         </md-menu-item>
-                        <!-- <md-menu-item >
-                            <md-button ng-click="deleteRecord(tdi)">
-                            <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon>
-                                <p>Delete</p>
-                            </md-button>
-                        </md-menu-item> -->
                         <md-menu-item >
-                            <md-button ng-click="edit(tdi)">
-                            <!-- <md-icon md-svg-icon="img/ic_save_24px.svg" ></md-icon> -->
-                                <p>Edit</p>
+                            <md-button ng-click="cancelStatus(tdi)">
+                                <p>Cancel</p>
                             </md-button>
                         </md-menu-item>
-                       <!--  <md-divider ng-if="tdi.Status == 'Pending'"></md-divider> -->
-                        
                     </md-menu-content>
                 </md-menu>
             </div>
@@ -303,10 +291,15 @@
                                                              </span> 
                                                           </div>
 
-                                                           <div flex>
-                                                             <span style="color:#808080;">{{item.tax}}%
-                                                             <md-tooltip>Tax</md-tooltip>
-                                                             </span> 
+                                                           <div flex="35" >
+                                                              <span style="color:#808080;">{{item.tax.taxname}}
+                                                          <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
+                                                              <md-tooltip>Tax</md-tooltip>
+                                                          </span>
+                                                           <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
+                                                              <md-tooltip>Tax</md-tooltip>
+                                                          </span>
+
                                                           </div>
 
                                                           <div flex >
@@ -332,16 +325,14 @@
                                                             <div flex="10">
                                                                 <label>Sub Total</label>
                                                             </div>
-                                                     
                                                                 <md-input-container flex="20" >
                                                                     <input type="text" aria-label="total" ng-model="tdi.fdiscount" style="display:none" />
                                                                 </md-input-container>
-                                                          
                                                             <div flex="5">
                                                                 <label></label>
                                                             </div>
                                                             <div flex="30">
-                                                                <span>{{calculatetotal(tdi)|currency}}</span>
+                                                              <span>{{calculatetotal(tdi)|currency}}</span>
                                                             </div>
                                                         </div>
                                                         <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
@@ -350,11 +341,9 @@
                                                             <div flex="10">
                                                                 <label>Discount</label>
                                                             </div>
-                                                       
                                                                 <md-input-container flex="20" >
                                                                     <input type="text" aria-label="discount" ng-model="tdi.fdiscount" />
                                                                 </md-input-container>
-                                                         
                                                             <div flex="5">
                                                                 <label></label>
                                                             </div>
@@ -368,30 +357,25 @@
                                                             <div flex="10">
                                                                 <label>Sales Tax</label>
                                                             </div>
-                                                            
                                                                 <md-input-container flex="20" >
                                                                     <input type="text" aria-label="tax" ng-model="tdi.salesTax" />
                                                                 </md-input-container>
-                                                            
                                                             <div flex="5">
                                                                 <label></label>
                                                             </div>
                                                             <div flex="30" >
-                                                                <label>{{CalculateTax(tdi)|currency}}</label>
+                                                              <label>{{CalculateTax(tdi)|currency}}</label>
                                                             </div>
                                                         </div>
-                                                       
                                                         <div layout layout-sm="column" layout-margin style="overflow:hidden;">
                                                             <div flex="5"></div>
                                                             <div flex="20" style="margin-top:35px;"></div>
                                                             <div flex="10">
                                                                 <label>Shipping</label>
                                                             </div>
-                                                            
                                                                 <md-input-container flex="20" >
                                                                     <input type="text" aria-label="Shipping" ng-model="tdi.shipping" />
                                                                 </md-input-container>
-                                                            
                                                             <div flex="5">
                                                                 <label></label>
                                                             </div>
@@ -412,8 +396,7 @@
                                                                 </label>
                                                             </div>
                                                             
-                                                                <md-input-container flex="20" >
-                                                                    
+                                                                <md-input-container flex="20">  
                                                                 </md-input-container>
                                                             
                                                             <div flex="5">
@@ -456,7 +439,7 @@
                         
                                                                        <section-title title="Uploaded File Details"> </section-title>
                                                                       <div layout="row" layout-align="center center"  flex>
-                                                                          <div flex="98" >
+                                                                          <div flex="98">
                                                                               <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="tdi.UploadImages.val"></md-table>
                                                                           </div>
                                                                       </div>

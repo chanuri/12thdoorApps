@@ -727,7 +727,12 @@ angular
      $scope.TDCreditNote.InvoiceRefNo = $rootScope.selectedNo.display;
       $scope.TDCreditNote.UploadImages = {val: []};
       $scope.TDCreditNote.UploadImages.val = UploaderService.loadBasicArray();
-
+       $scope.TDCreditNote.commentsAndHistory=[];
+         $scope.TDCreditNote.commentsAndHistory.push({
+              done: false,
+              text: "Credit Note was created by Mr.dddd",
+              date:new Date()
+         });
       client.onComplete(function(data) {
         $mdDialog.show(
           $mdDialog.alert()
@@ -759,6 +764,111 @@ angular
       client.insert([$scope.TDCreditNote], {
         KeyProperty: "creditNoteNo"
       });
+    }
+
+    $scope.cancelCNote = function(ev){
+      var confirm = $mdDialog.confirm()
+          .title('Would you like save this to draft?')
+          .content('')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('save')
+          .cancel('clear');
+            $mdDialog.show(confirm).then(function() {
+
+              $scope.imagearray = UploaderService.loadArray();
+         if ($scope.imagearray.length > 0) {
+            for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
+               $uploader.upload("45.55.83.253", "invoiceUploades", $scope.imagearray[indexx]);
+               $uploader.onSuccess(function(e, data) {
+                  var toast = $mdToast.simple()
+                     .content('Successfully uploaded!')
+                     .action('OK')
+                     .highlightAction(false)
+                     .position("bottom right");
+                  $mdToast.show(toast).then(function() {
+                  });
+               });
+               $uploader.onError(function(e, data) {
+                  var toast = $mdToast.simple()
+                     .content('There was an error, please upload!')
+                     .action('OK')
+                     .highlightAction(false)
+                     .position("bottom right");
+                  $mdToast.show(toast).then(function() {
+                  });
+               });
+            }
+         };
+
+        var client = $objectstore.getClient("CNote12thdoorDrafts");
+
+      $scope.TDCreditNote.productTB = $rootScope.testArray.val;
+      $scope.TDCreditNote.total = $scope.total;
+      $scope.TDCreditNote.finalamount = $scope.famount;
+      $scope.TDCreditNote.status = "Draft";
+      $scope.TDCreditNote.Name = $rootScope.selectedItem1.display;
+      $scope.TDCreditNote.billingAddress = $rootScope.selectedItem1.BillingAddress;
+      $scope.TDCreditNote.shippingAddress = $rootScope.selectedItem1.ShippingAddress;
+     
+     //$scope.TDCreditNote.InvoiceRefNo = $rootScope.selectedNo.display;
+      $scope.TDCreditNote.UploadImages = {val: []};
+      $scope.TDCreditNote.UploadImages.val = UploaderService.loadBasicArray();
+       $scope.TDCreditNote.commentsAndHistory=[];
+         $scope.TDCreditNote.commentsAndHistory.push({
+              done: false,
+              text: "Credit Note was created by Mr.dddd",
+              date:new Date()
+         });
+         client.onComplete(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('')
+               .content('invoice Saved to drafts')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+               .targetEvent(data)
+            );
+            location.href = '#/app';
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('Sorry')
+               .content('Error saving drafts')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+          $scope.TDCreditNote.creditNoteNo = "-999";
+      client.insert([$scope.TDCreditNote], {KeyProperty: "creditNoteNo"});
+
+            }, function() {
+               $rootScope.testArray.val = "";
+                $rootScope.dateArray.val = "";
+                 $scope.total = "";
+                 $scope.famount="";
+                 $rootScope.selectedItem1.display="";
+                 $rootScope.selectedItem1.BillingAddress="";
+                 $rootScope.selectedItem1.ShippingAddress="";
+                 $scope.dateArray.value="";
+                 $rootScope.searchText = null;
+                 $scope.TDCreditNote.poNum = "";
+                 $scope.TDCreditNote.comments = "";
+                 $scope.TDCreditNote.fdiscount = "";
+                 $scope.TDCreditNote.salesTax = "";
+                 $scope.TDCreditNote.anotherTax = "";
+                 $scope.TDCreditNote.shipping = "";
+                 $scope.TDCreditNote.notes = "";
+                 $scope.TDCreditNote.paymentMethod = "";
+                 $scope.TDCreditNote.roFruitNames = "";
+
+                 location.href = '#/invoice_app';
+         
+            });
     }
 
     //pops a dialog box to edit or view product
@@ -809,7 +919,7 @@ angular
          $scope.finalDisc = 0;
          $scope.Discount = 0;
          if($scope.dis == "SubTotal Items" ){
-            $scope.finalDisc = parseInt($scope.total*$scope.TDinvoice.fdiscount/100)
+            $scope.finalDisc = parseInt($scope.total*$scope.TDCreditNote.fdiscount/100)
          }else if ($scope.dis == "Individual Items" ){
             angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
             $scope.Discount +=   parseInt(tdIinvoice.discount);

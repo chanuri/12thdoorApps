@@ -78,26 +78,26 @@
                                     <p>Open</p>
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item >
+                            <md-menu-item ng-if="tdi.status != 'Cancelled'">
                                 <md-button ng-click="PrintRecurringInvoice(tdi)">
                                     <md-icon md-svg-icon="img/ic_delete_24px.svg" ></md-icon>
                                     <p>Print</p>
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item >
+                            <md-menu-item ng-if="tdi.status != 'Cancelled'">
                                 <md-button ng-click="downloadRecurring(tdi)">
                                     <md-icon md-svg-icon="img/ic_save_24px.svg" ></md-icon>
                                     <p>download</p>
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item>
+                            <md-menu-item ng-if="tdi.status != 'Cancelled'" >
                                 <md-button ng-click="copyRecurringInvoice(tdi)">
                                     <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                                     <p>Copy</p>
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="cancelProfile(tdi)">
+                            <md-menu-item ng-if="tdi.status != 'Cancelled'">
+                                <md-button ng-click="cancelStatus(tdi)">
                                     <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                                     <p>Cancel</p>
                                 </md-button>

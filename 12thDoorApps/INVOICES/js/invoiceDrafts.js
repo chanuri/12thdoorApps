@@ -145,6 +145,7 @@ angular.module('mainApp')
             return arry;
         },
         setFullArr : function(obj){
+          console.log(obj)
             this.setArray(obj);
             $rootScope.correctArr = [];
             $rootScope.multiTax = [];

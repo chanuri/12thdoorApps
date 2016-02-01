@@ -46,19 +46,19 @@
                                 <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:10px;" ></md-icon>
                             </md-button>
                             <md-menu-content width="4">
-                               <md-menu-item >
+                               <md-menu-item ng-if="item.status != 'Cancelled'">
                                     <md-button href ng-click="cancelStatus(item)">
                                         <p>Cancel</p>
                                         <md-icon md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
-                                <md-menu-item >
+                                <md-menu-item ng-if="item.status != 'Cancelled'">
                                     <md-button href ng-click="EditRecurringInvoice(item)">
                                         <p>Edit</p>
                                         <md-icon href md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
-                                <md-menu-item >
+                                <md-menu-item ng-if="item.status != 'Cancelled'">
                                     <md-button href ng-click="copyRecurringInvoice(item)">
                                         <p>Copy</p>
                                         <md-icon md-menu-align-target ></md-icon>
@@ -67,12 +67,6 @@
                                 <md-menu-item >
                                     <md-button href ng-click="deleteRecurringInvoice(item)">
                                         <p>Delete</p>
-                                        <md-icon md-menu-align-target ></md-icon>
-                                    </md-button>
-                                </md-menu-item>
-                                <md-menu-item >
-                                    <md-button href ng-click="">
-                                        <p>Add Comments</p>
                                         <md-icon md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
@@ -252,7 +246,7 @@
                                 <img src="../../img/material alperbert/avatar_tile_h_28.png" />
                                 
                                   <font  color="#A9A9A9" >{{todo.date|date}} {{todo.text}}</font> 
-                                  <md-button href aria-label="delete" ng-mouseover="display:none;" ng-click="deleteComments(todo)" style="width:25px; height:10px; padding:15px;">
+                                  <md-button href aria-label="delete" ng-click="deleteComments(todo)" style="width:25px; height:10px; padding:15px;">
                                  <img src="img/ic_clear_24px.svg" style=" width:15px; height:15px; margin-top:5px;" /></md-button>
                               </li>
                             </ul>

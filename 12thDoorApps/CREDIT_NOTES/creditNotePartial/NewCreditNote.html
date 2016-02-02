@@ -93,23 +93,10 @@
                     <div layout layout-sm="column" layout-margin>
                        
                         <section-title> </section-title>
-
-                <md-autocomplete flex 
-                    md-input-name="autocompleteField"
-                         md-no-cache="ctrl.noCache" 
-                         md-selected-item="$root.selectedNo" 
-                         md-search-text="ctrl.searchText1"
-                          md-items="item in ctrl.querySearch1(ctrl.searchText1)" 
-                          md-item-text="item.display" 
-                          md-floating-label="Invoice Ref No"
-                         >
-                        <md-item-template>
-                            <span  md-highlight-text="ctrl.searchText1"  md-highlight-flags="^i">
-                            {{item.display}}
-                            </span>
-                            
-                        </md-item-template>
-                    </md-autocomplete>
+                    <md-input-container flex >
+                            <label>Invoice Ref No</label>
+                            <input ng-model="TDCreditNote.invoiceRefNo">
+                            </md-input-container>
 
                      <md-input-container flex >
                             <label>Comment</label>

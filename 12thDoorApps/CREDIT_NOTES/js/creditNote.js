@@ -505,51 +505,6 @@ angular
       creditNoteService.removeArray(name);
     }
 
-    $rootScope.loadInv = INVload();
-    $rootScope.selectedNo = null;
-     $rootScope.searchText1 = null;
-    $rootScope.self.querySearch1 = querySearch1;
-
-    function querySearch1(query) {
-
-      $scope.enter = function(keyEvent) {
-          if (keyEvent.which === 13) {
-            if ($rootScope.selectedNo === null) {
-              $rootScope.selectedNo = query;
-              console.log($rootScope.results);
-            } else {
-              console.log($rootScope.selectedNo);
-            }
-          }
-        }
-        //Custom Filter
-      $rootScope.results = [];
-      for (i = 0, len = $rootScope.invoiceNombures.length; i < len; ++i) {
-            if ($rootScope.invoiceNombures[i].display.indexOf(query) != -1) {
-               $rootScope.results.push($rootScope.invoiceNombures[i]);
-            }
-         }
-      return $rootScope.results;
-    }
-    $scope.invoiceNombures = [];
-
-    function INVload() {
-
-      var client = $objectstore.getClient("invoice12thdoor");
-      client.onGetMany(function(data) {
-        if (data) {
-        $rootScope.invoiceNombures = [];
-               for (i = 0, len = data.length; i < len; ++i) {
-                  $rootScope.invoiceNombures.push({
-                     display: data[i].invoiceNo.toLowerCase(),
-                  });
-               }
-        }
-      });
-      client.onError(function(data) {});
-      client.getByFiltering("*");
-    }
-
     //dialog box pop up to add customer through invoice
     $scope.addCustomer = function() {
         $mdDialog.show({
@@ -724,7 +679,7 @@ angular
       $scope.TDCreditNote.Name = $rootScope.selectedItem1.display;
       $scope.TDCreditNote.billingAddress = $rootScope.selectedItem1.BillingAddress;
       $scope.TDCreditNote.shippingAddress = $rootScope.selectedItem1.ShippingAddress;
-     $scope.TDCreditNote.InvoiceRefNo = $rootScope.selectedNo.display;
+     //$scope.TDCreditNote.InvoiceRefNo = $rootScope.selectedNo.display;
       $scope.TDCreditNote.UploadImages = {val: []};
       $scope.TDCreditNote.UploadImages.val = UploaderService.loadBasicArray();
        $scope.TDCreditNote.commentsAndHistory=[];
@@ -733,6 +688,7 @@ angular
               text: "Credit Note was created by Mr.dddd",
               date:new Date()
          });
+          if($rootScope.testArray.val.length >0){
       client.onComplete(function(data) {
         $mdDialog.show(
           $mdDialog.alert()
@@ -747,7 +703,16 @@ angular
         creditNoteService.setCNArr($scope.TDCreditNote);
         $state.go('view', {'Cnno': $scope.TDCreditNote.creditNoteRefNo});
       });
-
+       }else {
+        $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('')
+               .content('add line Item')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK') 
+            );
+      }
       client.onError(function(data) {
         $mdDialog.show(
           $mdDialog.alert()

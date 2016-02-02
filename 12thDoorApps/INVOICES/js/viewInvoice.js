@@ -824,7 +824,7 @@ $scope.email = function(item) {
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
-               .content('Error Occure while Adding cancelling Invoice')
+               .content('Error Occure while Adding the comment')
                .ariaLabel('')
                .ok('OK')
                .targetEvent(data)

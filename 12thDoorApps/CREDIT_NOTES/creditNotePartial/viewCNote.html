@@ -264,13 +264,12 @@
 
 				<md-divider></md-divider>
 				<div layout layout-sm="column" layout-margin>
-				<section-title title="Payment History"> </section-title>
+				<section-title title="Invoice Applied"> </section-title>
 					<table >
 					<tr>
 						<th flex style="padding: 30px;">Date</th>
-						<th style="padding: 30px;" flex>Doc Ref No</th>
-						<th style="padding: 30px;" flex>Payment Method</th>
-						<th style="padding: 30px;" flex>Paid Amount</th>
+						<th style="padding: 30px;" flex>Invoice No</th>
+						<th style="padding: 30px;" flex> Amount</th>
 						<md-divider></md-divider>
 						</tr>
 
@@ -279,7 +278,7 @@
 							<td style="padding: 30px;"flex>{{cc.paymentid}}</td>
 							<td style="padding: 30px;"flex>{{cc.paymentMethod}}</td>
 							<td style="padding: 30px;"flex>{{cc.total|currency}}</td>
-							 <!-- <md-divider></md-divider> -->
+							<!-- <md-divider></md-divider>  -->
 						</tr>
 						<md-divider></md-divider>
 					</table>

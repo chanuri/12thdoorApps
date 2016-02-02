@@ -71,7 +71,6 @@ angular.module('mainApp')
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
-
             };
       }
     });
@@ -142,6 +141,46 @@ angular.module('mainApp')
         }
       });
     }
+
+     $scope.todos = [];
+  $scope.markAll = false;
+
+  $scope.addTodo = function(todoText) {
+      if(event.keyCode == 13 ){
+          $scope.todos.push({text:todoText.addView, done:false,  date:new Date()});
+
+          console.log(todoText.addView)
+          
+         var client = $objectstore.getClient("CNote12thdoor");
+         todoText.invoiceNo = todoText.invoiceNo.toString();
+
+            for (var i =  $scope.todos.length - 1; i >= 0; i--) {
+           todoText.commentsAndHistory.push($scope.todos[i]);
+         };
+            todoText.addView = "";
+         client.onComplete(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('successfull')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding the comment')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(todoText, {KeyProperty: "creditNoteNo"});
+      }
+  };
 
     $scope.systemMessage = [];
 $scope.cancelStatus = function(obj, ev) {

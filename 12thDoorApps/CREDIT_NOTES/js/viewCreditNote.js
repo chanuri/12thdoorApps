@@ -10,9 +10,7 @@ angular.module('mainApp')
     var client = $objectstore.getClient("CNote12thdoor");
     client.onGetMany(function(data) {
       if (data) {
-        // $scope.TDCreditNote = data;
         for (var i = data.length - 1; i >= 0; i--) {
-              // loading_spinner.remove();
               data[i].addView = "";
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDCreditNote.push(data[i]);
@@ -30,7 +28,6 @@ angular.module('mainApp')
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
-
             };
       }
     });
@@ -130,6 +127,42 @@ angular.module('mainApp')
         };
       };
     }
+
+ $scope.applyInvoice = function(obj,ev){
+    $mdDialog.show({
+           templateUrl: 'creditNotePartial/applyInvoice.html',
+            targetEvent: ev,
+        controller: function applyinvoice($scope, $mdDialog) {
+            $scope.invoArr = {val: []};
+
+            $scope.invoArr.val=[{
+              date: "",
+              invoiceNo: "",
+              dueDate: "",
+              Amount:"",
+              Balace:"",
+              CreditAmount:""
+            }]
+
+            $scope.addItem = function(){
+                $scope.invoArr.val.push({
+                date: "",
+                invoiceNo: "",
+                dueDate: "",
+                Amount:"",
+                Balace:"",
+                CreditAmount:""
+              })
+            }
+          $scope.cancel = function() {
+                 $mdDialog.cancel();
+              }
+           $scope.removeItem = function(index){
+             $scope.invoArr.val.splice($scope.invoArr.val.indexOf(index), 1 );
+          }
+        }
+      });
+  }
 
     $scope.viewSavedProducts = function(obj) {
       console.log('hit');

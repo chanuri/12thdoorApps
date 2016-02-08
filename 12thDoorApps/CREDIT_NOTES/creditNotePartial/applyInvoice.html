@@ -1,0 +1,62 @@
+<md-dialog style="max-width:850px;" aria-label="multiple due dates">
+    <md-toolbar class="modal-header">
+        <div class="md-toolbar-tools">
+            <h2>Applied Invoice</h2>
+            <span flex></span>
+            <md-button href class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="">
+    <div layout layout-sm="column" layout-margin>
+                    <section-title title="Invoices Applied"> </section-title>
+					<table>
+					<tr>
+						<th layout layout-sm="row" layout-margin>
+						<div layout layout-sm="row" layout-margin flex="15">Date</div>
+						<div layout layout-sm="row" layout-margin flex="15">Invoice No</div>
+						<div layout layout-sm="row" layout-margin flex="15">Due Date</div>
+						<div layout layout-sm="row" layout-margin flex="15">Amount</div>
+						<div layout layout-sm="row" layout-margin flex="15">Balance</div>
+						</th>
+						</tr>
+						<tr animate ng:repeat="cn in invoArr.val">
+                                <td data-title="Item Detail" layout layout-sm="column" layout-margin>
+                                  <md-datepicker ng-model="cn.date" md-placeholder="Date" required flex style="margin-top:-18px; width:230px; margin-left:-20px;"></md-datepicker>
+                                    <md-input-container flex style="margin-top:-15px; width:150px; padding-left:5px;">
+                                            <input type="number" ng-model="cn.invoiceNo" style="margin-top:5px;" >
+                                            </md-input-container>
+                                            <md-datepicker ng-model="cn.dueDate" md-placeholder="Due Date" required flex style="margin-top:-18px; width:230px; margin-left:-20px; padding-left:5px;" ></md-datepicker>
+                                            <md-input-container flex style="margin-top:-15px; width:150px; padding-left:10px;">
+                                                <input ng-model="cn.Amount|currency" style="margin-top:5px;">
+                                                </md-input-container>
+                                                <md-input-container flex style="margin-top:-15px; width:150px; padding-left:10px;">
+                                                <input ng-model="cn.Balace|currency" style="margin-top:5px;">
+                                                </md-input-container>
+                                                <md-input-container flex style="margin-top:-15px; width:150px; padding-left:10px;">
+                                                <input ng-model="cn.CreditAmount|currency" style="margin-top:5px;">
+                                                </md-input-container>
+                                                <md-button href class="md-mini md-primary" ng-click="removeItem(cn)" style="height:30px;margin-left:-18px;top:10px;">
+                                                    <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
+                                                    <md-tooltip md-direction="left">Delete</md-tooltip>
+                                                </md-button>
+                                        </td>
+                                    </tr>
+						<md-divider></md-divider>
+
+					</table>
+                </div>
+                <div layout layout-sm="column" layout-margin>
+                             <section-title> </section-title>
+                                <md-button href class="md-mini md-primary" ng-click="addItem()" style="margin-left:-18px;">
+                                    <md-icon md-svg-src="img/ic_add_circle_outline_24px.svg" class="iconColor" style="right:1px;right:90%;top:20px;" ></md-icon>
+                                    <md-tooltip md-direction="left">Add another Date</md-tooltip>
+                                </md-button>
+                            </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+                <span flex></span>
+                <md-button href ng-click="AddDueDates()" class="md-primary">Save</md-button>
+              </div>
+    </md-dialog>

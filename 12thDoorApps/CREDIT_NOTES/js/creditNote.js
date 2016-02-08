@@ -703,6 +703,8 @@ angular
         creditNoteService.setCNArr($scope.TDCreditNote);
         $state.go('view', {'Cnno': $scope.TDCreditNote.creditNoteRefNo});
       });
+       $scope.TDCreditNote.creditNoteNo = "-999";
+      client.insert([$scope.TDCreditNote], {KeyProperty: "creditNoteNo"});
        }else {
         $mdDialog.show(
                $mdDialog.alert()
@@ -725,10 +727,7 @@ angular
         );
 
       });
-      $scope.TDCreditNote.creditNoteNo = "-999";
-      client.insert([$scope.TDCreditNote], {
-        KeyProperty: "creditNoteNo"
-      });
+      
     }
 
     $scope.cancelCNote = function(ev){

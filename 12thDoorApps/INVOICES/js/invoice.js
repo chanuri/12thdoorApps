@@ -871,8 +871,7 @@ angular
                 );
             });
 
-            client.insert(cusform, {
-                KeyProperty: "customerid"})
+            client.insert(cusform, {KeyProperty: "customerid"});
 
                      $rootScope.customerNames.splice( $rootScope.customerNames.indexOf($rootScope.selectedItem1), 1 );
                      $rootScope.customerNames.push({
@@ -913,6 +912,8 @@ angular
                if (keyEvent.which == 40) {
                }
             }
+    // var results = query ? self.states.filter( createFilterFor(query) ) : [];
+    //   return results;
             //Custom Filter
          $rootScope.results = [];
          for (i = 0, len = $rootScope.customerNames.length; i < len; ++i) {
@@ -941,6 +942,13 @@ angular
          client.onError(function(data) {});
          client.getByFiltering("*");
       }
+
+      function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+      return function filterFn(state) {
+        return (data[i].Name.value.indexOf(lowercaseQuery) === 0);
+      };
+    }
 
       $scope.Billingaddress = true;
       $scope.Shippingaddress = false;
@@ -1055,6 +1063,7 @@ angular
          $scope.TDinvoice.favouriteStarNo = 1;
          $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
          $scope.TDinvoice.Email = $rootScope.selectedItem1.value.Email;
+         $scope.TDinvoice.customerid = $rootScope.selectedItem1.value.customerid;
          $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
          $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
          

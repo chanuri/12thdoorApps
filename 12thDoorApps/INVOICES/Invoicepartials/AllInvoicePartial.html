@@ -193,18 +193,7 @@ ng-controller="viewCtrl as ctrl">
                                             <section-title > </section-title>
                                             <md-input-container flex >
                                                 <label>Payment Terms</label>
-                                                <md-select ng-model="tdi.termtype" flex ng-disabled="true" required>
-                                                <md-optgroup label="Terms type">
-                                                    <md-option value="Custom" >Custom</md-option>
-                                                    <md-option value="Net 7 days">Net 7 days</md-option>
-                                                    <md-option value="Net 14 days" >Net 14 days</md-option>
-                                                    <md-option value="Net 21 days">Net 21 days</md-option>
-                                                    <md-option value="Net 30 days">Net 30 days</md-option>
-                                                    <md-option value="Net 45 days">Net 45 days</md-option>
-                                                    <md-option value="Net 60 days">Net 60 days</md-option>
-                                                    <md-option value="Net 90 days">Net 90 days</md-option>
-                                                    <md-option value="multipleDueDates" >Multiple Due Dates</md-option>
-                                                </md-optgroup>
+                                                <input ng-model="tdi.termtype" ng-disabled="true">
                                                 </md-select>
                                             </md-input-container>
                                             <div flex >

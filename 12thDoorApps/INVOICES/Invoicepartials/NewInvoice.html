@@ -14,12 +14,8 @@
                 <!--   -->
                 <div layout layout-sm="column" layout-margin  >
                     <section-title title="Customer Details"> </section-title>
-
-                    <div ng-init="loadcus()"></div>
                     <md-autocomplete flex="70" required="" 
                           ng-keydown="enter($event)"
-                          ng-disabled="ctrl.isDisabled" 
-                          md-no-cache="ctrl.noCache" 
                           md-selected-item="$root.selectedItem1" 
                           md-search-text-change="ctrl.searchTextChange($root.searchText)"
                           md-search-text="$root.searchText"
@@ -39,9 +35,13 @@
                                 <md-divider></md-divider>
                             </span>
                         </md-item-template>
+                        <md-not-found>
+                          No names matching "{{$root.searchText}}" were found.
+                          <a ng-click="addCustomer($root.searchText)">Create a new one!</a>
+                        </md-not-found>
                     </md-autocomplete>
                     <!-- <custom-input button="newOption()" button-icon="switch"></custom-input> -->
-                    <div layout="row" layout-align="center center" style="height:30px; width:30px; margin-top:40px; margin-left:15px;">
+                    <div layout="row" layout-align="center center" style="height:30px; width:30px; margin-top:40px; margin-left:5px;">
                         <md-menu md-position-mode="target-right target">
                             <md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
                                 <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
@@ -86,7 +86,7 @@
                         <input ng-model="TDinvoice.invoiceRefNo" ng-disabled="true">
                         </md-input-container>
                         <!-- <div flex ><md-date-picker-new model="TDinvoice.Startdate"  label="Date" dialog-md-theme="datePickerTheme" required/></md-date-picker-new></div> -->
-                        <md-datepicker ng-model="TDinvoice.Startdate" md-placeholder="Enter date" required flex style="margin-top:25px; width:230px;"></md-datepicker>
+                        <md-datepicker ng-model="TDinvoice.Startdate" md-placeholder="Date" ng-required="true" flex style="margin-top:25px; width:230px;" ng-disabled="showdate" ></md-datepicker>
                     </div>
                     <div layout  layout-sm="column" layout-margin>
                        <section-title> </section-title>
@@ -108,7 +108,7 @@
                         </md-select>
                     </md-input-container>
                    
-                    <md-datepicker ng-model="TDinvoice.duedate" md-placeholder="Due Date" required flex style="margin-top:25px; width:230px;" ng-disabled="showdate" ></md-datepicker>
+                    <md-datepicker ng-model="TDinvoice.duedate" md-placeholder="Due Date" ng-required="true" flex style="margin-top:25px; width:230px;" ng-disabled="showdate" ></md-datepicker>
                     <div style="height:30px; width:30px; margin-top:35px;">
                         <md-button ng-click="MultiDuDates()" style="height:30px;" aria-label="multi-dates" href>
                             <md-icon md-svg-src="img/ic_more_horiz_24px.svg" class="iconColor"  md-ink-ripple style="margin-left:-5px;" ></md-icon>

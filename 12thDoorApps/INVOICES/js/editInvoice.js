@@ -15,6 +15,10 @@ $scope.Settings = {};
  $scope.roles = [];
  $scope.permission = [];
 
+ $scope.termtype = $rootScope.invoiceArray[0].termtype;
+ $scope.duedate = new Date($rootScope.invoiceArray[0].duedate);
+ $scope.Startdate = new Date($rootScope.invoiceArray[0].Startdate);
+
  var client = $objectstore.getClient("Settings12thdoor");
       client.onGetMany(function(data) {
          if (data) {
@@ -105,6 +109,12 @@ for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
         $scope.editInvoiceB = true;
      }
 
+     // for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
+       console.log($rootScope.invoiceArray[0].termtype)
+     // };
+
+     
+
 $scope.edit = function(updatedForm) {
          updatedForm.invoiceNo = updatedForm.invoiceNo.toString();
 
@@ -112,6 +122,9 @@ $scope.edit = function(updatedForm) {
           var client = $objectstore.getClient("invoice12thdoorDraft");
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
+         updatedForm.Startdate = $scope.Startdate;
+         updatedForm.termtype = $scope.termtype;
+         updatedForm.duedate = $scope.duedate;
          updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
           $scope.systemMessage.push({text:"The Invoice was Edited by mr.Perera", done:false,  date:new Date()});
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
@@ -139,6 +152,9 @@ $scope.edit = function(updatedForm) {
          //updatedForm.invoiceProducts = $rootScope.showprodArray.val;
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
+          //updatedForm.termtype = $scope.termtype;
+          updatedForm.Startdate = $scope.Startdate;
+         updatedForm.duedate = $scope.duedate;
          $scope.systemMessage.push({text:"The Invoice was Edited by mr.Perera", done:false,  date:new Date()});
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
@@ -202,7 +218,6 @@ $scope.edit = function(updatedForm) {
          $scope.salesTax = 0;
 
          for (var i = $rootScope.getTax.length - 1; i >= 0; i--) {
-          //console.log($rootScope.getTax[i].salesTax)
             $scope.salesTax += parseInt($rootScope.getTax[i].salesTax);
           }
          return $scope.salesTax;
@@ -240,6 +255,8 @@ $scope.edit = function(updatedForm) {
          $mdDialog.show(confirm).then(function() {
             var draftdelete = $objectstore.getClient("invoice12thdoorDraft");
             obj.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
+            obj.termtype = $scope.termtype;
+            obj.duedate = $scope.duedate;
             draftdelete.onComplete(function(data) {
               if(obj.termtype != "multipleDueDates"){
          obj.MultiDueDAtesArr= [{
@@ -732,7 +749,8 @@ $scope.edit = function(updatedForm) {
          updatedForm.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
          updatedForm.ProgressBar.PaymentScheme = updatedForm.termtype;
           updatedForm.ProgressBar.PaymentSchemeActive= "false";
-
+          updatedForm.termtype = $scope.termtype;
+         updatedForm.duedate = $scope.duedate;
          updatedForm.ProgressBar.PaymentSchemeData.push($rootScope.dateArray.value);
          updatedForm.commentsAndHistory=[];
          updatedForm.commentsAndHistory.push({

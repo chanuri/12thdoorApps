@@ -225,6 +225,7 @@ $scope.cancelStatus = function(obj, ev) {
             $scope.checkAbility = true;
          }
       };
+
      
       $scope.deleteInvoice = function(deleteform, ev) {
         if(deleteform.invoiceNo == "-999"){

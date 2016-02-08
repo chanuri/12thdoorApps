@@ -811,6 +811,7 @@ var client = $objectstore.getClient("Settings12thdoor");
            $scope.invoicDEtails.comments = $scope.TDinvoice.comments;
            $scope.invoicDEtails.Startdate =  $scope.TDinvoice.Startdate;
            $scope.invoicDEtails.commentsAndHistory=[];
+           $scope.invoicDEtails.termtype = "Custom";
            $scope.invoicDEtails.roFruitNames = angular.copy($scope.TDinvoice.roFruitNames);
              $scope.changeDate = angular.copy($scope.TDinvoice.Startdate);
 

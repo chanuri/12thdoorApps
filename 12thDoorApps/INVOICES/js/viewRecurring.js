@@ -1,4 +1,4 @@
-angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog, $objectstore,$stateParams, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
+angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog, $objectstore,$stateParams,uiInitilize, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
       $scope.TDinvoice = [];
       $scope.newItems = [];
       $scope.show = false;
@@ -18,23 +18,21 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
           $scope.viewPortHeight = $scope.viewPortHeight+"px";
       }, 100);
 
+      $scope.items = uiInitilize.insertIndex($scope.TDinvoice);
+  
+      //This holds the UI logic for the collapse cards
       $scope.toggles = {};
-      $scope.toggleOne = function($index){
-          for (ind in $scope.payments)
-              if ($scope.toggles[ind] && ind != $index)
-                  $scope.toggles[ind] = false;
-
-              if (!$scope.toggles[$index])
-                  $scope.toggles[$index] = true;
-          else $scope.toggles[$index] = !$scope.toggles[$index];
-      };
+      $scope.toggleOne = function($index)
+      { 
+      $scope.toggles = uiInitilize.openOne($scope.TDinvoice, $index);
+      }
 
       // ------------------------------------virtual repeat end -------------
 
 
 
 
-      
+
       var vm = this;
       $scope.announceClick = function(index) {
          $mdDialog.show(

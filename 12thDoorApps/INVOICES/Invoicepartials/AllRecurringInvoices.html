@@ -1,4 +1,4 @@
-<div md-virtual-repeat-container style="height: {{viewPortHeight}};">
+<div md-virtual-repeat-container ng-init="viewPortHeight='700px;'" style="height: {{viewPortHeight}};">
     
 
 
@@ -6,7 +6,7 @@
  ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;">
     <!--START OF COLLAPSE CARD HEADING-->
     <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:33px">
-    <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi)">
+    <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi);toggleOne($index)">
         <div style="width:56px;">
                     <div  ng-hide="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
                         <img src="../../img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>

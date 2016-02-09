@@ -5,6 +5,36 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
       $scope.showTable = false;
       $scope.obtable = [];
       $scope.invoiceArray.shipping = 0;
+
+
+
+
+
+          // ------------------------------------virtual repeat start-----------------
+
+      
+      setInterval(function interval(){
+          $scope.viewPortHeight = window.innerHeight;
+          $scope.viewPortHeight = $scope.viewPortHeight+"px";
+      }, 100);
+
+      $scope.toggles = {};
+      $scope.toggleOne = function($index){
+          for (ind in $scope.payments)
+              if ($scope.toggles[ind] && ind != $index)
+                  $scope.toggles[ind] = false;
+
+              if (!$scope.toggles[$index])
+                  $scope.toggles[$index] = true;
+          else $scope.toggles[$index] = !$scope.toggles[$index];
+      };
+
+      // ------------------------------------virtual repeat end -------------
+
+
+
+
+      
       var vm = this;
       $scope.announceClick = function(index) {
          $mdDialog.show(

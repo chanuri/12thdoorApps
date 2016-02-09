@@ -1,7 +1,11 @@
-<!--START OF SECOND CARD CONTAINER-->
-<!--START OF  COLLAPSE CARDS-->
-<div  class="collapse-card" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch " ng-class="{ active: $active }" style="max-width:960px;">
+<div md-virtual-repeat-container style="height: {{viewPortHeight}};">
+    
+
+
+<div  class="card_container" md-virtual-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch "
+ ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;">
     <!--START OF COLLAPSE CARD HEADING-->
+    <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:33px">
     <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi)">
         <div style="width:56px;">
                     <div  ng-hide="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
@@ -159,7 +163,6 @@
                                             <md-option value="Yearly">Yearly</md-option>
                                             <md-option value="2Years">2 Years</md-option>
                                             <md-option value="3Years">3 Years</md-option>
-                                        </md-optgroup>
                                     </md-select>
                                 </md-input-container>
                                 <md-input-container flex >
@@ -249,7 +252,7 @@
                                                                 </span>
                                                                  <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
                                                                     <md-tooltip>Tax</md-tooltip>
-                                                                </span>
+                                                               
 
                                                                 </div>
                                                                 <div flex >
@@ -413,9 +416,7 @@
                                                 </md-content>
                                             </form>
                                         </div>
-                                        <!--END OF CARD BODY-->
                                     </div>
-                                    <!--END OF COLLAPSE CARDS-->
                                 </div>
-                                <!--START OF SECOND CARD CONTAINER-->
                             </div>
+                             

@@ -22,11 +22,12 @@
                <!--   -->
                <md-autocomplete flex="" required="" md-input-name="autocompleteField"
                   md-no-cache="noCache" 
-                  md-selected-item="selectedItem" 
                   md-search-text="searchText"   
                   md-items="item in querySearch(searchText)"               
                   md-item-text="item.display" 
-                  md-floating-label="Product or Service Name">
+                  md-selected-item="selectedItem" 
+                  md-floating-label="Product or Service Name"
+                  md-selected-item-change="testMe()">
                   <md-item-template>
                      <span  md-highlight-text="searchText">{{item.display}}</span>
                   </md-item-template>
@@ -72,6 +73,13 @@
                   <label>Comment</label>
                   <input ng-model="inventory.Comment">
                </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+               
+               <section-title > </section-title>
+                <div flex ng-show="showGinLabel"> <span style="color:red;font-size:13px"> GIN Exceed the GRN of this product</span>
+                   
+                </div>
             </div>
             <md-divider></md-divider>
          </md-content>

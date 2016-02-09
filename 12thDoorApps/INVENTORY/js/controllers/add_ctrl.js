@@ -1,5 +1,31 @@
 rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, InvoiceService,UploaderService, $mdToast, $rootScope, $state, $objectstore, $mdDialog, $window, $objectstore, $auth, $q, $http, $compile, $timeout) {
-  //upload controllers start
+  //upload controllers 
+
+
+  $scope.inventory = {};
+
+
+  function getMaxNumber(className,callback){
+      var clientMax = $objectstore.getClient("domainClassAttributes");
+      clientMax.onGetMany(function(data){          
+         callback(data[0].maxCount)
+      });
+      clientMax.onError(function(data){
+        console.log("error loading max count")
+      });
+      clientMax.getByFiltering("select maxCount from domainClassAttributes where class = '"+className+"'")
+    }
+
+
+  if ($state.current.name == 'Add_Inventory') { 
+      getMaxNumber("GRN12thdoor",function(maxCount){
+        $scope.inventory.GRNno = parseInt(maxCount) +1
+      });
+  }else if ($state.current.name == 'Add_Inventory_Issue') {   
+      getMaxNumber("GIN12thdoor",function(maxCount){
+        $scope.inventory.GINno = parseInt(maxCount) +1
+      })
+  } 
 
   $scope.CurrentDate = moment().format("LL");
   console.log($scope.CurrentDate)
@@ -63,8 +89,19 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
         $scope.shipaddresshow = false;
       };
     }
+  var proBalClient = $objectstore.getClient("productBalance");
+  proBalClient.onGetMany(function(data){
+    $scope.balanceArr = [];
+    for(p=0; p<= data.length-1; p++){
+        data[p].balance_code = parseInt(data[p].balance_code)
+        $scope.balanceArr.push(data[p]);
+    }
+  });
+  proBalClient.onError(function(data){
+    console.log("error loading balance details ")
+  });
+  proBalClient.getByFiltering("*")
     //save functon start
-  $scope.inventory = {};
   $scope.submit = function() {
       console.log(self.selectedItem)
       if ($rootScope.testArray.val.length == 0) {
@@ -77,12 +114,11 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
           .targetEvent()
           )
       }else{
-
         $scope.imagearray = [];
         $scope.imagearray = UploaderService.loadArray();
         if ($scope.imagearray.length > 0) {
           for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-            $uploader.upload("45.55.83.253", "expenseimagesNew", $scope.imagearray[indexx]);
+            $uploader.upload("45.55.83.253", "inventoryimagesNew", $scope.imagearray[indexx]);
             $uploader.onSuccess(function (e, data) {});
             $uploader.onError(function (e, data) {
               var toast = $mdToast.simple()
@@ -96,26 +132,106 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
             });
           }
         };
+        var client;
+        if ($state.current.name == 'Add_Inventory') {
+            $scope.inventory.inventoryClass = "Receipt";
+            client = $objectstore.getClient("GRN12thdoor");
+        } else if ($state.current.name == 'Add_Inventory_Issue') {
+            $scope.inventory.inventoryClass = "Issue";
+            client = $objectstore.getClient("GIN12thdoor");
+        } 
 
-        var client = $objectstore.getClient("inventory12thdoor");
         client.onComplete(function(data) {
-          $mdDialog.show($mdDialog.alert().parent(angular.element(document.body))
-            .content('Inventory Successfully Saved.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
+          $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('Inventory Successfully Saved.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
           
-          MoveToViewscreen();
+          var samplebalance = [];
+          var sampleFullArr = [];
+          var fullArr = [];
+          var checkStatus  = false;
+
+          function addtoservice(obj){
+            $scope.latestObj = {};
+            $scope.latestObj  = angular.copy(obj);
+
+            $scope.latestObj.startValue = obj.closeValue;
+            $scope.latestObj.balance_code = "-999";
+
+            if ($state.current.name == 'Add_Inventory' || $state.current.name == 'home.receipt') {
+              $scope.latestObj.GRNvalue = $scope.testArray.val[g].Quantity;
+              $scope.latestObj.closeValue = (parseInt($scope.latestObj.closeValue) + parseInt($scope.testArray.val[g].Quantity)).toString();
+              $scope.latestObj.GINvalue = "0";  
+              
+            } else if ($state.current.name == 'Add_Inventory_Issue' || $state.current.name == 'home.issue') {
+              $scope.latestObj.GINvalue = $scope.testArray.val[g].Quantity
+              $scope.latestObj.closeValue = (parseInt($scope.latestObj.closeValue) - parseInt($scope.testArray.val[g].Quantity)).toString();
+              $scope.latestObj.GRNvalue = "0";
+            } 
+              
+            fullArr.push($scope.latestObj); 
+            console.log(fullArr)
+          }   
+
+          for(g=0; g <= $scope.testArray.val.length-1; g++){
+
+            if (fullArr.length > 0) {
+              checkStatus = false;
+              samplebalance = [];
+
+              for(l=0; l <= fullArr.length-1; l++){
+                if (fullArr[l].productId == $scope.testArray.val[g].proId) {
+                  checkStatus = true;
+                  samplebalance.push(fullArr[l])
+                }         
+              } 
+              if (checkStatus) {
+                var sortArr = [];
+                sortArr = samplebalance.sort(function(a,b){
+                  return b.balance_code - a.balance_code;
+                })
+                addtoservice(sortArr[0]);
+              }           
+            }
+
+            if (!checkStatus || fullArr.length == 0) {
+              sampleFullArr = [];
+              for(f=0; f<= $scope.balanceArr.length-1; f++){
+                if ($scope.testArray.val[g].proId == $scope.balanceArr[f].productId) {
+                  sampleFullArr.push($scope.balanceArr[f])
+                };
+              }
+              if (sampleFullArr.length > 0) {
+                var sortArr = sampleFullArr.sort(function(a,b){
+                  return b.balance_code - a.balance_code;
+                })                            
+              }
+              addtoservice(sortArr[0]);  
+            }            
+          }
+          
+          // var balanceArr = [];
+
+          console.log(fullArr)
+
+          var addToBalanceClass = $objectstore.getClient("productBalance");
+          addToBalanceClass.onComplete(function(data){
+            console.log("Successfully added to product balance class");          
+            MoveToViewscreen();
+          });
+          addToBalanceClass.onError(function(data){
+            console.log("error adding to product balance class");
+          });
+          addToBalanceClass.insertMultiple(fullArr,"balance_code");
+
         });
         client.onError(function(data) {
           $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('There was an error saving the data.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
         });
-        if ($state.current.name == 'Add_Inventory') {
-          $scope.inventory.inventoryClass = "Receipt";
-        } else if ($state.current.name == 'Add_Inventory_Issue') {
-          $scope.inventory.inventoryClass = "Issue";
-        }      
+            
 
         $scope.inventory.date = $scope.CurrentDate;
         $scope.inventory.inventoryFavourite = false;
         $scope.inventory.favouriteStarNo = 1;
+        $scope.inventory.deleteStatus = false;
         $scope.inventory.customerNames = self.selectedItem.display;
         $scope.inventory.AddressName = $scope.Address;
         $scope.inventory.BillAddress = self.selectedItem.BillAddress;
@@ -131,17 +247,21 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
     }
 
     function MoveToViewscreen(){
-      var client = $objectstore.getClient("inventory12thdoor");
+      var client = $objectstore.getClient("domainClassAttributes");
       client.onGetMany(function(data){
-        // console.log(data[0].maxCount)
         var maxNo = (data[0].maxCount);
-        $state.go('ViewScreen',{'inventoryID':maxNo});
-
+        $state.go('ViewScreen',{'inventoryID':maxNo, 'status' : $scope.classStatus});
       });
       client.onError(function(data){
         console.log("error loading max count")
       });
-      client.getByFiltering("select maxCount from domainClassAttributes where class='inventory12thdoor'")
+      if ($state.current.name == 'Add_Inventory') {        
+          client.getByFiltering("select maxCount from domainClassAttributes where class='GRN12thdoor'");
+          $scope.classStatus = "GRN";
+      }else if ($state.current.name == 'Add_Inventory_Issue') {   
+          client.getByFiltering("select maxCount from domainClassAttributes where class='GIN12thdoor'");
+          $scope.classStatus = "GIN";
+      } 
     }
     //save function end   
     //fab button functions
@@ -163,33 +283,13 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
     $rootScope.selectedIndex = 0;
     $rootScope.showaddInventory = true;
     location.href = '#/home/receipt';
-    // $('#viewinventory').animate({
-    //     width: "100%",
-    //     height: "100%",
-    //     borderRadius: "0px",
-    //     right: "0px",
-    //     bottom: "0px",
-    //     opacity: 0.25
-    // }, 400, function() {
-    //     location.href = '#/home/receipt';
-    // });
   }
   $scope.viewIssue = function() {
       $rootScope.inventoryType = "cards";
       $rootScope.selectedIndex = 1;
       $rootScope.showaddInventory = false;
       location.href = '#/home/issue';
-      // $('#viewissues').animate({
-      //     width: "100%",
-      //     height: "100%",
-      //     borderRadius: "0px",
-      //     right: "0px",
-      //     bottom: "0px",
-      //     opacity: 0.25
-      // }, 400, function() {
-      //     location.href = '#/home/issue';
-      // });
-    }
+  }
     //end of fab button functions
     // table add button function start
   $scope.addproduct = function() {
@@ -220,18 +320,7 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
   self.querySearch = querySearch;
   self.querySearchView = querySearchView;
 
-  function querySearch(query) {
-    $scope.enter = function(keyEvent) {
-        if (keyEvent.which === 13) {
-          if (self.selectedItem === null) {
-            self.selectedItem = query;
-            console.log(results);
-          } else {
-            console.log(self.selectedItem);
-          }
-        }
-      }
-      //Custom Filter
+  function querySearch(query) {   
     var results = [];
     for (i = 0, len = $scope.customerNames.length; i < len; ++i) {
       if ($scope.customerNames[i].display.indexOf(query) != -1) {

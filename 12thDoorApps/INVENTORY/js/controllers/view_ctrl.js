@@ -54,8 +54,8 @@ rasm.controller('viewctrl', function($scope, $location, dialogsvc,$DownloadPdf, 
     callback($scope.InventoryObject);
   }
   
-  $scope.OpenViewScreen = function(obj){
-    $state.go('ViewScreen',{'inventoryID': obj.inventory_code});
+  $scope.OpenViewScreen = function(obj,type){
+    $state.go('ViewScreen',{'inventoryID': obj.inventory_code, 'status': type});
   }
 
   $scope.testdialog = function() {
@@ -386,28 +386,32 @@ rasm.controller('viewctrl', function($scope, $location, dialogsvc,$DownloadPdf, 
     $scope.Inventories = [];
     $scope.arissues = [];
     $scope.arReceipt = [];
-    var client = $objectstore.getClient("inventory12thdoor");
-    client.onGetMany(function(data) {
-      if (data) {
-        $scope.Inventories = data;
-        for (var d = 0, len = $scope.Inventories.length; d < len; d++) {
-          if ($scope.Inventories[d].inventoryClass == "Issue") {
-            $scope.Inventories[d].GINno = parseInt($scope.Inventories[d].GINno);
-            $scope.arissues.push($scope.Inventories[d]);
-          } else if ($scope.Inventories[d].inventoryClass == "Receipt") {
-            $scope.Inventories[d].GRNno = parseInt($scope.Inventories[d].GRNno);
-            $scope.arReceipt.push($scope.Inventories[d]);
-          }
-        }
-        console.log($scope.arissues);
-        console.log($scope.arReceipt);
-        $rootScope.inventoryType = "cards";
+
+    var issueClient = $objectstore.getClient("GIN12thdoor");
+    issueClient.onGetMany(function(issueData){
+      $scope.arissues = issueData
+      for(k=0; k <= $scope.arissues.length-1; k++){
+          $scope.arissues[k].GINno = parseInt($scope.arissues[k].GINno);
       }
+
+      var reeiptClient = $objectstore.getClient("GRN12thdoor");
+      reeiptClient.onGetMany(function(receiptData){
+        $scope.arReceipt = receiptData;
+        for(k=0; k <= $scope.arReceipt.length-1; k++){
+          $scope.arReceipt[k].GRNno = parseInt($scope.arReceipt[k].GRNno);
+        }
+      });
+      reeiptClient.onError(function(data){
+          $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('This is embarracing').content('There was an error retreving the data.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
+      });
+      reeiptClient.getByFiltering("*");
+
     });
-    client.onError(function(data) {
-      $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('This is embarracing').content('There was an error retreving the data.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
+    issueClient.onError(function(data){
+        $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('This is embarracing').content('There was an error retreving the data.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
     });
-    client.getByFiltering("*");
+    issueClient.getByFiltering("*");
+
     if ($state.current.name == 'home.receipt') {
       $rootScope.showaddInventory = true;
       $scope.selectedIndex = 0;

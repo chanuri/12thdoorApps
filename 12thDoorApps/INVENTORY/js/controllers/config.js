@@ -22,7 +22,7 @@ rasm.config(function($stateProvider, $urlRouterProvider) {
         }).state('ViewScreen', {
                 templateUrl: 'inventory_partials/inventory_view_screen.html'
                 , controller: 'ViewScreen'
-                , url: '/ViewScreen/Iid=:inventoryID'
+                , url: '/ViewScreen/Iid=:inventoryID&status=:status'
                 // params:['expenseID']
         })
         .state('Add_Inventory_Issue', {

@@ -8,12 +8,6 @@
             <div layout layout-sm="column" layout-margin>
                
                <section-title title="Customer Details" > </section-title>
-               <!-- <md-select placeholder="Suplier" ng-model="inventory.Suplier" flex>
-                  <md-optgroup label="Suplier">
-                  <md-option value="1">Suplier 1</md-option>
-                  <md-option value="2">Suplier 2</md-option>
-                  
-                  </md-select> -->
                <md-autocomplete flex="" required md-input-name="autocompleteField"
                   md-no-cache="ctrl.noCache" 
                   md-selected-item="ctrl.selectedItem" 
@@ -83,7 +77,7 @@
                <div layout="column" layout-align flex>
                   <div flex layout="row"  >
                      <ul flex style="max-width:600px;" as-sortable="sortableOptions" ng-model="testArray.val">
-                        <li ng-repeat="item in testArray.val" as-sortable-item style="max-width:600px;">
+                        <li ng-repeat="item in testArray.val track by $index" as-sortable-item style="max-width:600px;">
                            <md-card style="margin-left:-40px; max-width:630px;" as-sortable-item-handle >
                               <md-card-content >
                                  <div layout="row" >

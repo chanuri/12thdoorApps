@@ -1,7 +1,7 @@
 
 <div >
    <div  class="collapse-card" ng-repeat="inventory in arReceipt | filter:ctrl.searchText||undefined | 
-   orderBy:[prodSearch,latest]" ng-class="{ active: $active }">
+   orderBy:[prodSearch,latest]" ng-class="{ active: $active }"  ng-if="!inventory.deleteStatus">
       <!--START OF COLLAPSE CARD HEADING-->
       <div class="collapse-card__heading" layout="row" layout-align="start start">
          <!--START OF CARD OPEN SECTION-->
@@ -79,7 +79,7 @@
                </md-button>
                  <md-menu-content width="4">
                    <md-menu-item>
-                          <md-button ng-click="OpenViewScreen(inventory)">
+                          <md-button ng-click="OpenViewScreen(inventory,'GRN')">
                               <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                               <p>Open</p>
                           </md-button>

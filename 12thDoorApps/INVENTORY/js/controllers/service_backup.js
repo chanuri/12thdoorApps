@@ -1,3 +1,21 @@
+
+rasm.factory("$proBalance",function(){
+  var proArr = [];
+  return {
+    addToArr : function(obj){
+      proArr.push(obj);
+      console.log(proArr)
+    },
+    removeFromArr : function(index){
+      proArr.splice(index,1)
+      console.log(proArr)
+    },
+    returnArr : function(){
+      return proArr;
+    }
+  }
+})
+
 rasm.service('dialogsvc', function($mdDialog) {
   var dialogsvc = {};
   dialogsvc.method = function(obj) {
@@ -16,33 +34,14 @@ rasm.service('dialogsvc', function($mdDialog) {
     })
   }
 
-  function DialogController($scope, $objectstore, $mdDialog, InvoiceService, $rootScope, $state) {
+  function DialogController($scope, $objectstore, $mdDialog, InvoiceService, $rootScope, $state, $proBalance) {
     $scope.tenants = loadAll();
     $scope.selectedItem = null;
     $scope.searchText = null;
     $scope.querySearch = querySearch;
-    $scope.balanceExsist = false;
-    $scope.balanceArr = [];
+    $scope.checkQty = true;
 
-    $scope.testMe = function(){
-      if ($scope.selectedItem) {
-          var getBalanceClient = $objectstore.getClient("productBalance");
-          getBalanceClient.onGetMany(function(data){
-            if (data.length > 0) {
-              $scope.balanceExsist = true;
-              $scope.balanceArr = [];
-              $scope.balanceArr = angular.copy(data)
-              console.log($scope.balanceArr)
-            }
-          });
-          getBalanceClient.onError(function(data){
-            console.log("error loading product balance details");
-            $scope.balanceExsist = false;
-          });
-          getBalanceClient.getByFiltering("select * from productBalance where productId = '"+$scope.selectedItem.proId+"' ")
-      };
-    }
-
+    
     function querySearch(query) {
       $scope.enter = function(keyEvent) {
           if (keyEvent.which === 13) {
@@ -77,15 +76,6 @@ rasm.service('dialogsvc', function($mdDialog) {
               proId : data[i].product_code
             });
           }
-          if ($rootScope.testArray.val.length > 0) {
-            for(j=0; j<=$rootScope.testArray.val.length-1; j++){
-              for (i = 0, len = $scope.productNames.length; i < len; ++i) {
-                if ($scope.productNames[i].proId == $rootScope.testArray.val[j].proId ) {
-                  $scope.productNames.splice(i,1);
-                }
-              }
-            }            
-          }
         }
       });
       client.onError(function(data) {
@@ -96,95 +86,134 @@ rasm.service('dialogsvc', function($mdDialog) {
     $scope.inventory = {};
     $scope.dialogaddbutton = true;
     $scope.dialogUpdatebutton = false;
+
+    var getBalance;
+
     if ($state.current.name == 'Add_Inventory' || $state.current.name == 'home.receipt') {
       $scope.plusdialog = true;
-      $scope.ginExceed = false;
-
     } else if ($state.current.name == 'Add_Inventory_Issue' || $state.current.name == 'home.issue') {
       $scope.plusdialog = false;
-      $scope.ginExceed = true;
     }
     $scope.closeDialog = function(product) {
       $mdDialog.hide();
     }
-    $scope.showGinLabel = false;
-
     $scope.AddCus = function(product, qty, unit) {
       $scope.inventory.productname = product;
       $scope.inventory.Unit = unit;
-      $scope.inventory.proId =  $scope.selectedItem.proId;
+      $scope.checkQty = true;
 
-      $scope.showGinLabel = false;
+      function addtoservice(obj){
+          productBalanceArr = {}
+          productBalanceArr = obj;
+          productBalanceArr.startValue = obj.closeValue;
+          productBalanceArr.balance_code = "-999";
+          $scope.checkQty = true;
 
-      if ($scope.ginExceed && $scope.balanceExsist) {
-          var sortArr = $scope.balanceArr.sort(function(a,b){
-            return b.balance_code - a.balance_code;
-          })
-          var diff = parseInt(sortArr[0].closeValue) - parseInt(qty);
-          if (diff < 0) {
-            $scope.showGinLabel = true
-          }   
-      }
-      if(!$scope.showGinLabel){         
-      
-        if ($rootScope.inventoryType == "cards") {
-          if (product == null || qty == null || unit == null) {
-            console.log("fill all details")
-          } else {
-            InvoiceService.setArrayview($scope.inventory, $rootScope.tableContent);
-            $mdDialog.hide();
+          if ($state.current.name == 'Add_Inventory' || $state.current.name == 'home.receipt') {
+            productBalanceArr.GRNvalue = qty;
+            productBalanceArr.closeValue = (parseInt(productBalanceArr.closeValue) + parseInt(qty)).toString();
+            productBalanceArr.GINvalue = "0"
+            $scope.checkQty = true;       
+            
+          } else if ($state.current.name == 'Add_Inventory_Issue' || $state.current.name == 'home.issue') {
+            productBalanceArr.GINvalue = qty
+            productBalanceArr.closeValue = (parseInt(productBalanceArr.closeValue) - parseInt(qty)).toString();
+            productBalanceArr.GRNvalue = "0"
+            if (parseInt(productBalanceArr.closeValue) < 0) {
+              $scope.checkQty = false;
+              console.log("GIN exceed the GRN value")
+
+            }else if (parseInt(productBalanceArr.closeValue) >= 0){
+              $scope.checkQty = true;
+            }
           }
-        } else if ($rootScope.inventoryType == "insert") {
-          if (product == null || qty == null || unit == null) {
-            console.log("fill all details")
-          } else {
-            InvoiceService.setArray($scope.inventory);
-            $mdDialog.hide();
+          if ($scope.checkQty) {
+
+              console.log(productBalanceArr);
+              $proBalance.addToArr(productBalanceArr);
+
+              if ($rootScope.inventoryType == "cards") {
+                if (product == null || qty == null || unit == null) {
+                  console.log("fill all details")
+                } else {
+                  InvoiceService.setArrayview($scope.inventory, $rootScope.tableContent);
+                  $mdDialog.hide();
+                }
+              } else if ($rootScope.inventoryType == "insert") {
+                if (product == null || qty == null || unit == null) {
+                  console.log("fill all details")
+                } else {
+                  InvoiceService.setArray($scope.inventory);
+                  $mdDialog.hide();
+                }
+              }
           }
-        }
       }
+ 
+      var productBalanceArr = {};
+      var checkStatus = false;
+
+      var proArr = angular.copy($proBalance.returnArr());
+
+      if (proArr.length > 0) {
+          for(l=0; l <= proArr.length-1; l++){
+            if (proArr[l].productId == $scope.selectedItem.proId) {
+              checkStatus = true;
+              addtoservice(proArr[l]);
+            }         
+          }
+      }
+      if (!checkStatus || proArr.length == 0) {
+        getBalance = $objectstore.getClient("productBalance")
+        getBalance.onGetMany(function(data){
+          console.log(data);
+          if (data.length > 0) {            
+            for(o=0; o<= data.length-1; o++){
+              data[o].balance_code = parseInt(data[o].balance_code);
+            }
+            var sortArr = data.sort(function(a,b){
+              return b.balance_code - a.balance_code
+            })
+            addtoservice(sortArr[0]);  
+          };              
+        });
+        getBalance.onError(function(data){
+          console.log("error")
+        });
+        console.log("productId:"+$scope.selectedItem.proId)
+        //getBalance.orderByDsc("balance_code").take(1).getByKeyword("productId:"+$scope.selectedItem.proId)
+        // getBalance.getByFiltering("select * from productBalance where productId = '"+$scope.selectedItem.proId+"' order by balance_code DESC")
+        getBalance.getByFiltering("select * from productBalance where productId = '"+$scope.selectedItem.proId+"'")
+     
+      };
     }
   }
 
   function EyeController($scope, $mdDialog, InvoiceService, item, $rootScope, $state, $objectstore) {
     $scope.inventory = item;
     $scope.dialogaddbutton = false;
-    $scope.dialogUpdatebutton = true;    
-    $scope.balanceExsist = false;
+    $scope.dialogUpdatebutton = true;
     $scope.tenants = loadAll();
     $scope.selectedItem = {
       display : item.productname,
-      uom : item.Unit,
-      proId : item.proId,
-      value: item.productname.toLowerCase()
+      uom : item.Unit
     };
     // $scope.selectedItem.display = item.productname;
     // $scope.selectedItem.uom = item.Unit;
     $scope.searchText = null;
     $scope.querySearch = querySearch;
 
-    $scope.testMe = function(){
-      if ($scope.selectedItem) {
-          var getBalanceClient = $objectstore.getClient("productBalance");
-          getBalanceClient.onGetMany(function(data){
-            if (data.length > 0) {
-              $scope.balanceExsist = true;
-              $scope.balanceArr = [];
-              $scope.balanceArr = angular.copy(data)
-              console.log($scope.balanceArr)
-            }
-          });
-          getBalanceClient.onError(function(data){
-            console.log("error loading product balance details");
-            $scope.balanceExsist = false;
-          });
-          getBalanceClient.getByFiltering("select * from productBalance where productId = '"+$scope.selectedItem.proId+"' ")
-      };
-    }
-
-    $scope.testMe();
-
     function querySearch(query) {
+      $scope.enter = function(keyEvent) {
+          if (keyEvent.which === 13) {
+            if ($scope.selectedItem === null) {
+              $scope.selectedItem = query;
+              console.log(results);
+            } else {
+              console.log($scope.selectedItem);
+            }
+          }
+        }
         //Custom Filter
       $scope.results = [];
       for (i = 0, len = $scope.productNames.length; i < len; ++i) {
@@ -204,26 +233,9 @@ rasm.service('dialogsvc', function($mdDialog) {
             $scope.productNames.push({
               display: data[i].Productname,
               value: data[i].Productname.toLowerCase(),
-              uom: data[i].ProductUnit,
-              proId : data[i].product_code
+              uom: data[i].ProductUnit
             });
           }
-
-          if ($rootScope.testArray.val.length > 0) {
-            for(j=0; j<=$rootScope.testArray.val.length-1; j++){
-              for (i = 0, len = $scope.productNames.length; i < len; ++i) {
-                if ($scope.productNames[i].proId == $rootScope.testArray.val[j].proId ) {
-                  $scope.productNames.splice(i,1);
-                }
-              }
-            }            
-          }
-          $scope.productNames.push({
-              display: item.productname,
-              value: item.productname.toLowerCase(),
-              uom: item.Unit,
-              proId : item.proId
-          })
         }
       });
       client.onError(function(data) {
@@ -233,28 +245,13 @@ rasm.service('dialogsvc', function($mdDialog) {
     }
     if ($state.current.name == 'Add_Inventory' || $state.current.name == 'home.receipt') {
       $scope.plusdialog = true;
-      $scope.ginExceed = false;
     } else if ($state.current.name == 'Add_Inventory_Issue' || $state.current.name == 'home.issue') {
       $scope.plusdialog = false;
-      $scope.ginExceed = true;
     }
     $scope.closeDialog = function(product,unit) {
       item.productname = product;
       item.Unit = unit;
-      $scope.showGinLabel = false;
-
-      if ($scope.ginExceed && $scope.balanceExsist) {
-          var sortArr = $scope.balanceArr.sort(function(a,b){
-            return b.balance_code - a.balance_code;
-          })
-          var diff = parseInt(sortArr[0].closeValue) - parseInt(item.Quantity);
-          if (diff < 0) {
-            $scope.showGinLabel = true
-          }   
-      }
-      if(!$scope.showGinLabel){
-        $mdDialog.hide();
-      }
+      $mdDialog.hide();
     }
     $scope.deletecus = function() {
       if ($rootScope.inventoryType == "cards") {

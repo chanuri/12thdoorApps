@@ -1,38 +1,10 @@
-angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog, $objectstore,$stateParams,uiInitilize, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
+angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog, $objectstore,$stateParams, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
       $scope.TDinvoice = [];
       $scope.newItems = [];
       $scope.show = false;
       $scope.showTable = false;
       $scope.obtable = [];
       $scope.invoiceArray.shipping = 0;
-
-
-
-
-
-          // ------------------------------------virtual repeat start-----------------
-
-      
-      setInterval(function interval(){
-          $scope.viewPortHeight = window.innerHeight;
-          $scope.viewPortHeight = $scope.viewPortHeight+"px";
-      }, 100);
-
-      $scope.items = uiInitilize.insertIndex($scope.TDinvoice);
-  
-      //This holds the UI logic for the collapse cards
-      $scope.toggles = {};
-      $scope.toggleOne = function($index)
-      { 
-      $scope.toggles = uiInitilize.openOne($scope.TDinvoice, $index);
-      }
-
-      // ------------------------------------virtual repeat end -------------
-
-
-
-
-
       var vm = this;
       $scope.announceClick = function(index) {
          $mdDialog.show(

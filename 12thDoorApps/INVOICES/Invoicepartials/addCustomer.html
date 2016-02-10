@@ -11,26 +11,26 @@
     <md-dialog-content style="width:850px;">
         <div layout layout-sm="column" layout-margin>
             <section-title title="Customer Name"> </section-title>
-            <md-input-container id="accContainer" flex >
+            <md-input-container id="accContainer" flex style="margin-top:20px;" >
                 <label>Company or Individual Name</label>
-                <input  ng-model="contact.Name" autofocus required></input>
+                <input  ng-model="contact.Name" autofocus ng-required="true"></input>
             </md-input-container>
-            <md-input-container id="accContainer" flex >
+            <md-input-container id="accContainer" flex style="margin-top:20px;">
                 <label>Email</label>
-                <input type="email" ng-model="contact.Email" required></input>
+                <input type="email" ng-model="contact.Email" ng-required="true"></input>
             </md-input-container>
         </div>
         <md-divider></md-divider>
         <div layout layout-sm="column" layout-margin>
             
             <section-title title="Contact Person"> </section-title>
-            <md-input-container id="accContainer" flex >
+            <md-input-container id="accContainer" flex style="margin-top:20px;" >
                 <label>First Name</label>
-                <input id="accNo" ng-model="contact.CustomerFname" required></input>
+                <input id="accNo" ng-model="contact.CustomerFname" ></input>
             </md-input-container>
-            <md-input-container flex >
+            <md-input-container flex style="margin-top:20px;">
                 <label>Last Name</label>
-                <input ng-model="contact.CustomerLname" required>
+                <input ng-model="contact.CustomerLname" >
                 </textarea>
             </md-input-container>
         </div>
@@ -38,18 +38,19 @@
         <div ng-show="showBilling" flex>
          
             <div layout layout-sm="column" layout-margin >
-                 <section-title title="Billing Address"> </section-title>
-                 <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
-                <md-input-container id="accContainer" flex >
+                 <section-title title="Billing Address"> 
+                  </section-title>
+                <md-icon style="margin-left:-40px; margin-top:40px;" md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
+                <md-input-container id="accContainer" flex style="margin-top:20px;">
                     <label>Street</label>
-                    <input id="accNo" ng-model="contact.baddress.street" required></input>
+                    <input id="accNo" ng-model="contact.baddress.street" ng-required="true"></input>
                 </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
                 <section-title > </section-title>
                 <md-input-container id="accContainer" flex >
                     <label>City</label>
-                    <input id="accNo" ng-model="contact.baddress.city" required></input>
+                    <input id="accNo" ng-model="contact.baddress.city" ng-required="true"></input>
                 </md-input-container>
                 <md-input-container id="accContainer" flex >
                     <label>State</label>
@@ -60,7 +61,7 @@
                  <section-title > </section-title>
                 <md-input-container id="accContainer" flex >
                     <label>Zip code</label>
-                    <input id="accNo" ng-model="contact.baddress.zip" required></input>
+                    <input id="accNo" ng-model="contact.baddress.zip" ng-required="true"></input>
                 </md-input-container flexflex>
                 <md-input-container flex>
                 <label>Country</label>
@@ -73,14 +74,23 @@
                     </md-select>
                     </md-input-container>
                 </div>
+                <div layout layout-sm="column" layout-margin>
+             <section-title > </section-title>
+            <label style="margin-left:12px;">Do you want to use billing address as shipping address?</label>
+            <div style="margin-top:-32px;">
+           <md-switch ng-model="cb" ng-change="onChange(cb)" aria-label="Switch 2"class="md-warn">
+            </md-switch>
+             </div>      
+                    </div>
             </div>
+            
             <div ng-show="showShipping" flex>
 
                 <div layout layout-sm="column" layout-margin >
         
                      <section-title title="Shipping Address"> </section-title>
-                      <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
-                    <md-input-container id="accContainer" flex >
+                      <md-icon style="margin-left:-40px; margin-top:40px;" md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
+                    <md-input-container id="accContainer" flex style="margin-top:20px;">
                         <label>Street</label>
                         <input id="accNo" ng-model="contact.saddress.s_street"></input>
                     </md-input-container>
@@ -118,24 +128,24 @@
                 <div layout layout-sm="column" layout-margin>
                    
                      <section-title title="Contact Numbers"> </section-title>
-                    <md-input-container id="accContainer" flex >
+                    <md-input-container id="accContainer" flex style="margin-top:20px;">
                         <label>Phone</label>
-                        <input type="phone" ng-model="contact.Phone" required></input>
+                        <input type="phone" ng-model="contact.Phone" ng-required="true"></input>
                     </md-input-container>
-                    <md-input-container id="accContainer" flex >
+                    <md-input-container id="accContainer" flex style="margin-top:20px;">
                         <label>Mobile</label>
-                        <input type="phone" ng-model="contact.Mobile" required></input>
+                        <input type="phone" ng-model="contact.Mobile" ng-required="true"></input>
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
                     <section-title> </section-title>
                     <md-input-container id="accContainer" flex >
                         <label>Fax</label>
-                        <input id="accNo" ng-model="contact.Fax" required></input>
+                        <input id="accNo" ng-model="contact.Fax" ng-required="true"></input>
                     </md-input-container>
                     <md-input-container id="accContainer" flex >
                         <label>Website</label>
-                        <input id="accNo" ng-model="contact.Website" required></input>
+                        <input id="accNo" ng-model="contact.Website" ng-required="true"></input>
                     </md-input-container>
                 </div>
                 <!--      <md-button href ng-click="closeDialog()" class="btn btn-small">close</md-button> -->

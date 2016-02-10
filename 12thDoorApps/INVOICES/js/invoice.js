@@ -405,6 +405,7 @@ angular
 
                   $scope.rmoveDate = function(index){
                      $scope.aDatearr.val.splice($scope.aDatearr.val.indexOf(index), 1 );
+                     $rootScope.dateArray.val.splice($rootScope.dateArray.val.indexOf(index), 1 );
                   }
                   $scope.removeItem = function(index) {
                       $scope.testarr.splice( $scope.testarr.indexOf(index), 1 );
@@ -467,8 +468,8 @@ angular
                $scope.promoItems = [];
                $scope.taxType = [];
                $scope.AllUnitOfMeasures = [];
-
-               $scope.addproductToarray = function(item,ev) {
+                $scope.discount = 0;
+               $scope.addproductToarray = function(item) {
                   $scope.promoItems[0] = {
                       productName: $scope.SproductName,
                       price : $scope.Sprice,
@@ -522,7 +523,7 @@ angular
                       $mdDialog.show(confirm).then(function(item) {
                         for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
                         $scope.prod.Productname = $scope.promoItems[i].productName;
-                         $scope.prod.costprice = $scope.promoItems[i].price;
+                         $scope.prod.productprice = $scope.promoItems[i].price;
                          $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
                          $scope.prod.producttax = $scope.promoItems[i].tax;                       
 
@@ -625,13 +626,13 @@ angular
                   $scope.TaxDisabled = false;
                   $scope.setSelectedClient = function (package){
                          $scope.promoItems.tax = 0;
-                        $scope.discount = 0;
+                       
 
                        for (var i = 0; i < $scope.product.length; i++) {
                         
                            if($scope.product[i].Productname.toLowerCase() === package.toLowerCase()){
                               $scope.SproductName = package;
-                              $scope.Sprice = $scope.product[i].costprice;
+                              $scope.Sprice = $scope.product[i].productprice;
                               $scope.SProductUnit = $scope.product[i].ProductUnit;
                               $scope.Sqty = $scope.qty;
                               $scope.Solp = $scope.olp;
@@ -640,7 +641,7 @@ angular
                               $scope.promoItems.splice(0,1)
                                $scope.promoItems.push({
                                      productName: package,
-                                     price : $scope.product[i].costprice,
+                                     price : $scope.product[i].productprice,
                                      tax : $scope.product[i].producttax,
                                      ProductUnit : $scope.product[i].ProductUnit,
                                      qty : $scope.qty,
@@ -654,7 +655,7 @@ angular
                            else if($scope.product[i].Productname.toLowerCase() != package.toLowerCase()){
                               $scope.SproductName = package;
                               $scope.Sprice = $scope.productPrice;
-                              $scope.SProductUnit = $scope.promoItems.ProductUnit;
+                              $scope.SProductUnit = $scope.promoItems[0].ProductUnit;
                               $scope.Sqty = $scope.qty;
                               $scope.Solp = $scope.olp;
                               $scope.Stax = $scope.Ptax;
@@ -677,6 +678,7 @@ angular
 
                    $scope.setprice = function(pd){
                       $scope.Sprice = pd.price;
+                       $scope.calAMount()
                    }
                    $scope.setTax = function(pDis){
                     // if(pDis.status == "notavailable"){
@@ -695,9 +697,19 @@ angular
                      // console.log($scope.Stax);
 
                    }
-                   $scope.setUOM = function(pUOM){
-                      $scope.SProductUnit = pUOM.ProductUnit;
-                   }
+                    $scope.calAMount = function() {
+                  $scope.Amount = 0;
+                  $scope.disc = 0;
+                  $scope.totall = 0;
+                  $scope.totall = $scope.Sprice * $scope.Sqty;
+                  if ($rootScope.discounts == "Individual Items" ){
+                      $scope.disc = parseInt($scope.totall* $scope.discount/100);
+                      $scope.Amount =  $scope.totall - $scope.disc;
+                     }else {
+                         $scope.Amount = $scope.totall ;
+                   }    
+                  return $scope.Amount;
+               }
 
                   var client = $objectstore.getClient("product12thdoor");
                      client.onGetMany(function(data) {
@@ -723,7 +735,7 @@ angular
                   }
                   $rootScope.results = [];
                   for (i = 0, len = $rootScope.proName.length; i < len; ++i) {
-                     if ($rootScope.proName[i].dis.indexOf(query) != -1) {
+                     if ($rootScope.proName[i].dis.indexOf(query.toLowerCase()) != -1) {
                         $rootScope.results.push($rootScope.proName[i]);
                      }
                   }
@@ -747,15 +759,6 @@ angular
                      });
                      client.getByFiltering("*");
                   }
-
-                  //calculate the invoice amount for each product
-               $scope.calAMount = function() {
-                  $scope.Amount = 0;
-                  // angular.forEach($scope.promoItems, function(tdIinvoice) {
-                     $scope.Amount = $scope.Sprice * $scope.Sqty;
-                  // })
-                  return $scope.Amount;
-               }
             }
          })
       }
@@ -766,14 +769,38 @@ angular
             $mdDialog.show({
                templateUrl: 'Invoicepartials/addCustomer.html',
                controller: function DialogController($scope, $mdDialog) {
+
+               var last = {
+              bottom: false,
+              top: true,
+              left: false,
+              right: true
+                      };
+                    $scope.toastPosition = angular.extend({},last);
+                    $scope.getToastPosition = function() {
+                      sanitizePosition();
+                      return Object.keys($scope.toastPosition)
+                        .filter(function(pos) { return $scope.toastPosition[pos]; })
+                        .join(' ');
+                    };
+                    function sanitizePosition() {
+                      var current = $scope.toastPosition;
+                      if ( current.bottom && last.top ) current.top = false;
+                      if ( current.top && last.bottom ) current.bottom = false;
+                      if ( current.right && last.left ) current.left = false;
+                      if ( current.left && last.right ) current.right = false;
+                      last = angular.extend({},current);
+                    }
                   $scope.addTask = "";
                   $scope.email = "";
                   $scope.contact={};
                   $scope.baddress = {};
                   $scope.saddress = {};
+                  $scope.contact["baddress"] = {};
+                  $scope.contact["saddress"] = {};
                   $scope.showShipping = $scope.showShipping;
                   $scope.showBilling = !$scope.showBilling;
-
+                  $scope.cb=false;
                   $scope.closeDialog = function() {
                      $mdDialog.hide();
                   }
@@ -781,9 +808,44 @@ angular
                      $scope.showShipping = !$scope.showShipping;
                      $scope.showBilling = !$scope.showBilling;
                   }
+
+                 $scope.onChange = function(cb) {
+                cb==true;
+                $scope.contact.saddress["s_street"]=$scope.contact.baddress["street"];
+                $scope.contact.saddress["s_city"] = $scope.contact.baddress["city"];
+                $scope.contact.saddress["s_country"]=$scope.contact.baddress["country"];
+                $scope.contact.saddress["s_zip"]= $scope.contact.baddress["zip"];
+                $scope.contact.saddress["s_state"] =$scope.contact.baddress["state"];
+                if(cb==false){   
+                 $scope.contact.saddress["s_street"]="";
+                 $scope.contact.saddress["s_city"] ="";
+                 $scope.contact.saddress["s_country"]="";
+                 $scope.contact.saddress["s_zip"]="";
+                 $scope.contact.saddress["s_state"] ="";
+                
+                }
+        }
+       
                   $scope.AddCus = function() {
                      var client = $objectstore.getClient("contact");
-                       client.onComplete(function(data) {
+                     if($scope.contact.Name == null){         
+                          var toast = $mdToast.simple()
+                                .textContent('Please add Company or Individual Name')
+                                .action('OK')
+                                .highlightAction(false)
+                                .position($scope.getToastPosition());
+                          $mdToast.show(toast).then(function(response) {
+                          });
+                     }else if($scope.contact.Email == null){
+                       var toast = $mdToast.simple()
+                                .textContent('Please enter your email')
+                                .action('OK')
+                                .highlightAction(false)
+                                .position($scope.getToastPosition());
+                          $mdToast.show(toast).then(function(response) {
+                          });
+                     }else{
+                      client.onComplete(function(data) {
                         $mdDialog.show(
                           $mdDialog.alert()
                           .parent(angular.element(document.body))
@@ -793,24 +855,11 @@ angular
                           .targetEvent(data)
                          );
                         });
-                        client.onError(function(data) {
-                         $mdDialog.show(
-                          $mdDialog.alert()
-                          .parent(angular.element(document.body))
-                          .content('There was an error saving the data.')
-                          .ariaLabel('Alert Dialog Demo')
-                          .ok('OK')
-                          .targetEvent(data)
-                         );
-                        });
-
-                           $scope.contact.favoritestar = false;
+                      $scope.contact.favoritestar = false;
                            $scope.contact.customerid = "-999";
-                           client.insert($scope.contact, {
-                            KeyProperty: "customerid"
-                     });
+                           client.insert($scope.contact, {KeyProperty: "customerid"});
 
-                           $rootScope.customerNames.push({
+                            $rootScope.customerNames.push({
                               display: $scope.contact.Name.toLowerCase(),
                               value: $scope.contact,
                               BillingValue: $scope.contact.baddress.street + ', ' + $scope.contact.baddress.city + ', ' + $scope.contact.baddress.zip + ', ' + $scope.contact.baddress.state + ', ' + $scope.contact.baddress.country,
@@ -823,7 +872,21 @@ angular
                                  $rootScope.selectedItem1 = $rootScope.customerNames[i];
                                }; 
                              };
-                     $mdDialog.hide();
+
+                             $mdDialog.hide();
+                     }
+                       
+                        client.onError(function(data) {
+                         $mdDialog.show(
+                          $mdDialog.alert()
+                          .parent(angular.element(document.body))
+                          .content('There was an error saving the data.')
+                          .ariaLabel('Alert Dialog Demo')
+                          .ok('OK')
+                          .targetEvent(data)
+                         );
+                        });
+                     
                   }
                }
             })
@@ -912,12 +975,10 @@ angular
                if (keyEvent.which == 40) {
                }
             }
-    // var results = query ? self.states.filter( createFilterFor(query) ) : [];
-    //   return results;
-            //Custom Filter
+
          $rootScope.results = [];
          for (i = 0, len = $rootScope.customerNames.length; i < len; ++i) {
-            if ($rootScope.customerNames[i].display.indexOf(query) != -1) {
+            if ($rootScope.customerNames[i].display.indexOf(query.toLowerCase()) != -1) {
                $rootScope.results.push($rootScope.customerNames[i]);
             }
          }
@@ -925,6 +986,7 @@ angular
       }
       function loadAll() {
          var client = $objectstore.getClient("contact");
+         // client.skip(25).take(25).getByFiltering("select * from data where x like l%"){
          client.onGetMany(function(data) {
             if (data) {
                 $rootScope.customerNames = [];
@@ -942,13 +1004,6 @@ angular
          client.onError(function(data) {});
          client.getByFiltering("*");
       }
-
-      function createFilterFor(query) {
-      var lowercaseQuery = angular.lowercase(query);
-      return function filterFn(state) {
-        return (data[i].Name.value.indexOf(lowercaseQuery) === 0);
-      };
-    }
 
       $scope.Billingaddress = true;
       $scope.Shippingaddress = false;
@@ -1123,7 +1178,13 @@ angular
                 for (var i = $scope.InvoiceDetails.length - 1; i >= 0; i--) {
                   $scope.ID = $scope.InvoiceDetails[i].maxCount;
             };
-            $scope.maxID = parseInt($scope.ID)+1;
+            
+            if($scope.InvoiceDetails.length == 0){
+              $scope.maxID = 1;
+            }
+            else{
+              $scope.maxID = parseInt($scope.ID)+1;
+            }
             $scope.TDinvoice.invoiceRefNo = $scope.maxID.toString();
                  }
               });
@@ -1133,21 +1194,18 @@ angular
       $rootScope.calculatetotal = function() {     
          $scope.total = 0;
          angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
-            $scope.total += parseInt(tdIinvoice.price * tdIinvoice.quantity);
+            $scope.total += parseInt(tdIinvoice.amount);
          })
          return $scope.total;
       };
-  
+       $scope.finalDisc = 0;
       $scope.finaldiscount = function() {
-         $scope.finalDisc = 0;
+        
          $scope.Discount = 0;
          if($scope.dis == "SubTotal Items" ){
             $scope.finalDisc = parseInt($scope.total*$scope.TDinvoice.fdiscount/100)
          }else if ($scope.dis == "Individual Items" ){
-            angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
-            $scope.Discount +=   parseInt(tdIinvoice.discount);
-            $scope.finalDisc = parseInt($scope.total*$scope.Discount/100);
-         })
+           $scope.finalDisc = 0;
        }
        return $scope.finalDisc;
       }
@@ -1183,20 +1241,20 @@ angular
          };
       }
 
-      $scope.InvoiceDraftDetails = [];   
-       var client = $objectstore.getClient("domainClassAttributes");
-              client.onGetMany(function(data) {
-                 if (data) {
-                  $scope.InvoiceDraftDetails = data;
+      // $scope.InvoiceDraftDetails = [];   
+      //  var client = $objectstore.getClient("domainClassAttributes");
+      //         client.onGetMany(function(data) {
+      //            if (data) {
+      //             $scope.InvoiceDraftDetails = data;
 
-                for (var i = $scope.InvoiceDraftDetails.length - 1; i >= 0; i--) {
-                  $scope.ID = $scope.InvoiceDraftDetails[i].maxCount;
-            };
-            $scope.maxNo = parseInt($scope.ID)+1;
-            $scope.RefNo = $scope.maxNo.toString();
-                 }
-              });
-              client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoorDraft'");
+      //           for (var i = $scope.InvoiceDraftDetails.length - 1; i >= 0; i--) {
+      //             $scope.IND = $scope.InvoiceDraftDetails[i].maxCount;
+      //       };
+      //       $scope.maxNo = parseInt($scope.IND)+1;
+      //       $scope.RefNo = $scope.maxNo.toString();
+      //            }
+      //         });
+      //         client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoorDraft'");
               
  
       $scope.clearAll = function(ev){

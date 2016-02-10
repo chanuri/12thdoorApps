@@ -152,6 +152,7 @@ angular.module('mainApp')
                $rootScope.total = 0;
                 $rootScope.compoundcal=[];
            // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
+            if(obj.tax != null){
             if(obj.tax.type == "individualtaxes"){
                $rootScope.taxArr.push({
                  taxName: obj.tax.taxname,
@@ -213,6 +214,7 @@ angular.module('mainApp')
                   };                  
                }
             }
+          }
         },
         setTempArr : function(obj){
             this.setArray2(obj);
@@ -315,11 +317,6 @@ angular.module('mainApp')
             $rootScope.showmsg = true;
             // alert("please check the percentage")
           }
-          
-          
-          
-          
-          //console.log(val)
          }
       }
    })

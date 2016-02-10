@@ -20,25 +20,23 @@
                           md-items="item in $root.querySearchh($root.searchTextt)" 
                           md-item-text="item.dis" 
                           md-floating-label="Product or Service"
-                          md-autofocus="true"
-                          md-selected-item-change="setSelectedClient($root.searchTextt)">  
+                          md-autofocus="true">  
                     <md-item-template >
                         <span  md-highlight-text="$root.searchTextt">{{item.dis}}</span>
                     </md-item-template>
                 </md-autocomplete >
             </div>
-            <div layout layout-sm="column" layout-margin >
+            <div layout layout-sm="column" style="margin-top:-45px;" layout-margin >
                <section-title> </section-title>
                 <md-input-container flex style="margin-top:0px;">
                     <label>Quantity</label>
                     <input type="number" ng-model="qty" ng-change="setSelectedClient($root.searchTextt)" required/>
                 </md-input-container>
-                <!-- {{$root.AllUnitOfMeasures}} -->
                 <div flex ng-repeat="pim in promoItems" >
 
-                    <md-input-container >
+                    <md-input-container style=" margin-top:-8px;">
                         <label>Unit</label>
-                            <md-select ng-model="pim.ProductUnit" ng-change="setUOM(pim)" flex required/>
+                            <md-select style="width:150px;"ng-model="pim.ProductUnit" ng-change="setUOM(pim)" flex required/>
                             <md-optgroup label="Terms type">
                                  <md-option ng-repeat="tax in $root.AllUnitOfMeasures" value="{{tax.unitsOfMeasurement}}">
                                 {{tax.unitsOfMeasurement}}
@@ -48,12 +46,10 @@
                         </md-select>
                     </md-input-container>
                 </div>
-              <!--  <div > -->
-                <md-input-container ng-repeat="pim in promoItems" flex>
+                <md-input-container ng-repeat="pim in promoItems" style=" margin-top:-3px;" flex>
                     <label>Price</label>
                     <input type="text" ng-model="pim.price" required ng-change="setprice(pim)"/>
                 </md-input-container>
-                <!-- </div> -->
             </div>
             <div layout layout-sm="column" layout-margin>
                <section-title></section-title>
@@ -62,11 +58,10 @@
                     <label>Discount</label>
                     <input type="text" ng-model="discount" />
                 </md-input-container>
-               <!--  ng-if="$root.discounts == 'Individual Items'" -->
                 <div flex ng-repeat="pim in promoItems" ng-show="$root.DisplayTaxes">
-                <md-input-container flex style="margin-top:9px;">
+                <md-input-container flex style=" margin-top:2px;">
                     <label>Tax</label>
-                     <md-select ng-model="pim.tax.taxname" ng-disabled="TaxDisabled" ng-change="setTax(pim)" flex required/>
+                     <md-select style="width:150px; " ng-model="pim.tax.taxname" ng-disabled="TaxDisabled" ng-change="setTax(pim)" flex required/>
                             <md-optgroup label="Tax">
                                 <md-option ng-repeat="tax in $root.taxType" value="{{tax.taxname}}">
                                 {{tax.taxname}} 
@@ -75,7 +70,7 @@
                         </md-select>
                 </md-input-container>
                 </div>
-                <md-input-container flex>
+                <md-input-container style=" margin-top:5px;" flex>
                     <label>Amount</label>
                     <span style="display:none">{{calAMount()}}</span >
                     <input ng-model="Amount| currency" ng-disabled="true">
@@ -90,7 +85,7 @@
                 </md-input-container>
  
             </div>
-
+            <md-divider></md-divider>
          </md-dialog-content>
             <div class="md-actions" layout="row">
                 <span flex></span>

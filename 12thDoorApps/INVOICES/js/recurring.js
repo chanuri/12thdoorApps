@@ -461,7 +461,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                   }
                   $rootScope.results = [];
                   for (i = 0, len = $rootScope.proName.length; i < len; ++i) {
-                     if ($rootScope.proName[i].dis.indexOf(query) != -1) {
+                     if ($rootScope.proName[i].dis.indexOf(query.toLowerCase()) != -1) {
                         $rootScope.results.push($rootScope.proName[i]);
                      }
                   }
@@ -658,7 +658,7 @@ var client = $objectstore.getClient("Settings12thdoor");
             //Custom Filter
          $rootScope.results = [];
          for (i = 0, len = $rootScope.customerNames.length; i < len; ++i) {
-            if ($rootScope.customerNames[i].display.indexOf(query) != -1) {
+            if ($rootScope.customerNames[i].display.indexOf(query.toLowerCase()) != -1) {
                $rootScope.results.push($rootScope.customerNames[i]);
             }
          }

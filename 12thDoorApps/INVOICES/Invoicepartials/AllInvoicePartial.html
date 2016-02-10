@@ -5,13 +5,10 @@
   </div>
 
 </div>
-<div md-virtual-repeat-container ng-init="viewPortHeight='700px;'"  style="height: {{viewPortHeight}};">
-<div  class="card_container" md-virtual-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch "
- ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
-    <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:33px">
-
+<div  class="collapse-card" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch " ng-class="{ active: $active }" style="max-width:960px;" 
+ng-controller="viewCtrl as ctrl">
             <!--START OF COLLAPSE CARD HEADING-->
-            <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi);toggleOne($index)" >
+            <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi)">
             <!--  -->
                 <div style="width:56px;">
                     <div  ng-hide="tdi.favourite" class="collapse-card_header_content_info" ng-click="favouriteFunction(tdi)" layout="row">
@@ -197,6 +194,7 @@
                                             <md-input-container flex >
                                                 <label>Payment Terms</label>
                                                 <input ng-model="tdi.termtype" ng-disabled="true">
+                                                </md-select>
                                             </md-input-container>
                                             <div flex >
                                                 <md-date-picker model="tdi.duedate"  label=" Due Date" dialog-md-theme="datePickerTheme" ng-disabled="true"></md-date-picker>
@@ -250,13 +248,14 @@
                                     <md-tooltip>Discount</md-tooltip>
                                 </span>
                             </div>
+                            <div flex="35" >
                             <span style="color:#808080;">{{item.tax.taxname}}
                         <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
                             <md-tooltip>Tax</md-tooltip>
                         </span>
                          <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
                             <md-tooltip>Tax</md-tooltip>
-                      
+                        </span>
 
                         </div>
                             <div flex >
@@ -265,12 +264,12 @@
                                     <md-tooltip>Amount</md-tooltip>
                                 </span>
                             </div>
-
-                             </md-card-content>
-                             </md-card>
-                        </li>
-                    </ul>
-            </div>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </li>
+        </ul>
+    </div>
         <md-divider></md-divider>
                 <div layout layout-sm="column" layout-margin>
                     <section-title title="Totals"> </section-title>
@@ -386,6 +385,7 @@
                         <md-input-container flex >
                        <label>Payment Method</label>
                     <input ng-model="tdi.paymentMethod"  ng-disabled="true">  
+                        </input>
                         </md-input-container>
                         
                     </div>
@@ -442,13 +442,12 @@
                 </md-content>
             </form>
         </div>
-    </div>
         <!--END OF CARD BODY-->
 </div>
-</div>
 <footer flex>
-<!-- <div style="display: inline-block;padding-left: 10px;padding-right: 10px;background-color: #FFFFFF;
-margin-left:35%;"> 
+<div style="display: inline-block;padding-left: 10px;padding-right: 10px;background-color: #FFFFFF;
+margin-left:35%;">
+     <!-- <p>Posted by: Hege Refsnes</p> -->
       <md-button ng-click="previous()" style="height:30px;" aria-label="previous" href>
         <md-icon md-svg-icon="img/ic_keyboard_arrow_left_24px.svg" ></md-icon>
     </md-button>
@@ -470,7 +469,8 @@ margin-left:35%;">
      <md-button ng-click="next()" style="height:30px;" aria-label="next" href>
         <md-icon md-svg-icon="img/ic_keyboard_arrow_right_24px.svg" ></md-icon>
     </md-button>
- 
-</div> -->
+  <!--    <img src="img/ic_keyboard_arrow_left_24px.svg">
+     <img src="img/ic_keyboard_arrow_right_24px.svg"> -->
+</div>
     
 </footer>

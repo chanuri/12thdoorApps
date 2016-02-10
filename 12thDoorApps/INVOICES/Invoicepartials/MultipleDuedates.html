@@ -2,7 +2,7 @@
 <md-dialog style="max-width:850px;" aria-label="multiple due dates">
     <md-toolbar class="modal-header">
         <div class="md-toolbar-tools">
-            <h2>Multiple Due Dates</h2>
+            <h2>Due Dates</h2>
             <span flex></span>
             <md-button href class="md-icon-button" ng-click="cancel()">
                 <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
@@ -14,7 +14,7 @@
     <div flex="5"></div>
         <h3>Invoice Total USD {{$root.famount|currency}}</h3>
     </div>
-        <div layout layout-sm="column" layout-margin  ng-if="aDatearr.val.length == 0">
+        <div layout layout-sm="column" layout-margin > 
             <div flex="5"></div>
             <div layout layout-sm="row" layout-margin >
                 <div class="table-responsive-vertical"  style="overflow-x:hidden; margin-left:-20px;" >
@@ -24,9 +24,9 @@
                                 <td data-title="Item Detail" >
                                     <div layout layout-sm="column" layout-margin>
                                         <md-datepicker ng-model="cn.duedate" md-placeholder="Due Date" required flex style="margin-top:1px; width:230px; margin-left:-20px;" ></md-datepicker>
-                                    <md-input-container flex style="margin-top:-15px; padding-left:5px;">
+                                    <md-input-container flex style="margin-top:10px; padding-left:5px;">
                                             <label>Percentage</label>
-                                            <input type="number" ng-model="cn.percentage" style="margin-top:5px;" ng-change="DueAmount(cn,$index)">
+                                            <input  ng-model="cn.percentage"  ng-change="DueAmount(cn,$index)">
                                              <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
                                               <div ng-message="required" ng-show="showPercentage">
                                                  <b>percentage is exceeded</b>
@@ -37,9 +37,9 @@
                                               </div>
                                             </md-input-container>
                                             
-                                            <md-input-container flex style="margin-top:-15px; padding-left:10px;">
+                                            <md-input-container flex style=" padding-left:10px;">
                                                 <label>Amount</label>
-                                                <input ng-model="cn.duDatePrice|currency" style="margin-top:5px;">
+                                                <input ng-model="cn.duDatePrice|currency" >
                                                 </md-input-container>
                                                 <md-button href class="md-mini md-primary" ng-click="removeItem(cn)" style="height:30px;margin-left:-18px;top:10px;">
                                                     <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>

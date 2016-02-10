@@ -9,7 +9,7 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 	link: function(scope,element){
 		// Makes sure the dataTransfer information is sent when we
 		// Drop the item in the drop box.
-		jQuery.event.props.push('dataTransfer');	
+		jQuery.event.props.push('dataTransfer');
 
 		// file/s on a single drag and drop
 		var files;			
@@ -17,6 +17,8 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 		var filesArray = [];
 		var sampleArray = [];
 		var sampleArraybrochure = [];
+		var fileType;
+		scope.btnVisibility = false;
 		
 		// Bind the drop event to the dropzone.
 		element.find("#drop-files").bind('drop', function(e) {
@@ -24,43 +26,56 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 			// Stop the default action, which is to redirect the page
 			// To the dropped file
 			
-			  files = e.dataTransfer.files || e.dataTransfer.files;
+			files = e.dataTransfer.files || e.dataTransfer.files;
+
 			
 			if (scope.uploadType == "image") {
-			  for(indexx = 0; indexx < files.length; indexx++) {
-					filesArray.push(files[indexx]);
-					ProductService.setArray(files[indexx]);
-					ProductService.BasicArray(filesArray[indexx].name,filesArray[indexx].size);
-					sampleArray.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});						 
+
+			  for(indexx = 0; indexx < files.length; indexx++) {			  		  
+			  		fileType = files[indexx].type.split("/")[0];
+			  		if (fileType == 'image') {
+			  			scope.btnVisibility = true;
+						filesArray.push(files[indexx]);
+						ProductService.setArray(files[indexx]);
+						ProductService.BasicArray(filesArray[indexx].name,filesArray[indexx].size);
+						sampleArray.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});
+
+			  		}				 
 				}
 
 			}else if (scope.uploadType == "brochure") {
 
 				 for(indexx = 0; indexx < files.length; indexx++) {
-					filesArray.push(files[indexx]);
-					ProductService.setArraybrochure(files[indexx]);
-					ProductService.BasicArraybrochure(filesArray[indexx].name,filesArray[indexx].size);
-					sampleArraybrochure.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});						 
+			  		fileType = files[indexx].type.split("/")[0];
+			  		if (fileType == 'application') {
+			  			scope.btnVisibility = true;
+						filesArray.push(files[indexx]);
+						ProductService.setArraybrochure(files[indexx]);
+						ProductService.BasicArraybrochure(filesArray[indexx].name,filesArray[indexx].size);
+						sampleArraybrochure.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});	
+					}					 
 				}
 
-			};		
+			};
+		if (scope.btnVisibility) {
+		 	var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
 
-		 var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
-
-		  for (var i = 0; i < filesArray.length; i++) {
-				 var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
-				 filesArray[i].type+ "</td><td class='upload-table'>" +
-				 filesArray[i].size +" bytes"+ "</td></tr>";
-				 newHtml += tableRow;
+		  	for (var i = 0; i < filesArray.length; i++) {
+				var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
+				filesArray[i].type+ "</td><td class='upload-table'>" +
+				filesArray[i].size +" bytes"+ "</td></tr>";
+				newHtml += tableRow;
 			}
-			
+
 			element.find("#Tabulate").html(newHtml);
 			 
-			 $rootScope.$apply(function(){
+			$rootScope.$apply(function(){
 				scope.showUploadButton = true;
 				scope.showDeleteButton = true;
 				scope.showUploadTable = true;
-			 })
+			})
+		}
+
 
 		});		
 		function restartFiles() {			
@@ -70,6 +85,7 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 				scope.showUploadButton = false;
 				scope.showDeleteButton = false;
 				scope.showUploadTable = false;
+				scope.btnVisibility = false;
 			 })		
 			// And finally, empty the array
 			ProductService.removeArray(filesArray,scope.uploadType);

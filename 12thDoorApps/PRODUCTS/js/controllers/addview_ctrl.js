@@ -11,12 +11,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       value:['12','samal','3221','rana','duo'],
       addition:true
     }]
-
-
-
     //end test
-
-
     //  get the settings json object 
     var SettingsApp  = $objectstore.getClient("Settings12thdoor");
     SettingsApp.onGetMany(function(data){
@@ -706,18 +701,23 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           };
           var client = $objectstore.getClient("product12thdoor");
           client.onComplete(function (data) {
-            $mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              //.title('This is embarracing')
-              .content('Product Successfully Saved.')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent(data)
-            );
+           
             $scope.newItems.push($scope.product);
+            saveToBalanceClass(data.Data[0].ID,function(status){
+                if (status == "success") {
+                  $state.go("home");
+                }else{
+                   $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .content('Product Successfully Saved.')
+                    .ariaLabel('Alert Dialog Demo')
+                    .ok('OK')
+                    .targetEvent(data)
+                  );
+                }
+            })
             //window.location.href = window.location.protocol + "//" + window.location.host + "/12thdoor/expenses.html";
-            $state.go("home");
 
           });
           client.onError(function (data) {
@@ -756,6 +756,28 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
         
       }
     }
+    function saveToBalanceClass(pID,callback){
+      $scope.balanceArr = {
+        productId : pID,
+        startValue : "0",
+        GRNvalue : "0",
+        GINvalue : "0",
+        closeValue : "0",
+        startDate : new Date(),
+        balance_code : "-999"
+      }
+      var balanceClient = $objectstore.getClient("productBalance");
+      balanceClient.onComplete(function(data){
+        console.log("Successfully inserted to balance class");
+        callback("success");
+      });
+      balanceClient.onError(function(data){
+        console.log("error inserting to balance class")
+        callback("fail")
+      });
+      balanceClient.insert($scope.balanceArr,{KeyProperty:"balance_code"})
+    }
+
     $scope.updateproduct = function (updatedForm, prod) {
       var client = $objectstore.getClient("product12thdoor");
       console.log(updatedForm.stocklevel);

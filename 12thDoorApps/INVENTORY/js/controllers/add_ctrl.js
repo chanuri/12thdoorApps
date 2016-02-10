@@ -134,9 +134,11 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
         };
         var client;
         if ($state.current.name == 'Add_Inventory') {
+            $scope.inventoryType = "GRN";
             $scope.inventory.inventoryClass = "Receipt";
             client = $objectstore.getClient("GRN12thdoor");
         } else if ($state.current.name == 'Add_Inventory_Issue') {
+            $scope.inventoryType = "GIN";
             $scope.inventory.inventoryClass = "Issue";
             client = $objectstore.getClient("GIN12thdoor");
         } 
@@ -144,6 +146,7 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
         client.onComplete(function(data) {
           $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('Inventory Successfully Saved.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
           
+          $scope.inventoryID = data.Data[0].ID;
           var samplebalance = [];
           var sampleFullArr = [];
           var fullArr = [];
@@ -206,16 +209,16 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
               }
               addtoservice(sortArr[0]);  
             }            
-          }
-          
+          }          
           // var balanceArr = [];
-
           console.log(fullArr)
 
           var addToBalanceClass = $objectstore.getClient("productBalance");
           addToBalanceClass.onComplete(function(data){
-            console.log("Successfully added to product balance class");          
-            MoveToViewscreen();
+            console.log("Successfully added to product balance class");
+            AddToHistory($scope.inventoryID,function(){
+              MoveToViewscreen();
+            })    
           });
           addToBalanceClass.onError(function(data){
             console.log("error adding to product balance class");
@@ -244,6 +247,34 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
           KeyProperty: "inventory_code"
         });
       }       
+    }
+
+    function AddToHistory(invenId,callback){
+      $scope.historyArr = [];
+
+      for(u=0; u<=$rootScope.testArray.val.length-1; u++){
+
+        $scope.historyArr.push({
+          history_code : "-999",
+          type : $scope.inventoryType,
+          inventoryNo : invenId,
+          proId : $rootScope.testArray.val[u].proId,
+          amount : $rootScope.testArray.val[u].Quantity,
+          stockLevel : "Level 1",
+          status : "Active"
+        })
+      }
+
+      var historyClinet = $objectstore.getClient("inventoryHistory");
+      historyClinet.onComplete(function(data){
+        console.log("Successfully added to history class");
+        callback();
+      });
+      historyClinet.onError(function(data){
+        console.log("error adding to history class")
+      });
+      historyClinet.insertMultiple($scope.historyArr,"history_code");
+
     }
 
     function MoveToViewscreen(){

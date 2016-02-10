@@ -1,12 +1,10 @@
-<!--Background banner with parallax effect-->
- <!--CARD CONTAINER START-->
 <div class="card-container" style="padding:20px;" ng-controller="AppCtrl as ctrl" >
    <!--WHITEFRAME START-->
-  <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto;z-index:2">     <!--FORM START-->
+   <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto;z-index:2">
+      <!--FORM START-->
       <form name="editForm" ng-submit="submit()" style="width:960px;">
          <md-content flex>
             <div layout layout-sm="column" layout-margin>
-               
                <section-title title="Customer Details" > </section-title>
                <md-autocomplete flex="" required md-input-name="autocompleteField"
                   md-no-cache="ctrl.noCache" 
@@ -32,10 +30,10 @@
                <md-input-container flex ng-show="addresshow"  >
                   <label>{{Address}}</label>
                   <textarea maxlength="200" type="text" ng-model="ctrl.selectedItem.BillAddress" required ng-disabled="true">
-                  </textarea>					
+                  </textarea>         
                </md-input-container>
                <md-input-container flex ng-show="shipaddresshow">
-                  <label>{{Address}}</label>				
+                  <label>{{Address}}</label>        
                   <textarea maxlength="200" type="text" ng-model="ctrl.selectedItem.ShipAddress" required ng-disabled="true">
                   </textarea>
                </md-input-container>
@@ -47,17 +45,9 @@
                   <label>GIN No</label>
                   <input ng-model="inventory.GINno" required>
                </md-input-container>
-              <md-date-picker-new model="CurrentDate" req="true" label="Date" dialog-md-theme="datePickerTheme" 
+               <md-date-picker-new model="CurrentDate" req="true" label="Date" dialog-md-theme="datePickerTheme" 
                   style="margin-top: 13px;" flex/>
-               </md-date-picker-new>
-              
-                 <!--  <md-date-picker-new ng-model="inventory.date" md-placeholder="Date"  flex></md-datepicker-new> -->
-            
-               
-               <!-- 	<md-input-container flex >
-                  <label>Refference Number</label>
-                  <input ng-model="inventory.RefferenceNo" required></textarea>
-                  </md-input-container> -->
+               </md-date-picker-new> 
             </div>
             <div layout layout-sm="column" layout-margin>
                <section-title > </section-title>
@@ -72,8 +62,7 @@
             </div>
             <md-divider></md-divider>
             <div layout layout-sm="column" layout-margin>
-                <section-title title = "Item"> </section-title>
-               
+               <section-title title = "Item"> </section-title>
                <div layout="column" layout-align flex>
                   <div flex layout="row"  >
                      <ul flex style="max-width:600px;" as-sortable="sortableOptions" ng-model="testArray.val">
@@ -88,10 +77,6 @@
                                        </span>
                                     </div>
                                     <div flex="15" style="margin-top:-17px" layout="column" >
-                                       <!-- <md-button href aria-label="Open demo menu" class="md-icon-button" 
-                                          ng-click="tableclick(inventory.itemdetails,item)" >
-                                          <md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
-                                          </md-button> -->
                                        <md-menu md-position-mode="target-right target" layout="row" flex-sm="100" flex="5" layout-align="center center"  >
                                           <md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
                                              <md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
@@ -127,7 +112,6 @@
                                           <md-tooltip>Unit</md-tooltip>
                                        </span>
                                     </div>
-                                   
                                  </div>
                               </md-card-content>
                            </md-card>
@@ -138,118 +122,53 @@
                      <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addproduct()">New Line</md-button>
                   </div>
                </div>
-               <!-- <div style="margin-top:30px;">
-                  <md-button href ng-click="addproduct()" class="md-raised md-primary">
-                      <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
-                      <md-tooltip md-direction="left">Add Item</md-tooltip>
-                  </md-button>
-                  </div> -->
             </div>
             <div layout layout-sm="column" layout-margin>
                <section-title > </section-title>
             </div>
             <md-divider></md-divider>
             <div layout layout-sm="column" layout-margin>
-                 <section-title title = "Optional Details"> </section-title>
-              
+               <section-title title = "Optional Details"> </section-title>
                <md-input-container flex>
                   <label>Notes</label>
                   <textarea maxlength="200" type="text" ng-model="inventory.note"></textarea>  
                </md-input-container>
             </div>
-    
-
-              <div layout ng-init="DemoCtrl()" layout-sm="column" layout-margin>
-                 <section-title > </section-title>
-                <div layout="column" style="margin-left:-5px; margin-top:-10px;" class="chipsdemoBasicUsage" flex>
-                    <md-content class="md-padding" layout="column">
-                        <md-chips
-                                        ng-model="inventory.roFruitNames"
-                                        readonly="readonly"
-                                        placeholder="Enter a tag"
-                                        delete-button-label="Remove Tag"
-                                        delete-hint="Press delete to remove tag"
-                                        secondary-placeholder="+Tag">
-                            <md-chip-template>
-                                <strong>{{$chip}}</strong>
-                            </md-chip-template>
-                        </md-chips>
-                    </md-content>
-                </div>
-            </div>
-             <div layout layout-sm="column" layout-margin>
-                <section-title > </section-title>
-               
-                 <div style=" margin-top:20px;margin-left: 15px;">
-                        <md-button class="md-raised" ng-click="imageuploader()" type="button">Upload</md-button>
+            <div layout ng-init="DemoCtrl()" layout-sm="column" layout-margin>
+               <section-title > </section-title>
+               <div layout="column" style="margin-left:-5px; margin-top:-10px;" class="chipsdemoBasicUsage" flex>
+                  <md-content class="md-padding" layout="column">
+                     <md-chips
+                        ng-model="inventory.roFruitNames"
+                        readonly="readonly"
+                        placeholder="Enter a tag"
+                        delete-button-label="Remove Tag"
+                        delete-hint="Press delete to remove tag"
+                        secondary-placeholder="+Tag">
+                        <md-chip-template>
+                           <strong>{{$chip}}</strong>
+                        </md-chip-template>
+                     </md-chips>
+                  </md-content>
                </div>
-              
             </div>
-
+            <div layout layout-sm="column" layout-margin>
+               <section-title > </section-title>
+               <div style=" margin-top:20px;margin-left: 15px;">
+                  <md-button class="md-raised" ng-click="imageuploader()" type="button">Upload</md-button>
+               </div>
+            </div>
             <md-divider></md-divider>
-
-
             <div layout="row" layout-align="end start" layout-margin  ng-show="true" >
                <div>
-                   <md-button id="mySignup" class="md-raised md-primary"  type="submit">Save</md-button>
-              
+                  <md-button id="mySignup" class="md-raised md-primary"  type="submit">Save</md-button>
                </div>
                <div style="margin-left: 15px;">
-                    <md-button style="margin-left: 15px;" class="md-raised"  type="button" ng-click="viewIssue()">Cancel</md-button>
-            
+                  <md-button style="margin-left: 15px;" class="md-raised"  type="button" ng-click="viewIssue()">Cancel</md-button>
                </div>
             </div>
          </md-content>
       </form>
    </md-whiteframe>
-   <br><br>
-   <!--WHITEFRAME END-->
+   <br><br> 
 </div>
-<!--CARD CONTAINER END-->
-<!-- <div id="viewinventory" class="fab_button_animation" style="background:red;"></div>
-<div id="viewissues" class="fab_button_animation" style="background:#3498db;"></div>
-<div  class="lock-size" layout="row">
-<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
-   ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
-   <md-fab-trigger>
-      <div style="padding:0px;">
-         <md-button aria-label="menu" class="md-fab md-warn" style="background-color:#db4437;">
-            <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
-         </md-button>
-      </div>
-   </md-fab-trigger>
-   <md-fab-actions>
-      <div style="padding:5px;">
-         <md-button aria-label="twitter" class="md-fab md-raised md-mini" ng-click="save()" style="background-color:#1abc9c;">
-            <md-icon md-svg-src="img/ic_save_24px.svg" ></md-icon>
-            <md-tooltip md-direction="left">Save</md-tooltip>
-         </md-button>
-      </div>
-      <div style="padding:5px;">
-         <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="viewInventory()" style="background-color:red;">
-            <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>
-            <md-tooltip md-direction="left">View Receipt</md-tooltip>
-         </md-button>
-      </div>
-      <div style="padding:5px;">
-         <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="viewIssue()" style="background-color:#3498db;">
-            <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>
-            <md-tooltip md-direction="left">View Issue</md-tooltip>
-         </md-button>
-      </div>
-          <div style="padding:5px;">
-         <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="AddIssue()" style="background-color:#e67e22;">
-            <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon>
-            <md-tooltip md-direction="left">Add Issue</md-tooltip>
-         </md-button>
-         </div>
-         
-         
-         <div style="padding:5px;">
-         <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="Addreceipt()" style="background-color:#9b59b6;">
-            <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon>
-            <md-tooltip md-direction="left">Add Receipt</md-tooltip>
-         </md-button>
-         </div>  
-   </md-fab-actions>
-</md-fab-speed-dial> -->

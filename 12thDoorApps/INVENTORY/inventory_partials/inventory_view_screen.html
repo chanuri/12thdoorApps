@@ -1,8 +1,7 @@
 <!--CARD CONTAINER START-->
-<div class="card-container" style="padding:20px;" >
-   <!--WHITEFRAME START-->
-   <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto;z-index:2"  ng-repeat="inventory in ViewInventory" >
-      <!--FORM START-->
+<div class="card-container" style="padding:20px;" > 
+   <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center"
+    style="border:1px solid #ccc;max-width:960px;margin:0 auto;z-index:2"  ng-repeat="inventory in ViewInventory" > 
       <form name="editForm" ng-submit="submit()" style="width:100%">
          <md-content flex>
             <div layout="row" layout-sm="column" style="background-color: rgba(128, 128, 128, 0.05);    height: 60px;">
@@ -13,7 +12,6 @@
                   <span style="padding-left: 16px;">
                   {{InventoryTypeValue}}
                   </span>
-
                   <span style="padding-left: 16px; background-color: #212121; margin-left: 16px; width: 100px;" ng-if="inventory.Status == 'Cancelled'">
                   <b style="font-color:#FFFFFF;padding-right: 15px;">
                   <font color="white">{{inventory.Status}}</font>
@@ -61,154 +59,98 @@
                   </div>
                </div>
             </div>
-         <div id="convert_to_pdf"> 
-            <div layout layout-sm="column" layout-margin>
-               <div flex="55">
-                  <img src="img/inventory.jpg" style="border-radius:20px"/>
+            <div id="convert_to_pdf">
+               <div layout layout-sm="column" layout-margin>
+                  <div flex="55">
+                     <img src="img/inventory.jpg" style="border-radius:20px"/>
+                  </div>
                </div>
-            </div>
-            <div layout layout-sm="column" layout-margin>
-               <div flex="10">
+               <div layout layout-sm="column" layout-margin>
+                  <div flex="10">
+                  </div>
+                  <h3>{{NoteType}} NOTE</h3>
                </div>
-               <h3>{{NoteType}} NOTE</h3>
-            </div>
-            <div layout layout-sm="column" layout-margin>
-               <div flex="15"></div>
-               <div layout = "column" flex = "30" style="max-height: 50px;">
+               <div layout layout-sm="column" layout-margin>
+                  <div flex="15"></div>
+                  <div layout = "column" flex = "30" style="max-height: 50px;">
+                     <div flex>
+                        <span> {{InventoryType}}</span>
+                        <span style="margin-left: 60px;"> {{InventoryTypeValue}}</span>
+                     </div>
+                     <div flex style="margin-top: 10px;">
+                        <span> Date</span>
+                        <span style="margin-left: 95px;"> {{inventory.date}}</span>
+                     </div>
+                  </div>
+                  <div flex="25"></div>
+                  <div flex layout="column">  
+                     <span flex> To :</span>
+                     <span style="margin-top:5px;" flex> <b>{{AddressOne}}.</b></span>
+                     <span style="margin-top:5px;" flex> {{AddressTwo}}</span>
+                     <span style="margin-top:5px;" flex> {{AddressThree}}</span>
+                     <span style="margin-top:5px;" flex> {{AddressFour}}</span>
+                  </div>
+               </div>
+               <div layout layout-sm="column" layout-margin style="height: 100px;">
+                  <div flex="15"></div>
                   <div flex>
-                     <span> {{InventoryType}}</span>
-                     <span style="margin-left: 60px;"> {{InventoryTypeValue}}</span>
-                  </div>
-                  <div flex style="margin-top: 10px;">
-                     <span> Date</span>
-                     <span style="margin-left: 95px;"> {{inventory.date}}</span>
+                     <span>Comment</span>
+                     <span style="margin-left: 60px;"> {{inventory.Comment}}</span>
                   </div>
                </div>
-               <div flex="25"></div>
-               <div flex layout="column">  
-                  <span flex> To :</span>
-                  <span style="margin-top:5px;" flex> <b>{{AddressOne}}.</b></span>
-                  <span style="margin-top:5px;" flex> {{AddressTwo}}</span>
-                  <span style="margin-top:5px;" flex> {{AddressThree}}</span>
-                  <span style="margin-top:5px;" flex> {{AddressFour}}</span>
-               </div>
-            </div>
-            <div layout layout-sm="column" layout-margin style="height: 100px;">
-               <div flex="15"></div>
-               <div flex>
-                  <span>Comment</span>
-                  <span style="margin-left: 60px;"> {{inventory.Comment}}</span>
-               </div>
-            </div>
-            <div layout="row" layout-sm="row" layout-margin style="height: 18px;">
-               <div flex="15" hide-sm></div>
-               <div flex="60">
-                  <span><b>Description</b></span>                   
-               </div>
-               <div flex="5">
-                  <span><b>Qty</b></span>                   
-               </div>
-               <div flex="5">
-                  <span><b>Unit</b></span>                   
-               </div>
-            </div>
-            <div layout="row" layout-sm="row" layout-margin >
-               <div flex="15" hide-sm></div>
-               <div flex="75" style="border-bottom: thick solid #000000;border-width:1px;"></div>
-            </div>
-            <div ng-repeat="items in inventory.itemdetails" style="margin-top: -15px;">
-               <div layout="row" layout-sm="row" layout-margin>
+               <div layout="row" layout-sm="row" layout-margin style="height: 18px;">
                   <div flex="15" hide-sm></div>
-                  <div flex="60" layout="column" layout-sm="row">
-                     <div flex layout="row">
-                        <span><b>{{items.productname}}</b></span> 
-                     </div>  
-                     <div flex layout="row">
-                        <span>{{items.Comment}}</span> 
-                     </div>                
+                  <div flex="60">
+                     <span><b>Description</b></span>                   
                   </div>
                   <div flex="5">
-                     <span>{{items.Quantity}}</span>                   
+                     <span><b>Qty</b></span>                   
                   </div>
                   <div flex="5">
-                     <span>{{items.Unit}}</span>                   
+                     <span><b>Unit</b></span>                   
                   </div>
                </div>
-               <div layout="row" layout-sm="row" layout-margin style="margin-top: -15px;">
+               <div layout="row" layout-sm="row" layout-margin >
                   <div flex="15" hide-sm></div>
                   <div flex="75" style="border-bottom: thick solid #000000;border-width:1px;"></div>
                </div>
-            </div>
-
-            <div layout="row" layout-sm="row" layout-margin style="margin-top:150px;">
-               <div flex="15" hide-sm></div>
-               <div flex>
-                  <span>Note</span>
+               <div ng-repeat="items in inventory.itemdetails" style="margin-top: -15px;">
+                  <div layout="row" layout-sm="row" layout-margin>
+                     <div flex="15" hide-sm></div>
+                     <div flex="60" layout="column" layout-sm="row">
+                        <div flex layout="row">
+                           <span><b>{{items.productname}}</b></span> 
+                        </div>
+                        <div flex layout="row">
+                           <span>{{items.Comment}}</span> 
+                        </div>
+                     </div>
+                     <div flex="5">
+                        <span>{{items.Quantity}}</span>                   
+                     </div>
+                     <div flex="5">
+                        <span>{{items.Unit}}</span>                   
+                     </div>
+                  </div>
+                  <div layout="row" layout-sm="row" layout-margin style="margin-top: -15px;">
+                     <div flex="15" hide-sm></div>
+                     <div flex="75" style="border-bottom: thick solid #000000;border-width:1px;"></div>
+                  </div>
+               </div>
+               <div layout="row" layout-sm="row" layout-margin style="margin-top:150px;">
+                  <div flex="15" hide-sm></div>
+                  <div flex>
+                     <span>Note</span>
+                  </div>
+               </div>
+               <div layout="row" layout-sm="row" layout-margin>
+                  <div flex="15" hide-sm></div>
+                  <div flex style="margin-top: -15px;">
+                     <p>{{inventory.note}}</p>
+                  </div>
                </div>
             </div>
-            <div layout="row" layout-sm="row" layout-margin>
-               <div flex="15" hide-sm></div>
-               <div flex style="margin-top: -15px;">
-                  <p>{{inventory.note}}</p> 
-               </div>
-            </div>
-         </div>
          </md-content>
-      </form>  
-   </md-whiteframe>
-   <br><br>
-   <!--WHITEFRAME END-->
+      </form>
+   </md-whiteframe> 
 </div>
-<!--CARD CONTAINER END-->
-<!-- <div  class="lock-size" layout="row">
-   <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
-      ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
-   
-   <md-fab-trigger>
-   
-   <div style="padding:5px;">
-      
-      <md-button aria-label="menu" class="md-fab md-warn" style="background-color:#db4437;">
-        <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
-      </md-button>
-   
-   
-   
-   </div>
-   
-   </md-fab-trigger>
-   
-   <md-fab-actions>
-   
-   <div style="padding:5px;">
-   
-   <md-button aria-label="twitter" class="md-fab md-raised md-mini" ng-click="save()" style="background-color:#1abc9c;">
-   <md-icon md-svg-src="img/ic_save_24px.svg" ></md-icon><md-tooltip md-direction="left">Save Expense</md-tooltip>
-   </md-button>
-   
-   </div>
-   
-   <div style="padding:5px;">
-   
-   <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="viewExpense()" style="background-color:red;">
-   <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon><md-tooltip md-direction="left">View Expense</md-tooltip>
-   </md-button>
-   
-   </div>
-   
-   <div style="padding:5px;">
-            <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="uploader()" style="background-color:#e67e22;">
-               <md-icon md-svg-src="img/ic_cloud_upload_48px.svg"></md-icon>
-               <md-tooltip md-direction="left">Upload</md-tooltip>
-            </md-button>
-         </div>
-   
-   
-   </md-fab-actions>
-   </md-fab-speed-dial>
-   
-   
-   </div>
-   
-   
-   -->

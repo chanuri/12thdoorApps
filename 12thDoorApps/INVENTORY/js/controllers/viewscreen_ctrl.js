@@ -145,12 +145,15 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 			.cancel("Cancel")
 			$mdDialog.show(confirm).then(function(){
 				if (obj.inventoryClass == "Receipt") {
+					$scope.historyType = "GRN";
 					ObjectStoreFunction("Delete",obj,"GRN12thdoor","inventory_code",function(status){
 						if (status == "success") {
 							updateBalance(obj,function(data){
 								if (data == "success") {
-						 			$state.go('home.receipt')
-						 			obj.deleteStatus = true;											
+									addToHistory(obj,"Delete",function(){	
+							 			$state.go('home.receipt')
+							 			obj.deleteStatus = true;	
+									})											
 								}
 							})
 						}else{
@@ -162,8 +165,10 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 						if (status == "success") {							
 							updateBalance(obj,function(data){
 								if (data == "success") {
-						 			$state.go('home.issue')
-						 			obj.deleteStatus = true;											
+									addToHistory(obj,"Delete",function(){										
+							 			$state.go('home.issue')
+							 			obj.deleteStatus = true;	
+									})										
 								}
 							})
 						}else{
@@ -183,6 +188,32 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 				});
 			}
 		}
+	}
+
+	function addToHistory(obj,status,callback){
+		$scope.historyArr = [];
+		if (obj.itemdetails.length > 0) {
+			for(k=0; k<=obj.itemdetails.length-1; k++){
+				$scope.historyArr.push({
+					history_code : "-999",
+			        type : $scope.historyType,
+			        inventoryNo : obj.inventory_code,
+			        proId : obj.itemdetails[k].proId,
+			        amount : obj.itemdetails[k].Quantity,
+			        stockLevel : "Level 1",
+			        status : status
+				})
+			}
+		}
+		var historyClinet = $objectstore.getClient("inventoryHistory");
+	    historyClinet.onComplete(function(data){
+	       console.log("Successfully added to history class");
+	       callback();
+	    });
+	    historyClinet.onError(function(data){
+	       console.log("error adding to history class")
+	    });
+	    historyClinet.insertMultiple($scope.historyArr,"history_code");
 	}
 
 	function getBalance(obj,k,callback){
@@ -258,7 +289,9 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 							if (status == "success") {
 								updateBalance(obj,function(data){
 									if (data == "success") {
-					 					$state.go('home.receipt')											
+										addToHistory(obj,"Cancel",function(){
+					 						$state.go('home.receipt')	
+										})											
 									}
 								});
 							}else{
@@ -270,7 +303,9 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 							if (status == "success") {
 								updateBalance(obj,function(data){
 									if (data == "success") {
-					 					$state.go('home.issue')										
+										addToHistory(obj,"Cancel",function(){
+					 						$state.go('home.issue')	
+										})									
 									}
 								});
 							}else{
@@ -351,9 +386,12 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 	if ($stateParams.status == "GRN") {
 		client = $objectstore.getClient("GRN12thdoor");
 		clientClass = "GRN12thdoor";
+		$scope.historyType = "GRN";
+
 	}else if ($stateParams.status == "GIN") {
 		client = $objectstore.getClient("GIN12thdoor");
 		clientClass = "GIN12thdoor";
+		$scope.historyType = "GIN";
 	}
 	
 	client.onGetMany(function(data){

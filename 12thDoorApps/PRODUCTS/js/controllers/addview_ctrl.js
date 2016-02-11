@@ -253,11 +253,11 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     function MergeArr(backup,arr){
         //sort back up array by date in accending order       
         backup.sort(function(a,b){
-            return new Date(b.date) - new Date(a.date);
+            return new Date(b.todayDate) - new Date(a.todayDate);
         });        
 
         arr.sort(function(a,b){
-         return new Date(b.date) - new Date(a.date);
+         return new Date(b.todayDate) - new Date(a.todayDate);
         });
 
         //prepend backup array to fullarray 
@@ -280,8 +280,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
 
     $scope.starfunc = function(item,index) {
 
-         if (item.id === "favouriteStarNo") {
-            
+        if (item.id === "favouriteStarNo") {            
             $scope.latest = '-todayDate'
             $scope.prodSearch = null;
             item.upstatus == false;
@@ -293,9 +292,9 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             $scope.indexno = index;
             SortStarFunc();
 
-         }else if(item.id === "status"){
+        }else if(item.id === "status"){
 
-            $scope.latest = '-todayDate'
+            $scope.latest = null
             $scope.prodSearch = null;
             item.upstatus == false;
             item.downstatus = false;
@@ -306,8 +305,8 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             $scope.indexno = index;
             $scope.CheckFullArrayStatus(item.name, item.id);
 
-         }
-         else{
+        }
+        else{
           // scope.star = "";
 
               if (item.upstatus == false && item.downstatus == false) {

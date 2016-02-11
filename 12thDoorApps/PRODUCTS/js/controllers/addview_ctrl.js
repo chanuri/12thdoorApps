@@ -171,119 +171,168 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       , src: "img/ic_grade_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: true
+      , divider: true,
+      close: false
     }, {
+      name: "Date",
+      id: "todayDate",
+      src: "img/ic_add_shopping_cart_48px.svg",
+      upstatus : false,
+      downstatus : true,
+      divider: false,
+      close: true
+    },{
       name: "Product Name"
       , id: "Productname"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
-      , downstatus : true
-      , divider: false
+      , downstatus : false
+      , divider: false,
+      close: false
     }, {
       name: "Product Code"
       , id: "ProductCode"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: false
+      , divider: false,
+      close: false
     }, {
       name: "Price"
       , id: "productprice"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: true
+      , divider: true,
+      close: false
     }, {
       name: "Active"
       , id: "status"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: false
+      , divider: false,
+      close: false
     }, {
       name: "Inactive"
       , id: "status"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: false
-    }]
-
-     
-    
+      , divider: false,
+      close: false
+    }];   
     
     $scope.self = this;
     $scope.self.searchText = "";
+    $scope.prodSearch = '-todayDate';
     $scope.indexno = 1;
-    $scope.latest = 'timestamp';
+    $scope.latest = '-todayDate';
 
+    $scope.DefaultCancel = function(item){
+      $scope.testarr[1].close = true;
+      $scope.testarr[$scope.indexno].upstatus = false;
+      $scope.testarr[$scope.indexno].downstatus = false;
+      item.close = false;
+      $scope.prodSearch = '-todayDate';
+      $scope.indexno = 1;
+      $scope.latest = '-todayDate';
+    }
     $scope.CheckFullArrayStatus = function(type,id){  
         $scope.BackUpArray = [];
         //remove all all object that status = paid and put them into backup array
-        if(id == 'status' ){
-          for (var i = $scope.products.length - 1; i >= 0; i--) {
-           if ($scope.products[i].status === type) {
-              $scope.BackUpArray.push($scope.products[i]);            
-              $scope.products.splice(i,1);           
+            for (var i = $scope.products.length - 1; i >= 0; i--) {
+                if ($scope.products[i].status === type) {
+                   $scope.BackUpArray.push($scope.products[i]);            
+                   $scope.products.splice(i,1);           
+                };
             };
-          };
-        }      
-        //sort back up array by date in accending order
-        $scope.BackUpArray.sort(function(a,b){
+        $scope.products = MergeArr($scope.BackUpArray,$scope.products);         
+    }
+
+    function MergeArr(backup,arr){
+        //sort back up array by date in accending order       
+        backup.sort(function(a,b){
+            return new Date(b.date) - new Date(a.date);
+        });        
+
+        arr.sort(function(a,b){
          return new Date(b.date) - new Date(a.date);
         });
+
         //prepend backup array to fullarray 
-        console.log($scope.BackUpArray)
-        for (var i = $scope.BackUpArray.length - 1; i >= 0; i--) {
-          $scope.products.unshift($scope.BackUpArray[i]);        
+        for (var i = backup.length - 1; i >= 0; i--) {
+            arr.unshift(backup[i]);        
         }; 
+        return arr;
       }
+
+    function SortStarFunc(){
+        $scope.BackUpArrayStar = [];
+        for (var i = $scope.products.length - 1; i >= 0; i--) {
+            if ($scope.products[i].favouriteStarNo === 0) {
+              $scope.BackUpArrayStar.push($scope.products[i]);            
+              $scope.products.splice(i,1);           
+            };
+        };
+        $scope.products = MergeArr($scope.BackUpArrayStar,$scope.products);        
+    }
 
     $scope.starfunc = function(item,index) {
 
          if (item.id === "favouriteStarNo") {
-            $scope.prodSearch = item.id;
-            item.upstatus == false;
-            item.downstatus = false; 
-            $scope.testarr[$scope.indexno].upstatus = false;
-            $scope.testarr[$scope.indexno].downstatus = false;
-            $scope.indexno  = index; 
-            $scope.latest = 'Productname';         
-         }else if(item.id === "status"){
-            $scope.testarr[$scope.indexno].upstatus = false;
-            $scope.testarr[$scope.indexno].downstatus = false;
+            
+            $scope.latest = '-todayDate'
+            $scope.prodSearch = null;
             item.upstatus == false;
             item.downstatus = false;
-            $scope.CheckFullArrayStatus(item.name,item.id);
-            $scope.latest = null;
+            $scope.testarr[$scope.indexno].upstatus = false;
+            $scope.testarr[$scope.indexno].downstatus = false;
+            $scope.testarr[$scope.indexno].close = false;
+            item.close = true;
+            $scope.indexno = index;
+            SortStarFunc();
+
+         }else if(item.id === "status"){
+
+            $scope.latest = '-todayDate'
             $scope.prodSearch = null;
-            $scope.indexno  = index; 
+            item.upstatus == false;
+            item.downstatus = false;
+            $scope.testarr[$scope.indexno].downstatus = false;
+            $scope.testarr[$scope.indexno].upstatus = false;
+            $scope.testarr[$scope.indexno].close = false;
+            item.close = true;
+            $scope.indexno = index;
+            $scope.CheckFullArrayStatus(item.name, item.id);
 
          }
          else{
           // scope.star = "";
 
-                if (item.upstatus == false && item.downstatus == false) {
-                    item.upstatus = !item.upstatus;
-                    $scope.testarr[$scope.indexno].upstatus = false;
-                    $scope.testarr[$scope.indexno].downstatus = false;
-                    $scope.indexno  = index;
-                }
-                else{
-                 item.upstatus = !item.upstatus;
-                 item.downstatus = !item.downstatus;             
-                 }                
-                               
-                $scope.self.searchText = "";
-                 
-                if (item.upstatus) {
-                     $scope.prodSearch = item.id;
-                     $scope.latest = '-date';
-                }
-                if (item.downstatus) {
-                     $scope.prodSearch ='-'+item.id;
-                     $scope.latest = '-date';
-                }
+              if (item.upstatus == false && item.downstatus == false) {
+                  item.upstatus = !item.upstatus;
+                  item.close = true;
+                  $scope.testarr[$scope.indexno].upstatus = false;
+                  $scope.testarr[$scope.indexno].downstatus = false;
+                  $scope.testarr[$scope.indexno].close = false;
+                  $scope.indexno = index;
+              } else {
+                  item.upstatus = !item.upstatus;
+                  item.downstatus = !item.downstatus;
+                  item.close = true;
+              }
+
+              $scope.self.searchText = "";
+
+              if (item.upstatus) {
+                  $scope.prodSearch = item.id;
+                  $scope.latest = '-todayDate';
+              }
+              if (item.downstatus) {
+                  $scope.prodSearch = '-' + item.id;
+                  $scope.latest = '-todayDate';
+              }
           }
         }
     //sort function variable end 
@@ -321,20 +370,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     $scope.products = [];
     // $scope.packages=[];
     $scope.loadallarray = [];
-    // sort function variable start
-    $scope.prodSearch = "";
-    $scope.sortProdName = "Productname";
-    $scope.sortProdCode = "ProductCode";
-    $scope.sortProdBrand = "brand";
-    $scope.sortProdCat = "ProductCategory";
-    $scope.sortProdStatus = "status";
-    $scope.sortProdStock = "stocklevel";
-    $scope.mytest = null;
-    $scope.sortFunciton = function (name) {
-      $scope.prodSearch = name;
-      self.searchText = null;
-      console.log($scope.prodSearch);
-    }
+    
     $scope.testfunc = function () {
       self.searchText = "true"
     }
@@ -405,12 +441,12 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           //whatever
         });
       });
-      // if (obj.favouriteStarNo == 1 ) {
-      // 	obj.favouriteStarNo = 0;
-      // }
-      // else if (obj.favouriteStarNo == 0){
-      // 	obj.favouriteStarNo = 1;
-      // };
+      if (obj.favouriteStarNo == 1 ) {
+      	obj.favouriteStarNo = 0;
+      }
+      else if (obj.favouriteStarNo == 0){
+      	obj.favouriteStarNo = 1;
+      };
       obj.favouriteStar = !obj.favouriteStar;
       client.insert(obj, {
         KeyProperty: "product_code"
@@ -733,12 +769,14 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           $scope.product.favouriteStar = false;
           $scope.product.favouriteStarNo = 1;
           $scope.product.date = today;
+          $scope.product.todayDate = new Date()
           $scope.product.UploadImages = {
             val: []
           };
           $scope.product.UploadBrochure = {
             val: []
           };
+          $scope.product.customFields = $scope.ProCustArr;
 
           if (!$scope.product.tags) {
             $scope.product.tags = [];

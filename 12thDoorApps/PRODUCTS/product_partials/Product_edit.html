@@ -118,6 +118,26 @@
                          </div>
                       </div>
 
+                   <div layout-gt-sm="row" layout-margin ng-repeat="cust in product.customFields" ng-init="cust.value == cust.inputType">
+                     <!--KEEP BLANK SPACE - ask why-->
+                     <section-title ng-if="$index == '0'" title="Custom Fields"></section-title>
+                     <section-title ng-if="$index != '0'" ></section-title>
+
+                     <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'textBox'" class="md-block" flex-gt-sm >
+                        <label>{{cust.labelshown}}</label>
+                        <input ng-model="cust.inputType">
+                     </md-input-container>
+
+                      <md-input-container  ng-if="cust.type == 'selectBox'" class="md-block" flex-gt-sm >
+                        <label>{{cust.labelshown}}</label>
+                        <md-select  ng-model="cust.inputType" flex>
+                           <md-option ng-repeat="item in cust.fields" value="{{item}}">{{item}}</md-option>
+                        </md-select>
+                     </md-input-container>
+
+                     <div flex ></div>
+                  </div>
+
                      <input type="hidden" required type="text" ng-model="product.product_code" /> 
                      <div layout layout-sm="column"  layout-margin>
                         <section-title> </section-title>

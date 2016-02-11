@@ -3,7 +3,6 @@
    <div id="md-childApp-contentContainerSection" ng-init="loadAllProducts()" >
       <!--START OF FIRST CARD CONTAINER-->
       <div class="header_container" >
-
   <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:40px;">
 
            <md-autocomplete flex
@@ -28,17 +27,44 @@
 
            </md-autocomplete>            
         
-        <div layout style='width:50px;'><md-menu md-position-mode='target-right target' style='z-index:99;box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.084); background:rgb(250,250,250); height:40px; width:50px;'> <md-button type='button' aria-label='Open demo menu' class='md-icon-button' ng-click='$mdOpenMenu()'> <md-icon md-svg-icon='img/ic_reorder_24px.svg' style='margin-top: -9px;'></md-icon> </md-button> <md-menu-content width='4'> <div ng-repeat='item in testarr track by $index'> <md-menu-item> <md-button ng-click='starfunc(item,$index)'> <div layout='row'> <p flex>{{item.name}}</p> <div> <md-icon md-svg-icon='img/ic_arrow_drop_up_48px.svg' style='margin-top:4px; position: absolute; left: 150px;' ng-show='item.upstatus'></md-icon> </div> <div> <md-icon md-svg-icon='img/ic_arrow_drop_down_24px.svg' style='margin-top:9px;position: absolute; left: 150px;' ng-show='item.downstatus'></md-icon> </div> <md-icon md-menu-align-target md-svg-icon='{{item.src}}' style='margin: auto 3px auto 0;'></md-icon> </div> </md-button> </md-menu-item> <md-divider ng-show='item.divider'></md-divider></div> </md-menu-content></md-menu></div>
+         <div layout style='width:50px;'>
+         <md-menu md-position-mode='target-right target' style='z-index:99;box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.084); background:rgb(250,250,250); height:40px; width:50px;'>
+            <md-button type='button' aria-label='Open demo menu' class='md-icon-button' ng-click='$mdOpenMenu()'>
+               <md-icon md-svg-icon='img/ic_reorder_24px.svg' style='margin-top: -9px;'></md-icon>
+            </md-button>
+            <md-menu-content width='4'>
+               <div ng-repeat='item in testarr track by $index'>
+                  <md-menu-item>
+                     <md-button ng-click='starfunc(item,$index)'>
+                        <div layout='row'>
+                           <p flex>{{item.name}}</p>
+                           <div>
+                              <md-icon md-svg-icon='img/ic_arrow_drop_up_48px.svg' style='margin-top:4px; position: absolute; left: 150px;' ng-show='item.upstatus'></md-icon>
+                           </div>
+                           <div>
+                              <md-icon md-svg-icon='img/ic_arrow_drop_down_24px.svg' style='margin-top:9px;position: absolute; left: 150px;' ng-show='item.downstatus'></md-icon>
+                           </div>
+                        </div>
+                     </md-button>
+                     <div ng-click="DefaultCancel(item)" style="width: 18px;z-index: 10;margin-left: -45px; margin-top: 15px;position: relative;" ng-show='item.close'>
+                        <md-icon md-svg-icon='img/ic_close_24px.svg' style='width: 18px;
+                           margin-top:-4px;'></md-icon>
+                     </div>
+                  </md-menu-item>
+                  <md-divider ng-show='item.divider'></md-divider>
+               </div>
+            </md-menu-content>
+         </md-menu>
+      </div>
    </md-whiteframe>
    </div>
-
          
         
       <div class="card_container"  >
       <div class="ui-view-container">
          <!--START OF  COLLAPSE CARDS-->
          <div  class="collapse-card" ng-repeat="product in products | filter:ctrl.searchText||undefined 
-         | orderBy: [prodSearch,Latest] " ng-class="{ active: $active }" ng-if="!product.deleteStatus">
+         | orderBy: [prodSearch,latest] " ng-class="{ active: $active }" ng-if="!product.deleteStatus">
             <!--START OF COLLAPSE CARD HEADING-->
             <div class="collapse-card__heading" layout="row" layout-align="start start"
                ng-click="getuploaddata(product.ProductCode,product.inventory,product.stocklevel)">

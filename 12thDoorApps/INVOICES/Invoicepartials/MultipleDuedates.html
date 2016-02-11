@@ -23,10 +23,10 @@
                             <tr animate ng:repeat="cn in testarr">
                                 <td data-title="Item Detail" >
                                     <div layout layout-sm="column" layout-margin>
-                                    <md-datepicker ng-model="cn.duedate" md-placeholder="Due Date" required flex style="margin-top:1px; width:230px; margin-left:-20px;" ></md-datepicker>
-                                    <md-input-container flex style="margin-top:10px; padding-left:5px;">
+                                    <md-datepicker ng-model="cn.duedate" md-placeholder="Due Date" required flex style=" width:230px; margin-left:-20px;" ></md-datepicker>
+                                    <md-input-container flex style=" padding-left:5px;">
                                             <label>Percentage</label>
-                                            <input  ng-model="cn.percentage"  ng-change="DueAmount(cn,$index)">
+                                            <input  ng-model="cn.percentage" id="shehana" ng-change="DueAmount(cn,$index)" >
                                              <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
                                               <div ng-message="required" ng-show="showPercentage">
                                                  <b>percentage is exceeded</b>
@@ -37,11 +37,11 @@
                                               </div>
                                             </md-input-container>
                                             
-                                            <md-input-container flex style=" padding-left:10px;">
+                                            <md-input-container flex style=" padding-left:10px;margin-top:10px;">
                                                 <label>Amount</label>
-                                                <input ng-model="cn.duDatePrice|currency" >
+                                                <input ng-model="cn.duDatePrice|currency"  >
                                                 </md-input-container>
-                                                <md-button href class="md-mini md-primary" ng-click="removeItem(cn)" style="height:30px;margin-left:-18px;top:10px;">
+                                                <md-button  href class="md-mini md-primary" ng-click="removeItem(cn)" style="height:30px;margin-left:-18px;top:10px;">
                                                     <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
                                                     <md-tooltip md-direction="left">Delete</md-tooltip>
                                                 </md-button>

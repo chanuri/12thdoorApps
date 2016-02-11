@@ -14,7 +14,7 @@
 <div md-virtual-repeat-container ng-init="viewPortHeight='700px;'"  style="height: {{viewPortHeight}};">
 <div  class="card_container" md-virtual-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch "
  ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
-    <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:33px">
+    <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:20px">
 
             <!--START OF COLLAPSE CARD HEADING-->
             <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi);toggleOne($index)" >
@@ -174,11 +174,11 @@
                                     </div>
                                     <div layout layout-sm="column" layout-margin>
                                          <section-title> </section-title>
-                                        <md-input-container flex="73" ng-show="Billingaddress">
+                                        <md-input-container flex="70" ng-show="Billingaddress">
                                             <label>Billing Address</label>
                                             <input  ng-model="tdi.billingAddress" ng-disabled="true"/>
                                         </md-input-container>
-                                        <md-input-container flex="73" ng-show="Shippingaddress" >
+                                        <md-input-container flex="70" ng-show="Shippingaddress" >
                                             <label>Shipping Address</label>
                                             <input  ng-model="tdi.shippingAddress" ng-disabled="true"/>
                                         </md-input-container>
@@ -194,9 +194,11 @@
                                             <label>Invoice No.</label>
                                             <input ng-model="tdi.invoiceNo" ng-disabled="true">
                                             </md-input-container>
-                                            <div flex >
-                                                <md-date-picker model="tdi.Startdate"  label="Date" dialog-md-theme="datePickerTheme" ng-disabled="true"></md-date-picker>
-                                            </div>
+                                            <md-input-container flex >
+                                            <label>Date</label>
+                                            <input ng-model="tdi.Startdate" ng-disabled="true">
+                                            </md-input-container>
+                                            
                                         </div>
                                         <div layout layout-sm="column" layout-margin>
                                             <section-title > </section-title>
@@ -204,9 +206,11 @@
                                                 <label>Payment Terms</label>
                                                 <input ng-model="tdi.termtype" ng-disabled="true">
                                             </md-input-container>
-                                            <div flex >
-                                                <md-date-picker model="tdi.duedate"  label=" Due Date" dialog-md-theme="datePickerTheme" ng-disabled="true"></md-date-picker>
-                                            </div>
+                                             <md-input-container flex >
+                                            <label>Due Date</label>
+                                            <input ng-model="tdi.duedate" ng-disabled="true">
+                                            </md-input-container>
+                                            
                                         </div>
                                         <div layout layout-sm="column" layout-margin>
                                             <section-title > </section-title>

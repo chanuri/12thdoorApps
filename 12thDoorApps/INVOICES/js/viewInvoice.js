@@ -480,7 +480,7 @@ $scope.cancelStatus = function(obj, ev) {
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDinvoice.push(data[i]);
 
-               if($stateParams.invoiceno == data[i].invoiceNo){
+               if($stateParams.invoiceno == data[i].invoiceNo && data[i].status == "Draft"){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
                   $scope.Address = data[i].billingAddress.split(',');

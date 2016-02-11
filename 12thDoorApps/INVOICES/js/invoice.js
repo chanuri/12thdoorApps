@@ -4,6 +4,19 @@ angular
    .config(function($mdThemingProvider) {
       $mdThemingProvider.theme('datePickerTheme').primaryPalette('teal');
    })
+   .factory('$focus', function($timeout, $window) {
+    return function(id) {
+      // timeout makes sure that it is invoked after any other event has been triggered.
+      // e.g. click events that need to run before the focus or
+      // inputs elements that are in a disabled state but are enabled when those events
+      // are triggered.
+      $timeout(function() {
+        var element = $window.document.getElementById(id);
+        if(element)
+          element.focus();
+      });
+    };
+  })
    .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise('/settings/invoice_app');
       $stateProvider
@@ -79,7 +92,7 @@ angular
    })
 
 //------------APPCtrl starts--------------------------------------------------------------------------------------------------------
-   .controller('AppCtrl', function($scope, $objectstore, $uploader,$state, $mdDialog , InvoiceService, invoiceDetails,$window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
+   .controller('AppCtrl', function($scope, $objectstore,$focus, $uploader,$state, $mdDialog , InvoiceService, invoiceDetails,$window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
       
       $scope.list = [];
       $scope.TDinvoice = {};
@@ -165,11 +178,18 @@ angular
          if($scope.EmailPermission == true){
           $scope.TDinvoice.adminEmail = $scope.mail;
          }
+         $scope.TDinvoice.comments = $scope.com;
+        $scope.TDinvoice.notes = $scope.note;
+        $scope.TDinvoice.termtype =  $scope.paymentTerm;
+        
+        $scope.TDinvoice.DiplayShipiingAddress = $scope.ShowShipAddress;
+        $scope.TDinvoice.allowPartialPayments = $scope.partialPayment;
         
         $scope.AllTaxes = $scope.individualTax;
         $scope.UOM = $scope.UnitOfMeasure;
         $scope.CusFields = $scope.cusF;
         $scope.Displaydiscount = $scope.ShowDiscount;
+        // $scope.TDinvoice.termtype = $scope.paymentTerm
       });
       client.onError(function(data) {
       });
@@ -428,13 +448,14 @@ angular
                     }
                   }
                     $scope.newfamount =(parseInt($rootScope.famount*cn.percentage)/100);
-                     $scope.testarr[index] = { 
-                     duedate: cn.duedate,
-                     percentage: cn.percentage,
-                     duDatePrice :  $scope.newfamount,
-                     balance : $scope.newfamount
+                       $scope.testarr[index] = { 
+                         duedate: cn.duedate,
+                         percentage: cn.percentage,
+                         duDatePrice :  $scope.newfamount,
+                         balance : $scope.newfamount
                       }
-                          return  $scope.newfamount ;
+
+                    $focus('shehana');
                   }
                }
             })
@@ -568,6 +589,7 @@ angular
 
                        $scope.prod.ProductCategory = "Product";
                        $scope.prod.progressshow = "false"
+                       $scope.prod.deleteStatus = false
                        $scope.prod.favouriteStar = false;
                        $scope.prod.favouriteStarNo = 1;
                        $scope.prod.tags = [];
@@ -1002,7 +1024,7 @@ angular
             }
          });
          client.onError(function(data) {});
-         client.getByFiltering("*");
+         client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
       }
 
       $scope.Billingaddress = true;
@@ -1015,10 +1037,7 @@ angular
       $scope.cancel = function() {
          $mdDialog.cancel();
       }
-      
-      
       $scope.productCode = [];
-      //Retrieve product details
       var client = $objectstore.getClient("product12thdoor");
       client.onGetMany(function(data) {
          if (data) {
@@ -1370,5 +1389,4 @@ angular
          
             });
       }
-   }) //END OF AppCtrl
-   
+   })

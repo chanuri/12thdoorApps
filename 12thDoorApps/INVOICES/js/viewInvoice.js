@@ -1,5 +1,5 @@
 angular.module('mainApp')
-.controller('viewCtrl', function($scope,$mdBottomSheet,$interval, $mdDialog, $state, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope,invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
+.controller('viewCtrl', function($scope,$mdBottomSheet,$interval, $mdDialog, $state,uiInitilize, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope,invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
       $scope.TDinvoice =[];
       $scope.Payment =[];
       $scope.newItems = [];
@@ -8,6 +8,27 @@ angular.module('mainApp')
       $scope.obtable = [];
       var vm = this;
       $scope.Makepayment = false;
+
+
+
+      // ------------------------------------virtual repeat start-----------------
+
+
+      setInterval(function interval(){
+          $scope.viewPortHeight = window.innerHeight;
+          $scope.viewPortHeight = $scope.viewPortHeight+"px";
+      }, 100);
+
+      $scope.items = uiInitilize.insertIndex($scope.TDinvoice);
+  
+      //This holds the UI logic for the collapse cards
+      $scope.toggles = {};
+      $scope.toggleOne = function($index)
+      { 
+      $scope.toggles = uiInitilize.openOne($scope.TDinvoice, $index);
+      }
+
+      // ------------------------------------virtual repeat end -------------
       
         if ($state.current.name == 'settings.invoice_app') {
                 $rootScope.showinvoice = true;

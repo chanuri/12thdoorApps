@@ -14,7 +14,7 @@
 </style>
 <div class="card-container" style="padding:20px; overflow-x:hidden;">
     <!--WHITEFRAME START-->
-    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto; overflow-x:hidden;" >
+    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto; " >
         <!--FORM START-->
         <form name="editForm" ng-submit="submit()" style="width:960px;" ng-controller="AppCtrl as ctrl">
             <!--     ng-repeat="TDinvoice in invoiceArray"   > -->
@@ -195,7 +195,7 @@
                                                             <span style="color:#808080;">{{item.tax.taxname}}
                                                             <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
                                                                 <md-tooltip>Tax</md-tooltip>
-                                                            </span>
+                                                            
                                                              <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
                                                                 <!-- <md-tooltip>Tax</md-tooltip> -->
                                                             </span>
@@ -240,6 +240,7 @@
                                     <label style="display:none">{{CalculateTax()}}</label>
                                 </div>
                             </div>
+                           <!--   -->
                             <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;" ng-show="Displaydiscount" ng-if="dis == 'SubTotal Items'">
                                 <div flex="5"></div>
                                 <div flex="20" style="margin-top:35px;"></div>
@@ -248,6 +249,7 @@
                                 </div>
                                 <md-input-container flex="20" >
                                     <input type="text"  ng-model="TDinvoice.fdiscount" aria-label="discount" style="margin-top:-12px;" ng-disabled="checkDiscout"/>
+                                    <md-icon md-svg-src="img/disc.svg"  md-ink-ripple style="margin-left:-30px;margin-top:-10px;width:50px;height:30px;" ></md-icon>
                                 </md-input-container>
                                 <div flex="5">
                                     <label></label>
@@ -265,7 +267,7 @@
                                     <label>{{tt.taxName}}</label>
                                 </div>
                                 <md-input-container flex="20" >
-                                    <input type="text"  ng-model="tt.rate" aria-label="sales tax" style="margin-top:-12px;"/>
+                                    <input type="text"  ng-model="tt.rate" aria-label="sales tax" style="margin-top:-12px;" ng-disabled="true"/>
                                 </md-input-container>
                                 <div flex="5">
                                     <label></label>
@@ -311,11 +313,11 @@
                                         <b>{{finalamount()| currency:"Rs"}}</b>
                                     </span>
                                 </div>
-                               <!--  <div style="height:30px; width:40px;">
+                                <div style="height:30px; width:40px;">
                                     <md-button ng-click="acceptAccount()" style="height:30px;" aria-label="accept account" href>
                                         <md-icon md-svg-src="img/ic_more_horiz_24px.svg" class="iconColor"  md-ink-ripple style="right:1px;margin-right:0px;" ></md-icon>
                                     </md-button>
-                                </div> -->
+                                </div>
                             </div>
                             </div>
                             <md-divider></md-divider>

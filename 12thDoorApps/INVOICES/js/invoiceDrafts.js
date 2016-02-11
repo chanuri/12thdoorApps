@@ -64,9 +64,7 @@ angular.module('mainApp')
 //-------------------------------------------------------------------------------------------------------  
 //------------------------------------------------------------------------------------------------------
    .controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService) {
-      $scope.uploadimages = {
-         val: []
-      };
+      $scope.uploadimages = {val: []};
       $scope.uploadimages.val = UploaderService.loadBasicArray();
       //directive table content start
       $scope.$on('viewRecord', function(event, args) {

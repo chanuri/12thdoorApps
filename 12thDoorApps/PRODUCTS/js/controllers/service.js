@@ -1,8 +1,8 @@
 rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'ProductService', function($uploader,$rootScope, $mdToast, ProductService) {
   return {
 	restrict: 'E',
-	template: "<div ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><text style='font-size:12px;margin-left:10px'>{{label}}<text></div></div></div>",
-	scope:{			 
+	template: "<div class='content' ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><label for='file-upload' style='font-size:12px;margin-left:10px' class='ng-binding'>{{label}}</label><input  id='file-upload' type='file' style='display: none;' multiple></div></div></div></div>",
+    scope:{			 
 		label:'@',
 		uploadType:'@'
 	},
@@ -19,6 +19,41 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 		var sampleArraybrochure = [];
 		var fileType;
 		scope.btnVisibility = false;
+
+		element.find("#file-upload").bind('change',function(changeEvent){
+	        scope.$apply(function () {
+	            scope.fileread = changeEvent.target.files;
+	            console.log(scope.fileread)
+	        }); 
+
+	        if (scope.uploadType == "image") {
+	        	for(u=0; u<=scope.fileread.length-1; u++){ 			  		  
+			  		fileType = scope.fileread[u].type.split("/")[0];
+			  		if (fileType == 'image') {
+			  			scope.btnVisibility = true;
+						filesArray.push(scope.fileread[u]);
+						ProductService.setArray(scope.fileread[u]);
+						ProductService.BasicArray(scope.fileread[u].name,scope.fileread[u].size);
+						sampleArray.push({'name': scope.fileread[u].name, 'size': scope.fileread[u].size});
+			  		}				 
+				}
+
+			}else if (scope.uploadType == "brochure") {
+
+	        	for(u=0; u<=scope.fileread.length-1; u++){ 		  
+			  		fileType = scope.fileread[u].type.split("/")[0];
+			  		if (fileType == 'application') {
+			  			scope.btnVisibility = true;
+						filesArray.push(scope.fileread[u]);
+						ProductService.setArray(scope.fileread[u]);
+						ProductService.BasicArray(scope.fileread[u].name,scope.fileread[u].size);
+						sampleArray.push({'name': scope.fileread[u].name, 'size': scope.fileread[u].size});
+					}					 
+				}
+
+			}
+			bindNewFile();	        
+	    })
 		
 		// Bind the drop event to the dropzone.
 		element.find("#drop-files").bind('drop', function(e) {
@@ -39,7 +74,6 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 						ProductService.setArray(files[indexx]);
 						ProductService.BasicArray(filesArray[indexx].name,filesArray[indexx].size);
 						sampleArray.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});
-
 			  		}				 
 				}
 
@@ -56,28 +90,31 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 					}					 
 				}
 
-			};
-		if (scope.btnVisibility) {
-		 	var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
-
-		  	for (var i = 0; i < filesArray.length; i++) {
-				var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
-				filesArray[i].type+ "</td><td class='upload-table'>" +
-				filesArray[i].size +" bytes"+ "</td></tr>";
-				newHtml += tableRow;
 			}
+			bindNewFile();
+		});	
 
-			element.find("#Tabulate").html(newHtml);
-			 
-			$rootScope.$apply(function(){
-				scope.showUploadButton = true;
-				scope.showDeleteButton = true;
-				scope.showUploadTable = true;
-			})
-		}
+		function bindNewFile(){
 
+			if (scope.btnVisibility) {
+			 	var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
 
-		});		
+			  	for (var i = 0; i < filesArray.length; i++) {
+					var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
+					filesArray[i].type+ "</td><td class='upload-table'>" +
+					filesArray[i].size +" bytes"+ "</td></tr>";
+					newHtml += tableRow;
+				}
+
+				element.find("#Tabulate").html(newHtml);
+				 
+				$rootScope.$apply(function(){
+					scope.showUploadButton = true;
+					scope.showDeleteButton = true;
+					scope.showUploadTable = true;
+				})
+			}
+		}	
 		function restartFiles() {			
 			// We need to remove all the images and li elements as
 			// appropriate. We'll also make the upload button disappear

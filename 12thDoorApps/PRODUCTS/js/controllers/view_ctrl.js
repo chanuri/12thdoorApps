@@ -365,32 +365,33 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
           .ok('Delete')
           .cancel('Cancel');
 	    $mdDialog.show(confirm).then(function() {
-	      
-	      var client  = $objectstore.getClient("product12thdoor");
-	      client.onComplete(function(data){
-	      	$mdDialog.show(
-	          $mdDialog.alert()
-	          .parent(angular.element(document.body))
-	          //.title('This is embarracing')
-	          .content('Product Successfully Deleted')
-	          .ariaLabel('')
-	          .ok('OK')
-	          .targetEvent(data)
-	        );
-	        $state.go("home");
-	      });
-	      client.onError(function(data){
-	      	$mdDialog.show(
-	          $mdDialog.alert()
-	          .parent(angular.element(document.body))
-	          .content('Error Deleting Product')
-	          .ariaLabel('')
-	          .ok('OK')
-	          .targetEvent(data)
-	        );
-	      });
-	      client.deleteSingle(obj.product_code,"product_code");
-
+	    	obj.deleteStatus = true;
+	    	var addClient = $objectstore.getClient("product12thdoor");
+	    	addClient.onComplete(function(data){
+	    		$mdDialog.show(
+		          $mdDialog.alert()
+		          .parent(angular.element(document.body))
+		          .title('Success')
+		          .content('Product Successfully Deleted')
+		          .ariaLabel('')
+		          .ok('OK')
+		          .targetEvent(ev)
+		        );
+		       	$state.go("home");
+	    	});
+	    	addClient.onError(function(data){
+	    		$mdDialog.show(
+		          $mdDialog.alert()
+		          .parent(angular.element(document.body))
+		          .title('Error')
+		          .content('Error Occur While Deleting The Product')
+		          .ariaLabel('')
+		          .ok('OK')
+		          .targetEvent(ev)
+		        );
+		        obj.deleteStatus = false;
+	    	});
+	    	addClient.insert(obj,{KeyProperty : 'product_code'});
 	    }, function() {});  
 	} 
 

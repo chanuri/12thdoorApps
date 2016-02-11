@@ -4,14 +4,11 @@
    {
    width:80%
    }
-</style>
-<!--CARD CONTAINER START-->
-<div class="card-container" style="padding:20px;" ng-controller="AppCtrlAdd as ctrl" ng-init="loadAllInvoiceDetails()">
-   <!--WHITEFRAME START-->
-   <md-whiteframe class="md-whiteframe-2dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout layout-align="center center" style="margin:0 auto;max-width:960px"> 
-      <!--FORM START-->
+</style> 
+<div class="card-container" style="padding:20px;" ng-controller="AppCtrlAdd as ctrl" ng-init="loadAllInvoiceDetails()"> 
+   <md-whiteframe class="md-whiteframe-2dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout layout-align="center center" style="margin:0 auto;max-width:960px">  
 
-      <md-content layout-padding style="width:100%">
+      <md-content layout-padding style="width:100%; overflow-x: hidden;">
 
       <form name="editForm" ng-submit="submit()">
             <div layout-gt-sm="row">
@@ -36,10 +33,8 @@
                         </md-item-template>
                </md-autocomplete>
             </div>
-            <div layout-gt-sm="row">
-               <!--KEEP BLANK SPACE - ask why-->
-               <section-title></section-title>
-               <!--KEEP BLANK SPACE - ask why-->
+            <div layout-gt-sm="row"> 
+               <section-title></section-title> 
                <md-input-container class="md-block" flex-gt-sm >
                   <label>Payment Number</label>
                   <input ng-model="payment.paymentref" required>
@@ -49,10 +44,8 @@
                      md-max-date="maxDate"  ></md-datepicker>
                </div>
             </div>
-            <div layout-gt-sm="row">
-               <!--KEEP BLANK SPACE - ask why-->
-               <section-title></section-title>
-               <!--KEEP BLANK SPACE - ask why-->
+            <div layout-gt-sm="row"> 
+               <section-title></section-title> 
                <md-input-container class="md-block" flex-gt-sm >
                   <label>Payment method</label>
                   <md-select  ng-model="payment.paymentMethod" flex>
@@ -65,10 +58,8 @@
                   <input ng-model="payment.amountReceived" required ng-change="netAmount()">
                </md-input-container>
             </div>
-            <div layout-gt-sm="row">
-               <!--KEEP BLANK SPACE - ask why-->
-               <section-title></section-title>
-               <!--KEEP BLANK SPACE - ask why-->
+            <div layout-gt-sm="row"> 
+               <section-title></section-title> 
                <md-input-container class="md-block" flex-gt-sm >
                   <label>Bank Charges</label>
                   <input ng-model="payment.bankCharges">
@@ -99,89 +90,6 @@
                   </div>
                </div>
             </div>
-          <!--   <md-divider></md-divider>
-            <div layout-gt-sm="row">
-               <section-title title="Invoice Details"></section-title>
-               <div style="padding-left:40px;" flex>
-                  <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#FFFFFF; margin-top:32px;height:40px; border-bottom:1px #f1f1f1 solid;     margin-left: 5px;">
-                     <div layout="row" layout-sm="column" style="height:40px;width:101%;font-size:12px;">
-                        <div flex="25" style="max-width: 152px;padding-left: 2px; padding-left: 2px;" >
-                           <label><b>Date</b></label>
-                        </div>
-                        <div flex>
-                           <label><b>Invoice no</b></label>
-                        </div>
-                        <div flex >
-                           <label><b>Due date</b></label> 
-                        </div>
-                        <div flex>
-                           <label><b>Amount</b></label> 
-                        </div>
-                        <div flex >
-                           <lable><b>Balance</b></lable>
-                        </div>
-                        <div flex >
-                           <lable><b>Paid amount</b></lable>
-                        </div>
-                        <div flex >
-                           <lable></lable>
-                        </div>
-                     </div>
-                  </md-whiteframe>
-               </div>
-            </div>
-            <div layout-gt-sm="row" style="margin-top:-20px;"ng-repeat="invo in outstandingInvoices track by $index">
-               <section-title></section-title>
-               <div style="padding-left:40px;" flex>
-                  <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#ffffff; margin-top:12px;height:40px;">
-                     <div layout="row" layout-sm="column" flex style="height:20px;margin-top:10px;width:101%;font-size:12px;">
-                        <div layout="row" flex="20" style="margin-top:-10px;">
-                           <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="checkbox[$index]" class="md-primary" ng-change="checkItem($index,invo)"></md-checkbox>
-                           <input type="checkbox" ng-model="checkbox[$index]"  ng-change="checkItem($index,invo)"> 
-                           <span style="margin-top: 10px;"><label>{{invo.sdate|date}}</label></span> 
-                        </div>
-                        <div flex style="margin-left:20px;">
-                           <label>{{invo.invono}}</label>
-                        </div>
-                        <div  flex>
-                           <label >{{invo.mduedate|date}}</label> 
-                        </div>
-                        <div flex>
-                           <lable>{{invo.famount|currency}}</lable>
-                        </div>
-                        <div flex>
-                           <div >
-                              <label >{{invo.instalment|currency}}</label>
-                           </div>
-                        </div>
-                        <div style="margin-top:-1.5%;"flex >
-                           <md-input-container flex md-no-float>
-                              <input placeholder="Paid Amount" ng-disabled="!invo.checked" ng-model="invo.amount" 
-                              ng-change="getPaidAmount(invo, '{{invo.amount}}', $event)">
-                           </md-input-container>
-                        </div>
-                        <div flex >
-                           <md-menu>
-                              <div style="margin-top: -18%; margin-right:0px;">
-                                 <md-button type="button"   aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-                                    <md-icon  md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
-                                 </md-button>
-                              </div>
-                              <md-menu-content>
-                                 <md-menu-item>
-                                    <md-button href ng-click="history(invo)">
-                                       <p>View History</p>
-                                       <md-icon md-menu-align-target></md-icon>
-                                    </md-button>
-                                 </md-menu-item>
-                              </md-menu-content>
-                           </md-menu>
-                        </div>
-                     </div>
-                  </md-whiteframe>
-               </div>
-            </div> -->
-
             <md-divider></md-divider>
                <div layout-gt-sm="row">
                   <section-title title="invoice details"></section-title>
@@ -301,8 +209,7 @@
                   </div>
 
                </div>
-               <md-divider></md-divider>
-            <!---END OF TABLE------>
+               <md-divider></md-divider> 
 
             <div layout-gt-sm="row" style="overflow:hidden;">
                <section-title></section-title>
@@ -321,11 +228,6 @@
                   </div>
                </div>
             </div>
-
-           <!--  <div flex  style="margin-left:425px; margin-top:2%">
-               <label><b>Total Payments Applied :</b></label>
-               <span style="margin-left:31%;"><b>{{payment.total|currency}}</b></span>
-            </div> -->
             <md-divider></md-divider>
             <div layout-gt-sm="row" layout-sm="row">
                
@@ -335,22 +237,17 @@
                </div>
             </div>
            
-            <div layout-gt-sm="row" ng-repeat="cust in payCustArr" ng-init="cust.value == cust.inputType">
-               <!--KEEP BLANK SPACE - ask why-->
+            <div layout-gt-sm="row" ng-repeat="cust in payCustArr" ng-init="cust.value == cust.inputType"> 
                <section-title ng-if="$index == '0'" title="Custom Fields"></section-title>
                <section-title ng-if="$index != '0'" ></section-title>
 
-               <div  flex-gt-sm  style=" margin-top:35px;">
-                  <label><b>{{cust.labelshown}}</b></label>
-                </div>
-
                <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'textBox'" class="md-block" flex-gt-sm >
-                  <label></label>
+                  <label>{{cust.labelshown}}</label>
                   <input ng-model="cust.inputType">
                </md-input-container>
 
                 <md-input-container  ng-if="cust.type == 'selectBox'" class="md-block" flex-gt-sm >
-                  <label>select a field</label>
+                  <label>{{cust.labelshown}}</label>
                   <md-select  ng-model="cust.inputType" flex>
                      <md-option ng-repeat="item in cust.fields" value="{{item}}">{{item}}</md-option>
                   </md-select>
@@ -359,10 +256,8 @@
                <div flex="40"></div>
             </div>
             <md-divider></md-divider>
-            <div layout-gt-sm="row">
-               <!--KEEP BLANK SPACE - ask why-->
-               <section-title></section-title>
-               <!--KEEP BLANK SPACE - ask why-->
+            <div layout-gt-sm="row"> 
+               <section-title></section-title> 
                <div style="margin-left:55%; margin-top: 1%;">
                   <md-button class="md-raised md-warn" href class="md-raised md-primary" style="height:5px; "ng-click="cancelFunc()">Cancel</md-button>
                </div>

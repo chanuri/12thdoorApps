@@ -66,7 +66,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       $scope.ProCustArr = [];
       var CustArr = arr[0].preference.productpref.CusFiel; 
       for(var i=0; i<= CustArr.length-1; i++){
-        $scope.ProCustArr.push(CustArr[i].name);
+        $scope.ProCustArr.push(CustArr[i]);
       } 
       callback();
     }
@@ -694,8 +694,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
                   .action('OK')
                   .highlightAction(false)
                   .position("bottom right");
-                $mdToast.show(toast).then(function () {//whatever
-                });
+                $mdToast.show(toast).then(function () {});
               });
             }
           };
@@ -717,8 +716,6 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
                   );
                 }
             })
-            //window.location.href = window.location.protocol + "//" + window.location.host + "/12thdoor/expenses.html";
-
           });
           client.onError(function (data) {
             $mdDialog.show(
@@ -731,6 +728,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             );
           });
           $scope.product.progressshow = "false"
+          $scope.product.deleteStatus = false
           $scope.product.product_code = "-999"
           $scope.product.favouriteStar = false;
           $scope.product.favouriteStarNo = 1;
@@ -752,8 +750,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             KeyProperty: "product_code"
           });
 
-        };
-        
+        }        
       }
     }
     function saveToBalanceClass(pID,callback){
@@ -777,64 +774,6 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       });
       balanceClient.insert($scope.balanceArr,{KeyProperty:"balance_code"})
     }
-
-    $scope.updateproduct = function (updatedForm, prod) {
-      var client = $objectstore.getClient("product12thdoor");
-      console.log(updatedForm.stocklevel);
-      client.onComplete(function (data) {
-        $scope.newItems.push($scope.product);
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Product Successfully Updated')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.onError(function (data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Error Updating Product')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.insert(updatedForm, {
-        KeyProperty: "product_code"
-      });
-    }
-    $scope.deleteproduct = function (deleteform) {
-      var client = $objectstore.getClient("product12thdoor");
-      client.onComplete(function (data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Product Successfully Deleted')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
-        location.href = '#/home';
-      });
-      client.onError(function (data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Error Deleting Product')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.deleteSingle(deleteform.product_code, "promotion_code");
-    }
     $scope.demo = {
       topDirections: ['left', 'up']
       , bottomDirections: ['down', 'right']
@@ -849,28 +788,13 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
         $('#mySignup').click();
       }, 0)
     }
-    $scope.viewProduct = function () {
-      // $('#viewProduct').animate({width:"100%",height:"100%", borderRadius:"0px", right:"0px", bottom:"0px", opacity: 0.25},400, function() { 
-      // 		  // $window.location="product_view.html";
-      // 		  	// setroute('home');	
-      // 		    location.href = '#/home';
-      //   });
+    $scope.viewProduct = function () { 
       location.href = '#/home';
     }
     $scope.addProduct = function () {
-      $('#addProduct').animate({
-        width: "100%"
-        , height: "100%"
-        , borderRadius: "0px"
-        , right: "0px"
-        , bottom: "0px"
-        , opacity: 0.25
-      }, 400, function () {
-        // $window.location="index.html";
-        // setroute('Add_Product');	
-        location.href = '#/Add_Product';
-      });
+      location.href = '#/Add_Product';
     }
+
     $scope.TDinvoice = {};
     $rootScope.$on('viewRecord', function (event, args) {
       $scope.imageDetails = args;

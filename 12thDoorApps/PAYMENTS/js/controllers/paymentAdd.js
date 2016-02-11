@@ -63,7 +63,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                 }
             }
         });
-        client.getByFiltering("select maxCount from domainClassAttributes where class='payment");
+        client.getByFiltering("select maxCount from domainClassAttributes where class='payment'");
     }
     $rootScope.self = this;
     $rootScope.self.tenants = loadAll();

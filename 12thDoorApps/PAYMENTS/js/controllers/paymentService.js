@@ -68,7 +68,7 @@
                         scope.fileread = changeEvent.target.files;
                         console.log(scope.fileread)
                     });
-                    var testMe = scope.fileread[0]
+                    var testMe = scope.fileread[0];
                     console.log(testMe.type);
                         
                     fileType = testMe.type.split("/")[0];

@@ -28,22 +28,17 @@
 
            </md-autocomplete>            
         
-
-      <!--   <sort-option full-array="products" name-array="testarr" serch-item="prodSearch" star="ctrl.searchText" latest="Latest">  </sort-option> -->
-
         <div layout style='width:50px;'><md-menu md-position-mode='target-right target' style='z-index:99;box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.084); background:rgb(250,250,250); height:40px; width:50px;'> <md-button type='button' aria-label='Open demo menu' class='md-icon-button' ng-click='$mdOpenMenu()'> <md-icon md-svg-icon='img/ic_reorder_24px.svg' style='margin-top: -9px;'></md-icon> </md-button> <md-menu-content width='4'> <div ng-repeat='item in testarr track by $index'> <md-menu-item> <md-button ng-click='starfunc(item,$index)'> <div layout='row'> <p flex>{{item.name}}</p> <div> <md-icon md-svg-icon='img/ic_arrow_drop_up_48px.svg' style='margin-top:4px; position: absolute; left: 150px;' ng-show='item.upstatus'></md-icon> </div> <div> <md-icon md-svg-icon='img/ic_arrow_drop_down_24px.svg' style='margin-top:9px;position: absolute; left: 150px;' ng-show='item.downstatus'></md-icon> </div> <md-icon md-menu-align-target md-svg-icon='{{item.src}}' style='margin: auto 3px auto 0;'></md-icon> </div> </md-button> </md-menu-item> <md-divider ng-show='item.divider'></md-divider></div> </md-menu-content></md-menu></div>
    </md-whiteframe>
    </div>
 
          
         
-      <!--END OF FIRST CARD CONTAINER-->
-      <!--START OF SECOND CARD CONTAINER-->
       <div class="card_container"  >
       <div class="ui-view-container">
          <!--START OF  COLLAPSE CARDS-->
          <div  class="collapse-card" ng-repeat="product in products | filter:ctrl.searchText||undefined 
-         | orderBy: [prodSearch,Latest] " ng-class="{ active: $active }">
+         | orderBy: [prodSearch,Latest] " ng-class="{ active: $active }" ng-if="!product.deleteStatus">
             <!--START OF COLLAPSE CARD HEADING-->
             <div class="collapse-card__heading" layout="row" layout-align="start start"
                ng-click="getuploaddata(product.ProductCode,product.inventory,product.stocklevel)">
@@ -65,7 +60,6 @@
                <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%;"
                 ng-click="$active = !$active;" layout-sm="row">
                  
-<!--  WITHOUT RESPONSIVE -->
                     <div layout-sm="row" flex style="margin-left: 15px;">
                         <div layout-sm="column" flex style="margin-top: 13px;">
 
@@ -94,8 +88,6 @@
                         </div>
                     </div>
                </div>
-               <!--END OF CARD OPEN SECTION-->
-               <!--START OF CARD CONTROLS SECTION-->
                <div class="collapse-card_header_content_controls" style="width:10%; height:100%;" layout="column" layout-align="center end">
                   <md-menu md-position-mode="target-right target">
                                 <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
@@ -124,10 +116,7 @@
                                 </md-menu-content>
                             </md-menu>
                </div>
-               <!--END OF CARD CONTROLS SECTION-->
             </div>
-            <!--END OF COLLAPSE CARD HEADING-->
-            <!--START OF CARD BODY-->
             <div class="collapse-card__body">
                <form name="editForm">
                   
@@ -270,39 +259,19 @@
                            </div>
                         </div>
                      </div>
-
-                       
-                   <!--      <hh-table heading="Additional" column-arr="testColumn" full-arr="testArr"></hh-table>
-                    -->  
-
                   </md-content>
                </form>
             </div>
             <!--END OF CARD BODY-->
          </div>
          <!--END OF COLLAPSE CARDS-->
-
-           <footer flex>
-           
-
-            <!-- <md-paging paging-gap="2" full-arr="products" paging-arr="testProducts"> </md-paging> -->
-                
-            </footer>
       </div>
       <!--START OF SECOND CARD CONTAINER-->
-
      </div>
    </div>
    <!--END OF ALL CONTENT-->
    <div  class="lock-size" layout="row">
-      <div id="addProduct" class="fab_button_animation" style="background:red;"></div>
-      <!-- <div id="viewPackage" class="fab_button_animation" style="background:#3498db;"></div> -->
-
-
-
-
-      
-      <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+   <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
          ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
          <md-fab-trigger>
             <div style="padding:px;">
@@ -318,12 +287,6 @@
                   <md-tooltip md-direction="left">Add product</md-tooltip>
                </md-button>
           </div>
-          <!--   <div style="padding:5px;">
-               <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="viewPackage()" style="background-color:#3498db;">
-                  <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>
-                  <md-tooltip md-direction="left">View Package</md-tooltip>
-               </md-button>
-            </div> -->
          </md-fab-actions>
       </md-fab-speed-dial>
    </div>

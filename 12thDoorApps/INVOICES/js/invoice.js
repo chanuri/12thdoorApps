@@ -366,9 +366,11 @@ angular
                   $scope.testarr = [{
                      duedate: '',
                      percentage: '',
-                     duDatePrice:$scope.newfamount,
+                     duDatePrice:'',
                      paymentStatus:'Unpaid',
-                     balance :$scope.newfamount
+                     balance :$scope.newfamount,
+                     count:1,
+                     uniqueKey: 'checkfocus1'
                   }];
 
                   $scope.dateArray = {
@@ -377,7 +379,9 @@ angular
                         percentage: '',
                         duDatePrice: '',
                         paymentStatus:'Unpaid',
-                        balance :''
+                        balance :'',
+                        count:1,
+                        uniqueKey: 'checkfocus1'
                      }]
                   };
 
@@ -393,7 +397,8 @@ angular
                            Percentage: $scope.testarr[i].percentage,
                            dueDateprice: $scope.testarr[i].duDatePrice,
                            paymentStatus:"Unpaid",
-                           balance :$scope.testarr[i].duDatePrice
+                           balance :$scope.testarr[i].duDatePrice,
+                           count:$scope.testarr[i].count
                         });
                       // }
                      };
@@ -407,18 +412,23 @@ angular
                   $scope.addItem = function() {
                     $scope.arrr = [];
                     $scope.perCount = 0;
-                     
+                       $scope.focus = 0;
                        for (var i = $scope.testarr.length - 1; i >= 0; i--){
                       $scope.perCount += parseInt($scope.testarr[i].percentage);
+                      var numbers = $scope.testarr[i].count + 1;
+                      $scope.focus ='checkfocus'+($scope.testarr[i].count + 1).toString();
                     };
                       if( $scope.perCount >= 100 ){
                       }else if($scope.perCount < 100){
                          $scope.testarr.push({
-                        duedate: '',
-                        percentage: '',
-                        duDatePrice: parseInt($rootScope.famount-$scope.newfamount),
-                        paymentStatus:'Unpaid',
-                        balance : parseInt($rootScope.famount-$scope.newfamount)
+                          duedate: '',
+                          percentage: '',
+                          duDatePrice: parseInt($rootScope.famount-$scope.newfamount),
+                          paymentStatus:'Unpaid',
+                          balance : parseInt($rootScope.famount-$scope.newfamount),
+                          count:numbers,
+                          uniqueKey: $scope.focus
+
                         });
                       }  
                   };
@@ -439,10 +449,11 @@ angular
                   $scope.DueAmount = function(cn,index) {
                     $scope.showPercentage = false;
                     $scope.cal = 0;
+                  
                     for (var i = $scope.testarr.length - 1; i >= 0; i--){
                     $scope.showPercentage = false;
                     $scope.cal += parseInt($scope.testarr[i].percentage);
-
+                    
                     if($scope.cal>100){
                       $scope.showPercentage = true;
                     }
@@ -452,10 +463,15 @@ angular
                          duedate: cn.duedate,
                          percentage: cn.percentage,
                          duDatePrice :  $scope.newfamount,
-                         balance : $scope.newfamount
+                         balance : $scope.newfamount,                         
+                         count:cn.count,
+                         uniqueKey: cn.uniqueKey
                       }
 
-                    $focus('shehana');
+                      console.log(cn.count)
+                      console.log(cn.uniqueKey)
+
+                    $focus(cn.uniqueKey);
                   }
                }
             })
@@ -779,7 +795,7 @@ angular
                      });
                      client.onError(function(data) {
                      });
-                     client.getByFiltering("*");
+                     client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
                   }
             }
          })
@@ -1024,7 +1040,7 @@ angular
             }
          });
          client.onError(function(data) {});
-         client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
+         client.getByFiltering("*");
       }
 
       $scope.Billingaddress = true;
@@ -1071,7 +1087,7 @@ angular
          for (var i = $scope.CusFields.length - 1; i >= 0; i--) {
           if($scope.CusFields[i].type== 'textBox'){
            $scope.TDinvoice.CuSFields = ({name:  $scope.CusFields[i].type,
-                                                 id:  $scope.CusFields[i].textBoxFields});
+                                                 id:  $scope.CusFields[i].inputType});
           }
          }
 

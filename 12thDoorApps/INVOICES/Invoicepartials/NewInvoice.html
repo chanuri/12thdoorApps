@@ -95,7 +95,7 @@
                     </div>
                     <div layout  layout-sm="column" layout-margin ng-cloak>
                        <section-title> </section-title>
-                        <md-input-container  flex="35" >
+                        <md-input-container  flex="33" >
                             <label>Payment Terms</label>
                             <md-select ng-model="TDinvoice.termtype" ng-required="true"/>
                             <md-optgroup label="Terms type">
@@ -373,10 +373,10 @@
                                     </tr> -->
                                     <tr ng-repeat="txt in CusFields">
                                         <td style=""flex>{{txt.labelshown}}
-                                       <!--  </td>
-                                        <td style=" padding-left:200px;"  flex> -->
+                                        </td>
+                                        <td style=" padding-left:200px;"  flex>
                                         <md-input-container flex ng-if=" txt.type== 'textBox'" >
-                                        <input ng-model="txt.textBoxFields" ng-disabled="true">
+                                        <input aria-label="ttt" ng-model="txt.inputType" ng-disabled="true">
                                         </md-input-container>
                                         <md-select ng-change="check(nn)" placeholder="id" ng-if=" txt.type == 'selectBox'" ng-model="nn" flex >
                                             <md-option ng-repeat="nn in txt.fields" value="{{nn}}">{{nn}}</md-option>

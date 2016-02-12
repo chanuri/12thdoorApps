@@ -12,7 +12,17 @@ angular.module('mainApp')
 
 
       // ------------------------------------virtual repeat start-----------------
+$scope.toggles = {};
+    $scope.toggleOne = function($index){
+     for (ind in $scope.items)
+    if ($scope.toggles[ind] && ind != $index)
+     $scope.toggles[ind] = false;
 
+     if (!$scope.toggles[$index])
+     $scope.toggles[$index] = true;
+     else $scope.toggles[$index] = !$scope.toggles[$index];
+   };
+  
 
       setInterval(function interval(){
           $scope.viewPortHeight = window.innerHeight;

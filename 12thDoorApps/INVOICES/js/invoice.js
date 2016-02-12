@@ -412,11 +412,12 @@ angular
                   $scope.addItem = function() {
                     $scope.arrr = [];
                     $scope.perCount = 0;
+                    // $scope.numbers = 0;
                        $scope.focus = 0;
-                       for (var i = $scope.testarr.length - 1; i >= 0; i--){
+                    for(i=0; i<=$scope.testarr.length - 1; i++){
                       $scope.perCount += parseInt($scope.testarr[i].percentage);
-                      var numbers = $scope.testarr[i].count + 1;
-                      $scope.focus ='checkfocus'+($scope.testarr[i].count + 1).toString();
+                      var numbers = parseInt($scope.testarr[i].count) + 1;
+                      $scope.focus ='checkfocus'+(parseInt($scope.testarr[i].count) + 1).toString();
                     };
                       if( $scope.perCount >= 100 ){
                       }else if($scope.perCount < 100){
@@ -426,11 +427,12 @@ angular
                           duDatePrice: parseInt($rootScope.famount-$scope.newfamount),
                           paymentStatus:'Unpaid',
                           balance : parseInt($rootScope.famount-$scope.newfamount),
-                          count:numbers,
+                          count: numbers,
                           uniqueKey: $scope.focus
 
                         });
-                      }  
+                      }
+                      console.log($scope.testarr)  
                   };
 
                   $scope.rmoveDate = function(index){
@@ -471,7 +473,7 @@ angular
                       console.log(cn.count)
                       console.log(cn.uniqueKey)
 
-                    $focus(cn.uniqueKey);
+                    $focus(cn.count);
                   }
                }
             })

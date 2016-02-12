@@ -4,6 +4,8 @@
     }
 </style>
 
+
+<div md-virtual-repeat-container   style="height: {{viewPortHeight}};">
 <div layout="column" class="progressCirculardemoBasicUsage" ng-app="MyApp">
 
   <div layout="row" layout-sm="column" layout-align="space-around">
@@ -11,9 +13,7 @@
   </div>
 
 </div>
-<div md-virtual-repeat-container ng-init="viewPortHeight='700px;'"  style="height: {{viewPortHeight}};">
-<div  class="card_container" md-virtual-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch "
- ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
+<div  class="card_container" md-virtual-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch " ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
     <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:20px">
 
             <!--START OF COLLAPSE CARD HEADING-->
@@ -32,7 +32,7 @@
                     <div layout-sm="row" flex>
                         <div layout-sm="column" flex>
                             <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title">
-                                <b>   {{tdi.Startdate|date}}</b>
+                                <b>{{tdi.Startdate|date}}</b>
                             </span>
                             <span style="  padding-right: 15px;margin-left:-10px;border-right-style: solid; border-width:1px;" class="collapse-card__title" ng-if="tdi.status != 'Draft'">
                                 <b>Invoice No. {{tdi.invoiceNo}}</b>
@@ -164,9 +164,7 @@
                             <md-divider></md-divider>
                             <md-content flex>
                                 <div layout layout-sm="column" layout-margin>
-
                                      <section-title title="Customer Details"> </section-title>
-
                                     <md-input-container flex >
                                         <label>Customer</label>
                                         <input ng-model="tdi.Name" ng-disabled="true">
@@ -256,7 +254,6 @@
                             </div>
                             <div flex >
                                 <span style="color:#808080;">{{item.discount}}%
-                 
                                     <md-tooltip>Discount</md-tooltip>
                                 </span>
                             </div>
@@ -266,8 +263,6 @@
                         </span>
                          <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
                             <md-tooltip>Tax</md-tooltip>
-                      
-
                         </div>
                             <div flex >
                                 <span style="color:#808080;">{{item.amount|currency}}
@@ -275,7 +270,6 @@
                                     <md-tooltip>Amount</md-tooltip>
                                 </span>
                             </div>
-
                              </md-card-content>
                              </md-card>
                         </li>
@@ -285,7 +279,7 @@
                 <div layout layout-sm="column" layout-margin>
                     <section-title title="Totals"> </section-title>
                 </div>
-                <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:-50px;">
+                <div layout layout-sm="column" layout-margin style="margin-top:-50px;">
                     <div flex="5"></div>
                     <div flex="20" style=""></div>
                     <div flex="10">

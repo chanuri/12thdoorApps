@@ -25,8 +25,7 @@ angular.module('mainApp')
 
       $scope.test = item;
       
-     
-
+    
       $scope.cancel = function() {
          $mdDialog.cancel();
       };

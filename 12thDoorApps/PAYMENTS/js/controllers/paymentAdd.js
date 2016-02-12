@@ -405,13 +405,17 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             val: []
         };
         $scope.payment.custField = [];
-        for(j=0; j<= $scope.payCustArr.length-1; j++){
-            $scope.payment.custField.push({
-                lable : $scope.payCustArr[j].labelshown,
-                type : $scope.payCustArr[j].type,
-                value : $scope.payCustArr[j].inputType
-            })  
+
+        if ($scope.payCustArr.length > 0) {
+            for(j=0; j<= $scope.payCustArr.length-1; j++){
+                $scope.payment.custField.push({
+                    lable : $scope.payCustArr[j].labelshown,
+                    type : $scope.payCustArr[j].type,
+                    value : $scope.payCustArr[j].inputType
+                })  
+            }            
         }
+        
         console.log($scope.payment.custField)
         $scope.payment.UploadImages.val = UploaderService.loadBasicArray();
         $scope.advancedPayment.advancedPayment_code = $scope.payment.customer +' '+ $rootScope.selectedItem1.Email;

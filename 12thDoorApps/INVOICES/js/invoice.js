@@ -355,6 +355,7 @@ angular
           $scope.TDinvoice.duedate = null;
           $scope.showPercentage = false;
             $rootScope.showmsg = false;
+
             $mdDialog.show({
                templateUrl: 'Invoicepartials/MultipleDuedates.html',
                controller: function addMultipleDueDates($scope, $mdDialog) {
@@ -362,6 +363,8 @@ angular
                $scope.aDatearr = angular.copy($rootScope.dateArray);
                $scope.duePaymenet = angular.copy($rootScope.famount);
                $scope.newfamount = angular.copy($rootScope.famount)
+                $scope.editDueDates = false;
+                $scope.DueDateprice = 0;
 
                   $scope.testarr = [{
                      duedate: '',
@@ -431,14 +434,61 @@ angular
                           uniqueKey: $scope.focus
 
                         });
-                      }
-                      console.log($scope.testarr)  
+                      } 
                   };
 
+                  $scope.addEditDueDates = function(index){
+                     $scope.arrr = [];
+                    $scope.perCount = 0;
+                    // $scope.numbers = 0;
+                       $scope.focus = 0;
+                    for(i=0; i<=$scope.editMultipleDuedates.length - 1; i++){
+                      $scope.perCount += parseInt($scope.editMultipleDuedates[i].percentage);
+                      $scope.calc += parseInt($scope.editMultipleDuedates[i].percentage);
+                      var numbers = parseInt($scope.editMultipleDuedates[i].count) + 1;
+                      $scope.focus ='checkfocus'+(parseInt($scope.editMultipleDuedates[i].count) + 1).toString();
+                    };
+                      if( $scope.perCount >= 100 ){
+                      }else if($scope.perCount < 100){
+                    $scope.editMultipleDuedates.push({
+                          duedate: '',
+                           percentage: '',
+                           duDatePrice:'',
+                           paymentStatus:'Unpaid',
+                           balance :$scope.DueDateprice,
+                           count:1,
+                           uniqueKey: 'checkfocus1'
+
+                        });
+                  }
+                  }
+
                   $scope.rmoveDate = function(index){
+                    $scope.cal = 0;
                      $scope.aDatearr.val.splice($scope.aDatearr.val.indexOf(index), 1 );
                      $rootScope.dateArray.val.splice($rootScope.dateArray.val.indexOf(index), 1 );
+                     for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
+                      $scope.cal += $rootScope.dateArray.val[i].balance;
+                     }
+                     $scope.DueDateprice = $scope.newfamount - $scope.cal
+                     console.log($scope.cal)
+
+                    $scope.editMultipleDuedates = [{
+                     duedate: '',
+                     percentage: '',
+                     duDatePrice:$scope.DueDateprice,
+                     paymentStatus:'Unpaid',
+                     balance :$scope.DueDateprice,
+                     count:1,
+                     uniqueKey: 'checkfocus1'
+                  }];
+                     $scope.editDueDates = true;
                   }
+
+                  $scope.removeeditArray = function(index) {
+                      $scope.editMultipleDuedates.splice($scope.editMultipleDuedates.indexOf(index), 1 );
+                  };
+                 
                   $scope.removeItem = function(index) {
                       $scope.testarr.splice( $scope.testarr.indexOf(index), 1 );
                   };
@@ -451,7 +501,6 @@ angular
                   $scope.DueAmount = function(cn,index) {
                     $scope.showPercentage = false;
                     $scope.cal = 0;
-                  
                     for (var i = $scope.testarr.length - 1; i >= 0; i--){
                     $scope.showPercentage = false;
                     $scope.cal += parseInt($scope.testarr[i].percentage);
@@ -469,12 +518,41 @@ angular
                          count:cn.count,
                          uniqueKey: cn.uniqueKey
                       }
-
-                      console.log(cn.count)
-                      console.log(cn.uniqueKey)
-
-                    $focus(cn.count);
+                    $focus(cn.uniqueKey);
                   }
+
+                  $scope.EditDueAmount = function(cc,index) {
+                    $scope.showPercentage = false;
+                    $scope.cal = 0;
+                    $scope.ccc = 0;
+                    $scope.tot = 0;
+                    $scope.finalTotal = 0;
+                    for (var i = $scope.editMultipleDuedates.length - 1; i >= 0; i--){
+                    $scope.showPercentage = false;
+                    $scope.cal += parseInt($scope.editMultipleDuedates[i].percentage);
+                     //$scope.tot += $scope.editMultipleDuedates[i].balance;
+
+                    if($scope.cal>100){
+                      $scope.showPercentage = true;
+                    }
+                  }
+                   for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
+                       $scope.tot+= $rootScope.dateArray.val[i].balance;
+                     }
+                   $scope.finalTotal = $scope.newfamount - $scope.tot
+                    $scope.ccc =(parseInt( $scope.finalTotal*cc.percentage)/100);
+                       $scope.editMultipleDuedates[index] = { 
+                         duedate: cc.duedate,
+                         percentage: cc.percentage,
+                         duDatePrice :  $scope.ccc,
+                         balance : $scope.ccc,                         
+                         count:cc.count,
+                         uniqueKey: cc.uniqueKey
+                      }
+                    $focus(cc.uniqueKey);
+                  }
+
+
                }
             })
          }

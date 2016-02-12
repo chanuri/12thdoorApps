@@ -49,7 +49,7 @@
  rasm.directive('fileUpLoaderInvoice', ['$uploader', "$rootScope", "$mdToast", 'UploaderService', function($uploader, $rootScope, $mdToast, UploaderService) {
     return {
         restrict: 'E',
-        template: "<div class='content' ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><label for='file-upload' style='font-size:12px;margin-left:10px' class='ng-binding'>{{label}}</label><input  id='file-upload' type='file' style='display: none;''></div></div></div></div>",
+        template: "<div class='content' ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><label for='file-upload' style='font-size:12px;margin-left:10px' class='ng-binding'>{{label}}</label><input  id='file-upload' type='file' style='display: none;' multiple></div></div></div></div>",
         scope: {
             label: '@',
             uploadType: '@'
@@ -68,22 +68,27 @@
                         scope.fileread = changeEvent.target.files;
                         console.log(scope.fileread)
                     });
-                    var testMe = scope.fileread[0];
-                    console.log(testMe.type);
-                        
-                    fileType = testMe.type.split("/")[0];
 
-                    if (fileType == 'image') {
-                        scope.btnVisibility = true;
-                        filesArray.push(scope.fileread[0]);
-                        UploaderService.setFile(scope.fileread[0]);
-                        UploaderService.BasicArray(testMe.name, testMe.size);
-                        sampleArray.push({
-                            'name': testMe.name,
-                            'size': testMe.size
-                        });
+                    for(u=0; u<=scope.fileread.length-1; u++){    
+                                        
+                        var testMe = scope.fileread[u];
+                        console.log(scope.fileread[u]);
+                            
+                        fileType = testMe.type.split("/")[0];
+
+                        if (fileType == 'image') {
+                            scope.btnVisibility = true;
+                            filesArray.push(scope.fileread[u]);
+                            UploaderService.setFile(scope.fileread[u]);
+                            UploaderService.BasicArray(testMe.name, testMe.size);
+                            sampleArray.push({
+                                'name': testMe.name,
+                                'size': testMe.size
+                            });
+                        }
                     }
                     bindNewFile()
+                    
                 })
 
                 element.find("#drop-files").bind('drop', function(e) {

@@ -7,8 +7,12 @@ rasm.controller('AppCtrl', function($scope, $location, dialogsvc,$uploader, Invo
 
   function getMaxNumber(className,callback){
       var clientMax = $objectstore.getClient("domainClassAttributes");
-      clientMax.onGetMany(function(data){          
-         callback(data[0].maxCount)
+      clientMax.onGetMany(function(data){
+         if (data.length == 0) {
+            callback("1");
+         }else{
+            callback(data[0].maxCount)
+         }        
       });
       clientMax.onError(function(data){
         console.log("error loading max count")

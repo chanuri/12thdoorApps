@@ -91,7 +91,7 @@ rasm.service('dialogsvc', function($mdDialog) {
       client.onError(function(data) {
         $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('Sorry').content('There is no products available').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
       });
-      client.getByFiltering("*");
+      client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
     }
     $scope.inventory = {};
     $scope.dialogaddbutton = true;
@@ -229,7 +229,7 @@ rasm.service('dialogsvc', function($mdDialog) {
       client.onError(function(data) {
         $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('Sorry').content('There is no products available').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
       });
-      client.getByFiltering("*");
+      client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
     }
     if ($state.current.name == 'Add_Inventory' || $state.current.name == 'home.receipt') {
       $scope.plusdialog = true;
@@ -294,20 +294,7 @@ rasm.factory('InvoiceService', function($rootScope) {
 });
 rasm.service('$DownloadPdf',function(){
 	this.GetPdf = function(obj,Inv,type){ 
-
-    // var specialElementHandlers = {
-    //   '#convert_to_pdf': function(element, renderer){
-    //     return true;
-    //   }
-    // };
-    // var doc = new jsPDF();
-    // doc.fromHTML($('#convert_to_pdf').get(0), 15, 15, {
-    //    'width': 170, 
-    //    'elementHandlers': specialElementHandlers
-    // }, function() {
-    //   doc.save('sample-file.pdf');
-    // });    
-  //obj = hasNull(obj); 
+    
   if(!obj.hasOwnProperty(Comment)){
      obj.Comment = "";
   }

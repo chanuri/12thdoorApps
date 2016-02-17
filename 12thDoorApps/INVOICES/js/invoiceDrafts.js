@@ -3,36 +3,66 @@ angular.module('mainApp')
   $scope.settings = {};
   $scope.UnitOfMeasure = [];
   $scope.taxType = []
+  $scope.AllTaxes = [];
+  $scope.individualTax = [];
    var client = $objectstore.getClient("Settings12thdoor");
       client.onGetMany(function(data) {
          if (data) {
            $scope.settings = data;
              for (var i =  $scope.settings.length - 1; i >= 0; i--) {
                for (var z = $scope.settings[i].preference.productpref.units.length - 1; z >= 0; z--) {
+                if($scope.settings[i].preference.productpref.units[z].activate == true){
                   $scope.UnitOfMeasure.push($scope.settings[i].preference.productpref.units[z])
+                }
+                  
+                  $scope.ShowDiscount = $scope.settings[i].preference.invoicepref.enableDisscounts;
+                  $scope.dis = $scope.settings[i].preference.invoicepref.disscountItemsOption;
                 };
+
+                if($scope.settings[i].taxes){
+                  for (var x = $scope.settings[i].taxes.individualtaxes.length - 1; x >= 0; x--) {
+                     $scope.individualTax.push($scope.settings[i].taxes.individualtaxes[x]);
+                   };
+                   for (var y = $scope.settings[i].taxes.multipletaxgroup.length - 1; y >= 0; y--) {
+                    $scope.individualTax.push($scope.settings[i].taxes.multipletaxgroup[y]); 
+                   };
+               }
 
              }
             }
-             $scope.UOM = $scope.UnitOfMeasure;
+             $scope.AllTaxes = $scope.individualTax;
+              $scope.Displaydiscount = $scope.ShowDiscount;
         });
       client.onError(function(data) {
       });
       client.getByFiltering("*");
 
-       $scope.taxType = $scope.UOM;
-      console.log( $scope.taxType)
-
       $scope.test = item;
       
-    
       $scope.cancel = function() {
          $mdDialog.cancel();
       };
-      $scope.edit = function(tst) {
-      	console.log($rootScope.testArray);
-          $rootScope.testArray.val.splice(tst, 1);
-         InvoiceService.setArray({
+
+      $scope.setTax = function(pDis){
+      for (var i = $scope.AllTaxes.length - 1; i >= 0; i--) {
+       if($scope.AllTaxes[i].taxname == pDis.tax.taxname){
+            $scope.Ptax = ({
+               taxname:$scope.AllTaxes[i].taxname,
+               activate: $scope.AllTaxes[i].activate, 
+               compound:$scope.AllTaxes[i].compound,
+               rate:$scope.AllTaxes[i].rate, 
+               type: $scope.AllTaxes[i].type, 
+               individualtaxes:$scope.AllTaxes[i].individualtaxes});
+        }
+      };
+     item.tax = $scope.Ptax;
+   }   
+
+            
+      $scope.edit = function(tst, index) {
+           $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(tst), 1);
+
+         InvoiceService.setFullArr({
                         Productname: item.Productname,
                         price: item.price,
                         quantity: item.quantity,
@@ -47,7 +77,18 @@ angular.module('mainApp')
       };
       $scope.calAMount = function() {
          $scope.Amount = 0;
-         $scope.Amount = (item.price * item.quantity) ;
+         $scope.total = 0;
+         $scope.disc = 0;
+
+         $scope.total = (item.price * item.quantity);
+
+         if($scope.dis=="Individual Items"){
+          $scope.disc = parseInt($scope.total* item.discount/100);
+          $scope.Amount =  $scope.total - $scope.disc;
+         }else{
+          $scope.Amount = $scope.total;
+         }
+         
          return $scope.Amount;
       }
    })
@@ -55,7 +96,6 @@ angular.module('mainApp')
 //-------------------------------------------------------------------------------------------------------
  .controller('paymentCtrl', function($scope, $mdDialog, $rootScope, pim) {
     $scope.pay = pim;
-    console.log($scope.pay);
     $scope.cancel = function() {
          $mdDialog.cancel();
       }
@@ -142,42 +182,47 @@ angular.module('mainApp')
             return arry;
         },
         setFullArr : function(obj){
-          console.log(obj)
             this.setArray(obj);
             $rootScope.correctArr = [];
             $rootScope.multiTax = [];
                $rootScope.total = 0;
                 $rootScope.compoundcal=[];
-           // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
+
             if(obj.tax != null){
             if(obj.tax.type == "individualtaxes"){
+              if(obj.tax.rate == 0){
+              }else{
                $rootScope.taxArr.push({
                  taxName: obj.tax.taxname,
                  rate: obj.tax.rate,
                  salesTax: parseInt(obj.amount*obj.tax.rate/100),
                  compoundCheck: obj.tax.compound
                })
+             }
                }else if(obj.tax.type == "multipletaxgroup"){
                   for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
                      $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate);
-                     //$rootScope.compoundcal = obj.tax.individualtaxes[i].compound;
-                     $rootScope.compoundcal.push({
-                      taxname:obj.tax.individualtaxes[i].taxname,
+
+                    
+                      $rootScope.total = parseInt(obj.amount*obj.tax.individualtaxes[i].rate/100)
+
+                      // if(obj.tax.individualtaxes[i].compound == true){
+                      //   $rootScope.ID = obj.tax.individualtaxes[i].positionId
+                      //    $rootScope.total = parseInt(obj.amount * obj.tax.individualtaxes[i].rate/100)
+                      // }
+
+                     if(obj.tax.individualtaxes[i].rate == 0){
+
+                     }else{
+                     $rootScope.taxArr.push({
+                      taxName:obj.tax.individualtaxes[i].taxname,
                       rate:obj.tax.individualtaxes[i].rate,
-                      compound: obj.tax.individualtaxes[i].compound
+                      salesTax: $rootScope.total,
+                      compoundCheck: obj.tax.individualtaxes[i].compound
                      })
-                    // if()          
+                     }       
                   }; 
-                   angular.forEach($rootScope.multiTax, function(tdIinvoice) {
-                     $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
-                     return $rootScope.total
-                   })
-                   $rootScope.taxArr.push({
-                       taxName: obj.tax.taxname,
-                       rate:$rootScope.multiTax ,
-                       salesTax: $rootScope.total,
-                       compoundCheck: $rootScope.compoundcal
-                     })
+                   
                }
             $rootScope.taxArr = $rootScope.taxArr.sort(function(a,b){
               return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
@@ -215,40 +260,36 @@ angular.module('mainApp')
         },
         setTempArr : function(obj){
             this.setArray2(obj);
-            console.log(obj);
             $rootScope.correctArr1 = [];
             $rootScope.multiTax = [];
                $rootScope.total = 0;
                 $rootScope.calCompound=[];
-           // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
             if(obj.tax.type == "individualtaxes"){
-               $rootScope.calTax.push({
+               if(obj.tax.rate == 0){
+
+              }else{
+               $rootScope.taxArr.push({
                  taxName: obj.tax.taxname,
                  rate: obj.tax.rate,
                  salesTax: parseInt(obj.amount*obj.tax.rate/100),
                  compoundCheck: obj.tax.compound
                })
+             }
                }else if(obj.tax.type == "multipletaxgroup"){
                   for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
                      $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate);
-                     //$rootScope.calCompound = obj.tax.individualtaxes[i].compound;
-                     $rootScope.calCompound.push({
-                      taxname:obj.tax.individualtaxes[i].taxname,
+                     if(obj.tax.individualtaxes[i].rate == 0){
+
+                     }else{
+                     $rootScope.taxArr.push({
+                      taxName:obj.tax.individualtaxes[i].taxname,
                       rate:obj.tax.individualtaxes[i].rate,
-                      compound: obj.tax.individualtaxes[i].compound
+                      salesTax: parseInt(obj.amount*obj.tax.individualtaxes[i].rate/100),
+                      compoundCheck: obj.tax.individualtaxes[i].compound
                      })
-                    // if()          
+                     }       
                   }; 
-                   angular.forEach($rootScope.multiTax, function(tdIinvoice) {
-                     $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
-                     return $rootScope.total
-                   })
-                   $rootScope.calTax.push({
-                       taxName: obj.tax.taxname,
-                       rate:$rootScope.multiTax ,
-                       salesTax: $rootScope.total,
-                       compoundCheck: $rootScope.calCompound
-                     })
+                   
                }
             $rootScope.calTax = $rootScope.calTax.sort(function(a,b){
               return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
@@ -306,13 +347,33 @@ angular.module('mainApp')
           $rootScope.calPercentatge = 0;
           for (var i = $rootScope.checkArr.length - 1; i >= 0; i--) {
             $rootScope.calPercentatge += parseInt($rootScope.checkArr[i].percentage);
-           console.log($rootScope.calPercentatge);
           };
           if($rootScope.calPercentatge == 100){
             this.setDateArray(val);
+            console.log($rootScope.dateArray.val);
           }else{
             $rootScope.showmsg = true;
-            // alert("please check the percentage")
+          }
+         },
+
+         editDateArray:function(val){
+           $rootScope.showmsg = false;
+          $rootScope.calPercentatge = 0;
+          $rootScope.oldPercentage = 0;
+
+          for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
+            $rootScope.oldPercentage += parseInt($rootScope.dateArray.val[i].Percentage);
+          }
+        
+
+          for (var i = $rootScope.checkArr.length - 1; i >= 0; i--) {
+            $rootScope.calPercentatge += parseInt($rootScope.checkArr[i].percentage);
+          };
+          this.setDateArray(val);
+          if($rootScope.calPercentatge+$rootScope.oldPercentage == 100){
+            
+          }else{
+            $rootScope.showmsg = true;
           }
          }
       }
@@ -347,7 +408,6 @@ angular.module('mainApp')
 
    .controller('showproductCtrl', function($scope, $mdDialog, $rootScope, InvoiceService, item) {
       $scope.test = item;
-      console.log(item);
       $scope.cancel = function() {
          $mdDialog.cancel();
       };

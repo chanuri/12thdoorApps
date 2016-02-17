@@ -522,7 +522,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                      $scope.showBilling = !$scope.showBilling;
                   }
                   $scope.AddCus = function() {
-                     var client = $objectstore.getClient("contact");
+                     var client = $objectstore.getClient("contact12thdoor");
                        client.onComplete(function(data) {
                         $mdDialog.show(
                           $mdDialog.alert()
@@ -589,7 +589,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                      $mdDialog.hide();
                   }
                   $scope.editCus = function(cusform) {
-                      var client = $objectstore.getClient("contact");
+                      var client = $objectstore.getClient("contact12thdoor");
             client.onComplete(function(data) {
                 $mdDialog.show(
                     $mdDialog.alert()
@@ -665,7 +665,7 @@ var client = $objectstore.getClient("Settings12thdoor");
          return $rootScope.results;
       }
       function loadAll() {
-         var client = $objectstore.getClient("contact");
+         var client = $objectstore.getClient("contact12thdoor");
          client.onGetMany(function(data) {
             if (data) {
                 $rootScope.customerNames = [];

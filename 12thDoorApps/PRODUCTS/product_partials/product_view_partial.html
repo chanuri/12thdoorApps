@@ -172,9 +172,7 @@
                         <label>Unit</label>
                         <md-select ng-model="product.ProductUnit" ng-disabled="checkAbility" >
                            <md-optgroup label="Unit">
-                           <md-option value="Months">Months</md-option>
-                           <md-option value="Days">Days</md-option>
-                           <md-option value="Units">Units</md-option>
+                           <md-option ng-repeat="cat in ProUnits" value="{{cat}}">{{cat}}</md-option>
                         </md-select>
                      </md-input-container>
                      </div>
@@ -185,17 +183,16 @@
                            <input required type="text" ng-model="product.productprice" ng-disabled="checkAbilityproduct" /> 
                         </md-input-container>
                         <md-input-container flex>
-                           <label>Tax</label>
-                           <md-select ng-model="product.producttax" ng-disabled="checkAbilityproduct" >
+                           <label>Tax </label>
+                           <md-select ng-model="product.producttax.taxname" >
                               <md-optgroup label="Tax">
-                              <md-option value="10">10</md-option>
-                              <md-option value="20">20</md-option>
+                              <md-option ng-repeat="cat in taxesArr" value="{{cat.taxname}}">{{cat.taxname}}</md-option>
                            </md-select>
                         </md-input-container>
                      </div>
                       <md-divider> </md-divider>
                      <div layout layout-sm="column" layout-margin >
-                         <section-title title="Optional Details"> </section-title>
+                        <section-title title="Optional Details"> </section-title>
                        
                         <md-input-container flex>
                            <label>Cost Price</label>
@@ -216,16 +213,14 @@
                            <label>Product Brand</label>
                            <md-select ng-model="product.brand" class="required" ng-disabled="checkAbilityproduct" >
                               <md-optgroup label="Brand">
-                              <md-option value="Brand 1">Brand 1</md-option>
-                              <md-option value="Brand 2">Brand 2</md-option>
+                              <md-option ng-repeat="cat in ProBrandArray" value="{{cat}}">{{cat}}</md-option>
                            </md-select>
-                        </md-input-container >
+                        </md-input-container>
                         <md-input-container flex>
                            <label>Product Category</label>		
                            <md-select placeholder="Product Category" ng-model="product.ProductCategory" ng-disabled="true"  ng-disabled="checkAbilityproduct">
                               <md-optgroup label="Product Category">
-                              <md-option value="Product">Product</md-option>
-                              <md-option value="Package">Package</md-option>
+                              <md-option ng-repeat="cat in CategoryArray" value="{{cat}}">{{cat}}</md-option>
                            </md-select>
                         </md-input-container>
                      </div>

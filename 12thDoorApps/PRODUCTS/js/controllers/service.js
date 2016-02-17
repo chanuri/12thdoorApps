@@ -15,6 +15,7 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 		var files;			
 		// total of all the files dragged and dropped
 		var filesArray = [];
+		
 		var sampleArray = [];
 		var sampleArraybrochure = [];
 		var fileType;
@@ -45,9 +46,9 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 			  		if (fileType == 'application') {
 			  			scope.btnVisibility = true;
 						filesArray.push(scope.fileread[u]);
-						ProductService.setArray(scope.fileread[u]);
-						ProductService.BasicArray(scope.fileread[u].name,scope.fileread[u].size);
-						sampleArray.push({'name': scope.fileread[u].name, 'size': scope.fileread[u].size});
+						ProductService.setArraybrochure(scope.fileread[u]);
+						ProductService.BasicArraybrochure(scope.fileread[u].name,scope.fileread[u].size);
+						sampleArraybrochure.push({'name': scope.fileread[u].name, 'size': scope.fileread[u].size});	
 					}					 
 				}
 
@@ -72,8 +73,8 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 			  			scope.btnVisibility = true;
 						filesArray.push(files[indexx]);
 						ProductService.setArray(files[indexx]);
-						ProductService.BasicArray(filesArray[indexx].name,filesArray[indexx].size);
-						sampleArray.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});
+						ProductService.BasicArray(files[indexx].name,files[indexx].size);
+						sampleArray.push({'name': files[indexx].name, 'size': files[indexx].size});
 			  		}				 
 				}
 
@@ -85,8 +86,8 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 			  			scope.btnVisibility = true;
 						filesArray.push(files[indexx]);
 						ProductService.setArraybrochure(files[indexx]);
-						ProductService.BasicArraybrochure(filesArray[indexx].name,filesArray[indexx].size);
-						sampleArraybrochure.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});	
+						ProductService.BasicArraybrochure(files[indexx].name,files[indexx].size);
+						sampleArraybrochure.push({'name': files[indexx].name, 'size': files[indexx].size});	
 					}					 
 				}
 

@@ -21,7 +21,9 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
         GetProductBrand(data,function(){
           GetCustFields(data,function(){
             GetProUnits(data,function(){
-              GetProTaxes(data);
+              GetProTaxes(data,function(){
+                GetBaseCurrency(data)
+              });
             });
           });
         });
@@ -33,7 +35,11 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     SettingsApp.getByFiltering("*");
 
 
-    function GetProTaxes(arr){
+    function GetBaseCurrency(arr){
+      $scope.product.baseCurrency = arr[0].profile.baseCurrency;
+    }
+
+    function GetProTaxes(arr,callback){
       $scope.taxesArr = [];      
       var individualTaxes = arr[0].taxes.individualtaxes; 
       var multiplelTaxes = arr[0].taxes.multipletaxgroup; 
@@ -48,7 +54,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           $scope.taxesArr.push(multiplelTaxes[j]);
         }
       }
-
+      callback();
     }
 
     function GetProUnits(arr,callback){
@@ -81,8 +87,6 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       }
       callback();
     }
-
-
 
     function GetProductCategory(arr,callback){
       $scope.CategoryArray = [];
@@ -173,14 +177,6 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       , downstatus : false
       , divider: true,
       close: false
-    }, {
-      name: "Date",
-      id: "todayDate",
-      src: "img/ic_add_shopping_cart_48px.svg",
-      upstatus : false,
-      downstatus : true,
-      divider: false,
-      close: true
     },{
       name: "Product Name"
       , id: "Productname"
@@ -524,7 +520,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
 
           for (var i = $scope.products.length - 1; i >= 0; i--) {
             $scope.products[i].productprice = parseInt($scope.products[i].productprice);
-          };
+          }
           console.log($scope.products);
           LoadImageData();
         }
@@ -608,7 +604,10 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     $scope.product = {};
 
     $scope.submit = function () {
-
+      if (!$scope.product.productprice) {
+        $scope.product.productprice = "0";
+      }
+      
       $scope.product.producttax = {};
       if ($scope.producttax) {
         $scope.product.producttax = JSON.parse($scope.producttax);
@@ -689,7 +688,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               $uploader.upload("ignoreNamespace","productimagesNew", $scope.imagearray[indexx]);
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
-                  .content('Successfully uploaded!')
+                  .content('Image Successfully uploaded!')
                   .action('OK')
                   .highlightAction(false)
                   .position("bottom right");
@@ -715,7 +714,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               $uploader.upload("ignoreNamespace","productbrochureNew", $scope.brochurearray[indexx]);
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
-                  .content('Successfully uploaded!')
+                  .content('Brochure Successfully uploaded !')
                   .action('OK')
                   .highlightAction(false)
                   .position("bottom right");
@@ -739,8 +738,6 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             $scope.newItems.push($scope.product);
             saveToBalanceClass(data.Data[0].ID,function(status){
                 if (status == "success") {
-                  $state.go("home");
-                }else{
                    $mdDialog.show(
                     $mdDialog.alert()
                     .parent(angular.element(document.body))
@@ -749,6 +746,9 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
                     .ok('OK')
                     .targetEvent(data)
                   );
+                  $state.go("home");
+                }else{
+
                 }
             })
           });

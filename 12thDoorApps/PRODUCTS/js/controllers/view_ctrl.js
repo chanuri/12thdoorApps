@@ -4,34 +4,108 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 
 	// pfd functions passing the whole object as parameters 
 	$scope.ConvertToPdf = function(obj){
-		$scope.downloadPdfArr = [];
-		$scope.downloadPdfArr = angular.copy(obj);
+		
+		if (obj.UploadBrochure.val.length == 0) {
+			$mdDialog.show(
+              $mdDialog.alert()
+              .title("Error Loading Brochures")
+              .content("Brochures Are Not Available")
+              .ariaLabel('Alert Dialog Demo')
+              .ok('OK')
+            );
+		}else{
+
+			for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
+				var brochureClient = $objectstore.getClient("productbrochureNew");
+				brochureClient.onGetOne(function(data){
+					if (!isEmpty(data)) {
+						var fileExt = data.FileName.split('.').pop();
+						var doc = new jsPDF();
+
+						if (fileExt  == "pdf" ) {
+							var url = 'data:application/pdf;base64,' + data.Body;
+				            doc.save(data.FileName,url)	
+				        }
+						if (fileExt == "docx") {
+							var url = 'data:application/msword;base64,' + data.Body;
+				            doc.save(data.FileName,url)	
+						}				
+					}
+				})
+				brochureClient.onError(function(data){
+					console.log("error loading brochure Data")
+				})
+				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
+			}
+		}
+
+		
+
+  	//------convert to pdf ----------
+
+  		// $scope.downloadPdfArr = [];
+		// $scope.downloadPdfArr = angular.copy(obj);
 
 		// var context = angular.element('widget')[0].getContext('2d');
-  //   	context.font = "34px Arial";
-		html2canvas($("#widget"),{
-			onrendered : function(canvas){
+  		// context.font = "34px Arial";
+
+		// html2canvas($("#widget"),{
+		// 	onrendered : function(canvas){
 				         
-                var imgData = canvas.toDataURL(
-                    'image/png');              
-                var doc = new jsPDF();
-                doc.addImage(imgData, 'PNG', 10, 10,200,100);
-                doc.save('sample-file.pdf');
+		//	var imgData = canvas.toDataURL(
+		//	'image/png');              
+		//	var doc = new jsPDF();
+		//	doc.addImage(imgData, 'PNG', 10, 10,200,100);
+		//	doc.save('sample-file.pdf');
+		// 	}
+		// })
 
-				//theCanvas = canvas;
-				//document.body.appendChild(canvas);
+  	//------convert to pdf ----------
 
-			}
-		})
 
-		//$DownloadPdf.GetPdf($scope.downloadPdfArr,'download'); //pdf type is 'download'
+	//$DownloadPdf.GetPdf($scope.downloadPdfArr,'download'); //pdf type is 'download'
 	}
 
 	// print pdf in a new tab , pass whole object as parameters
 	$scope.print = function(obj){
-		$scope.PrintDownloadArr = [];
-		$scope.PrintDownloadArr = angular.copy(obj);
-		$DownloadPdf.GetPdf($scope.PrintDownloadArr,'print'); //ptf type is 'print'
+
+		if (obj.UploadBrochure.val.length == 0) {
+			$mdDialog.show(
+              $mdDialog.alert()
+              .title("Error Loading Brochures")
+              .content("Brochures Are Not Available")
+              .ariaLabel('Alert Dialog Demo')
+              .ok('OK')
+            );
+		}else{
+
+			for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
+				var brochureClient = $objectstore.getClient("productbrochureNew");
+				brochureClient.onGetOne(function(data){
+					if (!isEmpty(data)) {
+						var fileExt = data.FileName.split('.').pop()
+						if (fileExt  == "pdf" ) {window.open("data:application/pdf;base64," + data.Body)};
+						if (fileExt == "docx") {window.open("data:application/msword;base64," + data.Body)};					
+					}
+				})
+				brochureClient.onError(function(data){
+					console.log("error loading brochure Data")
+				})
+				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
+			}			
+		}
+
+		// $scope.PrintDownloadArr = [];
+		// $scope.PrintDownloadArr = angular.copy(obj);
+		// $DownloadPdf.GetPdf($scope.PrintDownloadArr,'print'); //ptf type is 'print'
+	}
+	function isEmpty(obj) {
+	    for(var prop in obj) {
+	        if(obj.hasOwnProperty(prop))
+	            return false;
+	    }
+
+	    return true;
 	}
 	// check comment label 
 	$scope.CheckText = function(obj,event){
@@ -47,31 +121,31 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 		$scope.ProgressBar = false;
 		pro.Commentstxt = obj.Comment;
 		$scope.lblVisibility = 'Hidelabel';
-		$scope.CommentDelete(obj,index)
+		$scope.CommentDelete(obj,index,"edit")
 	}
 
 	// current comment delete 
 	$scope.CurrentCommentDelete = function(obj){
 		obj = {};
 		$scope.ProgressBar = false;
-
 	}
 	// comment delete 
-	$scope.CommentDelete = function(item,index){
+	$scope.CommentDelete = function(item,index,type){
 		var client = $objectstore.getClient("productComment");
 		client.onComplete(function(data){
 
 			$scope.ViewExpense[0].Comments.splice(index,1); //remove from array
+			if (type == "edit") {
 
-			var toast = $mdToast.simple()
-		 	.content('Successfully Deleted!')
-		 	.action('OK')
-		 	.highlightAction(false)
-		 	.position("bottom right");
-		 	$mdToast.show(toast).then(function() {
-
-		 	});
-			
+			}else{
+				var toast = $mdToast.simple()
+			 	.content('Successfully Deleted!')
+			 	.action('OK')
+			 	.highlightAction(false)
+			 	.position("bottom right");
+			 	$mdToast.show(toast).then(function() {
+			 	});
+			}			
 		});
 		client.onError(function(data){
 			var toast = $mdToast.simple()
@@ -441,6 +515,9 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
     		console.log("error Loading comments");
     	});
     	client.getByFiltering("select * from productComment where product_code = '"+Pcode+"'")
+    }
+    $scope.cancelBtn = function(){
+    	$state.go("home")
     }
 
 });

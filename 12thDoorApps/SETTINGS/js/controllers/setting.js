@@ -94,7 +94,6 @@ angular
 
 			profile : {
 				CusFiel:[],
-
 			},
 
 			preference : 
@@ -598,7 +597,7 @@ angular
 
 			taxes :
 			{
-				individualtaxes:[],
+				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes"}],
 				multipletaxgroup:[],
 
 			},
@@ -646,13 +645,13 @@ angular
 	var client = $objectstore.getClient("Settings12thdoor");
 
 	client.onGetMany(function(data) {
-		if (data) {
+		if (data.length==true) {
 			$rootScope.Settings12thdoor=data[0];
 			console.log($rootScope.Settings12thdoor);
 		}
 		else
 		{
-			$rootScope.Settings12thdoor = $rootScope.Settings12thdoor;
+			load12thdoorSettingsJson();
 		}
 	});
 
@@ -3450,6 +3449,12 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 		// console.log(typeof($scope.individualtax));
 
 		$scope.individualtaxes.push(JSON.parse(tax));
+
+		for(var i=0; i < $scope.individualtaxes.length; i++ ){
+			console.log(i);
+			$scope.individualtaxes[i].positionId=i;
+		}
+
 		console.log($scope.individualtaxes);
 		
 		// $scope.individualtaxes.push(tax);
@@ -3492,9 +3497,17 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
  		$scope.individualtaxes[event.dest.index].positionId=event.dest.index;
  		console.log($scope.individualtaxes[event.dest.index].positionId);
  		$scope.individualtaxes[event.source.index].positionId=event.source.index;
+ 		for (var i=0; i< $scope.individualtaxes.length; i++){
+ 			$scope.individualtaxes[i].positionId=i;
+ 		}
 
  	}
- }
+
+
+
+//when else part others position id hav to change according to current index
+
+}
 
 };
 

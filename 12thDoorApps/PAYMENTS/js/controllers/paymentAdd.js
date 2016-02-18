@@ -186,7 +186,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     }
     /*_________________________________loadAll__________________________________________________*/
     function loadAll() { //get customer name for auto compleate field from contact class
-        var client = $objectstore.getClient("contact");
+        var client = $objectstore.getClient("contact12thdoor");
         client.onGetMany(function(data) {
             if (data) {
                 for (i = 0, len = data.length; i < len; ++i) {

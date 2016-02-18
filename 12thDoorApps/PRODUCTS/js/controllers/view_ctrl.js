@@ -5,7 +5,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 	// pfd functions passing the whole object as parameters 
 	 
 
-	$scope.UserName = $auth.getUserName()
+	$scope.UserName = $auth.getSession()
 
 	$scope.ConvertToPdf = function(obj){
 		

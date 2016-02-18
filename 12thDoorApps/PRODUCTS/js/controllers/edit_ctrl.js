@@ -1,4 +1,4 @@
-rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope, $objectstore, $auth, $EditUploadData, $uploader, $mdDialog, $objectstoreAccess, UploaderService) {
+rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope,$activityLog, $objectstore, $auth, $EditUploadData, $uploader, $mdDialog, $objectstoreAccess, UploaderService) {
 	console.log($stateParams.Eobject);
 
 	$objectstoreAccess.LoadOneDetails("product12thdoor", $stateParams.Eobject, function (data) {
@@ -12,6 +12,15 @@ rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope, $
         };
 		
 	});	
+
+  var proClient = $objectstore.getClient("product12thdoor");
+  proClient.onGetMany(function(data){
+     $rootScope.FullArray = data;     
+  });
+  proClient.onError(function(data){
+    console.log("error loading data")
+  });
+  proClient.getByFiltering("*");
 
   $scope.edit = function(obj){
 
@@ -51,8 +60,12 @@ rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope, $
     }else{
         var client = $objectstore.getClient("product12thdoor");
         client.onComplete(function(data){
-          $state.go('home');
-          $mdDialog.show(
+
+          var txtActivity = "Product Edited By ";
+          $activityLog.newActivity(txtActivity,data.Data[0].ID,obj.ProductCode,function(status){
+            if (status == "success") {            
+              $state.go('home');
+              $mdDialog.show(
                   $mdDialog.alert()
                   .parent(angular.element(document.body))
                   //.title('This is embarracing')
@@ -61,6 +74,8 @@ rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope, $
                   .ok('OK')
                   .targetEvent(data)
                 );
+            }
+          });
         });
         client.onError(function(data){
           $mdDialog.show(

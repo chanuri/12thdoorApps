@@ -273,24 +273,30 @@ md-input-container.md-input-focused label {
                  </div>
                   <li class="view" style="min-height:{{item.textareaHeight}};padding:10px;" flex layout="row"
                    ng-repeat="item in product.Comments  | unique:'TodayDate'">
-                   <img flex="5" src="../../img/material alperbert/avatar_tile_h_28.png" style="border-radius:20px;  height: 30px;"/>
-                   <div flex layout="row" id="mainTable" style="min-heigth:35px;">
-                     <span  flex="30" style="color: #A9A9A9;padding-left: 12px;padding-top: 8px;">{{item.TodayDate | datetime}}
-                     </span> 
-                     <textarea readonly="readonly" flex ng-model="item.Comment" column="1" 
-                     style="color: #A9A9A9;resize: none; margin-top: 5px;border: none; overflow:hidden;"></textarea>
-                     <!-- <span  flex style="padding-left: 12px;padding-top: 8px;">{{item.Comment}}</span>  -->
-                   </div>
-                   <md-button type="button" ng-click="CommentEdit(product,item,$index)" style="height:30px;" aria-label="change address" >
-                      <md-icon md-svg-icon="img/ic_edit_24px.svg" style="height:20px; width:20px;"></md-icon>
-                    </md-button>
-                  
+                      
+                      <img ng-if="item.type =='comment'" flex="5" src="../../img/material alperbert/avatar_tile_h_28.png" style="border-radius:20px;  height: 30px;"/>
 
-                   <md-button type="button" ng-click="CommentDelete(item,$index)" style="height:30px;" aria-label="change address" >
-                      <md-icon md-svg-icon="img/ic_highlight_remove_24px.svg" style="height:20px; width:20px;"></md-icon>
-                    </md-button>
+                      <img ng-if="item.type =='activity'" flex="5" src="../../img/material alperbert/avatar_tile_a_28.png" style="border-radius:20px;  height: 30px;"/>
+                      
 
-                   <md-divider></md-divider>
+                      <div flex layout="row" id="mainTable" style="min-heigth:35px;">
+                        <span  flex="30" style="color: #A9A9A9;padding-left: 12px;padding-top: 8px;">{{item.TodayDate | datetime}}
+                        </span> 
+                        <textarea readonly="readonly" flex ng-model="item.Comment" column="1" style="color: #A9A9A9;resize: none; margin-top: 5px;border: none; overflow:hidden;"></textarea>
+                      </div>
+                       <md-button type="button" ng-if="item.type =='comment'" ng-click="CommentEdit(product,item,$index)" style="height:30px;" aria-label="change address" >
+                          <md-icon md-svg-icon="img/ic_edit_24px.svg" style="height:20px; width:20px;"></md-icon>
+                        </md-button>
+                      
+
+                       <md-button type="button" ng-if="item.type =='comment'" ng-click="CommentDelete(item,$index)" style="height:30px;" aria-label="change address" >
+                          <md-icon md-svg-icon="img/ic_highlight_remove_24px.svg" style="height:20px; width:20px;"></md-icon>
+                        </md-button>
+
+                        <div ng-if="item.type =='activity'" flex ="10"></div>
+
+                       <md-divider></md-divider>
+                
                   </li>
                 </ul>
             </div>

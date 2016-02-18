@@ -1,4 +1,4 @@
-rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
+rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
   
 
     $scope.currentPage = 1;
@@ -308,10 +308,14 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               if (item.upstatus == false && item.downstatus == false) {
                   item.upstatus = !item.upstatus;
                   item.close = true;
-                  $scope.testarr[$scope.indexno].upstatus = false;
-                  $scope.testarr[$scope.indexno].downstatus = false;
-                  $scope.testarr[$scope.indexno].close = false;
-                  $scope.indexno = index;
+
+                  if ($scope.indexno != index) {
+                    $scope.testarr[$scope.indexno].upstatus = false;
+                    $scope.testarr[$scope.indexno].downstatus = false;
+                    $scope.testarr[$scope.indexno].close = false;
+                    $scope.indexno = index;                    
+                  }
+
               } else {
                   item.upstatus = !item.upstatus;
                   item.downstatus = !item.downstatus;
@@ -736,20 +740,22 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           client.onComplete(function (data) {
            
             $scope.newItems.push($scope.product);
-            saveToBalanceClass(data.Data[0].ID,function(status){
-                if (status == "success") {
-                   $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.body))
-                    .content('Product Successfully Saved.')
-                    .ariaLabel('Alert Dialog Demo')
-                    .ok('OK')
-                    .targetEvent(data)
-                  );
-                  $state.go("home");
-                }else{
+            saveToActivityClass(data.Data[0].ID,function(){
+                saveToBalanceClass(data.Data[0].ID,function(status){
+                    if (status == "success") {
+                        $mdDialog.show(
+                          $mdDialog.alert()
+                          .parent(angular.element(document.body))
+                          .content('Product Successfully Saved.')
+                          .ariaLabel('Alert Dialog Demo')
+                          .ok('OK')
+                          .targetEvent(data)
+                        );
+                      $state.go("home");
+                    }else{
 
-                }
+                    }
+                })              
             })
           });
           client.onError(function (data) {
@@ -790,6 +796,18 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
         }        
       }
     }
+
+    function saveToActivityClass(pcode,callback){
+        $scope.product.ProductCode
+        var txt = "Product Added By ";
+        $activityLog.newActivity(txt,pcode,$scope.product.ProductCode,function(status){
+          if (status == "success") {
+            callback()
+          }
+        });
+    }
+
+
     function saveToBalanceClass(pID,callback){
       $scope.balanceArr = {
         productId : pID,

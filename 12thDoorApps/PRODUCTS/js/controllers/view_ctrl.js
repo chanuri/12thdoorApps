@@ -1,8 +1,12 @@
 
-rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
+rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $state, $activityLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
 	//console.log($stateParams.productID);
 
 	// pfd functions passing the whole object as parameters 
+	 
+
+	$scope.UserName = $auth.getUserName()
+
 	$scope.ConvertToPdf = function(obj){
 		
 		if (obj.UploadBrochure.val.length == 0) {
@@ -177,14 +181,14 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 			 event.preventDefault(); //prevent actions
 			 if (obj.Commentstxt) { // if comment is not null
 				 var TodayDate = new Date();
-				 $scope.UserName = "test ranawaka"
 				 $scope.CommentObj = {
 				 	UserName : $scope.UserName,
 				 	TodayDate : TodayDate,
 				 	Comment : obj.Commentstxt,
 				 	product_code : $scope.ViewExpense[0].product_code,
 				 	productNum : $stateParams.productID.slice(-4),
-				 	textareaHeight : $scope.Height[0] + 'px;'
+				 	textareaHeight : $scope.Height[0] + 'px;',
+				 	type : "comment"
 				 };
 				 obj.Commentstxt = ""; //make textare empty
 				 $scope.CommentObj.comment_code = "-999";
@@ -371,6 +375,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 	client.onGetMany(function(data){
 		$scope.ViewExpense = data;
 		$scope.ViewExpense[0].Commentstxt = ""; // ADD empty field to comment 
+		$scope.ViewExpense[0].Comments = [];
 		//console.log($scope.ViewExpense[0])
 		if ($scope.ViewExpense[0].status == 'Active') { //check the status and deside the menu option active or inactive
 			$scope.ProductStatus = "Inactive";
@@ -396,15 +401,32 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 
 		var client = $objectstore.getClient("product12thdoor");
 		client.onComplete(function(data){
-			$mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              //.title('This is embarracing')
-              .content('Status Sucessfully Changed.')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent(data)
-            );
+			var txtActivity = "Status Changed To " + obj.status + " By ";
+
+			$activityLog.newActivity(txtActivity,obj.product_code,obj.ProductCode,function(status){
+				if (status == "success") {
+					var txt = txtActivity + $scope.UserName;
+					
+					$scope.ViewExpense[0].Comments.unshift({
+					 	TodayDate : new Date(),
+					 	Comment : txt,
+					 	product_code :obj.product_code,
+					 	productNum : obj.ProductCode,
+					 	textareaHeight : '30px;',
+					 	type : "activity"
+					});
+
+					$mdDialog.show(
+		              $mdDialog.alert()
+		              .parent(angular.element(document.body))
+		              //.title('This is embarracing')
+		              .content('Status Sucessfully Changed.')
+		              .ariaLabel('Alert Dialog Demo')
+		              .ok('OK')
+		              .targetEvent(data)
+		            );
+				}
+			})			
 		});
 		client.onError(function(data){
 			$mdDialog.show(
@@ -505,10 +527,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
     	var client = $objectstore.getClient("productComment");
     	client.onGetMany(function(data){
     		if (data) {
-
-    			$scope.ViewExpense[0].Comments = data.sort(function(a,b){
-				  return new Date(b.TodayDate) - new Date(a.TodayDate);
-				});
+    			loadAllActivities(Pcode,data);
     		};    		
     	});
     	client.onError(function(data){
@@ -516,6 +535,28 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
     	});
     	client.getByFiltering("select * from productComment where product_code = '"+Pcode+"'")
     }
+
+    function loadAllActivities(Pcode,commentArr){
+    	var ActivityClient = $objectstore.getClient("productActivity");
+    	ActivityClient.onGetMany(function(data){
+    		var fullArr = [];
+    		if (data.length > 0) {
+    			fullArr = commentArr.concat(data)
+    		}else{
+    			fullArr = data;
+    		}
+    		
+			$scope.ViewExpense[0].Comments = fullArr.sort(function(a,b){
+			  return new Date(b.TodayDate) - new Date(a.TodayDate);
+			});
+    	});
+    	ActivityClient.onError(function(data){
+    		console.log("error loading data");
+    	}); 
+    	ActivityClient.getByFiltering("select * from productActivity where product_code = '"+Pcode+"'")
+
+    }
+
     $scope.cancelBtn = function(){
     	$state.go("home")
     }

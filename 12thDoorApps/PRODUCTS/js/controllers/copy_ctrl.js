@@ -1,4 +1,4 @@
-rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $DownloadPdf, $objectstore, $auth, $mdDialog){
+rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $DownloadPdf, $objectstore, $auth, $mdDialog, $activityLog){
 	console.log($stateParams.productID);
 
 	var client = $objectstore.getClient("product12thdoor");
@@ -17,17 +17,33 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
 	client.getByFiltering("select * from product12thdoor where ProductCode = "+$stateParams.productID+"");	 
 
 	function ChangeProductCode(obj){ // call to prouce new product code
-		var Pnumbers = obj[0].ProductCode.substring(4,8);
-		var NewPnumber = parseInt(Pnumbers) + 1;
-		$scope.NumberString = "";
 
-		for(i=0; i < 4-NewPnumber.toString().length; i++){
-			$scope.NumberString = $scope.NumberString + "0";
-		}
+		var Pname = obj[0].ProductCode.substring(0,3);
+		var sortArr = [];
+		var proClient = $objectstore.getClient("product12thdoor");
+		proClient.onGetMany(function(data){
+		 	console.log(data)
+		 	sortArr = data.sort(function(a,b){
+		 		return a.todayDate - b.todayDate;
+		 	})
 
-		var FinalNumber = $scope.NumberString + NewPnumber.toString();
-		obj[0].ProductCode = obj[0].ProductCode.replaceAt(4,FinalNumber);
-		obj.ProductCodeID = FinalNumber;
+			var Pnumbers = sortArr[0].ProductCode.substring(4,8);
+			var NewPnumber = parseInt(Pnumbers) + 1;
+			$scope.NumberString = "";
+
+			for(i=0; i < 4-NewPnumber.toString().length; i++){
+				$scope.NumberString = $scope.NumberString + "0";
+			}
+
+			var FinalNumber = $scope.NumberString + NewPnumber.toString();
+			obj[0].ProductCode = sortArr[0].ProductCode.replaceAt(4,FinalNumber);
+			obj.ProductCodeID = FinalNumber;
+		});
+		proClient.onError(function(data){
+			console.log("error Loading data")
+		});
+		proClient.getByFiltering("select * from product12thdoor where ProductCode like '%"+Pname+"%'");	
+
 	}
 
 	$scope.submit = function(obj){
@@ -68,36 +84,43 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
       }else{
 
         $scope.AlreadyExsist = false;
-        for(i=0; i<=$rootScope.FullArray.length-1; i++){
-            if ($rootScope.FullArray[i].ProductCode === obj.ProductCode) {
-              $mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              .title('Product Code Already Exsist')
-              .content('Please Enter Different Product Code')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent()
-            );
-              $scope.AlreadyExsist = true;
-              break;
-            };
-        }
+        if ($rootScope.FullArray) {
+        	for(i=0; i<=$rootScope.FullArray.length-1; i++){
+	            if ($rootScope.FullArray[i].ProductCode === obj.ProductCode) {
+	              $mdDialog.show(
+	              $mdDialog.alert()
+	              .parent(angular.element(document.body))
+	              .title('Product Code Already Exsist')
+	              .content('Please Enter Different Product Code')
+	              .ariaLabel('Alert Dialog Demo')
+	              .ok('OK')
+	              .targetEvent()
+	            );
+	              $scope.AlreadyExsist = true;
+	              break;
+	            };
+	        }
+        };
+        
 
 	        if (!$scope.AlreadyExsist){
 
 				var client = $objectstore.getClient("product12thdoor");
 				client.onComplete(function(data){
-					$state.go('home');
-					$mdDialog.show(
-		              $mdDialog.alert()
-		              .parent(angular.element(document.body))
-		              //.title('This is embarracing')
-		              .content('Product Successfully Saved.')
-		              .ariaLabel('Alert Dialog Demo')
-		              .ok('OK')
-		              .targetEvent(data)
-		            );
+					var txtActivity = "Product Added By ";
+			        $activityLog.newActivity(txtActivity,data.Data[0].ID,obj.ProductCode,function(status){
+				        if (status == "success") {            
+				            $state.go('home');
+				            $mdDialog.show(
+				                $mdDialog.alert()
+				                .parent(angular.element(document.body))
+				                .content('Product Successfully Saved.')
+				                .ariaLabel('Alert Dialog Demo')
+				                .ok('OK')
+				                .targetEvent(data)
+				            );
+				        }
+				    });
 				});
 				client.onError(function(data){
 					$mdDialog.show(
@@ -109,6 +132,7 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
 		              .targetEvent(data)
 		            );
 				});
+				obj.todayDate = new Date();
 				obj.product_code = "-999";
 				client.insert(obj,{KeyProperty:"product_code"});	
 			}	

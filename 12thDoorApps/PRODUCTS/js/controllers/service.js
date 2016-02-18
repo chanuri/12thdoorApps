@@ -1,3 +1,34 @@
+
+rasm.service("$activityLog",function($objectstore,$auth){
+	
+	var userName = $auth.getUserName()
+	this.newActivity = function(ActivityTxt,pCode,pNum,callback){
+		var txt = ActivityTxt + userName;
+		
+		var activityObj = {
+		 	UserName : userName,
+		 	TodayDate : new Date(),
+		 	Comment : txt,
+		 	product_code :pCode,
+		 	productNum : pNum,
+		 	textareaHeight : '30px;',
+		 	activity_code : "-999",
+		 	type : "activity"
+		};
+
+		var activityClient = $objectstore.getClient("productActivity");
+		activityClient.onComplete(function(data){
+			console.log("activity Successfully added")
+			callback("success")
+		});
+		activityClient.onError(function(data){
+			console.log("error Adding new activity")
+			callback("error")
+		});
+		activityClient.insert(activityObj, {KeyProperty:'activity_code'})
+	}
+});
+
 rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'ProductService', function($uploader,$rootScope, $mdToast, ProductService) {
   return {
 	restrict: 'E',

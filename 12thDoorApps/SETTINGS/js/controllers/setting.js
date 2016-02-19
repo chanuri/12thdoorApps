@@ -104,6 +104,7 @@ angular
 					invoicePrefix:"",
 					allowPartialPayments:true,
 					enableDisscounts:true,
+					disscountItemsOption:"",
 					enableTaxes:true,
 					enableshipping:true,
 					displayshipaddress:false,

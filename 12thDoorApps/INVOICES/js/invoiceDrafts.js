@@ -147,6 +147,10 @@ angular.module('mainApp')
       $rootScope.calTax = [];
       $rootScope.correctArr1 = [];
       $rootScope.calCompound = [];
+      $rootScope.trueComp = [];
+      $rootScope.falseComp = [];
+      $rootScope.compountTrue = [];
+      $rootScope.calculateCompound = [];
 
       return {
          setArray: function(newVal) {
@@ -187,6 +191,9 @@ angular.module('mainApp')
             $rootScope.multiTax = [];
                $rootScope.total = 0;
                 $rootScope.compoundcal=[];
+                $rootScope.calculateCompound = [];
+                $rootScope.falseComp = [];
+                $rootScope.trueComp = [];
 
             if(obj.tax != null){
             if(obj.tax.type == "individualtaxes"){
@@ -200,29 +207,43 @@ angular.module('mainApp')
                })
              }
                }else if(obj.tax.type == "multipletaxgroup"){
-                  for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
-                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate);
+                for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
 
-                    
-                      $rootScope.total = parseInt(obj.amount*obj.tax.individualtaxes[i].rate/100)
-
-                      // if(obj.tax.individualtaxes[i].compound == true){
-                      //   $rootScope.ID = obj.tax.individualtaxes[i].positionId
-                      //    $rootScope.total = parseInt(obj.amount * obj.tax.individualtaxes[i].rate/100)
-                      // }
-
-                     if(obj.tax.individualtaxes[i].rate == 0){
+                  if(obj.tax.individualtaxes[x].compound == false ){
+                    $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
+                  }else if(obj.tax.individualtaxes[x].compound == true){
+                    $rootScope.trueComp.push(obj.tax.individualtaxes[x])
+                    $rootScope.compountTrue = $rootScope.trueComp.sort(function(a,b){
+                      return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
+                    });
+                  }
+                }
+                  $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
+                  var tcopmAmount = 0;
+                  var fcompAmount = 0;
+                  var finalCal = 0;
+                  for (var y = 0;  y <= $rootScope.calculateCompound.length - 1; y++) {
+                  
+                    if($rootScope.calculateCompound[y].compound == false){
+                       fcompAmount= parseInt(obj.amount*obj.tax.individualtaxes[y].rate/100)
+                      $rootScope.total = fcompAmount;
+                    }
+                    else if(obj.tax.individualtaxes[y].compound == true){
+                       tcopmAmount = parseInt(fcompAmount + obj.amount);
+                         finalCal = (parseInt(finalCal+tcopmAmount)* obj.tax.individualtaxes[y].rate/100);
+                          $rootScope.total = finalCal;
+                      }
+                     if($rootScope.calculateCompound[y].rate == 0){
 
                      }else{
                      $rootScope.taxArr.push({
-                      taxName:obj.tax.individualtaxes[i].taxname,
-                      rate:obj.tax.individualtaxes[i].rate,
+                      taxName:$rootScope.calculateCompound[y].taxname,
+                      rate:$rootScope.calculateCompound[y].rate,
                       salesTax: $rootScope.total,
-                      compoundCheck: obj.tax.individualtaxes[i].compound
+                      compoundCheck: $rootScope.calculateCompound[y].compound
                      })
-                     }       
-                  }; 
-                   
+                     }      
+                  }
                }
             $rootScope.taxArr = $rootScope.taxArr.sort(function(a,b){
               return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
@@ -236,8 +257,7 @@ angular.module('mainApp')
                         var sumSalesTax = 0;
                         var txtName = $rootScope.taxArr[l].taxName;
                         var rate = $rootScope.taxArr[l].rate;
-                        var compound = $rootScope.taxArr[l].compoundCheck
-                        
+                        var compound = $rootScope.taxArr[l].compoundCheck;
                         sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l+1].salesTax;
 
                         $rootScope.taxArr.splice(l,2);
@@ -247,16 +267,111 @@ angular.module('mainApp')
                            salesTax : sumSalesTax,
                            compoundCheck: compound
                         })
-                        
                         $rootScope.taxArr.sort(function(a,b){
                             return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
                         });
-                      
                      };
                   };                  
                }
             }
           }
+        },
+        ReverseTax: function(obj, index){
+          var tt = [];
+          var arr = [];
+          var results = [];
+          $rootScope.compoundcal=[];
+                $rootScope.calculateCompound = [];
+                $rootScope.falseComp = [];
+                $rootScope.trueComp = [];
+
+          for (var i = $rootScope.testArray.val.length - 1; i >= 0; i--) {
+
+            if($rootScope.testArray.val[i].tax.type == "individualtaxes"){
+              arr.push($rootScope.testArray.val[i].tax.taxname)
+
+            }else if($rootScope.testArray.val[i].tax.type == "multipletaxgroup"){
+              for (var x = $rootScope.testArray.val[i].tax.individualtaxes.length - 1; x >= 0; x--) {
+                arr.push($rootScope.testArray.val[i].tax.individualtaxes[x].taxname)
+              }
+            }
+          }
+
+          for (var y =  $rootScope.taxArr.length - 1; y >= 0; y--) {
+                        tt.push({
+                            taxName : $rootScope.taxArr[y].taxName,
+                           rate : $rootScope.taxArr[y].rate,
+                           salesTax : $rootScope.taxArr[y].salesTax,
+                           compoundCheck: $rootScope.taxArr[y].compoundCheck
+                          })
+                        }
+
+          var sorted_arr = arr.sort(); 
+                var results = [];
+                for (var i = 0; i < arr.length - 1; i++) {
+                    if (sorted_arr[i + 1] == sorted_arr[i]) {
+                        results.push(sorted_arr[i]);
+                    }
+                }
+
+                if(obj.tax.type == "individualtaxes"){
+
+                   for (var x =  $rootScope.taxArr.length - 1; x >= 0; x--) {
+                    
+                     if( $rootScope.taxArr[x].taxName == obj.tax.taxname){
+
+                       if($.inArray(obj.tax.taxname, results) == -1){
+                        $rootScope.taxArr.splice(x,1); 
+
+                        }else if($.inArray(obj.tax.taxname, results) == 0){
+
+                          $rootScope.taxArr[x].salesTax = parseInt($rootScope.taxArr[x].salesTax - (obj.amount*obj.tax.rate/100));
+                          //results.splice(obj.tax.taxname,1);
+                        }
+                    }
+                   }
+                }else if(obj.tax.type == "multipletaxgroup"){
+                  for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
+
+                    if(obj.tax.individualtaxes[x].compound == false ){
+                    $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
+                  }else if(obj.tax.individualtaxes[x].compound == true){
+                    $rootScope.trueComp.push(obj.tax.individualtaxes[x])
+                    $rootScope.compountTrue = $rootScope.trueComp.sort(function(a,b){
+                      return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
+                    });
+                  }
+                  $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
+                   var tcopmAmount = 0;
+                  var fcompAmount = 0;
+                  var finalCal = 0;
+
+                    for (var y =  $rootScope.taxArr.length - 1; y >= 0; y--) {
+                       
+                     if( $rootScope.taxArr[y].taxName == obj.tax.individualtaxes[x].taxname){
+
+                       if($.inArray(obj.tax.individualtaxes[x].taxname, results) == 0){
+                        for (var z = 0;  z <= $rootScope.calculateCompound.length - 1; z++) {
+                          if($rootScope.calculateCompound[z].compound == false){
+                            $rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - (obj.amount*obj.tax.individualtaxes[x].rate/100));
+                       fcompAmount= parseInt(obj.amount*obj.tax.individualtaxes[x].rate/100)
+                    }
+                    else if(obj.tax.individualtaxes[y].compound == true){
+                       tcopmAmount = parseInt(fcompAmount + obj.amount);
+                         finalCal = (parseInt(finalCal+tcopmAmount)* obj.tax.individualtaxes[x].rate/100);
+                         $rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - finalCal);
+                      }   
+                        }
+                          //$rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - (obj.amount*obj.tax.individualtaxes[x].rate/100));
+                        }
+                      else if($.inArray(obj.tax.individualtaxes[x].taxname, results) == -1){
+                        $rootScope.taxArr.splice(y,1)
+
+                        }
+                      }
+                    }
+                  }
+                }
         },
         setTempArr : function(obj){
             this.setArray2(obj);
@@ -323,7 +438,7 @@ angular.module('mainApp')
                   };                  
                }
             }
-        } 
+        }
       }
    })
 //------------------------------------------------------------------------------------------------

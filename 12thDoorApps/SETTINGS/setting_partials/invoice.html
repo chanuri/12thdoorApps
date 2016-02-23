@@ -1,396 +1,328 @@
 <div>
 	<form id="form" name="editForm">
-		<md-content>
+		<md-content style="overflow:hidden;">
 		<md-divider></md-divider>
-		<div layout layout-sm="column" layout-margin>
-			<div flex="5" hide-sm>	
-			</div>
-			<div flex="20" hide-sm>
-			</div>
-			<md-input-container flex="30">
-			<label>Invoice Prefix</label>
-			<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.invoicePrefix">
-		</md-input-container>
-	</div>
-
-	<div layout layout-sm="column" layout-margin>
-		<div flex="5" hide-sm>	
-		</div>
-		<div flex="20" hide-sm>
-		</div>
-		<md-input-container flex="30">
-		<label>Invoice Sequence</label>
-		<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.invoicesequence">
+		<md-list style="margin-top: 20px; margin-bottom: 20px;">
+		<md-list-item>
+		<p>Invoice Prefix</p>
+		<md-input-container md-no-float class="md-block" flex="40">
+		<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.invoicePrefix"  placeholder="Invoice Prefix">
 	</md-input-container>
-	<div layout="row" layout-align="start center">
-		<md-button ng-click="enter()">Set Sequence</md-button>
-	</div>
-	<div layout="row" layout-align="start center">
-		<a href="#" class="tooltip" data-tooltip=" To update your name or email address 
-		please edit your personal profile">
-		<md-icon style="color:#A5A0A0" md-svg-src="img/ic_info_24px.svg" aria-label="Insert Drive Icon">
-	</md-icon>
-</a>
-</div>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Default Payment Terms</label>
-	<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.defaultPaymentTerms">
-	<md-option>Due on Receipt</md-option>
-	<md-option>Net 7 days</md-option>
-	<md-option>Net 14 days</md-option>
-	<md-option>Net 30 days</md-option>
-	<md-option>Net 45 days</md-option>
-	<md-option>Net 60 days</md-option>
-	<md-option>Custom</md-option>
+<md-list-item class="secondary-button-padding">
+<div layout-gt-sm="column" flex>
+	<p>Invoice Sequence</p>
+	<p style="margin-top: -15px; color: rgba(0,0,0,0.54); font-size:13px;">To update your name or email address. Please edit your personal profile</p>
+	<!-- <md-button class="md-secondary" ng-click="enter()">Set Sequence</md-button> -->
+</div>
+<div flex="40">
+	<md-input-container md-no-float class="md-block" flex-gt-sm>
+	<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.invoicesequence"  placeholder="Invoice Sequence">
+</md-input-container>
+<md-button class="md-icon-button md-secondary">
+<md-icon md-svg-icon="img/ic_settings_24px.svg" style="margin-bottom: 2px;"></md-icon>
+<md-tooltip md-direction="left">Click, To Set Sequence</md-tooltip>
+</md-button>
+</div>
+</md-list-item>
+
+<md-list-item>
+<p>Default Payment Terms</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.defaultPaymentTerms" placeholder="Default Payment Terms">
+<md-option>Due on Receipt</md-option>
+<md-option>Net 7 days</md-option>
+<md-option>Net 14 days</md-option>
+<md-option>Net 30 days</md-option>
+<md-option>Net 45 days</md-option>
+<md-option>Net 60 days</md-option>
+<md-option>Custom</md-option>
 </md-select>
 </md-input-container>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex="22" class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.allowPartialPayments" aria-label="Switch 1">
-	Allow Partial Payments
+</md-list-item>
+
+<md-list-item>
+<p>Allow Partial Payments</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.allowPartialPayments">
 </md-switch>
-</div>
+</md-list-item>
+
 <md-divider></md-divider>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch  flex="20" class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableDisscounts" aria-label="Switch 1" ng-init="$root.Settings12thdoor.preference.invoicepref.enableDisscounts=true">
-	Enable Discounts
+
+<md-list-item>
+<p>Enable Discounts</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableDisscounts" aria-label="Switch 1" ng-init="$root.Settings12thdoor.preference.invoicepref.enableDisscounts=true">
 </md-switch>
-<md-input-container flex="30" style="margin-bottom: -19px;" ng-if="$root.Settings12thdoor.preference.invoicepref.enableDisscounts">
+</md-list-item>
+
+<md-list-item ng-if="$root.Settings12thdoor.preference.invoicepref.enableDisscounts"><!-- when disscount enable this input Display -->
+<md-input-container flex="40" >
 <md-select ng-model="$root.Settings12thdoor.preference.invoicepref.disscountItemsOption" >
-<md-option>Individual Items</md-option>
+<md-option selected>Individual Items</md-option>
 <md-option>SubTotal Items</md-option>
 </md-select>
 </md-input-container>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex="20" class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableTaxes" aria-label="Switch 1">
-	Enable Taxes
-</md-switch>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableshipping" aria-label="Switch 1">
-	Enable Shipping
-</md-switch>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex ng-model="$root.Settings12thdoor.preference.invoicepref.displayshipaddress" aria-label="Switch 2" class="md-primary">
-	Display ship to address on invoice
-</md-switch>
-</div>
+</md-list-item>
+
 <md-divider></md-divider>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.pdfinvoiceattachment" aria-label="Switch 1">Send PDF Invoice as attachment
+
+<md-list-item>
+<p>Enable Taxes</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableTaxes"></md-switch>
+</md-list-item> 
+
+<md-list-item>
+<p>Enable Shipping</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableshipping"></md-switch>
+</md-list-item>
+
+<md-list-item>
+<p>Display ship to address on invoice</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.displayshipaddress" >
 </md-switch>
-<div layout="row" layout-align="start center" style="margin-top: 19px;">
-	<a href="#" class="tooltipSmallLength" data-tooltip="If not selected, customer can view online via email link">
-		<md-icon style="color:#A5A0A0" md-svg-src="img/ic_info_24px.svg" aria-label="Insert Drive Icon">
-	</md-icon>
-</a>
+</md-list-item>
+
+<md-divider></md-divider>
+
+<md-list-item>
+<div layout="column" flex>
+	<p>Send PDF Invoice as attachment</p>
+	<p style="margin-top: -15px; color: rgba(0,0,0,0.54); font-size:13px;">If not selected, customer can view online via email link</p>
 </div>
-<div flex="35"></div>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.notifyadminwheninvoiceviewed" aria-label="Switch 1">Notify admin when invoice is viewed
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.pdfinvoiceattachment">
 </md-switch>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.copyadminallinvoices" aria-label="Switch 1">Copy Admin for all invoices
+</md-list-item>
+
+<md-list-item>
+<p>Notify admin when invoice is viewed</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.notifyadminwheninvoiceviewed">
 </md-switch>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enabletnkuemailforrecipt" aria-label="Switch 1">Enable thank you email for receipts
+</md-list-item>
+
+<md-list-item>
+<p>Copy Admin for all invoices</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.copyadminallinvoices">
 </md-switch>
-<div flex layout="row" layout-align="center center" style="margin-top:21px; font-size:13px;"> 
-	<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1">Copy Admin</md-checkbox>
-</div>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
+</md-list-item>
+
+<md-list-item>
+<div layout="column" flex>
+	<p>Enable thank you email for receipts</p>
+	<div style="margin-top: -14px; margin-left:0px;">
+		<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1" style="color: rgba(0,0,0,0.54);">Copy Admin</md-checkbox>
 	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableremindersoverdueinvoices" aria-label="Switch 1">Enable reminders for overdue invoices
+</div>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enabletnkuemailforrecipt">
 </md-switch>
-<div flex layout="row" layout-align="center center" style="margin-top:21px; font-size:13px;">
-	<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1">Copy Admin</md-checkbox>
-</div>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
+</md-list-item>
+
+<md-list-item>
+<div layout="column" flex>
+	<p>Enable reminders for overdue invoices</p>
+	<div style="margin-top: -14px; margin-left:0px;">
+		<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1" style="color: rgba(0,0,0,0.54);">Copy Admin</md-checkbox>
 	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Reminder interval in days</label>
-	<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.ReminderDays" >
+</div>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.enableremindersoverdueinvoices">
+</md-switch>
+</md-list-item>
+
+<md-list-item style="margin-bottom: 15px;">
+<p>Reminder interval in days</p>
+<md-input-container flex="40">
+<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.ReminderDays" >
 </md-input-container>
-</div>
+</md-list-item>
+
 <md-divider></md-divider>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="40">
-	<label>Default comment (top of invoice)</label>
+
+<md-list-item>
+<div layout="column" flex>
+	<p>Default comment (top of invoice)</p>
+	<md-input-container flex>
 	<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.defaultComm" >
 </md-input-container>
 </div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="40">
-	<label>Default note (bottom of invoice)</label>
+</md-list-item>
+
+<md-list-item>
+<div layout="column" flex>
+	<p>Default note (bottom of invoice)</p>
+	<md-input-container flex>
 	<textarea ng-model="$root.Settings12thdoor.preference.invoicepref.defaultNote" columns="1" md-maxlength="150"></textarea>
 </md-input-container>
 </div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
+<md-list-item style="margin-bottom: 13px;">
+<div layout="column" flex>
+	<p>Bank details for offline payments</p>
+	<div style="margin-top: -14px; margin-left:0px;">
+		<md-checkbox ng-model="data.cb1" aria-label="Checkbox 1" style="color: rgba(0,0,0,0.54);">Display on invoice</md-checkbox>
 	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="40">
-	<label>Bank details for offline payments</label>
-	<textarea ng-model="$root.Settings12thdoor.preference.invoicepref.offlinePayments" columns="1" md-maxlength="150"></textarea>
-</md-input-container>
-<div flex layout="row" layout-align="center center" style="font-size:13px;">
-	<md-checkbox ng-model="$root.Settings12thdoor.preference.invoicepref.CheckedOfflinePayments" aria-label="Checkbox 1">Display on invoice</md-checkbox>
+	<div layout="row" flex>
+		<md-input-container flex>
+		<textarea ng-model="$root.Settings12thdoor.preference.invoicepref.offlinePayments" columns="1" md-maxlength="150"></textarea>
+	</md-input-container>
 </div>
 </div>
+</md-list-item>
 
 <md-divider></md-divider>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<div flex="20" style="margin-top:18px; color: rgba(0,0,0,.64);">
-		<span> New Invoice Email</span>
-	</div>
-	<div flex>
-		<md-button class="md-primary" ng-click="newinvoiceemail($event)">
-		Edit
-	</md-button>
-</div>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<div flex="20" style="margin-top: 18px;color: rgba(0,0,0,.64);">
-		<span> Payment Recept Email</span>
-	</div>
-	<div flex>
-		<md-button class="md-primary" ng-click="" >
-		Edit
-	</md-button>
-</div>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<div flex="20" style="margin-top: 18px;color: rgba(0,0,0,.64);">
-		<span> Payment Reminder Email</span>
-	</div>
-	<div flex>
-		<md-button class="md-primary" ng-click="" >
-		Edit
-	</md-button>
-</div>	
-</div>
+<md-list-item style="padding: 0px 43px;">
+<p>New Invoice Email</p>
+<md-button class="md-primary" ng-click="newinvoiceemail($event)">
+Edit
+</md-button>
+</md-list-item>
+
+<md-list-item style="padding: 0px 43px;">
+<p>Payment Recept Email</p>
+<md-button class="md-primary" ng-click="">
+Edit
+</md-button>
+</md-list-item>
+
+<md-list-item style="padding: 0px 43px;">
+<p>Payment Reminder Email</p>
+<md-button class="md-primary" ng-click="">
+Edit
+</md-button>
+</md-list-item>
+
 <md-divider></md-divider>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="40">
-	<label>Recurring Invoices Default Action</label>
-	<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.recurringInvoiceDefultAction">
-	<md-option>Save invoice as pending</md-option>
-	<md-option>Save and email customer</md-option>
-	<md-option>Save email and charge customer</md-option>
+
+<md-list-item style="margin-top:9px;">
+<p>Recurring Invoices Default Action</p>
+<md-input-container flex="30">
+<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.recurringInvoiceDefultAction">
+<md-option>Save invoice as pending</md-option>
+<md-option>Save and email customer</md-option>
+<md-option>Save email and charge customer</md-option>
 </md-select>
 </md-input-container>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="40">
-	<label>Generate invoice prior to bill date in days</label>
-	<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.billdateindays">
-</md-input-container>
-<div layout="row" layout-align="start center">
-	<a href="#" class="tooltipbiggerlength" data-tooltip="Invoice can be automatically generated a couple of days prior for review. Enter 0 to generate on actual bill date">
-		<md-icon style="color:#A5A0A0" md-svg-src="img/ic_info_24px.svg" aria-label="Insert Drive Icon">
-	</md-icon>
-</a>
-</div>
-</div>
+</md-list-item>
 
-<div layout="row" layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<div layout="column" layout-align="center start" flex style="margin-top:-2px;">
-		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="$root.Settings12thdoor.preference.invoicepref.CusFiel">
-			<li ng-repeat="item in $root.Settings12thdoor.preference.invoicepref.CusFiel" as-sortable-item>
-				<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
-				<md-card-content>
-				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
-					<div flex>
-						<span style="color:#808080;font-size:15px;">{{item.labelshown}}
-							<md-tooltip md-direction="right">Custom Fields name</md-tooltip>
-						</span>
-					</div>
-					<div flex>
-						<span style="color:#808080;font-size:15px;">{{item.type}}
-							<md-tooltip md-direction="right">Fields Type</md-tooltip>
-						</span>
-					</div>
-					<div flex="5">
-						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
-						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
-					</md-button>
-					<md-menu-content width="4">
-					<md-menu-item>
-					<md-button ng-click="editinvoicecusFieldsrow(item , $event)">
-					<p>Edit</p>
-					<md-icon md-menu-align-target ></md-icon>
+<md-list-item style="margin-bottom: 18px;" >
+<div layout="column" flex>
+	<p>Generate invoice prior to bill date in days</p>
+	<p style="margin-top: -15px; color: rgba(0,0,0,0.54); font-size:13px;">Invoice can be automatically generated a couple of days prior for review.</br> Enter 0 to generate on actual bill date</p>
+</div>
+<md-input-container flex="30">
+<input type="text" ng-model="$root.Settings12thdoor.preference.invoicepref.billdateindays">
+</md-input-container>
+</md-list-item>
+
+<md-divider></md-divider>
+
+<div layout-gt-sm="column" style="padding:0px 4% 24px;">
+	<div flex style="padding: 4px 10px 0px;"><p>Custom Fields</p></div>
+	<div as-sortable="sortableOptions" ng-model="asdc" flex="100">
+		<div ng-repeat="item in $root.Settings12thdoor.preference.invoicepref.CusFiel" as-sortable-item flex>
+			<md-card class="add-mdcard" style="padding:5px;" as-sortable-item-handle flex>
+			<md-card-content>
+			<div layout="row">
+				<div flex>
+					<span style="color:#808080;font-size:15px;">{{item.labelshown}}
+						<md-tooltip md-direction="right">Custom Fields name</md-tooltip>
+					</span>
+				</div>
+				<div flex>
+					<span style="color:#808080;font-size:15px;">{{item.type}}
+						<md-tooltip md-direction="right">Fields Type</md-tooltip>
+					</span>
+				</div>
+				<div flex>
+					<md-menu md-position-mode="target-right target" layout="row" layout-align="end end" flex-sm="100" style="margin:-16px 0px -32px;">
+					<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+					<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
 				</md-button>
-			</md-menu-item>
-			<md-menu-item>
-			<md-button ng-click="deleteinvoicecusfieldsrow(item, $index)">
-			<p>Delete</p>
-			<md-icon md-menu-align-target ></md-icon>
-		</md-button>
-	</md-menu-item>
+				<md-menu-content width="4">
+				<md-menu-item>
+				<md-button ng-click="editinvoicecusFieldsrow(item , $event)">
+				<p>Edit</p>
+				<md-icon md-menu-align-target ></md-icon>
+			</md-button>
+		</md-menu-item>
+		<md-menu-item>
+		<md-button ng-click="deleteinvoicecusfieldsrow(item, $index)">
+		<p>Delete</p>
+		<md-icon md-menu-align-target ></md-icon>
+	</md-button>
+</md-menu-item>
 </md-menu-content>
 </md-menu>
 </div>
 </div>
 </md-card-content>
 </md-card>
-</li>
-</ul>
-<div flex layout="row" layout-align="start end" style=" margin-top:-33px;">
+</div>
+</div>
+<div layout-gt-sm="row" layout-align="start start" style="padding: 10px 9px 0px;">
 	<md-button  class="md-raised" ng-click="addcusfieldsInvoice($event)">
 	Add custom fields
 </md-button>
 </div>
 </div>
-</div>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex="33" class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.emailcustomeruponsavinginvoice" ng-init="$root.Settings12thdoor.preference.invoicepref.emailcustomeruponsavinginvoice=true"  aria-label="Switch 1">Email customer upon saving invoice
+<md-divider></md-divider>
+
+<md-list-item>
+<div layout="column" flex>
+	<p>Email customer upon saving invoice</p>
+</div>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.emailcustomeruponsavinginvoice" ng-init="$root.Settings12thdoor.preference.invoicepref.emailcustomeruponsavinginvoice=true"  aria-label="Switch 1">
 </md-switch>
-<md-input-container flex="30" ng-if="$root.Settings12thdoor.preference.invoicepref.emailcustomeruponsavinginvoice" style="margin-bottom:-19px;">
-<!-- <label></label> -->
+</md-list-item>
+<md-list-item ng-show="$root.Settings12thdoor.preference.invoicepref.emailcustomeruponsavinginvoice"><!-- when disscount enable this input Display -->
+<md-input-container flex="40">
 <md-select ng-model="$root.Settings12thdoor.preference.invoicepref.emailcustomeroption">
 <md-option>Display pop up and prompt</md-option>
 <md-option>Send email in background</md-option>
 </md-select>
 </md-input-container>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.addstockcancelOrdeleteinvoiceincluCreditnote" aria-label="Switch 1">Add stock for cancelled, deleted invoices including credit notes
+<md-divider></md-divider>
+
+<md-list-item>
+<p>Add stock for cancelled, deleted invoices including credit notes</p>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.addstockcancelOrdeleteinvoiceincluCreditnote">
 </md-switch>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-switch flex class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.includeaccountstatementwithinvoice" aria-label="Switch 1">Include account statement with invoice
+<md-list-item>
+<div layout="column" flex>
+	<p>Include account statement with invoice</p>
+</div>
+<md-switch class="md-primary" ng-model="$root.Settings12thdoor.preference.invoicepref.includeaccountstatementwithinvoice" aria-label="Switch 1">
 </md-switch>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>billing frequency</label>
-	<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.billingFrequency">
-	<md-option>Weekly</md-option>
-	<md-option>2 Weeks</md-option>
-	<md-option>4 Weeks</md-option>
-	<md-option>Monthly</md-option>
-	<md-option>2 Months</md-option>
-	<md-option>3 Months</md-option>
-	<md-option>6 Months</md-option>
-	<md-option>Yearly</md-option>
-	<md-option>2 Years</md-option>
-	<md-option>3 Years</md-option>
+<md-list-item>
+<div layout="column" flex>
+	<p>billing frequency</p>
+</div>
+<md-input-container flex="30">
+<md-select ng-model="$root.Settings12thdoor.preference.invoicepref.billingFrequency">
+<md-option>Weekly</md-option>
+<md-option>2 Weeks</md-option>
+<md-option>4 Weeks</md-option>
+<md-option>Monthly</md-option>
+<md-option>2 Months</md-option>
+<md-option>3 Months</md-option>
+<md-option>6 Months</md-option>
+<md-option>Yearly</md-option>
+<md-option>2 Years</md-option>
+<md-option>3 Years</md-option>
 </md-select>
 </md-input-container>
-</div>
+</md-list-item>
+
+</md-list>
+
 </md-content>
 </form>
 </div>
-

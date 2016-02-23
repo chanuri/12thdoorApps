@@ -184,7 +184,7 @@
                                                             </span>
                                                         </div>
                                                         <div flex>
-                                                            <span style="color:#808080;">{{item.price|currency}}
+                                                            <span style="color:#808080;">{{item.price|currency:BaseCurrency}}
                                
                                                                 
                                                                 <md-tooltip>Price</md-tooltip>
@@ -207,7 +207,7 @@
                                                             </span>
                                                         </div>
                                                         <div flex >
-                                                            <span style="color:#808080;">{{item.amount|currency}}
+                                                            <span style="color:#808080;">{{item.amount|currency:BaseCurrency}}
                                
                                                                 
                                                                 <md-tooltip>Amount</md-tooltip>
@@ -224,8 +224,8 @@
                                 </div>
                             </div>
                             <md-divider></md-divider>
-                            <div ng-if="testArray.val.length != 0" >
-                                <!-- ng-show="totalSection" -->
+                            <div  >
+                                <!-- ng-if="testArray.val.length != 0" -->
                                 <div layout layout-sm="column" layout-margin>
                                     <section-title title="Totals"></section-title>
                                 </div>
@@ -242,7 +242,7 @@
                                         <label></label>
                                     </div>
                                     <div flex="30">
-                                        <span>{{calculatetotal() | currency}}</span>
+                                        <span>{{calculatetotal() | currency:BaseCurrency}}</span>
                                         <label style="display:none">{{CalculateTax()}}</label>
                                     </div>
                                 </div>
@@ -261,7 +261,7 @@
                                         <label></label>
                                     </div>
                                     <div flex="30">
-                                        <label>{{finaldiscount(TDinvoice.fdiscount) | currency}}</label>
+                                        <label>{{finaldiscount(TDinvoice.fdiscount) | currency:BaseCurrency}}</label>
                                     </div>
                                 </div>
                                 <div layout layout-sm="column" ng-repeat="tt in taxArr" layout-margin style="overflow:hidden;">
@@ -277,7 +277,7 @@
                                         <label></label>
                                     </div>
                                     <div flex="30" >
-                                        <label>{{tt.salesTax| currency}}</label>
+                                        <label>{{tt.salesTax| currency:BaseCurrency}}</label>
                                         <!--  <span style="display:none">{{CalculateTax()}}</span > -->
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                                         <label></label>
                                     </div>
                                     <div flex="15">
-                                        <span >{{TDinvoice.shipping| currency}}</span>
+                                        <span >{{TDinvoice.shipping| currency:BaseCurrency}}</span>
                                     </div>
                                 </div>
                                 <center>
@@ -314,7 +314,7 @@
                                     </div>
                                     <div flex="27">
                                         <span ng-model="TDinvoice.totalUSD">
-                                            <b>{{finalamount()| currency:"Rs"}}</b>
+                                            <b>{{finalamount()| currency:BaseCurrency}}</b>
                                         </span>
                                     </div>
                                     <div style="height:30px; width:40px;">

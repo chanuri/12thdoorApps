@@ -34,20 +34,20 @@
                             <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title">
                                 <b>{{tdi.Startdate|date}}</b>
                             </span>
-                            <span style="  padding-right: 15px;margin-left:-10px;border-right-style: solid; border-width:1px;" class="collapse-card__title" ng-if="tdi.status != 'Draft'">
+                            <span style="  padding-right: 15px;margin-left:-10px;border-right-style: solid; border-width:1px;" class="collapse-card__title" ng-if="tdi.paymentStatus != 'Draft'">
                                 <b>Invoice No. {{tdi.invoiceNo}}</b>
                             </span>
-                            <span style="padding-right: 15px;margin-left:-10px;border-right-style: solid; border-width:1px;" class="collapse-card__title" ng-if="tdi.status == 'Draft'">
+                            <span style="padding-right: 15px;margin-left:-10px;border-right-style: solid; border-width:1px;" class="collapse-card__title" ng-if="tdi.paymentStatus == 'Draft'">
                                 <b>Draft No. {{tdi.invoiceNo}}</b>
                             </span>
                             <span  class="collapse-card__title"style="padding-right: 15px;margin-left:-10px; border-right-style: solid; border-width:1px;">
                                 <b>{{tdi.Name}}</b>
                             </span>
                             <span  class="collapse-card__title" style="margin-left:-10px;">
-                                <b>Amount {{tdi.finalamount|currency}}</b>
+                                <b>Amount {{tdi.finalamount|currency:tdi.BaseCurrency}}</b>
                             </span>
                         </div>
-                        <div layout-sm="column" style="margin-top:10px;" flex>
+                        <div layout-sm="column" ng-repeat="tt in tdi.MultiDueDAtesArr" style="margin-top:10px;" flex>
                         <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
                                      Balace Due $200.00
                          </span>
@@ -57,37 +57,38 @@
                         <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; " ng-if="tdi.termtype == 'multipleDueDates'">
                                         Due Date. Multiple Due Dates
                                         </span>
-                        <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid green;background-color: #4CAF50;" ng-if="tdi.status == 'Paid'">
+                                     
+                        <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid green;background-color: #4CAF50;" ng-if="tt.paymentStatus == 'Paid'">
                                 <b style=" width:70px; font-color:#FFFFFF;">
                                     <font color="white">Paid</font>
                                 </b>
                             </span>
-                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid red;background-color: #FF0000; " ng-if="tdi.status == 'Unpaid'">
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid red;background-color: #FF0000; " ng-if="tt.paymentStatus == 'Unpaid'">
                                 <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Unpaid</font>
                                 </b>
                             </span>
-                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #D2691E;background-color: #D2691E;" ng-if="tdi.status == 'overdue'">
+                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #D2691E;background-color: #D2691E;" ng-if="tt.paymentStatus == 'overdue'">
                                 <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Overdue</font>
                                 </b>
                             </span>
-                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #FF4500;background-color: #FF4500;" ng-if="tdi.status == 'Partially Paid'">
+                             <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #FF4500;background-color: #FF4500;" ng-if="tt.paymentStatus == 'Partially Paid'">
                                 <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Partially Paid</font>
                                 </b>
                             </span>
-                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000; background-color: #000000;" ng-if="tdi.status == 'Cancelled'">
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000; background-color: #000000;" ng-if="tt.paymentStatus == 'Cancelled'">
                                 <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Cancelled</font>
                                 </b>
                             </span>
-                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="tdi.status == 'Draft'">
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="tt.paymentStatus == 'Draft'">
                                 <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Draft</font>
                                 </b>
                             </span>
-                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="tdi.status == 'Pending'">
+                            <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="tt.paymentStatus == 'Pending'">
                                 <b style="width:70px; font-color:#FFFFFF;">
                                     <font color="white">Pending</font>
                                 </b>
@@ -247,7 +248,7 @@
                                 </span>
                             </div>
                             <div flex>
-                                <span style="color:#808080;">{{item.price|currency}}
+                                <span style="color:#808080;">{{item.price|currency:tdi.BaseCurrency}}
                  
                                     <md-tooltip>Price</md-tooltip>
                                 </span>
@@ -265,7 +266,7 @@
                             <md-tooltip>Tax</md-tooltip>
                         </div>
                             <div flex >
-                                <span style="color:#808080;">{{item.amount|currency}}
+                                <span style="color:#808080;">{{item.amount|currency:tdi.BaseCurrency}}
                  
                                     <md-tooltip>Amount</md-tooltip>
                                 </span>
@@ -293,7 +294,7 @@
                         <label></label>
                     </div>
                     <div flex="30">
-                        <span>{{tdi.total | currency}}</span>
+                        <span>{{tdi.total | currency:tdi.BaseCurrency}}</span>
                     </div>
                 </div>
                 <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
@@ -311,7 +312,7 @@
                         <label></label>
                     </div>
                     <div flex="30" >
-                        <label> - {{tdi.fdiscount | currency}}</label>
+                        <label> - {{tdi.fdiscount | currency:tdi.BaseCurrency}}</label>
                     </div>
                 </div>
                 <div layout layout-sm="column" layout-margin style="overflow:hidden;">
@@ -329,7 +330,7 @@
                         <label></label>
                     </div>
                     <div flex="30" >
-                        <label>{{tdi.salesTaxAmount|currency}}</label>
+                        <label>{{tdi.salesTaxAmount|currency:tdi.BaseCurrency}}</label>
                     </div>
                 </div>
                 
@@ -348,7 +349,7 @@
                         <label></label>
                     </div>
                     <div flex="30">
-                        <span >{{tdi.shipping| currency}}</span>
+                        <span >{{tdi.shipping| currency:tdi.BaseCurrency}}</span>
                     </div>
                 </div>
                 <center>
@@ -372,7 +373,7 @@
                     </div>
                     <div flex="30">
                         <span ng-model="creditNote.totalUSD">
-                            <b>{{tdi.finalamount| currency}}</b>
+                            <b>{{tdi.finalamount| currency:tdi.BaseCurrency}}</b>
                         </span>
                     </div>
                 </div>
@@ -423,7 +424,7 @@
                             <tr ng-repeat="mutidate in tdi.MultiDueDAtesArr">
                                 <td style="padding: 30px;" flex>{{mutidate.DueDate|date}}</td>
                                 <td style="padding: 30px;" flex>{{mutidate.Percentage}} % </td>
-                                <td style="padding: 30px;" flex> {{mutidate.dueDateprice|currency}} </td>
+                                <td style="padding: 30px;" flex> {{mutidate.dueDateprice|currency:tdi.BaseCurrency}} </td>
                             </tr>
                         </table>                      
                     </div>

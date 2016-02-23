@@ -24,7 +24,7 @@
          </md-input-container>
          <md-input-container >
             <label>Unit</label>
-            <md-select ng-model="test.ProductUnit" style="width:150px;" flex required/>
+            <md-select ng-model="test.ProductUnit" style="width:150px;" ng-change="setUOM(tax.unitsOfMeasurement)" flex required/>
             <md-optgroup label="Terms type">
                <md-option ng-repeat="tax in UnitOfMeasure" value="{{tax.unitsOfMeasurement}}">
                   {{tax.unitsOfMeasurement}}

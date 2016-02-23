@@ -43,23 +43,33 @@
                   </md-option>
                </md-optgroup>
                </md-select>
+               <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
+                   <div ng-message="required" ng-show="showPercentage">
+                       <b>Please Enter UOM </b>
+                   </div> 
+               </div>
             </md-input-container>
          </div>
          <md-input-container ng-repeat="pim in promoItems" style=" margin-top:-3px;" flex>
             <label>Price</label>
-            <input type="text" ng-model="pim.price| currency" required ng-change="setprice(pim)"/>
+            <input type="text" ng-model="pim.price" required ng-change="setprice(pim)"/>
+             <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
+                   <div ng-message="required" ng-show="showPrice">
+                       <b>Please Enter the Price </b>
+                   </div> 
+               </div>
          </md-input-container>
       </div>
       <div layout layout-sm="column" layout-margin>
          <section-title></section-title>
-         <md-input-container ng-disabled="$root.displayDiscountLine"  flex>
+         <md-input-container ng-show="displayDiscountLine"  flex>
             <label>Discount</label>
             <input type="text" ng-model="discount" />
          </md-input-container>
          <div flex ng-repeat="pim in promoItems" ng-show="$root.DisplayTaxes">
             <md-input-container flex style=" margin-top:2px;">
                <label>Tax</label>
-               <md-select style="width:150px; " ng-model="pim.tax.taxname" ng-disabled="TaxDisabled" ng-change="setTax(pim)" flex required/>
+               <md-select style="width:150px;" ng-model="pim.tax.taxname" ng-disabled="TaxDisabled" ng-change="setTax(pim)" flex required/>
                <md-optgroup label="Tax">
                   <md-option ng-repeat="tax in $root.taxType" value="{{tax.taxname}}">
                      {{tax.taxname}} 
@@ -71,7 +81,7 @@
          <md-input-container style=" margin-top:5px;" flex>
             <label>Amount</label>
             <span style="display:none">{{calAMount()}}</span >
-            <input ng-model="Amount| currency" ng-disabled="true">
+            <input ng-model="Amount| currency:$root.BaseCurrency1" ng-disabled="true">
          </md-input-container>
       </div>
       <div layout layout-sm="column" layout-margin>

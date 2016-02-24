@@ -1,5 +1,5 @@
 angular.module('mainApp')
-.controller('viewCtrl', function($scope,$mdBottomSheet,$interval, $mdDialog, $state, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope,invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
+.controller('viewCtrl', function($scope,$mdBottomSheet,$interval, $mdDialog, $state,uiInitilize, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope,invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
       $scope.TDinvoice =[];
       $scope.Payment =[];
       $scope.newItems = [];
@@ -8,7 +8,37 @@ angular.module('mainApp')
       $scope.obtable = [];
       var vm = this;
       $scope.Makepayment = false;
-      $scope.multipleDueDAtes = false;
+
+
+
+      // ------------------------------------virtual repeat start-----------------
+$scope.toggles = {};
+    $scope.toggleOne = function($index){
+     for (ind in $scope.items)
+    if ($scope.toggles[ind] && ind != $index)
+     $scope.toggles[ind] = false;
+
+     if (!$scope.toggles[$index])
+     $scope.toggles[$index] = true;
+     else $scope.toggles[$index] = !$scope.toggles[$index];
+   };
+  
+
+      setInterval(function interval(){
+          $scope.viewPortHeight = window.innerHeight;
+          $scope.viewPortHeight = $scope.viewPortHeight+"px";
+      }, 100);
+
+      $scope.items = uiInitilize.insertIndex($scope.TDinvoice);
+  
+      //This holds the UI logic for the collapse cards
+      $scope.toggles = {};
+      $scope.toggleOne = function($index)
+      { 
+      $scope.toggles = uiInitilize.openOne($scope.TDinvoice, $index);
+      }
+
+      // ------------------------------------virtual repeat end -------------
       
         if ($state.current.name == 'settings.invoice_app') {
                 $rootScope.showinvoice = true;
@@ -97,6 +127,35 @@ angular.module('mainApp')
             KeyProperty: "invoiceNo"
          });
       }
+
+      $scope.Approve = function(obj){
+        var client = $objectstore.getClient("invoice12thdoor");
+         obj.invoiceNo = obj.invoiceNo.toString();
+         obj.status = "Unpaid";
+         client.onComplete(function(data) {
+             $mdDialog.show(
+               // $mdDialog.alert()
+               // .parent(angular.element(document.body))
+               // .title('')
+               // .content('invoice Successfully Cancelled')
+               // .ariaLabel('Alert Dialog Demo')
+               // .ok('OK')
+               // .targetEvent(data)
+            );
+         });
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding Invoice')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(obj, {KeyProperty: "invoiceNo"});
+      }
+      
 $scope.systemMessage = [];
 $scope.cancelStatus = function(obj, ev) {
   var confirm = $mdDialog.confirm()
@@ -109,7 +168,6 @@ $scope.cancelStatus = function(obj, ev) {
             $mdDialog.show(confirm).then(function() {
          var client = $objectstore.getClient("invoice12thdoor");
          obj.invoiceNo = obj.invoiceNo.toString();
-         // if(obj.status != "Draft"){
           $scope.systemMessage.push({text:"The Invoice was Cancelled by mr.Perera", done:false,  date:new Date()});
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            obj.commentsAndHistory.push($scope.systemMessage[i]);
@@ -131,14 +189,13 @@ $scope.cancelStatus = function(obj, ev) {
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
-               .content('Error Occure while Adding cancelling Invoice')
+               .content('Error Occure while cancelling Invoice')
                .ariaLabel('')
                .ok('OK')
                .targetEvent(data)
             );
          });
         client.insert(obj, {KeyProperty: "invoiceNo"});
-       // }
       })
 }
       $scope.$watch('selectedIndex', function(current, old) {
@@ -199,6 +256,7 @@ $scope.cancelStatus = function(obj, ev) {
             $scope.checkAbility = true;
          }
       };
+
      
       $scope.deleteInvoice = function(deleteform, ev) {
         if(deleteform.invoiceNo == "-999"){
@@ -326,7 +384,8 @@ $scope.cancelStatus = function(obj, ev) {
 
       
         invoiceDetails.setArray(InvoItem);
-        location.href = '#/copyInvoiceDetails';
+        // location.href = '#/copyInvoiceDetails';
+       $state.go('copy', {'invoiceno': InvoItem.invoiceRefNo});
       }
 
       $scope.calAMount = function(data) {
@@ -431,13 +490,7 @@ $scope.cancelStatus = function(obj, ev) {
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDinvoice.push(data[i]);
 
-               for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
-
-                   if(data[i].termtype == "multipleDueDates"){
-                    $scope.multipleDueDAtes = true;
-                   }
-                 };
-               if($stateParams.invoiceno == data[i].invoiceNo){
+               if($stateParams.invoiceno == data[i].invoiceNo && data[i].status == "Draft"){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
                   $scope.Address = data[i].billingAddress.split(',');
@@ -450,6 +503,7 @@ $scope.cancelStatus = function(obj, ev) {
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
+
             };
          }
       });
@@ -466,6 +520,7 @@ $scope.cancelStatus = function(obj, ev) {
       client.getByFiltering("*");
 
       
+
       var client = $objectstore.getClient("invoice12thdoor");
       client.onGetMany(function(data) {
          if (data) {
@@ -474,13 +529,7 @@ $scope.cancelStatus = function(obj, ev) {
               data[i].addView = "";
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDinvoice.push(data[i]);
-               //console.log($scope.TDinvoice)
-               for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
-
-                   if(data[i].termtype == "multipleDueDates"){
-                    $scope.multipleDueDAtes = true;
-                   }
-                 };
+               
                if($stateParams.invoiceno == data[i].invoiceNo){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
@@ -494,6 +543,7 @@ $scope.cancelStatus = function(obj, ev) {
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
+ 
             };
          }
       });
@@ -518,7 +568,7 @@ $scope.cancelStatus = function(obj, ev) {
                  if($stateParams.invoiceno == data[i].paidInvoice[x].invono){
                 
                  $scope.Payment.push(data[i]);
-                 console.log($scope.Payment);
+                 //console.log($scope.Payment);
                }
                };
                
@@ -806,7 +856,7 @@ $scope.email = function(item) {
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
-               .content('Error Occure while Adding cancelling Invoice')
+               .content('Error Occure while Adding the comment')
                .ariaLabel('')
                .ok('OK')
                .targetEvent(data)

@@ -9,15 +9,9 @@
    padding-top: 114px!important;
    }
    }
-   /* page animation start*/
-   /*page animation end */
 </style>
 <div ng-init="loadAllInventory()"></div>
-<!--  <div ng-init="DemoCtrl1()" >
-   </div> -->
-<!--START OF ALL CONTENT-->
 <div ng-controller="viewctrl as ctrl" >
-   <!--START OF FIRST CARD CONTAINER-->
    <div class="header_container" >
       <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:40px;">
          <md-autocomplete flex  
@@ -54,12 +48,11 @@
                               <div>
                                  <md-icon md-svg-icon='img/ic_arrow_drop_down_24px.svg' style='margin-top:9px;position: absolute; left: 150px;' ng-show='item.downstatus'></md-icon>
                               </div>
-                              
                               <md-icon md-menu-align-target md-svg-icon='{{item.src}}' style='margin: auto 25px auto 0;'></md-icon>
                            </div>
                         </md-button>
                         <div ng-click="DefaultCancel(item)" style="width: 18px;z-index: 10;margin-left: -45px; margin-top: 15px;position: absolute;" ng-show='item.close'>
-                              <md-icon md-svg-icon='img/ic_close_24px.svg' style='width: 18px;
+                           <md-icon md-svg-icon='img/ic_close_24px.svg' style='width: 18px;
                               margin-top:-4px;'></md-icon>
                         </div>
                      </md-menu-item>
@@ -76,10 +69,6 @@
          </md-tabs>
       </md-content>
    </div>
-   <!--END OF FIRST CARD CONTAINER-->
-   <!--START OF SECOND CARD CONTAINER-->
-   <!--START OF SECOND CARD CONTAINER-->
-   <!--END OF ALL CONTENT-->
    <div class="card_container" style="padding-top: 117px;">
       <div class="ui-view-container">
          <div class="container" ui-view  viewcss></div>

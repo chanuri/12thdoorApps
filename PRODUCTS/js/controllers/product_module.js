@@ -1,1 +1,1 @@
-var rasm = angular.module('mainApp', ['ngMaterial','directivelibrary','12thdirective','uiMicrokernel','ui.router']);
+var rasm=angular.module("mainApp",["ngMaterial","directivelibrary","12thdirective","uiMicrokernel","ui.router"]);

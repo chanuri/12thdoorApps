@@ -1,22 +1,124 @@
+
+rasm.directive('embedSrc', function () {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var current = element;
+      scope.$watch(function() { return attrs.embedSrc; }, function () {
+        var clone = element
+                      .clone()
+                      .attr('src', attrs.embedSrc);
+        current.replaceWith(clone);
+        current = clone;
+      });
+    }
+  };
+})
+
+rasm.service("$commentLog",function(){
+	var commentObj = {};
+	var index;
+
+	this.addEditObject = function(obj,inx){
+		commentObj = {};
+		commentObj = obj;
+		index = inx;
+	}
+	this.returnEditObject = function(){
+		return {
+			commentObj : commentObj,
+			index : index
+		}
+	}
+})
+
+rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
+
+	var userName = $auth.getSession()
+	this.newActivity = function(ActivityTxt,pCode,pNum,callback){
+		var txt = ActivityTxt + userName;
+		
+		var activityObj = {
+		 	UserName : userName,
+		 	TodayDate : new Date(),
+		 	Comment : txt,
+		 	product_code :pCode,
+		 	productNum : pNum,
+		 	textareaHeight : '30px;',
+		 	activity_code : "-999",
+		 	type : "activity"
+		};
+
+		var activityClient = $objectstore.getClient("productActivity");
+		activityClient.onComplete(function(data){
+			console.log("activity Successfully added")
+			callback("success")
+		});
+		activityClient.onError(function(data){
+			console.log("error Adding new activity")
+			callback("error")
+		});
+		activityClient.insert(activityObj, {KeyProperty:'activity_code'})
+	}
+}]);
+
 rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'ProductService', function($uploader,$rootScope, $mdToast, ProductService) {
   return {
 	restrict: 'E',
-	template: "<div ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><text style='font-size:12px;margin-left:10px'>{{label}}<text></div></div></div>",
-	scope:{			 
+	template: "<div class='content' ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><label for='file-upload' style='font-size:12px;margin-left:10px' class='ng-binding'>{{label}}</label><input  id='file-upload' type='file' style='display: none;' multiple></div></div></div></div>",
+    scope:{			 
 		label:'@',
 		uploadType:'@'
 	},
 	link: function(scope,element){
 		// Makes sure the dataTransfer information is sent when we
 		// Drop the item in the drop box.
-		jQuery.event.props.push('dataTransfer');	
+		jQuery.event.props.push('dataTransfer');
 
 		// file/s on a single drag and drop
 		var files;			
 		// total of all the files dragged and dropped
 		var filesArray = [];
+		
 		var sampleArray = [];
 		var sampleArraybrochure = [];
+		var fileType;
+		scope.btnVisibility = false;
+
+		element.find("#file-upload").bind('change',function(changeEvent){
+	        scope.$apply(function () {
+	            scope.fileread = changeEvent.target.files;
+	            console.log(scope.fileread)
+	        }); 
+
+	        if (scope.uploadType == "image") {
+	        	for(u=0; u<=scope.fileread.length-1; u++){ 			  		  
+			  		fileType = scope.fileread[u].type.split("/")[0];
+			  		if (fileType == 'image') {
+			  			scope.btnVisibility = true;
+						filesArray.push(scope.fileread[u]);
+						ProductService.setArray(scope.fileread[u]);
+						ProductService.BasicArray(scope.fileread[u].name,scope.fileread[u].size);
+						sampleArray.push({'name': scope.fileread[u].name, 'size': scope.fileread[u].size});
+			  		}				 
+				}
+
+			}else if (scope.uploadType == "brochure") {
+
+	        	for(u=0; u<=scope.fileread.length-1; u++){ 		  
+			  		fileType = scope.fileread[u].type.split("/")[0];
+			  		if (fileType == 'application') {
+			  			scope.btnVisibility = true;
+						filesArray.push(scope.fileread[u]);
+						ProductService.setArraybrochure(scope.fileread[u]);
+						ProductService.BasicArraybrochure(scope.fileread[u].name,scope.fileread[u].size);
+						sampleArraybrochure.push({'name': scope.fileread[u].name, 'size': scope.fileread[u].size});	
+					}					 
+				}
+
+			}
+			bindNewFile();	        
+	    })
 		
 		// Bind the drop event to the dropzone.
 		element.find("#drop-files").bind('drop', function(e) {
@@ -24,45 +126,60 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 			// Stop the default action, which is to redirect the page
 			// To the dropped file
 			
-			  files = e.dataTransfer.files || e.dataTransfer.files;
+			files = e.dataTransfer.files || e.dataTransfer.files;
+
 			
 			if (scope.uploadType == "image") {
-			  for(indexx = 0; indexx < files.length; indexx++) {
-					filesArray.push(files[indexx]);
-					ProductService.setArray(files[indexx]);
-					ProductService.BasicArray(filesArray[indexx].name,filesArray[indexx].size);
-					sampleArray.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});						 
+
+			  for(indexx = 0; indexx < files.length; indexx++) {			  		  
+			  		fileType = files[indexx].type.split("/")[0];
+			  		if (fileType == 'image') {
+			  			scope.btnVisibility = true;
+						filesArray.push(files[indexx]);
+						ProductService.setArray(files[indexx]);
+						ProductService.BasicArray(files[indexx].name,files[indexx].size);
+						sampleArray.push({'name': files[indexx].name, 'size': files[indexx].size});
+			  		}				 
 				}
 
 			}else if (scope.uploadType == "brochure") {
 
 				 for(indexx = 0; indexx < files.length; indexx++) {
-					filesArray.push(files[indexx]);
-					ProductService.setArraybrochure(files[indexx]);
-					ProductService.BasicArraybrochure(filesArray[indexx].name,filesArray[indexx].size);
-					sampleArraybrochure.push({'name': filesArray[indexx].name, 'size': filesArray[indexx].size});						 
+			  		fileType = files[indexx].type.split("/")[0];
+			  		if (fileType == 'application') {
+			  			scope.btnVisibility = true;
+						filesArray.push(files[indexx]);
+						ProductService.setArraybrochure(files[indexx]);
+						ProductService.BasicArraybrochure(files[indexx].name,files[indexx].size);
+						sampleArraybrochure.push({'name': files[indexx].name, 'size': files[indexx].size});	
+					}					 
 				}
 
-			};		
-
-		 var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
-
-		  for (var i = 0; i < filesArray.length; i++) {
-				 var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
-				 filesArray[i].type+ "</td><td class='upload-table'>" +
-				 filesArray[i].size +" bytes"+ "</td></tr>";
-				 newHtml += tableRow;
 			}
-			
-			element.find("#Tabulate").html(newHtml);
-			 
-			 $rootScope.$apply(function(){
-				scope.showUploadButton = true;
-				scope.showDeleteButton = true;
-				scope.showUploadTable = true;
-			 })
+			bindNewFile();
+		});	
 
-		});		
+		function bindNewFile(){
+
+			if (scope.btnVisibility) {
+			 	var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
+
+			  	for (var i = 0; i < filesArray.length; i++) {
+					var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
+					filesArray[i].type+ "</td><td class='upload-table'>" +
+					filesArray[i].size +" bytes"+ "</td></tr>";
+					newHtml += tableRow;
+				}
+
+				element.find("#Tabulate").html(newHtml);
+				 
+				$rootScope.$apply(function(){
+					scope.showUploadButton = true;
+					scope.showDeleteButton = true;
+					scope.showUploadTable = true;
+				})
+			}
+		}	
 		function restartFiles() {			
 			// We need to remove all the images and li elements as
 			// appropriate. We'll also make the upload button disappear
@@ -70,6 +187,7 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 				scope.showUploadButton = false;
 				scope.showDeleteButton = false;
 				scope.showUploadTable = false;
+				scope.btnVisibility = false;
 			 })		
 			// And finally, empty the array
 			ProductService.removeArray(filesArray,scope.uploadType);
@@ -98,90 +216,88 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 	} //end of link
   };
 }]);
-rasm.factory('ProductService', function($rootScope){
-      $rootScope.testArray = [];
-      $rootScope.basicinfo = [];
-      $rootScope.testArraybrochure = [];
-      $rootScope.basicinfobrochure = [];
-  return {
-
-     setArraybrochure: function(newVal) {
-        $rootScope.testArraybrochure.push(newVal);
-      return $rootScope.testArraybrochure;
-    },
-  loadArraybrochure: function() {    
-      return $rootScope.testArraybrochure;
-   },
-   loadBasicArraybrochure: function() {    
-      return $rootScope.basicinfobrochure;
-   },
-  BasicArraybrochure: function(name,size) { 
-
-    $rootScope.basicinfobrochure.push({'name': name , 'size': size});
-      console.log($rootScope.basicinfobrochure);
-      return $rootScope.basicinfobrochure;
-   },
-  
-  setArray: function(newVal) {
-        $rootScope.testArray.push(newVal);
-      return $rootScope.testArray;
-    },
-  loadArray: function() {    
-      return $rootScope.testArray;
-   },
-   loadBasicArray: function() {    
-      return $rootScope.basicinfo;
-   },
-  BasicArray: function(name,size) { 
-
-    $rootScope.basicinfo.push({'name': name , 'size': size});
-      console.log($rootScope.basicinfo);
-      return $rootScope.basicinfo;
-   },
-  removeArray: function(arr,type){
-
-      if (type == "image") {
-        for (var i = arr.length - 1; i >= 0; i--) {
-        $rootScope.testArray.splice(arr[i], 1);
-        };
-        console.log($rootScope.testArray);
-        return $rootScope.testArray;
-
-     }
-     else if (type == "brochure") {
-
-        for (var i = arr.length - 1; i >= 0; i--) {
-        $rootScope.testArraybrochure.splice(arr[i], 1);
-        };
-        console.log($rootScope.testArraybrochure);
-        return $rootScope.testArraybrochure;
-     };
+rasm.factory('ProductService',["$rootScope", function($rootScope){
     
-   },
+    $rootScope.testArray = [];
+    $rootScope.basicinfo = [];
+    $rootScope.testArraybrochure = [];
+    $rootScope.basicinfobrochure = [];
 
-   removebasicArraybrochure: function(arr){
+	  return {
 
-        for (var i = arr.length - 1; i >= 0; i--) {
+	  	setArraysEmpty: function(){
 
-          $rootScope.basicinfobrochure.splice(arr[i], 1);
+	  		$rootScope.testArray = [];
+		    $rootScope.basicinfo = [];
+		    $rootScope.testArraybrochure = [];
+		    $rootScope.basicinfobrochure = [];
+	  	},
+	    setArraybrochure: function(newVal) {
+	        $rootScope.testArraybrochure.push(newVal);
+	      	return $rootScope.testArraybrochure;
+	    },
+	  	loadArraybrochure: function() {    
+	      	return $rootScope.testArraybrochure;
+	   	},
+	   	loadBasicArraybrochure: function() {    
+	      	return $rootScope.basicinfobrochure;
+	   	},
+	  	BasicArraybrochure: function(name,size) {
+	    	$rootScope.basicinfobrochure.push({'name': name , 'size': size});
+	      	console.log($rootScope.basicinfobrochure);
+	      	return $rootScope.basicinfobrochure;
+	   	},  
+	  	setArray: function(newVal) {
+	        $rootScope.testArray.push(newVal);
+	      	return $rootScope.testArray;
+	    },
+	  	loadArray: function() {    
+	      	return $rootScope.testArray;
+	   	},
+	   	loadBasicArray: function() {    
+	      	return $rootScope.basicinfo;
+	   	},
+	  	BasicArray: function(name,size) { 
 
-          };
-          console.log($rootScope.basicinfobrochure);
-          return $rootScope.basicinfobrochure;
+	    	$rootScope.basicinfo.push({'name': name , 'size': size});
+	      	console.log($rootScope.basicinfo);
+	      	return $rootScope.basicinfo;
+	   	},
+	  	removeArray: function(arr,type){
 
-   },
-   removebasicArray: function(arr){
-   
-        for (var i = arr.length - 1; i >= 0; i--) {
-          $rootScope.basicinfo.splice(arr[i], 1);
-        };
-        console.log($rootScope.basicinfo);
-        return $rootScope.basicinfo;
-    
-   }
-  }  
+	      	if(type == "image") {
+		        for (var i = arr.length - 1; i >= 0; i--) {
+			        $rootScope.testArray.splice(arr[i], 1);
+			    }
+		        console.log($rootScope.testArray);
+		        return $rootScope.testArray;
+	     	}
+	     	else if(type == "brochure") {
+		        for (var i = arr.length - 1; i >= 0; i--) {
+		        	$rootScope.testArraybrochure.splice(arr[i], 1);
+		        };
+		        console.log($rootScope.testArraybrochure);
+		        return $rootScope.testArraybrochure;
+	     	}    
+	   	},
+
+	   	removebasicArraybrochure: function(arr){
+	        for (var i = arr.length - 1; i >= 0; i--) {
+	          	$rootScope.basicinfobrochure.splice(arr[i], 1);
+	        };
+	        console.log($rootScope.basicinfobrochure);
+	        return $rootScope.basicinfobrochure;
+	   	},
+	   	removebasicArray: function(arr){	   
+	        for (var i = arr.length - 1; i >= 0; i--) {
+	          	$rootScope.basicinfo.splice(arr[i], 1);
+	        };
+	        console.log($rootScope.basicinfo);
+	        return $rootScope.basicinfo;    
+	   	}
+	  }  
   
-});
+}]);
 
 rasm.service('$DownloadPdf',function(){
 	this.GetPdf = function(obj,type){
@@ -297,7 +413,7 @@ rasm.service('$objectstoreAccess', ['$objectstore', '$auth', '$mdDialog'
 	}
 ]);
 
-rasm.factory('$EditUploadData',function($rootScope){
+rasm.factory('$EditUploadData',["$rootScope", function($rootScope){
 	$rootScope.UploadData = [];
 	return{
 		PutData:function(arr){
@@ -307,7 +423,7 @@ rasm.factory('$EditUploadData',function($rootScope){
 			return $rootScope.UploadData;
 		}
 	}
-});
+}]);
 
 rasm.filter('unique', function () {
 
@@ -347,7 +463,7 @@ rasm.filter('unique', function () {
     return items;
   };
 });
-rasm.filter('datetime', function($filter)
+rasm.filter('datetime',["$filter", function($filter)
 {
  return function(input)
  {
@@ -358,7 +474,7 @@ rasm.filter('datetime', function($filter)
   return _date.toUpperCase();
 
  };
-});
+}]);
 
 // remove all the null values in an array 
 // pass the array as a parameter and return not null element array 

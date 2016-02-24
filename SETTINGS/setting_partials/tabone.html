@@ -1,311 +1,255 @@
 <div>
-	<form ng-submit="submit()" id="form" name="editForm" style="box-shadow:0 5px 5px -3px rgba(0,0,0,.14),0 8px 10px 1px rgba(0,0,0,.098),0 3px 14px 2px rgba(0,0,0,.084)">
-		<md-content>
-		<div layout layout-sm="column" layout-margin>
-			<div flex="5">
-				<img src="img/material alperbert/avatar_tile_a_28.png" style="margin-top:22px;border-radius:20px"/>
-			</div>
-			<div flex="20" style="margin-top:35px;">
-				<label style="font-weight:700">Account Owner</label>
-			</div>
-			<md-input-container flex="40">
-			<label>Account Owner</label>
-			<input ng-model="$root.Settings12thdoor.profile.accountOwner" ng-disabled="true">
-		</md-input-container>
-		<div layout="row" layout-align="start center">
-			<a href="#" class="tooltip" data-tooltip="To update your name or email address. please edit your personal profile">
-				<md-icon style="color:#A5A0A0" md-svg-src="img/ic_info_24px.svg" aria-label="Insert Drive Icon">
-			</md-icon>
-		</a>
-	</div>
-</div>
+	<form id="form" name="editForm" ng-submit="submit()" style="box-shadow:0 5px 5px -3px rgba(0,0,0,.14),0 8px 10px 1px rgba(0,0,0,.098),0 3px 14px 2px rgba(0,0,0,.084)">
+		<md-content style="overflow:hidden;">
+		<md-divider></md-divider>
+		<md-list style="margin-top: 20px; margin-bottom: 20px;">
+		<div layout-gt-sm="row">
+			<section-title title="Account Owner Details"></section-title>
+		</div>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="40">
-	<label>Your Email</label>
-	<input type="text" ng-model="$root.Settings12thdoor.profile.adminEmail" ng-disabled="false">
-</md-input-container>
-<div layout="row" layout-align="start center">
-	<a href="#" class="tooltip" data-tooltip="To update your name or email address. please edit your personal profile">
-		<md-icon style="color:#A5A0A0" md-svg-src="img/ic_info_24px.svg" aria-label="Insert Drive Icon">
-	</md-icon>
-</a>
-</div>
-</div>
+		<md-list-item>
+		<div layout-gt-sm="column" flex>
+			<p>Account Owner</p>
+			<p style="margin-top: -15px; color: rgba(0,0,0,0.54); font-size:13px;">To update your name or email address. please edit your personal profile</p>
+		</div>
+		<md-input-container flex="40">
+		<input ng-model="$root.Settings12thdoor.profile.accountOwner" ng-disabled="true" placeholder="Account Owner">
+	</md-input-container>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="40">
-	<label>Accout Url</label>
-	<input type="text" ng-model="$root.Settings12thdoor.profile.accountUrl" ng-disabled="true">
+<md-list-item>
+<div layout-gt-sm="column" flex>
+	<p>Your Email</p>
+	<p style="margin-top: -15px; color: rgba(0,0,0,0.54); font-size:13px;">To update your name or email address. please edit your personal profile</p>
+</div>
+<md-input-container flex="40">
+<input ng-model="$root.Settings12thdoor.profile.adminEmail" ng-disabled="false" placeholder="Your Email">
 </md-input-container>
-<div flex="20" layout="row" layout-align="start center">
-	<md-button class="md-primary" style="font-size:12px;" ng-click="changeUrl($event)">
-	Change
+</md-list-item>
+
+<md-list-item class="secondary-button-padding">
+<div layout-gt-sm="column" flex>
+	<p>Account Url</p>
+</div>
+<div flex="40">
+	<md-input-container d-no-float class="md-block" flex-gt-sm>
+	<input type="text" ng-model="$root.Settings12thdoor.profile.accountUrl" ng-disabled="true" placeholder="Account Url">
+</md-input-container>
+<md-button class="md-primary md-secondary" style="font-size:12px;" ng-click="changeUrl($event)">
+Change
 </md-button>
 </div>
-</div>
+</md-list-item>
 
 <md-divider></md-divider>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5">
-		<img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:22px;border-radius:20px"/>
-	</div>
-	<div flex="20" style="margin-top:35px;">
-		<label style="font-weight:700">Company Information</label>
-	</div>
-	<md-input-container flex>
-	<label>Company Name</label>
-	<input type="text" ng-model="$root.Settings12thdoor.profile.companyName" >
-</md-input-container>
-<div flex="5" hide-sm>	
-</div>
+<div layout-gt-sm="row">
+	<section-title title="Company Information"></section-title>
 </div>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex md-no-float>
-	<input type="text" ng-model="$root.Settings12thdoor.profile.street" placeholder="Street">
+<md-list-item>
+<p>Company Name</p>
+<md-input-container flex="40">
+<input type="text" ng-model="$root.Settings12thdoor.profile.companyName" placeholder="Company Name">
 </md-input-container>
-<div flex="5" hide-sm>	
-</div>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30" md-no-float>
-	<input ng-model="$root.Settings12thdoor.profile.city" placeholder="City" >
+<md-list-item>
+<p>Street</p>
+<md-input-container flex="40">
+<input type="text" ng-model="$root.Settings12thdoor.profile.street" placeholder="Street">
 </md-input-container>
-<md-input-container flex md-no-float>
+</md-list-item>
+
+<md-list-item>
+<p>City</p>
+<md-input-container flex="40">
+<input ng-model="$root.Settings12thdoor.profile.city" placeholder="City" >
+</md-input-container>
+</md-list-item>
+
+<md-list-item>
+<p>State</p>
+<md-input-container flex="40">
 <input ng-model="$root.Settings12thdoor.profile.state" placeholder="State" required>
 </md-input-container>
-<div flex="5" hide-sm>	
-</div>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30" md-no-float>
-	<input ng-model="$root.Settings12thdoor.profile.zip" placeholder="Zip" required>
+<md-list-item>
+<p>Zip</p>
+<md-input-container flex="40">
+<input ng-model="$root.Settings12thdoor.profile.zip" placeholder="Zip" required>
 </md-input-container>
-<md-input-container flex>
-<label>Country</label>
-<md-select ng-model="$root.Settings12thdoor.profile.country">
+</md-list-item>
+
+<md-list-item>
+<p>Country</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.profile.country" placeholder="Country">
 <md-option ng-repeat="c in country" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
-<div flex="5" hide-sm>	
-</div>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Phone</label>
-	<input type="text" ng-model="$root.Settings12thdoor.profile.phoneNo" required>
+<md-list-item>
+<p>Phone Number</p>
+<md-input-container flex="40">
+<input type="text" ng-model="$root.Settings12thdoor.profile.phoneNo" placeholder="Phone Number">
 </md-input-container>
-<md-input-container flex>
-<label>Fax</label>
-<input type="text" ng-model="$root.Settings12thdoor.profile.fax" required>
-</md-input-container>
-<div flex="5" hide-sm>	
-</div>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Company Email</label>
-	<input type="text" ng-model="$root.Settings12thdoor.profile.companyEmail" placeholder="Will display on invoices, estimates etc.. " required>
+<md-list-item>
+<p>Fax</p>
+<md-input-container flex="40">
+<input type="text" ng-model="$root.Settings12thdoor.profile.fax" placeholder="Fax">
 </md-input-container>
-<md-input-container flex>
-<label>Website</label>
-<input type="text" ng-model="yfu" required>
-</md-input-container>
-<div flex="5" hide-sm>	
-</div>
-</div>
+</md-list-item>
 
-<div layout layout-sm="column" layout-margin >
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<div flex="20" style="margin-bottom: 29px;">
-		<md-button  class="md-raised" ng-click="uploadImage($event)">
-		Upload Company Logo
-	</md-button>
-</div>
-<div flex layout="row" layout-align="start center" ng-repeat="logo in $root.Settings12thdoor.profile.name" style="margin-top:-11px;">
-	<div><p style="color:#B5B5B5;font-size:16px;">{{logo.name}}</p></div>
-	<div><md-icon ng-click="deletelogoimage(logo, $index)" style="color:#A5A0A0" md-svg-src="img/ic_close_24px.svg" aria-label="Insert Drive Icon"></md-icon></div>
-</div>
-</div>
+<md-list-item>
+<p>Company Email</p>
+<md-input-container flex="40">
+<input type="text" ng-model="$root.Settings12thdoor.profile.companyEmail" placeholder="Will display on invoices, estimates etc..">
+</md-input-container>
+</md-list-item>
+
+<md-list-item>
+<p>Website</p>
+<md-input-container flex="40">
+<input type="text" ng-model="$root.Settings12thdoor.profile.website" placeholder="Website">
+</md-input-container>
+</md-list-item>
 
 <md-divider></md-divider>
 
-<div layout="row" layout-sm="column" layout-margin>
-	<div flex="5">
-		<img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:10px; border-radius:20px"/>
+<md-list-item ng-click="uploadImage($event)">
+<div layout-gt-sm="row" flex>
+	<p>Upload Company Logo</p>
+	<div flex layout="row" layout-align="end center" ng-repeat="logo in $root.Settings12thdoor.profile.name">
+		<div><p style="color:#B5B5B5;font-size:16px;">{{logo.name}}</p></div>
+		<div><md-icon ng-click="deletelogoimage(logo, $index)" style="color:#A5A0A0" md-svg-src="img/ic_close_24px.svg" aria-label="Insert Drive Icon"></md-icon></div>
 	</div>
-	<div flex="20" style="margin-top:25px;">
-		<label style="font-weight:700">Custom Fields</label>
-	</div>
-	<div layout="column" flex>
-		<!-- Start customer fields table -->
-		<ul as-sortable="sortableOptions" style="width:60%; margin-bottom: 42px; margin-top: 0px;" ng-model="asdc">
-			<li ng-repeat="item in $root.Settings12thdoor.profile.CusFiel" as-sortable-item>
-				<md-card style="margin-left:-41px;" class="add-mdcard" as-sortable-item-handle>
-				<md-card-content>
-				<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
-					<div flex>
-						<span style="color:#808080;font-size:15px;">{{item.labelshown}}
-							<md-tooltip md-direction="right">Custom Fields Label</md-tooltip>
-						</span>
-					</div>
-					<div flex>
-						<span style="color:#808080;font-size:15px;">{{item.type}}
-							<md-tooltip md-direction="right">Fields Type</md-tooltip>
-						</span>
-					</div>
-					<div flex="5">
-						<md-menu md-position-mode="target-right target" layout="row" flex-sm="100" layout-align="end center" style="margin-top:-4px;">
-						<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-						<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
-					</md-button>
-					<md-menu-content width="4">
-					<md-menu-item>
-					<md-button ng-click="editprofilecusFieldsrow(item ,$event)">
-					<p>Edit</p>
-					<md-icon md-menu-align-target ></md-icon>
+</div>
+</md-list-item>
+
+<md-divider></md-divider>
+
+<div layout-gt-sm="row">
+	<section-title title="Custom Fields"></section-title>
+</div>
+<div layout-gt-sm="column" style="padding:0px 4% 24px;">
+	<div as-sortable="sortableOptions" ng-model="asdc" flex="100">
+		<div ng-repeat="item in $root.Settings12thdoor.profile.CusFiel" as-sortable-item flex>
+			<md-card class="add-mdcard" style="padding:5px;" as-sortable-item-handle flex>
+			<md-card-content>
+			<div layout="row">
+				<div flex>
+					<span style="color:#808080;font-size:15px;">{{item.labelshown}}
+						<md-tooltip md-direction="right">Custom Fields name</md-tooltip>
+					</span>
+				</div>
+				<div flex>
+					<span style="color:#808080;font-size:15px;">{{item.type}}
+						<md-tooltip md-direction="right">Fields Type</md-tooltip>
+					</span>
+				</div>
+				<div flex>
+					<md-menu md-position-mode="target-right target" layout="row" layout-align="end end" flex-sm="100" style="margin:-16px 0px -32px;">
+					<md-button href aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+					<md-icon md-menu-origin  md-svg-src="img/ic_more_horiz_24px.svg"></md-icon>
 				</md-button>
-			</md-menu-item>
-			<md-menu-item>
-			<md-button ng-click="deleteprofilerow(item, $index)">
-			<p>Delete</p>
-			<md-icon md-menu-align-target ></md-icon>
-		</md-button>
-	</md-menu-item>
+				<md-menu-content width="4">
+				<md-menu-item>
+				<md-button ng-click="editprofilecusFieldsrow(item , $event)">
+				<p>Edit</p>
+				<md-icon md-menu-align-target ></md-icon>
+			</md-button>
+		</md-menu-item>
+		<md-menu-item>
+		<md-button ng-click="deleteprofilerow(item, $index)">
+		<p>Delete</p>
+		<md-icon md-menu-align-target ></md-icon>
+	</md-button>
+</md-menu-item>
 </md-menu-content>
 </md-menu>
 </div>
 </div>
 </md-card-content>
 </md-card>
-</li>
-</ul>
-<!-- End customer fields table -->
-<div flex layout="row" layout-align="start end" style=" margin-top: -33px;">
-	<md-button  style="width:31%;" class="md-raised" ng-click="addcusfieldsProfile($event)">
-	Add Custom Fields
-</md-button>
 </div>
+</div>
+<div layout-gt-sm="row" layout-align="start start" style="padding: 10px 9px 0px;">
+	<md-button  class="md-raised" ng-click="addcusfieldsProfile($event)">
+	Add custom fields
+</md-button>
 </div>
 </div>
 
 <md-divider></md-divider>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5">
-		<img src="img/material alperbert/avatar_tile_r_28.png" style="margin-top:22px;border-radius:20px"/>
-	</div>
-	<div flex="20" style="margin-top:35px;">
-		<label style="font-weight:700">Regional Settings</label>
-	</div>
-	<md-input-container flex="30">
-	<label>Base Currency</label>
-	<md-select ng-model="$root.Settings12thdoor.profile.baseCurrency">
-	<md-option>USD</md-option>
-	<md-option>CAD</md-option>
-</md-select>
-</md-input-container>
+<div layout-gt-sm="row">
+	<section-title title="Regional Settings"></section-title>
 </div>
 
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Time Zone</label>
-	<md-select ng-model="$root.Settings12thdoor.profile.timeZone">
-	<md-option ng-repeat="z in zones" value="">{{state.abbrev}}</md-option>
+<md-list-item>
+<p>Base Currency</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.profile.baseCurrency" placeholder="Base Currency">
+<md-option>USD</md-option>
+<md-option>CAD</md-option>
 </md-select>
 </md-input-container>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Date Format</label>
-	<md-select ng-model="$root.Settings12thdoor.profile.dataFormat">
-	<md-option ng-repeat="d in format" value="">{{state.abbrev}}</md-option>
+</md-list-item>
+
+<md-list-item>
+<p>Time Zone</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.profile.timeZone" placeholder="Time Zone">
+<md-option ng-repeat="z in zones" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Currency Format</label>
-	<md-select ng-model="$root.Settings12thdoor.profile.currencyFormat">
-	<md-option ng-repeat="cf in currFor" value="">{{state.abbrev}}</md-option>
+</md-list-item>
+
+<md-list-item>
+<p>Date Format</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.profile.dataFormat" placeholder="Date Format">
+<md-option ng-repeat="d in format" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Decimal Places</label>
-	<md-select ng-model="$root.Settings12thdoor.profile.decimalPlaces">
-	<md-option ng-repeat="deci in decimals" value="">{{state.abbrev}}</md-option>
+</md-list-item>
+
+<md-list-item>
+<p>Currency Format</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.profile.currencyFormat" placeholder="Currency Format">
+<md-option ng-repeat="cf in currFor" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
-</div>
-<div layout layout-sm="column" layout-margin>
-	<div flex="5" hide-sm>	
-	</div>
-	<div flex="20" hide-sm>
-	</div>
-	<md-input-container flex="30">
-	<label>Paper Size</label>
-	<md-select ng-model="$root.Settings12thdoor.profile.paperSize">
-	<md-option>letter(8.5" x 11")</md-option>
-	<md-option>A3(11.69" x 16.54")</md-option>
-	<md-option>A4(8.27" x 11.69")</md-option>
+</md-list-item>
+
+<md-list-item>
+<p>Decimal Places</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.profile.decimalPlaces" placeholder="Decimal Places">
+<md-option ng-repeat="deci in decimals" value="">{{state.abbrev}}</md-option>
 </md-select>
 </md-input-container>
-</div>
+</md-list-item>
+
+<md-list-item>
+<p>Paper Size</p>
+<md-input-container flex="40">
+<md-select ng-model="$root.Settings12thdoor.profile.paperSize" placeholder="Paper Size">
+<md-option>letter(8.5" x 11")</md-option>
+<md-option>A3(11.69" x 16.54")</md-option>
+<md-option>A4(8.27" x 11.69")</md-option>
+</md-select>
+</md-input-container>
+</md-list-item>
+
+</md-list>
+
 <!-- <md-divider></md-divider>
 <div layout layout-sm="column" layout-margin>
 	<div flex="5">
@@ -332,7 +276,7 @@
 </form>
 </div>
 
-<!-- <div class="lock-size" layout="row">
+<div class="lock-size" layout="row">
 	<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
 	ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
 	<md-fab-trigger>
@@ -343,4 +287,4 @@
 <md-fab-actions>
 </md-fab-actions>
 </md-fab-speed-dial>
-</div> -->
+</div>

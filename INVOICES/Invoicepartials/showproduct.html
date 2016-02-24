@@ -1,71 +1,74 @@
 <md-dialog style="max-width:960px;">
-<md-toolbar class="modal-header">
-    <div class="md-toolbar-tools" >
-      <h2>Edit Line Item</h2>
-      <span flex></span>
-      <md-button href class="md-icon-button" ng-click="cancel()">
-        <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-      </md-button>
+   <md-toolbar class="modal-header">
+      <div class="md-toolbar-tools" >
+         <h2>Update Line Item</h2>
+         <span flex></span>
+         <md-button href class="md-icon-button" ng-click="cancel()">
+            <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+         </md-button>
       </div>
-      </md-toolbar>
-    <md-dialog-content style="width:850px;" >
-        <div layout layout-sm="column" layout-margin >
-             <section-title title="Item Details"> </section-title>
-            <md-input-container flex>
-				<label>Product or Service</label>
-				<input type="text" ng-model="test.Productname " required/> 
-				</md-input-container>
-
-        </div>
-         <div layout layout-sm="column" layout-margin>
-                <section-title > </section-title>
-                <md-input-container flex>
-                    <label>Quantity</label>
-                    <input type="number" ng-model="test.quantity" required/>
-                </md-input-container>
-                <md-input-container flex>
-                    <label>Unit</label>
-                    <input type="text" ng-model="test.ProductUnit" required/>
-                </md-input-container>
-                <md-input-container flex>
-                    <label>Price</label>
-                    <input type="text" ng-model="test.price" required/>
-                </md-input-container>
-            </div>
-            <div layout layout-sm="column" layout-margin>
-                <section-title > </section-title>
-                
-                <md-input-container flex>
-                    <label>Discount</label>
-                    <input type="text" ng-model="test.discount" />
-                </md-input-container>
-                <md-input-container flex>
-                    <label>tax</label>
-                    <input type="text" ng-model="test.tax.taxname" />
-                </md-input-container>
-
-                <md-input-container flex>
-                    <abel>Amount</label>
-                   <span style="display:none">{{calAMount()}}</span >
-                    <input ng-model="Amount| currency" ng-disabled="true">
-                </md-input-container>
-            </div>
-            <div layout layout-sm="column" layout-margin>
-                <section-title> </section-title>
-                 
-                <md-input-container flex>
-                    <label>Optional line comment</label>
-                    <input type="text" ng-model="test.olp"/>
-                </md-input-container>
-            </div>
-</md-dialog-content>
-
-              <div class="md-actions" layout="row">
-                
-                <span flex></span>
-
-                <md-button href ng-click="edit(tst)" class="md-primary">Edit</md-button>
-              </div>
-
+   </md-toolbar>
+   <md-dialog-content style="width:850px;" >
+      <div layout layout-sm="column" layout-margin >
+         <section-title title="Item Details"> </section-title>
+         <md-input-container  style="margin-top:40px;"flex>
+            <label>Product or Service</label>
+            <input type="text" ng-model="test.Productname " required/> 
+         </md-input-container>
+      </div>
+      <div layout layout-sm="column" layout-margin>
+         <section-title > </section-title>
+         <md-input-container flex>
+            <label>Quantity</label>
+            <input type="number" ng-model="test.quantity" required/>
+         </md-input-container>
+         <md-input-container >
+            <label>Unit</label>
+            <md-select ng-model="test.ProductUnit" style="width:150px;" ng-change="setUOM(tax.unitsOfMeasurement)" flex required/>
+            <md-optgroup label="Terms type">
+               <md-option ng-repeat="tax in UnitOfMeasure" value="{{tax.unitsOfMeasurement}}">
+                  {{tax.unitsOfMeasurement}}
+               </md-option>
+            </md-optgroup>
+            </md-select>
+         </md-input-container>
+         <md-input-container flex>
+            <label>Price</label>
+            <input type="text" ng-model="test.price| currency" ng-disabled="true"/>
+         </md-input-container>
+      </div>
+      <div layout layout-sm="column" layout-margin>
+         <section-title > </section-title>
+         <md-input-container flex>
+            <label>Discount</label>
+            <input type="text" ng-model="test.discount" />
+         </md-input-container>
+         <md-input-container flex style=" margin-top:2px;">
+            <label>Tax</label>
+            <md-select style="width:150px;" ng-model="test.tax.taxname" ng-change="setTax(test)" flex />
+            <md-optgroup label="Tax">
+               <md-option ng-repeat="tax in individualTax" value="{{tax.taxname}}">
+                  {{tax.taxname}} 
+               </md-option>
+            </md-optgroup>
+            </md-select>
+         </md-input-container>
+         <md-input-container flex>
+            <label>Amount</label>
+            <span style="display:none">{{calAMount()}}</span >
+            <input ng-model="Amount| currency" aria-lable="amount" ng-disabled="true">
+         </md-input-container>
+      </div>
+      <div layout layout-sm="column" layout-margin>
+         <section-title> </section-title>
+         <md-input-container flex>
+            <label>Optional line comment</label>
+            <input type="text" ng-model="test.olp"/>
+         </md-input-container>
+      </div>
+   </md-dialog-content>
+   <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button href ng-click="edit(test,$index)" class="md-primary">Edit</md-button>
+   </div>
 </md-dialog>
-

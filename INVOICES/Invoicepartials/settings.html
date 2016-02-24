@@ -16,16 +16,10 @@
             <md-item-template>
                <span md-highlight-text="$root.searchText1" md-highlight-flags="^i">{{item.display}}</span> 
            </md-item-template> 
-
       </md-autocomplete>
-
- 
          <div layout="column">
            <sort-option name-array="sortarr" serch-item="prodSearch" star="$root.searchText1"></sort-option>
-         </div>
-                       
-         
-                     
+         </div>       
    </md-whiteframe>
 
   <md-content class="tab_content" style="margin-top:-8px; z-index:2;max-width: 960px;">
@@ -38,11 +32,11 @@
 </div>
 
 <!--START OF SECOND CARD CONTAINER-->
-<div class="card_container" style="padding-top: 117px;">
-    <div class="ui-view-container">
+ 
+    <div class="span12 ui-view-container">
        <div class="container" ui-view  viewcss></div>        
     </div>     
-</div>
+ 
 
 <div  class="lock-size" layout="row" ng-if="showinvoice == false">
 <md-button class="md-fab" aria-label="Profile" ng-click="addProfile()" style="position:fixed;top:270px;right:50px;background:#db4437">

@@ -63,7 +63,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                 }
             }
         });
-        client.getByFiltering("select maxCount from domainClassAttributes where class='payment");
+        client.getByFiltering("select maxCount from domainClassAttributes where class='payment'");
     }
     $rootScope.self = this;
     $rootScope.self.tenants = loadAll();
@@ -186,7 +186,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     }
     /*_________________________________loadAll__________________________________________________*/
     function loadAll() { //get customer name for auto compleate field from contact class
-        var client = $objectstore.getClient("contact");
+        var client = $objectstore.getClient("contact12thdoor");
         client.onGetMany(function(data) {
             if (data) {
                 for (i = 0, len = data.length; i < len; ++i) {
@@ -405,13 +405,17 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             val: []
         };
         $scope.payment.custField = [];
-        for(j=0; j<= $scope.payCustArr.length-1; j++){
-            $scope.payment.custField.push({
-                lable : $scope.payCustArr[j].labelshown,
-                type : $scope.payCustArr[j].type,
-                value : $scope.payCustArr[j].inputType
-            })  
+
+        if ($scope.payCustArr.length > 0) {
+            for(j=0; j<= $scope.payCustArr.length-1; j++){
+                $scope.payment.custField.push({
+                    lable : $scope.payCustArr[j].labelshown,
+                    type : $scope.payCustArr[j].type,
+                    value : $scope.payCustArr[j].inputType
+                })  
+            }            
         }
+        
         console.log($scope.payment.custField)
         $scope.payment.UploadImages.val = UploaderService.loadBasicArray();
         $scope.advancedPayment.advancedPayment_code = $scope.payment.customer +' '+ $rootScope.selectedItem1.Email;

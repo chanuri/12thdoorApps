@@ -1,5 +1,5 @@
 <md-dialog style="width: 700px; overflow:hidden;">
-   <div>
+ 
    <md-toolbar modal-header style="height: 48px">
       <div class="md-toolbar-tools" >
          <h2>Item Details</h2>
@@ -13,20 +13,15 @@
       <form style="width:100%">
          <md-content flex>
             <div layout layout-sm="column" layout-margin>
-              <section-title title="Item Details"> </section-title>
-             
-               <!--  <md-input-container flex >
-                  <label>Product or Service Name</label>
-                  <input ng-model="inventory.productname" required>
-                  </md-input-container> -->
-               <!--   -->
+               <section-title title="Item Details"> </section-title>
                <md-autocomplete flex="" required="" md-input-name="autocompleteField"
                   md-no-cache="noCache" 
-                  md-selected-item="selectedItem" 
                   md-search-text="searchText"   
                   md-items="item in querySearch(searchText)"               
                   md-item-text="item.display" 
-                  md-floating-label="Product or Service Name">
+                  md-selected-item="selectedItem" 
+                  md-floating-label="Product or Service Name"
+                  md-selected-item-change="testMe()">
                   <md-item-template>
                      <span  md-highlight-text="searchText">{{item.display}}</span>
                   </md-item-template>
@@ -42,7 +37,6 @@
             </div>
             <div layout layout-sm="column" layout-margin>
                <section-title > </section-title>
-             
                <md-input-container flex  ng-show="plusdialog">
                   <label>Quantity</label>
                   <input ng-model="inventory.Quantity" required>
@@ -59,40 +53,43 @@
                   <md-select ng-model="selectedItem.uom"  >
                      <md-optgroup label="Category">
                      <md-option value="each">each</md-option>
-
                      <md-option value="KG">KG</md-option>
-                     <md-option value="L">L</md-option> 
+                     <md-option value="L">L</md-option>
                   </md-select>
                </md-input-container >
             </div>
             <div layout layout-sm="column" layout-margin>
-               
                <section-title > </section-title>
                <md-input-container flex >
                   <label>Comment</label>
                   <input ng-model="inventory.Comment">
                </md-input-container>
             </div>
+            <div layout layout-sm="column" layout-margin>
+               <section-title > </section-title>
+               <div flex ng-show="showGinLabel"> <span style="color:red;font-size:13px"> GIN Exceed the GRN of this product</span>
+               </div>
+            </div>
             <md-divider></md-divider>
          </md-content>
       </form>
+    
    </div>
-   <div class="md-actions" layout layout="row" ng-show="dialogaddbutton">
-      <span flex></span>
-      <md-button  ng-click="AddCus(selectedItem.display,inventory.Quantity,selectedItem.uom)" class="md-primary" >
-         Add
-      </md-button>
-      <md-button type ="button" ng-click="closeDialog()" class="md-primary" ng-show="dialogaddbutton">
-         Close
-      </md-button>
-   </div>
-   <div class="md-actions" layout="row" ng-show="dialogUpdatebutton">
-      <span flex></span>
-      <!-- <md-button type ="button" ng-click="deletecus()" class="md-primary">
-         Delete
-         </md-button> -->
-      <md-button type ="button" ng-click="closeDialog(selectedItem.display,selectedItem.uom)" class="md-primary">
-         Done
-      </md-button>
-   </div>
+     <footer >
+            <div class="md-actions" layout layout="row" ng-show="dialogaddbutton">
+               <span flex></span>
+               <md-button  ng-click="AddCus(selectedItem.display,inventory.Quantity,selectedItem.uom)" class="md-primary" >
+                  Add
+               </md-button>
+               <md-button type ="button" ng-click="closeDialog()" class="md-primary" ng-show="dialogaddbutton">
+                  Close
+               </md-button>
+            </div>
+            <div class="md-actions" layout="row" ng-show="dialogUpdatebutton">
+               <span flex></span> 
+               <md-button type ="button" ng-click="closeDialog(selectedItem.display,selectedItem.uom)" class="md-primary">
+                  Done
+               </md-button>
+            </div>
+         </footer>
 </md-dialog>

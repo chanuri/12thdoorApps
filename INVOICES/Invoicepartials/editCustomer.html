@@ -12,16 +12,16 @@
     <md-dialog-content style="width:860px;">
         <div layout layout-sm="column" layout-margin>
             
-             <section-title title="Contact Name"> </section-title>
+             <section-title title="Customer Name"> </section-title>
             
             <md-input-container id="accContainer" flex >
                 <label>Company or Individual Name</label>
-                <input  ng-model="$root.selectedItem1.value.Name"></input>
+                <input  ng-model="$root.selectedItem1.value.Name">
             </md-input-container>
-             <input type="email" ng-model="$root.selectedItem1.value.customerid" style="display:none"></input>
+             <input type="email" ng-model="$root.selectedItem1.value.customerid" style="display:none">
             <md-input-container id="accContainer" flex >
                 <label>Email</label>
-                <input type="email" ng-model="$root.selectedItem1.value.Email" required></input>
+                <input type="email" ng-model="$root.selectedItem1.value.Email" required>
             </md-input-container>
         </div>
         <md-divider></md-divider>
@@ -29,12 +29,12 @@
             <section-title title="Contact Person"> </section-title>
             <md-input-container id="accContainer" flex >
                 <label>First Name</label>
-                <input id="accNo" ng-model="$root.selectedItem1.value.CustomerFname" required></input>
+                <input id="accNo" ng-model="$root.selectedItem1.value.CustomerFname" required>
             </md-input-container>
             <md-input-container flex >
                 <label>Last Name</label>
                 <input ng-model="$root.selectedItem1.value.CustomerLname" required>
-                </textarea>
+                
             </md-input-container>
         </div>
         <md-divider></md-divider>
@@ -42,27 +42,28 @@
             <div layout layout-sm="column" layout-margin >
                 
                  <section-title title="Billing Address"> </section-title>
+                 <md-icon style="margin-left:-40px; margin-top:40px;" md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
                 <md-input-container id="accContainer" flex >
                     <label>Street</label>
-                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.street" required></input>
+                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.street" required>
                 </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
                 <section-title> </section-title>
                 <md-input-container id="accContainer" flex >
                     <label>City</label>
-                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.city" required></input>
+                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.city" required>
                 </md-input-container>
                 <md-input-container id="accContainer" flex >
                     <label>State</label>
-                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.state"></input>
+                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.state">
                 </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
                <section-title> </section-title>
                 <md-input-container id="accContainer" flex >
                     <label>Zip code</label>
-                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.zip" required></input>
+                    <input id="accNo" ng-model="$root.selectedItem1.value.baddress.zip" required>
                 </md-input-container>
                  <md-input-container flex>
                     <label>Country</label>
@@ -81,9 +82,10 @@
                 <div layout layout-sm="column" layout-margin >
                 
                     <section-title title="Shipping Address"> </section-title>
+                   <md-icon style="margin-left:-40px; margin-top:40px;" md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
                     <md-input-container id="accContainer" flex >
                         <label>Street</label>
-                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_street"></input>
+                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_street">
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
@@ -91,11 +93,11 @@
                     
                     <md-input-container id="accContainer" flex >
                         <label>City</label>
-                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_city"></input>
+                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_city">
                     </md-input-container>
                     <md-input-container id="accContainer" flex >
                         <label>State</label>
-                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_state"></input>
+                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_state">
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
@@ -103,7 +105,7 @@
                     
                     <md-input-container id="accContainer" flex >
                         <label>Zip code</label>
-                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_zip"></input>
+                        <input id="accNo" ng-model="$root.selectedItem1.value.saddress.s_zip">
                     </md-input-container>
 
                     <md-input-container flex>
@@ -123,11 +125,11 @@
                     <section-title title="Contact Numbers"> </section-title>
                     <md-input-container id="accContainer" flex >
                         <label>Phone</label>
-                        <input type="phone" ng-model="$root.selectedItem1.value.Phone" required></input>
+                        <input type="phone" ng-model="$root.selectedItem1.value.Phone" required>
                     </md-input-container>
                     <md-input-container id="accContainer" flex >
                         <label>Mobile</label>
-                        <input type="phone" ng-model="$root.selectedItem1.value.Mobile" required></input>
+                        <input type="phone" ng-model="$root.selectedItem1.value.Mobile" required>
                     </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
@@ -135,11 +137,11 @@
                     
                     <md-input-container id="accContainer" flex >
                         <label>Fax</label>
-                        <input id="accNo" ng-model="$root.selectedItem1.value.Fax" required></input>
+                        <input id="accNo" ng-model="$root.selectedItem1.value.Fax" required>
                     </md-input-container>
                     <md-input-container id="accContainer" flex >
                         <label>Website</label>
-                        <input id="accNo" ng-model="$root.selectedItem1.value.Website" required></input>
+                        <input id="accNo" ng-model="$root.selectedItem1.value.Website" required>
                     </md-input-container>
                 </div>
                 <!--      <md-button href ng-click="closeDialog()" class="btn btn-small">close</md-button> -->

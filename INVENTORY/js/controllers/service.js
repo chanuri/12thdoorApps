@@ -21,6 +21,27 @@ rasm.service('dialogsvc', function($mdDialog) {
     $scope.selectedItem = null;
     $scope.searchText = null;
     $scope.querySearch = querySearch;
+    $scope.balanceExsist = false;
+    $scope.balanceArr = [];
+
+    $scope.testMe = function(){
+      if ($scope.selectedItem) {
+          var getBalanceClient = $objectstore.getClient("productBalance");
+          getBalanceClient.onGetMany(function(data){
+            if (data.length > 0) {
+              $scope.balanceExsist = true;
+              $scope.balanceArr = [];
+              $scope.balanceArr = angular.copy(data)
+              console.log($scope.balanceArr)
+            }
+          });
+          getBalanceClient.onError(function(data){
+            console.log("error loading product balance details");
+            $scope.balanceExsist = false;
+          });
+          getBalanceClient.getByFiltering("select * from productBalance where productId = '"+$scope.selectedItem.proId+"' ")
+      };
+    }
 
     function querySearch(query) {
       $scope.enter = function(keyEvent) {
@@ -52,44 +73,74 @@ rasm.service('dialogsvc', function($mdDialog) {
             $scope.productNames.push({
               display: data[i].Productname,
               value: data[i].Productname.toLowerCase(),
-              uom: data[i].ProductUnit
+              uom: data[i].ProductUnit,
+              proId : data[i].product_code
             });
+          }
+          if ($rootScope.testArray.val.length > 0) {
+            for(j=0; j<=$rootScope.testArray.val.length-1; j++){
+              for (i = 0, len = $scope.productNames.length; i < len; ++i) {
+                if ($scope.productNames[i].proId == $rootScope.testArray.val[j].proId ) {
+                  $scope.productNames.splice(i,1);
+                }
+              }
+            }            
           }
         }
       });
       client.onError(function(data) {
         $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('Sorry').content('There is no products available').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
       });
-      client.getByFiltering("*");
+      client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
     }
     $scope.inventory = {};
     $scope.dialogaddbutton = true;
     $scope.dialogUpdatebutton = false;
     if ($state.current.name == 'Add_Inventory' || $state.current.name == 'home.receipt') {
       $scope.plusdialog = true;
+      $scope.ginExceed = false;
+
     } else if ($state.current.name == 'Add_Inventory_Issue' || $state.current.name == 'home.issue') {
       $scope.plusdialog = false;
+      $scope.ginExceed = true;
     }
     $scope.closeDialog = function(product) {
       $mdDialog.hide();
     }
+    $scope.showGinLabel = false;
+
     $scope.AddCus = function(product, qty, unit) {
       $scope.inventory.productname = product;
       $scope.inventory.Unit = unit;
+      $scope.inventory.proId =  $scope.selectedItem.proId;
+
+      $scope.showGinLabel = false;
+
+      if ($scope.ginExceed && $scope.balanceExsist) {
+          var sortArr = $scope.balanceArr.sort(function(a,b){
+            return b.balance_code - a.balance_code;
+          })
+          var diff = parseInt(sortArr[0].closeValue) - parseInt(qty);
+          if (diff < 0) {
+            $scope.showGinLabel = true
+          }   
+      }
+      if(!$scope.showGinLabel){         
       
-      if ($rootScope.inventoryType == "cards") {
-        if (product == null || qty == null || unit == null) {
-          console.log("fill all details")
-        } else {
-          InvoiceService.setArrayview($scope.inventory, $rootScope.tableContent);
-          $mdDialog.hide();
-        }
-      } else if ($rootScope.inventoryType == "insert") {
-        if (product == null || qty == null || unit == null) {
-          console.log("fill all details")
-        } else {
-          InvoiceService.setArray($scope.inventory);
-          $mdDialog.hide();
+        if ($rootScope.inventoryType == "cards") {
+          if (product == null || qty == null || unit == null) {
+            console.log("fill all details")
+          } else {
+            InvoiceService.setArrayview($scope.inventory, $rootScope.tableContent);
+            $mdDialog.hide();
+          }
+        } else if ($rootScope.inventoryType == "insert") {
+          if (product == null || qty == null || unit == null) {
+            console.log("fill all details")
+          } else {
+            InvoiceService.setArray($scope.inventory);
+            $mdDialog.hide();
+          }
         }
       }
     }
@@ -98,28 +149,42 @@ rasm.service('dialogsvc', function($mdDialog) {
   function EyeController($scope, $mdDialog, InvoiceService, item, $rootScope, $state, $objectstore) {
     $scope.inventory = item;
     $scope.dialogaddbutton = false;
-    $scope.dialogUpdatebutton = true;
+    $scope.dialogUpdatebutton = true;    
+    $scope.balanceExsist = false;
     $scope.tenants = loadAll();
     $scope.selectedItem = {
       display : item.productname,
-      uom : item.Unit
+      uom : item.Unit,
+      proId : item.proId,
+      value: item.productname.toLowerCase()
     };
     // $scope.selectedItem.display = item.productname;
     // $scope.selectedItem.uom = item.Unit;
     $scope.searchText = null;
     $scope.querySearch = querySearch;
 
-    function querySearch(query) {
-      $scope.enter = function(keyEvent) {
-          if (keyEvent.which === 13) {
-            if ($scope.selectedItem === null) {
-              $scope.selectedItem = query;
-              console.log(results);
-            } else {
-              console.log($scope.selectedItem);
+    $scope.testMe = function(){
+      if ($scope.selectedItem) {
+          var getBalanceClient = $objectstore.getClient("productBalance");
+          getBalanceClient.onGetMany(function(data){
+            if (data.length > 0) {
+              $scope.balanceExsist = true;
+              $scope.balanceArr = [];
+              $scope.balanceArr = angular.copy(data)
+              console.log($scope.balanceArr)
             }
-          }
-        }
+          });
+          getBalanceClient.onError(function(data){
+            console.log("error loading product balance details");
+            $scope.balanceExsist = false;
+          });
+          getBalanceClient.getByFiltering("select * from productBalance where productId = '"+$scope.selectedItem.proId+"' ")
+      };
+    }
+
+    $scope.testMe();
+
+    function querySearch(query) {
         //Custom Filter
       $scope.results = [];
       for (i = 0, len = $scope.productNames.length; i < len; ++i) {
@@ -139,25 +204,57 @@ rasm.service('dialogsvc', function($mdDialog) {
             $scope.productNames.push({
               display: data[i].Productname,
               value: data[i].Productname.toLowerCase(),
-              uom: data[i].ProductUnit
+              uom: data[i].ProductUnit,
+              proId : data[i].product_code
             });
           }
+
+          if ($rootScope.testArray.val.length > 0) {
+            for(j=0; j<=$rootScope.testArray.val.length-1; j++){
+              for (i = 0, len = $scope.productNames.length; i < len; ++i) {
+                if ($scope.productNames[i].proId == $rootScope.testArray.val[j].proId ) {
+                  $scope.productNames.splice(i,1);
+                }
+              }
+            }            
+          }
+          $scope.productNames.push({
+              display: item.productname,
+              value: item.productname.toLowerCase(),
+              uom: item.Unit,
+              proId : item.proId
+          })
         }
       });
       client.onError(function(data) {
         $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('Sorry').content('There is no products available').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
       });
-      client.getByFiltering("*");
+      client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
     }
     if ($state.current.name == 'Add_Inventory' || $state.current.name == 'home.receipt') {
       $scope.plusdialog = true;
+      $scope.ginExceed = false;
     } else if ($state.current.name == 'Add_Inventory_Issue' || $state.current.name == 'home.issue') {
       $scope.plusdialog = false;
+      $scope.ginExceed = true;
     }
     $scope.closeDialog = function(product,unit) {
       item.productname = product;
       item.Unit = unit;
-      $mdDialog.hide();
+      $scope.showGinLabel = false;
+
+      if ($scope.ginExceed && $scope.balanceExsist) {
+          var sortArr = $scope.balanceArr.sort(function(a,b){
+            return b.balance_code - a.balance_code;
+          })
+          var diff = parseInt(sortArr[0].closeValue) - parseInt(item.Quantity);
+          if (diff < 0) {
+            $scope.showGinLabel = true
+          }   
+      }
+      if(!$scope.showGinLabel){
+        $mdDialog.hide();
+      }
     }
     $scope.deletecus = function() {
       if ($rootScope.inventoryType == "cards") {
@@ -197,20 +294,7 @@ rasm.factory('InvoiceService', function($rootScope) {
 });
 rasm.service('$DownloadPdf',function(){
 	this.GetPdf = function(obj,Inv,type){ 
-
-    // var specialElementHandlers = {
-    //   '#convert_to_pdf': function(element, renderer){
-    //     return true;
-    //   }
-    // };
-    // var doc = new jsPDF();
-    // doc.fromHTML($('#convert_to_pdf').get(0), 15, 15, {
-    //    'width': 170, 
-    //    'elementHandlers': specialElementHandlers
-    // }, function() {
-    //   doc.save('sample-file.pdf');
-    // });    
-  //obj = hasNull(obj); 
+    
   if(!obj.hasOwnProperty(Comment)){
      obj.Comment = "";
   }

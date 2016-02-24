@@ -1,5 +1,7 @@
-rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $DownloadPdf, $objectstore, $auth, $mdDialog){
+rasm.controller("CopyCtrl",["$scope","$rootScope","$uploader", "$stateParams", "$state", "$DownloadPdf", "$objectstore", "$auth", "$mdDialog", "$mdToast", "$activityLog","ProductService", function($scope,$rootScope,$uploader, $stateParams, $state, $DownloadPdf, $objectstore, $auth, $mdDialog, $mdToast, $activityLog,ProductService){
 	console.log($stateParams.productID);
+
+	ProductService.setArraysEmpty();
 
 	var client = $objectstore.getClient("product12thdoor");
 	client.onGetMany(function(data){
@@ -17,17 +19,33 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
 	client.getByFiltering("select * from product12thdoor where ProductCode = "+$stateParams.productID+"");	 
 
 	function ChangeProductCode(obj){ // call to prouce new product code
-		var Pnumbers = obj[0].ProductCode.substring(4,8);
-		var NewPnumber = parseInt(Pnumbers) + 1;
-		$scope.NumberString = "";
 
-		for(i=0; i < 4-NewPnumber.toString().length; i++){
-			$scope.NumberString = $scope.NumberString + "0";
-		}
+		var Pname = obj[0].ProductCode.substring(0,3);
+		var sortArr = [];
+		var proClient = $objectstore.getClient("product12thdoor");
+		proClient.onGetMany(function(data){
+		 	console.log(data)
+		 	sortArr = data.sort(function(a,b){
+		 		return new Date(b.todayDate) - new Date(a.todayDate);
+		 	})
 
-		var FinalNumber = $scope.NumberString + NewPnumber.toString();
-		obj[0].ProductCode = obj[0].ProductCode.replaceAt(4,FinalNumber);
-		obj.ProductCodeID = FinalNumber;
+			var Pnumbers = sortArr[0].ProductCode.substring(4,8);
+			var NewPnumber = parseInt(Pnumbers) + 1;
+			$scope.NumberString = "";
+
+			for(i=0; i < 4-NewPnumber.toString().length; i++){
+				$scope.NumberString = $scope.NumberString + "0";
+			}
+
+			var FinalNumber = $scope.NumberString + NewPnumber.toString();
+			obj[0].ProductCode = sortArr[0].ProductCode.replaceAt(4,FinalNumber);
+			obj.ProductCodeID = FinalNumber;
+		});
+		proClient.onError(function(data){
+			console.log("error Loading data")
+		});
+		proClient.getByFiltering("select * from product12thdoor where ProductCode like '%"+Pname+"%'");	
+
 	}
 
 	$scope.submit = function(obj){
@@ -68,36 +86,103 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
       }else{
 
         $scope.AlreadyExsist = false;
-        for(i=0; i<=$rootScope.FullArray.length-1; i++){
-            if ($rootScope.FullArray[i].ProductCode === obj.ProductCode) {
-              $mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              .title('Product Code Already Exsist')
-              .content('Please Enter Different Product Code')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent()
-            );
-              $scope.AlreadyExsist = true;
-              break;
-            };
-        }
+        if ($rootScope.FullArray) {
+        	for(i=0; i<=$rootScope.FullArray.length-1; i++){
+	            if ($rootScope.FullArray[i].ProductCode === obj.ProductCode) {
+	              $mdDialog.show(
+	              $mdDialog.alert()
+	              .parent(angular.element(document.body))
+	              .title('Product Code Already Exsist')
+	              .content('Please Enter Different Product Code')
+	              .ariaLabel('Alert Dialog Demo')
+	              .ok('OK')
+	              .targetEvent()
+	            );
+	              $scope.AlreadyExsist = true;
+	              break;
+	            };
+	        }
+        };
+        
 
 	        if (!$scope.AlreadyExsist){
 
+	          	$scope.imagearray = [];
+	          	$scope.brochurearray = [];
+
+	          	$scope.imagearray = ProductService.loadArray();
+	          	$scope.brochurearray = ProductService.loadArraybrochure();
+
+			  	if ($scope.imagearray.length > 0) {
+			        for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
+			          $uploader.upload("nameSpace","productimagesNew", $scope.imagearray[indexx]);
+			          $uploader.onSuccess(function (e, data) {
+			            var toast = $mdToast.simple()
+			              .content('Image Successfully uploaded!')
+			              .action('OK')
+			              .highlightAction(false)
+			              .position("bottom right");
+			            $mdToast.show(toast).then(function () {
+			              //whatever
+			            });
+			          });
+			          $uploader.onError(function (e, data) {
+			            var toast = $mdToast.simple()
+			              .content('There was an error, please upload!')
+			              .action('OK')
+			              .highlightAction(false)
+			              .position("bottom right");
+			            $mdToast.show(toast).then(function () {
+			              //whatever
+			            });
+			          });
+			        }
+			        obj.UploadImages = {val:[]}
+         			obj.UploadImages.val = ProductService.loadBasicArray();
+			    }
+		        if($scope.brochurearray.length > 0) {
+		            for (indexx = 0; indexx < $scope.brochurearray.length; indexx++) {
+
+		              	$uploader.upload("ignoreNamespace","productbrochureNew", $scope.brochurearray[indexx]);
+		              	$uploader.onSuccess(function (e, data) {
+			                var toast = $mdToast.simple()
+			                  .content('Brochure Successfully uploaded !')
+			                  .action('OK')
+			                  .highlightAction(false)
+			                  .position("bottom right");
+			                $mdToast.show(toast).then(function () {
+
+			                });
+		              	});
+		              	$uploader.onError(function (e, data) {
+			                var toast = $mdToast.simple()
+			                  .content('There was an error, please upload!')
+			                  .action('OK')
+			                  .highlightAction(false)
+			                  .position("bottom right");
+			                $mdToast.show(toast).then(function () {});
+		              	});
+		            }
+		            obj.UploadBrochure = {val:[]}
+          			obj.UploadBrochure.val = ProductService.loadBasicArraybrochure();
+		        }
+
 				var client = $objectstore.getClient("product12thdoor");
 				client.onComplete(function(data){
-					$state.go('home');
-					$mdDialog.show(
-		              $mdDialog.alert()
-		              .parent(angular.element(document.body))
-		              //.title('This is embarracing')
-		              .content('Product Successfully Saved.')
-		              .ariaLabel('Alert Dialog Demo')
-		              .ok('OK')
-		              .targetEvent(data)
-		            );
+					var txtActivity = "Product Added By ";
+			        $activityLog.newActivity(txtActivity,data.Data[0].ID,obj.ProductCode,function(status){
+				        if (status == "success") {            
+				            $state.go('home');
+				            $mdDialog.show(
+				                $mdDialog.alert()
+				                .parent(angular.element(document.body))
+				                .content('Product Successfully Saved.')
+				                .ariaLabel('Alert Dialog Demo')
+				                .ok('OK')
+				                .targetEvent(data)
+				            );
+				        }
+				    });
 				});
 				client.onError(function(data){
 					$mdDialog.show(
@@ -109,6 +194,7 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
 		              .targetEvent(data)
 		            );
 				});
+				obj.todayDate = new Date();
 				obj.product_code = "-999";
 				client.insert(obj,{KeyProperty:"product_code"});	
 			}	
@@ -187,7 +273,7 @@ rasm.controller("CopyCtrl",function($scope,$rootScope, $stateParams, $state, $Do
 	  }
 	  callback();
 	}
-});
+}]);
 
 
 String.prototype.replaceAt=function(index, character) {

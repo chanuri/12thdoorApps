@@ -76,7 +76,7 @@
                             <md-option value="Yearly">Yearly</md-option>
                             <md-option value="2Years">2 Years</md-option>
                             <md-option value="3Years">3 Years</md-option>
-                        </md-optgroup>
+                       
                     </md-select>
                                 </md-input-container>
                      <md-input-container flex >
@@ -165,7 +165,7 @@
                        <span style="color:#808080;">{{item.tax.taxname}}
                         <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
                             <md-tooltip>Tax</md-tooltip>
-                        </span>
+                        
                          <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
                             <md-tooltip>Tax</md-tooltip>
                         </span> 

@@ -108,7 +108,7 @@
                     
                      <md-input-container flex >
                             <label>Occurences</label>
-                            <input ng-model="TDinvoice.occurences" ng-required="true" >
+                            <input ng-model="TDinvoice.occurences"  ng-required="true" >
                             </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
@@ -194,7 +194,7 @@
                                                             <span style="color:#808080;">{{item.tax.taxname}}
                                                             <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
                                                                 <md-tooltip>Tax</md-tooltip>
-                                                            </span>
+                                                        
                                                              <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
                                                                 <!-- <md-tooltip>Tax</md-tooltip> -->
                                                             </span>

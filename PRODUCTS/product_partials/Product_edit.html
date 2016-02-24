@@ -13,14 +13,14 @@
                         <md-input-container flex>
                            <label>Product name</label>
                            <input required type="text" ng-model="product.Productname" 
-                           ng-blur="GenerateCode(product)" /> 
+                           ng-blur="GenerateCode(product)" ng-disabled="true"/> 
                         </md-input-container>
                      </div>
                      <div layout layout-sm="column" layout-margin>
                         <section-title> </section-title>
                         <md-input-container flex>
                            <label>Product Description</label>
-                           <textarea maxlength="200" type="text" ng-model="product.description"  required>
+                           <textarea maxlength="200" type="text" ng-model="product.description"  >
                            </textarea>
                         </md-input-container>
                      </div>
@@ -28,7 +28,7 @@
                         <section-title> </section-title>
                         <md-input-container flex>
                            <label>Product Code</label>
-                           <input required type="text" ng-model="product.ProductCode"  /> 
+                           <input required type="text" ng-model="product.ProductCode" ng-disabled="true" /> 
                         </md-input-container>
                                 <md-input-container flex>
                         <label>Unit</label>
@@ -58,11 +58,11 @@
                        
                         <md-input-container flex>
                            <label>Cost Price</label>
-                           <input required type="text" ng-model="product.costprice"  /> 
+                           <input  type="text" ng-model="product.costprice"  /> 
                         </md-input-container>
                         <md-input-container flex>
                            <label>Status</label>
-                           <md-select ng-model="product.status" class="required"  >
+                           <md-select ng-model="product.status"  >
                               <md-optgroup label="Status">
                               <md-option value="Active">Active</md-option>
                               <md-option value="Inactive">Inactive</md-option>
@@ -90,7 +90,7 @@
                       <section-title> </section-title>
                         <md-input-container flex>
                            <label>Inventory Tracking</label>   
-                           <md-select placeholder="Inventory Tracking" ng-model="product.inventory" class="required" 
+                           <md-select placeholder="Inventory Tracking" ng-model="product.inventory" 
                               ng-change="changeinventoryproductview(product.inventory,product)"  >
                               <md-optgroup label="Inventory">
                               <md-option value="No">Do Not Track Inventory</md-option>
@@ -99,7 +99,7 @@
                         </md-input-container>
                         <md-input-container flex>
                            <label>Stock Level</label>
-                           <input required type="text" ng-model="product.stocklevel" ng-disabled="stockdisabledproductview"/> 
+                           <input  type="text" ng-model="product.stocklevel" ng-disabled="stockdisabledproductview"/> 
                         </md-input-container>
                      </div>
                      <div layout layout-sm="column" layout-margin>
@@ -118,14 +118,39 @@
                          </div>
                       </div>
 
-                     <input type="hidden" required type="text" ng-model="product.product_code" /> 
-                     <div layout layout-sm="column"  layout-margin>
+                   <div layout-gt-sm="row" layout-margin ng-repeat="cust in product.customFields" ng-init="cust.value == cust.inputType">
+                     <!--KEEP BLANK SPACE - ask why-->
+                     <section-title ng-if="$index == '0'" title="Custom Fields"></section-title>
+                     <section-title ng-if="$index != '0'" ></section-title>
+
+                     <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'textBox'" class="md-block" flex-gt-sm >
+                        <label>{{cust.labelshown}}</label>
+                        <input ng-model="cust.inputType">
+                     </md-input-container>
+
+                      <md-input-container  ng-if="cust.type == 'selectBox'" class="md-block" flex-gt-sm >
+                        <label>{{cust.labelshown}}</label>
+                        <md-select  ng-model="cust.inputType" flex>
+                           <md-option ng-repeat="item in cust.fields" value="{{item}}">{{item}}</md-option>
+                        </md-select>
+                     </md-input-container>
+
+                     <div flex ></div>
+                  </div>
+
+                     <input type="hidden"  type="text" ng-model="product.product_code" /> 
+                     <div layout layout-sm="column" layout-margin>
                         <section-title> </section-title>
-                       
-                        <div style="margin-left: 15px; margin-top:20px;">
-                           <md-button class="md-raised" ng-click="uploader(Edit_Expense)" type="button">Upload</md-button>
-                        </div>
-                     </div>
+                      
+
+                         <div style=" margin-top:20px;margin-left: 15px;">
+                                <md-button class="md-raised" ng-click="imageuploader()" type="button">Upload Image</md-button>
+                       </div>
+                       <div style=" margin-top:20px; margin-left: 15px;">
+                                <md-button class="md-raised" ng-click="brochureuploader()" type="button">Upload Brochure</md-button>
+                       </div>
+                        
+                    </div>
                      <md-divider></md-divider>
                      <div layout="row" layout-align="end start" layout-margin  ng-show="true" >
                         <div>

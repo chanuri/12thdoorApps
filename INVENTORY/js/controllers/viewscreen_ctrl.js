@@ -108,6 +108,7 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 		 });
 	}
 	$scope.Iid = $stateParams.inventoryID;
+	console.log($stateParams.status)
 
 	$scope.ConvertToPdf = function(obj){
 		InventoryObject(function(InObj){
@@ -143,36 +144,135 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 			.ok("OK")
 			.cancel("Cancel")
 			$mdDialog.show(confirm).then(function(){
-				var client = $objectstore.getClient("inventory12thdoor");
-				client.onComplete(function(data){
-					$mdDialog.show(
-						$mdDialog.alert()
-						.parent(angular.element(document.body))
-						.title("Success")
-						.content("successfully deleted")
-						.ariaLabel("Alert Dialog Demo")
-						.ok("OK")
-						.targetEvent()
-						)
-					if (obj.inventoryClass == "Receipt") {
-					 	$state.go('home.receipt')
-					}else if (obj.inventoryClass == "Issue") {
-						$state.go('home.issue')
-					};
+				if (obj.inventoryClass == "Receipt") {
+					$scope.historyType = "GRN";
+					ObjectStoreFunction("Delete",obj,"GRN12thdoor","inventory_code",function(status){
+						if (status == "success") {
+							updateBalance(obj,function(data){
+								if (data == "success") {
+									addToHistory(obj,"Delete",function(){	
+							 			$state.go('home.receipt')
+							 			obj.deleteStatus = true;	
+									})											
+								}
+							})
+						}else{
+							obj.deleteStatus = false;
+						}
+					})
+				}else if (obj.inventoryClass == "Issue") {
+					ObjectStoreFunction("Delete",obj,"GIN12thdoor","inventory_code",function(status){
+						if (status == "success") {							
+							updateBalance(obj,function(data){
+								if (data == "success") {
+									addToHistory(obj,"Delete",function(){										
+							 			$state.go('home.issue')
+							 			obj.deleteStatus = true;	
+									})										
+								}
+							})
+						}else{
+							obj.deleteStatus = false;
+						}
+					})
+				} 
+			},function(){})
+	}
+
+	function updateBalance(obj,callback){
+		if (obj.itemdetails.length > 0) {
+			for(k=0; k<=obj.itemdetails.length-1; k++){
+				getBalance(obj,k,function(data){
+					callback("success")
+					console.log(data)
 				});
-				client.onError(function(data){
-					$mdDialog.show(
-						$mdDialog.alert()
-						.parent(angular.element(document.body))
-						.title("error")
-						.content("fail to delete record")
-						.ariaLabel("Alert Dialog Demo")
-						.ok("OK")
-						.targetEvent()
-						)
-				});
-				client.deleteSingle(obj.inventory_code,"inventory_code");
-		},function(){})
+			}
+		}
+	}
+
+	function addToHistory(obj,status,callback){
+		$scope.historyArr = [];
+		if (obj.itemdetails.length > 0) {
+			for(k=0; k<=obj.itemdetails.length-1; k++){
+				$scope.historyArr.push({
+					history_code : "-999",
+			        type : $scope.historyType,
+			        inventoryNo : obj.inventory_code,
+			        proId : obj.itemdetails[k].proId,
+			        amount : obj.itemdetails[k].Quantity,
+			        stockLevel : "Level 1",
+			        status : status
+				})
+			}
+		}
+		var historyClinet = $objectstore.getClient("inventoryHistory");
+	    historyClinet.onComplete(function(data){
+	       console.log("Successfully added to history class");
+	       callback();
+	    });
+	    historyClinet.onError(function(data){
+	       console.log("error adding to history class")
+	    });
+	    historyClinet.insertMultiple($scope.historyArr,"history_code");
+	}
+
+	function getBalance(obj,k,callback){
+		var balanceClient = $objectstore.getClient("productBalance");
+		balanceClient.onGetMany(function(data){
+			if (data) {
+				var sortArr = data.sort(function(a,b){
+					return b.balance_code - a.balance_code;
+				})
+				var latestObject = {};
+				if (obj.inventoryClass == "Receipt") { 
+					var grnDiff = parseInt(sortArr[0].GRNvalue) - parseInt(obj.itemdetails[k].Quantity);
+					latestObject = {
+						GINvalue : obj.itemdetails[k].Quantity,
+						GRNvalue : "0",
+						balance_code : "-999",
+						productId : obj.itemdetails[k].proId,
+						startDate : new Date(),
+						startValue : sortArr[0].closeValue,
+						closeValue : grnDiff.toString()
+					}
+
+				}else if (obj.inventoryClass == "Issue") {
+					var ginDiff = parseInt(sortArr[0].GINvalue) - parseInt(obj.itemdetails[k].Quantity);
+					latestObject = {
+						GINvalue : "0",
+						GRNvalue : obj.itemdetails[k].Quantity,
+						balance_code : "-999",
+						productId : obj.itemdetails[k].proId,
+						startDate : new Date(),
+						startValue : sortArr[0].closeValue,
+						closeValue : grnDiff.toString()
+					}
+				}
+				insertToBalance(latestObject,function(data){
+					if (data == "success") {
+						callback("success")
+					}
+				})
+			}
+		});
+		balanceClient.onError(function(data){
+			console.log("error loading balance data")
+			callback("error")
+		});
+		balanceClient.getByFiltering("select * from productBalance where productId = '"+obj.itemdetails[k].proId+"'")
+	}
+
+	function insertToBalance(obj,callback){
+		var addClient = $objectstore.getClient("productBalance");
+		addClient.onComplete(function(data){
+			console.log("successfully insert to balance class");
+			callback("success")
+		});
+		addClient.onError(function(data){
+			console.log("error inserting to product class");
+			callback("error")
+		});
+		addClient.insert(obj,{KeyProperty : 'balance_code'})
 	}
 
 	$scope.CancelStatus = function(obj){
@@ -183,42 +283,117 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 			.ok("OK")
 			.cancel("Cancel")
 				$mdDialog.show(confirm).then(function(){
-					var client = $objectstore.getClient("inventory12thdoor");
-					client.onComplete(function(data){
-						$mdDialog.show(
-			              $mdDialog.alert()
-			              .parent(angular.element(document.body))
-			              .title('Success')
-			              .content('Successfully change the cancel the inventory')
-			              .ariaLabel('Alert Dialog Demo')
-			              .ok('OK')
-			              .targetEvent()
-			            );
-			            if (obj.inventoryClass == "Receipt") {
-						 	$state.go('home.receipt')
-						}else if (obj.inventoryClass == "Issue") {
-							$state.go('home.issue')
-						};
-					});
-					client.onError(function(data){
-						$mdDialog.show(
-			              $mdDialog.alert()
-			              .parent(angular.element(document.body))
-			              .title('Failed')
-			              .content('Failed to change the Status')
-			              .ariaLabel('Alert Dialog Demo')
-			              .ok('OK')
-			              .targetEvent()
-			            );
-			            obj.Status = "";
-					});
-					obj.Status = "Cancelled";		
-					client.insert(obj, {KeyProperty: "inventory_code"});
+					if (obj.inventoryClass == "Receipt") {
+						obj.Status = "Cancelled";
+						ObjectStoreFunction("Cancel",obj,"GRN12thdoor","inventory_code",function(status){
+							if (status == "success") {
+								updateBalance(obj,function(data){
+									if (data == "success") {
+										addToHistory(obj,"Cancel",function(){
+					 						$state.go('home.receipt')	
+										})											
+									}
+								});
+							}else{
+								obj.Status = ""
+							}
+						})
+					}else if (obj.inventoryClass == "Issue") {
+						ObjectStoreFunction("Cancel",obj,"GIN12thdoor","inventory_code",function(status){
+							if (status == "success") {
+								updateBalance(obj,function(data){
+									if (data == "success") {
+										addToHistory(obj,"Cancel",function(){
+					 						$state.go('home.issue')	
+										})									
+									}
+								});
+							}else{
+								obj.Status = ""
+							}
+						})
+					} 
+
 				},function(){});
 		
 	}
 
-	var client = $objectstore.getClient("inventory12thdoor");
+	function ObjectStoreFunction(type,obj,className,key,callback){
+		var objectstoreClient;
+
+		if (type == "Delete") {
+			objectstoreClient = $objectstore.getClient(className);
+			objectstoreClient.onComplete(function(data){
+				$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.title("Success")
+					.content("successfully deleted")
+					.ariaLabel("Alert Dialog Demo")
+					.ok("OK")
+					.targetEvent()
+				)
+				callback("success")
+			});
+			objectstoreClient.onError(function(data){
+				$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.title("error")
+					.content("fail to delete record")
+					.ariaLabel("Alert Dialog Demo")
+					.ok("OK")
+					.targetEvent()
+				)
+				callback("error")
+			});
+			objectstoreClient.deleteSingle(obj.inventory_code,key);
+
+		}else if (type == "Cancel") {
+
+			objectstoreClient = $objectstore.getClient(className);
+			objectstoreClient.onComplete(function(data){
+				$mdDialog.show(
+	              $mdDialog.alert()
+	              .parent(angular.element(document.body))
+	              .title('Success')
+	              .content('Successfully change the cancel the '+className+'')
+	              .ariaLabel('Alert Dialog Demo')
+	              .ok('OK')
+	              .targetEvent()
+	            );
+	            callback("success")
+			});
+			objectstoreClient.onError(function(data){
+				$mdDialog.show(
+	              $mdDialog.alert()
+	              .parent(angular.element(document.body))
+	              .title('Failed')
+	              .content('Failed to change the Status')
+	              .ariaLabel('Alert Dialog Demo')
+	              .ok('OK')
+	              .targetEvent()
+	            );
+	            callback("error")
+			});
+			objectstoreClient.insert(obj, {KeyProperty : key})
+		};
+	}
+
+	var client;
+	var clientClass;
+
+	if ($stateParams.status == "GRN") {
+		client = $objectstore.getClient("GRN12thdoor");
+		clientClass = "GRN12thdoor";
+		$scope.historyType = "GRN";
+
+	}else if ($stateParams.status == "GIN") {
+		client = $objectstore.getClient("GIN12thdoor");
+		clientClass = "GIN12thdoor";
+		$scope.historyType = "GIN";
+	}
+	
 	client.onGetMany(function(data){
 		$scope.ViewInventory = [];
 		$scope.ViewInventory.push(data[0]);
@@ -246,7 +421,7 @@ rasm.controller('ViewScreen',function($scope, $stateParams, $state,$DownloadPdf,
 	client.onError(function(data){
 		console.log("error loading data");
 	});
-	client.getByFiltering("select * from inventory12thdoor where inventory_code = '"+$scope.Iid+"'");
+	client.getByFiltering("select * from "+clientClass+" where inventory_code = '"+$scope.Iid+"'");
 
 
 	function SeparateAddress(Address){

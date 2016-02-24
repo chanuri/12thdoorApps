@@ -1,454 +1,198 @@
-
-<!--START OF COLLAPSE CARDS-->
-			<div ng-init="loadAllcontact()" ></div>
-			<div class="collapse-card ng-scope" ng-repeat="contact in contacts | filter:ctrl.searchText||undefined | orderBy: prodSearch " ng-class="{ active: $active }" style="">
-				<!--START OF COLLAPSE CARD HEADING| filter:ctrl.actionSearchText||undefined-->
-				<div class="collapse-card__heading" layout="row" layout-align="start start" >
-					<div class="collapse-card_header_content_controls" flex="5" layout="column" layout-align="center start">
-                         <div style="width:9%">
-                    
-                    <div  ng-hide="contact.favoritestar" class="blankspace collapse-card_header_content_info" 
-                        ng-click="favouriteFunction(contact)" layout="row">
-                        
-                        <img src="img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px;  height:23px;width:23px;"/>
-                        
-                    </div>
-                    
-                    <div  ng-show="contact.favoritestar" class="blankspace collapse-card_header_content_info" 
-                        ng-click="favouriteFunction(contact)" layout="row">
-                        
-                        <img src="img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
-                        
-                    </div>
-                    
-                </div>
-						
-						
-						<md-button aria-label flex ng-if="content.favourite == false" ng-disabled="false" class="md-icon-button launch" 
-						ng-click="selectItem(content)">
-							<md-icon md-svg-icon="img/ic_check_box_outline_blank_24px.svg"></md-icon>
-						</md-button>
-
-						<md-button aria-label flex ng-if="content.favourite == true" ng-disabled="false" class="md-icon-button launch" 
-						ng-click="selectItem(content)">
-							<md-icon md-svg-icon="img/ic_check_box_24px.svg"></md-icon>
-						</md-button>
-
-
-
-						
-					</div>
-					<!--END OF CARD CONTROLS SECTION-->
-					<!--START OF CARD OPEN SECTION-->
-					<div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();">
-						<div layout-sm="row" flex>
-             
-            <div layout-sm="column" flex>
-                
-               <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>   {{contact.Name}}</b></span>
-              <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{contact.Email}}</b></span>
-              <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-width:1px;"><b>{{contact.CustomerFname}} {{contact.CustomerLname}} </b></span>
-             
-              </div>
-
-              <div layout-sm="column" style="margin-top:10px;" flex>
-                  
-                <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">Mobile {{contact.Mobile}}</span>
-                <span style="padding-right: 15px; padding-left: 15px; border-right-style: solid; border-width:1px; font-size:13px;">City {{contact.baddress.city}}</span>
-       <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">Country {{contact.baddress.country}}</span>
-             </div>
-             
+<div ng-init="loadAllcontact()" ></div>
+<div class="collapse-card ng-scope" ng-repeat="contact in contacts | filter:ctrl.searchText||undefined | orderBy: prodSearch " ng-class="{ active: $active }" style="">
+   <div class="collapse-card__heading" layout="row" layout-align="start start" >
+      <div class="collapse-card_header_content_controls" flex="5" layout="column" layout-align="center start">
+         <div style="width:9%">
+            <div  ng-hide="contact.favoritestar" class="blankspace collapse-card_header_content_info" 
+               ng-click="favouriteFunction(contact)" layout="row">
+               <img src="img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px;  height:23px;width:23px;"/>
+            </div>
+            <div  ng-show="contact.favoritestar" class="blankspace collapse-card_header_content_info" 
+               ng-click="favouriteFunction(contact)" layout="row">
+               <img src="img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
+            </div>
          </div>
-					
-					</div>
-					<!--END OF CARD OPEN SECTION-->
-					
-					<!--START OF CARD CONTROLS SECTION-->
-	
-					
-					<div style="width:5%;padding-left:10%;">
-					<div class="collapse-card_header_content_controls" flex="10" layout="column" layout-align="center start">
-			
-						<md-menu md-position-mode="target-right target">
-							<md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-								<md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
-							</md-button>
-							<md-menu-content width="4">
-								<md-menu-item>
-									<md-button ng-click="updateCustomer(contact,contact.customerid)">
-										<div layout="row">
-											<p flex>Update Timesheet</p>
-											<md-icon md-svg-icon="img/ic_save_24px.svg"></md-icon>
-										</div>
-									</md-button>
-								</md-menu-item>
-								<md-menu-item>
-									<md-button ng-click="deleteCustomer(contact,contact.customerid)">
-										<div layout="row">
-											<p flex>Delete</p>
-											<md-icon md-svg-icon="img/ic_delete_24px.svg"></md-icon>
-										</div>
-									</md-button>
-								</md-menu-item>
-								
-								<md-menu-item >
-									<md-button ng-click="">
-										<div layout="row">
-											<p flex>Print Request</p>
-											<md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
-										</div>
-									</md-button>
-								</md-menu-item>
-							
-							</md-menu-content>
-						</md-menu>
-					</div>
-                    </div>
-					<!--END OF CARD CONTROLS SECTION-->
-				</div>
-				<!--END OF COLLAPSE CARD HEADING-->
-				
-				<!--START OF CARD BODY-->
-				<div class="collapse-card__body">
-					<form id="form" name="editForm">
-						<md-content>
-<!--
-							<div layout="row" layout-align="end start" style="background:rgb(228, 240, 236)">
-                        
-                        <div style="margin-top:8px">Editing</div>
-                        
-                        <md-switch ng-model="formEditing" aria-label="Switch 1" style="margin:6px" ng-change="onChangeEditing(formEditing)">
-                        </md-switch>
-                        
-                        <md-button style="height:0px;line-height:0px; " class="md-icon-button" aria-label="More" ng-disabled="checkAbilityBtn" ng-click="deleteTimesheet(time,$event)">
-                            
-                            <md-icon md-svg-icon="img/ic_delete_24px.svg"></md-icon>
-                            
-                        </md-button>
-                        
-                        <md-button type="button" style="height:0px;line-height:0px; " class="md-icon-button" aria-label="More" ng-disabled="checkAbilityBtn" ng-click="updateTimesheet(time,time.timesheetid)">
-                            
-                            <md-icon md-svg-icon="img/ic_save_24px.svg"></md-icon>
-                            
-                        </md-button>
-                        
-                    </div>
--->
-						<div layout layout-sm="column" layout-margin>
-                    
-                    <div flex="5">
-                        
-                        <img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:22px;border-radius:20px"/>
-                    </div>
-                    
-                    <div flex="20" style="margin-top:35px;">
-                        
-                        <label style="font-weight:700">Customer Name</label>
-                        
-                    </div>
-                    
-                    <md-input-container id="accContainer" flex >
-                        <label>Company or Individual Name</label>
-                        <input  ng-model="contact.Name" required></input>
-                    </md-input-container>
-                
-                    <md-input-container id="accContainer" flex >
-                        <label>Email</label>
-                        <input type="email" ng-model="contact.Email" required></input>
-                    </md-input-container>
-            
-                </div>
-        
-                <md-divider></md-divider>
-        
-                <div layout layout-sm="column" layout-margin>
-                    
-                    <div flex="5">
-                        
-                        <img src="img/material alperbert/avatar_tile_p_28.png" style="margin-top:22px;border-radius:20px"/>
-                    </div>
-                    
-                    <div flex="20" style="margin-top:35px;">
-                        
-                        <label style="font-weight:700">Contact Person</label>
-                        
-                    </div>
-                    
-                    <md-input-container id="accContainer" flex >
-                        
-                        <label>First Name</label>
-                        <input id="accNo" ng-model="contact.CustomerFname" required></input>
-                    
-                    </md-input-container>
-        
-                    <md-input-container flex >
-                        
-                        <label>Last Name</label>
-                        <input ng-model="contact.CustomerLname" required></textarea>
-        
-                    </md-input-container>
-    
-                </div>
-
-                <md-divider></md-divider>
-
-                <div ng-show="showBilling" flex>
-                    
-                    <div layout layout-sm="column" layout-margin >
-                        
-                        <div flex="5">
-                            
-                            <img src="img/material alperbert/avatar_tile_b_28.png" style="margin-top:22px;border-radius:20px"/>
+         <md-button aria-label flex ng-if="content.favourite == false" ng-disabled="false" class="md-icon-button launch" 
+            ng-click="selectItem(content)">
+            <md-icon md-svg-icon="img/ic_check_box_outline_blank_24px.svg"></md-icon>
+         </md-button>
+         <md-button aria-label flex ng-if="content.favourite == true" ng-disabled="false" class="md-icon-button launch" 
+            ng-click="selectItem(content)">
+            <md-icon md-svg-icon="img/ic_check_box_24px.svg"></md-icon>
+         </md-button>
+      </div>
+      <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();">
+         <div layout-sm="row" flex>
+            <div layout-sm="column" flex>
+               <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>   {{contact.Name}}</b></span>
+               <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{contact.Email}}</b></span>
+               <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-width:1px;"><b>{{contact.CustomerFname}} {{contact.CustomerLname}} </b></span>
+            </div>
+            <div layout-sm="column" style="margin-top:10px;" flex>
+               <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">Mobile {{contact.Mobile}}</span>
+               <span style="padding-right: 15px; padding-left: 15px; border-right-style: solid; border-width:1px; font-size:13px;">City {{contact.baddress.city}}</span>
+               <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">Country {{contact.baddress.country}}</span>
+            </div>
+         </div>
+      </div>
+      <div style="width:5%;padding-left:10%;">
+         <div class="collapse-card_header_content_controls" flex="10" layout="column" layout-align="center start">
+            <md-menu md-position-mode="target-right target">
+               <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                  <md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
+               </md-button>
+               <md-menu-content width="4">
+                  <md-menu-item>
+                     <md-button ng-click="updateCustomer(contact,contact.customerid)">
+                        <div layout="row">
+                           <p flex>Update Timesheet</p>
+                           <md-icon md-svg-icon="img/ic_save_24px.svg"></md-icon>
                         </div>
-                        
-                        <div flex="20" style="margin-top:35px;">
-                            
-                            <label style="font-weight:700">Billing Address</label>
-                            <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
+                     </md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                     <md-button ng-click="deleteCustomer(contact,contact.customerid)">
+                        <div layout="row">
+                           <p flex>Delete</p>
+                           <md-icon md-svg-icon="img/ic_delete_24px.svg"></md-icon>
                         </div>
-                        
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>Street</label>
-                            <input id="accNo" ng-model="contact.baddress.street" required></input>
-                        
-                        </md-input-container>
-                    
-                    </div>
-
-                    <div layout layout-sm="column" layout-margin>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        <div flex="5" class="blankspace">
+                     </md-button>
+                  </md-menu-item>
+                  <md-menu-item >
+                     <md-button ng-click="">
+                        <div layout="row">
+                           <p flex>Print Request</p>
+                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                         </div>
-                        
-                        <div flex="20" class="blankspace">
-                        </div>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>City</label>
-                            <input id="accNo" ng-model="contact.baddress.city" required></input>
-                        
-                        </md-input-container>
-
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>State</label>
-                            <input id="accNo" ng-model="contact.baddress.state"></input>
-
-                        </md-input-container>
-                    </div>
-
-                    <div layout layout-sm="column" layout-margin>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        
-                        <div flex="5" class="blankspace">
-                        </div>
-                        
-                        <div flex="20" class="blankspace">
-                        </div>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>Zip code</label>
-                            <input id="accNo" ng-model="contact.baddress.zip" required></input>
-                        
-                        </md-input-container>
-
-                        <md-input-container  flex >
-                            
-                            <label>Country</label>
-                            <md-select ng-model="contact.baddress.country" flex>
-                                <md-optgroup label="Country">
-                                <md-option value="Maldives">Maldives</md-option>
-                                <md-option value="Sri lanka">Sri lanka</md-option>
-                                <md-option value="India">India</md-option>
-                            </md-select>
-                                
-                        </md-input-container>
-                            
-                    </div>
-
-                </div>
-
-                <div ng-show="showShipping" flex>
-                    
-                    <div layout layout-sm="column" layout-margin >
-                        
-                        <div flex="5">
-                            
-                            <img src="img/material alperbert/avatar_tile_s_28.png" style="margin-top:22px;border-radius:20px"/>
-                        </div>
-                        
-                        <div flex="20" style="margin-top:35px;">
-                            
-                            <label style="font-weight:700">Shipping Address</label>
-                            <md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></md-icon>
-                        </div>
-                        
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>Street</label>
-                            <input id="accNo" ng-model="contact.saddress.s_street"></input>
-                        
-                        </md-input-container>
-                    
-                    </div>
-
-                    <div layout layout-sm="column" layout-margin>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        
-                        <div flex="5" class="blankspace">
-                        </div>
-                        
-                        <div flex="20" class="blankspace">
-                        </div>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>City</label>
-                            <input id="accNo" ng-model="contact.saddress.s_city"></input>
-                        
-                        </md-input-container>
-
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>State</label>
-                            <input id="accNo" ng-model="contact.saddress.s_state"></input>
-
-                        </md-input-container>
-
-                    </div>
-
-                    <div layout layout-sm="column" layout-margin>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        
-                        <div flex="5" class="blankspace">
-                        </div>
-                        
-                        <div flex="20" class="blankspace">
-                        </div>
-                        
-                        <!--KEEP BLANK SPACE - ask why-->
-                        
-                        <md-input-container id="accContainer" flex >
-                            
-                            <label>Zip code</label>
-                            <input id="accNo" ng-model="contact.saddress.s_zip"></input>
-                        
-                        </md-input-container>
-
-                        <md-input-container  flex >
-                            
-                            <label>Country</label>
-                            <md-select ng-model="contact.saddress.s_country" flex>
-                                <md-optgroup label="Country">
-                                <md-option value="Maldives">Maldives</md-option>
-                                <md-option value="Sri lanka">Sri lanka</md-option>
-                                <md-option value="India">India</md-option>
-                            </md-select>
-                                
-                        </md-input-container>
-                            
-                    </div>
-
-                </div>
-
-                <md-divider></md-divider>
-
-                <div layout layout-sm="column" layout-margin>
-                    
-                    <!--KEEP BLANK SPACE - ask why-->
-                    
-                    <div flex="5">
-                        
-                        <img src="img/material alperbert/avatar_tile_c_28.png" style="margin-top:22px;border-radius:20px"/>
-                        
-                    </div>
-                    
-                    <div flex="20" style="margin-top:35px;">
-                        
-                        <label style="font-weight:700">Contact Numbers</label>
-                        
-                    </div>
-                    
-                    <!--KEEP BLANK SPACE - ask why-->
-                    
-                    <md-input-container id="accContainer" flex >
-                        
-                        <label>Phone</label>
-                        <input type="phone" ng-model="contact.Phone" required></input>
-                    
-                    </md-input-container>
-
-                    <md-input-container id="accContainer" flex >
-                        
-                        <label>Mobile</label>
-                        <input type="phone" ng-model="contact.Mobile" required></input>
-
-                    </md-input-container>
-
-                </div>
-
-                <div layout layout-sm="column" layout-margin>
-                    
-                    <!--KEEP BLANK SPACE - ask why-->
-                    
-                    <div flex="5" class="blankspace">
-                    </div>
-                    
-                    <div flex="20" class="blankspace">
-                    </div>
-                    
-                    <!--KEEP BLANK SPACE - ask why-->
-                    
-                    <md-input-container id="accContainer" flex >
-                        
-                        <label>Fax</label>
-                        <input id="accNo" ng-model="contact.Fax" required></input>
-                    
-                    </md-input-container>
-
-                    <md-input-container id="accContainer" flex >
-                        
-                        <label>Website</label>
-                        <input id="accNo" ng-model="contact.Website" required></input>
-
-                    </md-input-container>
-
-                </div>
-
-                <!-- <div layout="row" layout-align="end start" layout-margin ng-init="submitted=false" >
-
-                    <md-button id="mySignup" class="md-raised md-primary" style="width:100px;margin-right:10px !important; margin-left:20px !important" ng-disabled="submitted" type="submit" ng-clicl="submit()">Save</md-button>
-
-                    </div> -->
-                <div class="md-actions" layout="row" layout-align="center center" style="display:none">
-                    
-                    <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
-                    </md-button>
-                    
-                </div>	
-							
-							
-							
-							
-							
-						
-						</md-content>
-					</form>
-				</div>
-				<!--END OF CARD BODY-->
-				
-				
-			</div>
-			<!--END OF COLLAPSE CARDS-->
+                     </md-button>
+                  </md-menu-item>
+               </md-menu-content>
+            </md-menu>
+         </div>
+      </div>
+   </div>
+   <div class="collapse-card__body">
+      <form id="form" name="editForm">
+         <md-content>
+            <div layout layout-sm="column" layout-margin>
+               <section-title title = "Customer Name"></section-title>
+               <md-input-container id="accContainer" flex >
+                  <label>Company or Individual Name</label>
+                  <input  ng-model="contact.Name" ng-disabled="true"> 
+               </md-input-container>
+               <md-input-container id="accContainer" flex >
+               <label>Email</label>
+               <input type="email" ng-model="contact.Email" ng-disabled="true"> 
+            </div>
+            <md-divider></md-divider>
+            <div layout layout-sm="column" layout-margin>
+               <section-title title = "Contact Person"></section-title>
+               <md-input-container id="accContainer" flex >
+                  <label>First Name</label>
+                  <input id="accNo" ng-model="contact.CustomerFname" ng-disabled="true"> 
+               </md-input-container>
+               <md-input-container flex >
+                  <label>Last Name</label>
+                  <input ng-model="contact.CustomerLname" ng-disabled="true"> 
+               </md-input-container>
+            </div>
+            <md-divider></md-divider>
+            <div ng-show="showBilling" flex>
+               <div layout layout-sm="column" layout-margin >
+                  <section-title title = "Billing Address"></section-title>
+                  <md-input-container id="accContainer" flex >
+                     <label>Street</label>
+                     <input id="accNo" ng-model="contact.baddress.street" required ng-disabled="true"> 
+                  </md-input-container>
+               </div>
+               <div layout layout-sm="column" layout-margin>
+                  <section-title></section-title>
+                  <md-input-container id="accContainer" flex >
+                     <label>City</label>
+                     <input id="accNo" ng-model="contact.baddress.city" ng-disabled="true"> 
+                  </md-input-container>
+                  <md-input-container id="accContainer" flex >
+                     <label>State</label>
+                     <input id="accNo" ng-model="contact.baddress.state" ng-disabled="true"> 
+                  </md-input-container>
+               </div>
+               <div layout layout-sm="column" layout-margin>
+                  <section-title></section-title>
+                  <md-input-container id="accContainer" flex >
+                     <label>Zip code</label>
+                     <input id="accNo" ng-model="contact.baddress.zip" ng-disabled="true"> 
+                  </md-input-container>
+                  <md-input-container  flex >
+                     <label>Country</label>
+                     <md-select ng-model="contact.baddress.country" flex ng-disabled="true">
+                        <md-optgroup label="Country">
+                        <md-option value="Maldives">Maldives</md-option>
+                        <md-option value="Sri lanka">Sri lanka</md-option>
+                        <md-option value="India">India</md-option>
+                     </md-select>
+                  </md-input-container>
+               </div>
+            </div>
+            <div ng-show="showShipping" flex>
+               <div layout layout-sm="column" layout-margin >
+                  <section-title title="Shipping Address"></section-title>
+                  <md-input-container id="accContainer" flex >
+                     <label>Street</label>
+                     <input id="accNo" ng-model="contact.saddress.s_street" ng-disabled="true"> 
+                  </md-input-container>
+               </div>
+               <div layout layout-sm="column" layout-margin>
+                  <section-title></section-title>
+                  <md-input-container id="accContainer" flex >
+                     <label>City</label>
+                     <input id="accNo" ng-model="contact.saddress.s_city" ng-disabled="true"> 
+                  </md-input-container>
+                  <md-input-container id="accContainer" flex >
+                     <label>State</label>
+                     <input id="accNo" ng-model="contact.saddress.s_state" ng-disabled="true"> 
+                  </md-input-container>
+               </div>
+               <div layout layout-sm="column" layout-margin>
+                  <section-title></section-title>
+                  <md-input-container id="accContainer" flex >
+                     <label>Zip code</label>
+                     <input id="accNo" ng-model="contact.saddress.s_zip" ng-disabled="true"> 
+                  </md-input-container>
+                  <md-input-container  flex >
+                     <label>Country</label>
+                     <md-select ng-model="contact.saddress.s_country" flex ng-disabled="true">
+                        <md-optgroup label="Country">
+                        <md-option value="Maldives">Maldives</md-option>
+                        <md-option value="Sri lanka">Sri lanka</md-option>
+                        <md-option value="India">India</md-option>
+                     </md-select>
+                  </md-input-container>
+               </div>
+            </div>
+            <md-divider></md-divider>
+            <div layout layout-sm="column" layout-margin>
+               <section-title title="Contact Numbers"></section-title>
+               <md-input-container id="accContainer" flex >
+                  <label>Phone</label>
+                  <input type="phone" ng-model="contact.Phone" ng-disabled="true"> 
+               </md-input-container>
+               <md-input-container id="accContainer" flex >
+                  <label>Mobile</label>
+                  <input type="phone" ng-model="contact.Mobile" ng-disabled="true">
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+               <section-title></section-title>
+               <md-input-container id="accContainer" flex >
+                  <label>Fax</label>
+                  <input id="accNo" ng-model="contact.Fax"  ng-disabled="true">
+               </md-input-container>
+               <md-input-container id="accContainer" flex >
+                  <label>Website</label>
+                  <input id="accNo" ng-model="contact.Website" ng-disabled="true">
+               </md-input-container>
+            </div>
+         </md-content>
+      </form>
+   </div>
+</div>

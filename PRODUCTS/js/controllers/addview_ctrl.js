@@ -1,4 +1,4 @@
-rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
+rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploader", "$mdDialog", "$state","$activityLog", "$mdToast", "$objectstore", "$window", "$rootScope", "$interval", "$location", function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
   
 
     $scope.currentPage = 1;
@@ -11,22 +11,19 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       value:['12','samal','3221','rana','duo'],
       addition:true
     }]
-
-
-
     //end test
-
-
     //  get the settings json object 
     var SettingsApp  = $objectstore.getClient("Settings12thdoor");
     SettingsApp.onGetMany(function(data){
-      console.log(data)
+      //console.log(data)
       //console.log(data)
       GetProductCategory(data,function(){  // return one object of array 
         GetProductBrand(data,function(){
           GetCustFields(data,function(){
             GetProUnits(data,function(){
-              GetProTaxes(data);
+              GetProTaxes(data,function(){
+                GetBaseCurrency(data)
+              });
             });
           });
         });
@@ -38,7 +35,11 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     SettingsApp.getByFiltering("*");
 
 
-    function GetProTaxes(arr){
+    function GetBaseCurrency(arr){
+      $scope.product.baseCurrency = arr[0].profile.baseCurrency;
+    }
+
+    function GetProTaxes(arr,callback){
       $scope.taxesArr = [];      
       var individualTaxes = arr[0].taxes.individualtaxes; 
       var multiplelTaxes = arr[0].taxes.multipletaxgroup; 
@@ -53,7 +54,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           $scope.taxesArr.push(multiplelTaxes[j]);
         }
       }
-
+      callback();
     }
 
     function GetProUnits(arr,callback){
@@ -71,7 +72,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       $scope.ProCustArr = [];
       var CustArr = arr[0].preference.productpref.CusFiel; 
       for(var i=0; i<= CustArr.length-1; i++){
-        $scope.ProCustArr.push(CustArr[i].name);
+        $scope.ProCustArr.push(CustArr[i]);
       } 
       callback();
     }
@@ -86,8 +87,6 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       }
       callback();
     }
-
-
 
     function GetProductCategory(arr,callback){
       $scope.CategoryArray = [];
@@ -176,119 +175,162 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       , src: "img/ic_grade_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: true
-    }, {
+      , divider: true,
+      close: false
+    },{
       name: "Product Name"
       , id: "Productname"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
-      , downstatus : true
-      , divider: false
+      , downstatus : false
+      , divider: false,
+      close: false
     }, {
       name: "Product Code"
       , id: "ProductCode"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: false
+      , divider: false,
+      close: false
     }, {
       name: "Price"
       , id: "productprice"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: true
+      , divider: true,
+      close: false
     }, {
       name: "Active"
       , id: "status"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: false
+      , divider: false,
+      close: false
     }, {
       name: "Inactive"
       , id: "status"
       , src: "img/ic_add_shopping_cart_48px.svg"
       , upstatus : false
       , downstatus : false
-      , divider: false
-    }]
-
-     
-    
+      , divider: false,
+      close: false
+    }];   
     
     $scope.self = this;
     $scope.self.searchText = "";
+    $scope.prodSearch = '-todayDate';
     $scope.indexno = 1;
-    $scope.latest = 'timestamp';
+    $scope.latest = '-todayDate';
 
+    $scope.DefaultCancel = function(item){
+      $scope.testarr[$scope.indexno].upstatus = false;
+      $scope.testarr[$scope.indexno].downstatus = false;
+      item.close = false;
+      $scope.prodSearch = '-todayDate';
+      $scope.indexno = 1;
+      $scope.latest = '-todayDate';
+    }
     $scope.CheckFullArrayStatus = function(type,id){  
         $scope.BackUpArray = [];
         //remove all all object that status = paid and put them into backup array
-        if(id == 'status' ){
           for (var i = $scope.products.length - 1; i >= 0; i--) {
-           if ($scope.products[i].status === type) {
-              $scope.BackUpArray.push($scope.products[i]);            
+              if ($scope.products[i].status === type) {
+                 $scope.BackUpArray.push($scope.products[i]);            
+                 $scope.products.splice(i,1);           
+              };
+          };
+        $scope.products = MergeArr($scope.BackUpArray,$scope.products);         
+    }
+
+    function MergeArr(backup,arr){
+        //sort back up array by date in accending order       
+        backup.sort(function(a,b){
+            return new Date(b.todayDate) - new Date(a.todayDate);
+        });        
+
+        arr.sort(function(a,b){
+         return new Date(b.todayDate) - new Date(a.todayDate);
+        });
+
+        //prepend backup array to fullarray 
+        for (var i = backup.length - 1; i >= 0; i--) {
+            arr.unshift(backup[i]);        
+        }; 
+        return arr;
+      }
+
+    function SortStarFunc(){
+        $scope.BackUpArrayStar = [];
+        for (var i = $scope.products.length - 1; i >= 0; i--) {
+            if ($scope.products[i].favouriteStarNo === 0) {
+              $scope.BackUpArrayStar.push($scope.products[i]);            
               $scope.products.splice(i,1);           
             };
-          };
-        }      
-        //sort back up array by date in accending order
-        $scope.BackUpArray.sort(function(a,b){
-         return new Date(b.date) - new Date(a.date);
-        });
-        //prepend backup array to fullarray 
-        console.log($scope.BackUpArray)
-        for (var i = $scope.BackUpArray.length - 1; i >= 0; i--) {
-          $scope.products.unshift($scope.BackUpArray[i]);        
-        }; 
-      }
+        };
+        $scope.products = MergeArr($scope.BackUpArrayStar,$scope.products);        
+    }
 
     $scope.starfunc = function(item,index) {
 
-         if (item.id === "favouriteStarNo") {
-            $scope.prodSearch = item.id;
-            item.upstatus == false;
-            item.downstatus = false; 
-            $scope.testarr[$scope.indexno].upstatus = false;
-            $scope.testarr[$scope.indexno].downstatus = false;
-            $scope.indexno  = index; 
-            $scope.latest = 'Productname';         
-         }else if(item.id === "status"){
-            $scope.testarr[$scope.indexno].upstatus = false;
-            $scope.testarr[$scope.indexno].downstatus = false;
+        if (item.id === "favouriteStarNo") {            
+            $scope.latest = '-todayDate'
+            $scope.prodSearch = null;
             item.upstatus == false;
             item.downstatus = false;
-            $scope.CheckFullArrayStatus(item.name,item.id);
-            $scope.latest = null;
-            $scope.prodSearch = null;
-            $scope.indexno  = index; 
+            $scope.testarr[$scope.indexno].upstatus = false;
+            $scope.testarr[$scope.indexno].downstatus = false;
+            $scope.testarr[$scope.indexno].close = false;
+            item.close = true;
+            $scope.indexno = index;
+            SortStarFunc();
 
-         }
-         else{
+        }else if(item.id === "status"){
+
+            $scope.latest = null
+            $scope.prodSearch = null;
+            item.upstatus == false;
+            item.downstatus = false;
+            $scope.testarr[$scope.indexno].downstatus = false;
+            $scope.testarr[$scope.indexno].upstatus = false;
+            $scope.testarr[$scope.indexno].close = false;
+            item.close = true;
+            $scope.indexno = index;
+            $scope.CheckFullArrayStatus(item.name, item.id);
+
+        }
+        else{
           // scope.star = "";
 
-                if (item.upstatus == false && item.downstatus == false) {
-                    item.upstatus = !item.upstatus;
+              if (item.upstatus == false && item.downstatus == false) {
+                  item.upstatus = !item.upstatus;
+                  item.close = true;
+
+                  if ($scope.indexno != index) {
                     $scope.testarr[$scope.indexno].upstatus = false;
                     $scope.testarr[$scope.indexno].downstatus = false;
-                    $scope.indexno  = index;
-                }
-                else{
-                 item.upstatus = !item.upstatus;
-                 item.downstatus = !item.downstatus;             
-                 }                
-                               
-                $scope.self.searchText = "";
-                 
-                if (item.upstatus) {
-                     $scope.prodSearch = item.id;
-                     $scope.latest = '-date';
-                }
-                if (item.downstatus) {
-                     $scope.prodSearch ='-'+item.id;
-                     $scope.latest = '-date';
-                }
+                    $scope.testarr[$scope.indexno].close = false;
+                    $scope.indexno = index;                    
+                  }
+
+              } else {
+                  item.upstatus = !item.upstatus;
+                  item.downstatus = !item.downstatus;
+                  item.close = true;
+              }
+
+              $scope.self.searchText = "";
+
+              if (item.upstatus) {
+                  $scope.prodSearch = item.id;
+                  $scope.latest = '-todayDate';
+              }
+              if (item.downstatus) {
+                  $scope.prodSearch = '-' + item.id;
+                  $scope.latest = '-todayDate';
+              }
           }
         }
     //sort function variable end 
@@ -326,20 +368,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     $scope.products = [];
     // $scope.packages=[];
     $scope.loadallarray = [];
-    // sort function variable start
-    $scope.prodSearch = "";
-    $scope.sortProdName = "Productname";
-    $scope.sortProdCode = "ProductCode";
-    $scope.sortProdBrand = "brand";
-    $scope.sortProdCat = "ProductCategory";
-    $scope.sortProdStatus = "status";
-    $scope.sortProdStock = "stocklevel";
-    $scope.mytest = null;
-    $scope.sortFunciton = function (name) {
-      $scope.prodSearch = name;
-      self.searchText = null;
-      console.log($scope.prodSearch);
-    }
+    
     $scope.testfunc = function () {
       self.searchText = "true"
     }
@@ -362,9 +391,9 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
         if (keyEvent.which === 13) {
           if (self.selectedItem === null) {
             self.selectedItem = query;
-            console.log(results);
+            //console.log(results);
           } else {
-            console.log(self.selectedItem);
+            //console.log(self.selectedItem);
           }
         }
       }
@@ -410,12 +439,12 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           //whatever
         });
       });
-      // if (obj.favouriteStarNo == 1 ) {
-      // 	obj.favouriteStarNo = 0;
-      // }
-      // else if (obj.favouriteStarNo == 0){
-      // 	obj.favouriteStarNo = 1;
-      // };
+      if (obj.favouriteStarNo == 1 ) {
+      	obj.favouriteStarNo = 0;
+      }
+      else if (obj.favouriteStarNo == 0){
+      	obj.favouriteStarNo = 1;
+      };
       obj.favouriteStar = !obj.favouriteStar;
       client.insert(obj, {
         KeyProperty: "product_code"
@@ -494,8 +523,8 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
 
           for (var i = $scope.products.length - 1; i >= 0; i--) {
             $scope.products[i].productprice = parseInt($scope.products[i].productprice);
-          };
-          console.log($scope.products);
+          }
+          //console.log($scope.products);
           LoadImageData();
         }
       });
@@ -530,7 +559,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           };
         };
 
-        console.log($scope.products);
+        //console.log($scope.products);
       });
       client.onError(function(data){
 
@@ -576,15 +605,21 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     }
     $scope.newItems = [];
     $scope.product = {};
+    $scope.SubmitProgress = false;
 
     $scope.submit = function () {
-
+      if (!$scope.product.productprice) {
+        $scope.product.productprice = "0";
+      }
+      
       $scope.product.producttax = {};
-      $scope.product.producttax = JSON.parse($scope.producttax);
-      console.log($scope.product.producttax);
+      if ($scope.producttax) {
+        $scope.product.producttax = JSON.parse($scope.producttax);
+      };
+      //console.log($scope.product.producttax);
 
       if ($scope.product.ProductCode.indexOf('-') === -1) {
-        console.log("dash missing")
+        //console.log("dash missing")
         $mdDialog.show(
               $mdDialog.alert()
               .parent(angular.element(document.body))
@@ -595,7 +630,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent()
             );
       }else if(($scope.product.Productname.substring(0, 3).toUpperCase() != $scope.product.ProductCode.substring(0,3)) || ($scope.product.ProductCode.indexOf('-') != 3)){
-        console.log("first letters not match")
+        //console.log("first letters not match")
         $mdDialog.show(
               $mdDialog.alert()
               .parent(angular.element(document.body))
@@ -606,7 +641,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent()
             );
       }else if(($scope.product.ProductCode.slice(4).toString().length != 4) || (!isNormalInteger($scope.product.ProductCode.slice(4).toString()))){
-        console.log("last numbers are invalid or length is not 4")
+        //console.log("last numbers are invalid or length is not 4")
         $mdDialog.show(
               $mdDialog.alert()
               .parent(angular.element(document.body))
@@ -617,25 +652,28 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent()
             );
       }else{
-
+        $scope.SubmitProgress = true;
         $scope.AlreadyExsist = false;
         for(i=0; i<=$rootScope.FullArray.length-1; i++){
             if ($rootScope.FullArray[i].ProductCode === $scope.product.ProductCode) {
-              console.log("already exsist");
+              //console.log("already exsist");
+              $scope.SubmitProgress = false;
               $mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              .title('Product Code Already Exsist')
-              .content('Please Enter Different Product Code')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent()
-            );
+                $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .title('Product Code Already Exsist')
+                .content('Please Enter Different Product Code')
+                .ariaLabel('Alert Dialog Demo')
+                .ok('OK')
+                .targetEvent()
+              );
               $scope.AlreadyExsist = true;
               break;
             };
         }
         if (!$scope.AlreadyExsist) {
+
+          $scope.SubmitProgress = true;
 
           var today = new Date();
           var dd = today.getDate();
@@ -653,11 +691,11 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           $scope.brochurearray = ProductService.loadArraybrochure();
           if ($scope.imagearray.length > 0) {
             for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-              console.log($scope.imagearray[indexx]);
+              //console.log($scope.imagearray[indexx]);
               $uploader.upload("ignoreNamespace","productimagesNew", $scope.imagearray[indexx]);
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
-                  .content('Successfully uploaded!')
+                  .content('Image Successfully uploaded!')
                   .action('OK')
                   .highlightAction(false)
                   .position("bottom right");
@@ -679,11 +717,11 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           };
           if ($scope.brochurearray.length > 0) {
             for (indexx = 0; indexx < $scope.brochurearray.length; indexx++) {
-              console.log($scope.brochurearray[indexx].name);
+              //console.log($scope.brochurearray[indexx].name);
               $uploader.upload("ignoreNamespace","productbrochureNew", $scope.brochurearray[indexx]);
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
-                  .content('Successfully uploaded!')
+                  .content('Brochure Successfully uploaded !')
                   .action('OK')
                   .highlightAction(false)
                   .position("bottom right");
@@ -697,26 +735,32 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
                   .action('OK')
                   .highlightAction(false)
                   .position("bottom right");
-                $mdToast.show(toast).then(function () {//whatever
-                });
+                $mdToast.show(toast).then(function () {});
               });
             }
           };
           var client = $objectstore.getClient("product12thdoor");
           client.onComplete(function (data) {
-            $mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              //.title('This is embarracing')
-              .content('Product Successfully Saved.')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent(data)
-            );
+           
             $scope.newItems.push($scope.product);
-            //window.location.href = window.location.protocol + "//" + window.location.host + "/12thdoor/expenses.html";
-            $state.go("home");
+            saveToActivityClass(data.Data[0].ID,function(){
+                saveToBalanceClass(data.Data[0].ID,function(status){
+                    if (status == "success") {
+                        $mdDialog.show(
+                          $mdDialog.alert()
+                          .parent(angular.element(document.body))
+                          .content('Product Successfully Saved.')
+                          .ariaLabel('Alert Dialog Demo')
+                          .ok('OK')
+                          .targetEvent(data)
+                        );
+                      $scope.SubmitProgress = true;
+                      $state.go("home");
+                    }else{
 
+                    }
+                })              
+            })
           });
           client.onError(function (data) {
             $mdDialog.show(
@@ -729,87 +773,65 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             );
           });
           $scope.product.progressshow = "false"
+          $scope.product.deleteStatus = false
           $scope.product.product_code = "-999"
           $scope.product.favouriteStar = false;
           $scope.product.favouriteStarNo = 1;
           $scope.product.date = today;
+          $scope.product.todayDate = new Date()
           $scope.product.UploadImages = {
             val: []
           };
           $scope.product.UploadBrochure = {
             val: []
           };
+          $scope.product.customFields = $scope.ProCustArr;
 
           if (!$scope.product.tags) {
             $scope.product.tags = [];
           };
           $scope.product.UploadImages.val = ProductService.loadBasicArray();
           $scope.product.UploadBrochure.val = ProductService.loadBasicArraybrochure();
-          console.log($scope.product)
+          //console.log($scope.product)
           client.insert($scope.product, {
             KeyProperty: "product_code"
           });
 
-        };
-        
+        }        
       }
     }
-    $scope.updateproduct = function (updatedForm, prod) {
-      var client = $objectstore.getClient("product12thdoor");
-      console.log(updatedForm.stocklevel);
-      client.onComplete(function (data) {
-        $scope.newItems.push($scope.product);
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Product Successfully Updated')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.onError(function (data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Error Updating Product')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.insert(updatedForm, {
-        KeyProperty: "product_code"
-      });
+
+    function saveToActivityClass(pcode,callback){
+        $scope.product.ProductCode
+        var txt = "Product Added By ";
+        $activityLog.newActivity(txt,pcode,$scope.product.ProductCode,function(status){
+          if (status == "success") {
+            callback()
+          }
+        });
     }
-    $scope.deleteproduct = function (deleteform) {
-      var client = $objectstore.getClient("product12thdoor");
-      client.onComplete(function (data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Product Successfully Deleted')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
-        location.href = '#/home';
+
+
+    function saveToBalanceClass(pID,callback){
+      $scope.balanceArr = {
+        productId : pID,
+        startValue : "0",
+        GRNvalue : "0",
+        GINvalue : "0",
+        closeValue : "0",
+        startDate : new Date(),
+        balance_code : "-999"
+      }
+      var balanceClient = $objectstore.getClient("productBalance");
+      balanceClient.onComplete(function(data){
+        //console.log("Successfully inserted to balance class");
+        callback("success");
       });
-      client.onError(function (data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          //.title('This is embarracing')
-          .content('Error Deleting Product')
-          .ariaLabel('')
-          .ok('OK')
-          .targetEvent(data)
-        );
+      balanceClient.onError(function(data){
+        //console.log("error inserting to balance class")
+        callback("fail")
       });
-      client.deleteSingle(deleteform.product_code, "promotion_code");
+      balanceClient.insert($scope.balanceArr,{KeyProperty:"balance_code"})
     }
     $scope.demo = {
       topDirections: ['left', 'up']
@@ -825,34 +847,19 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
         $('#mySignup').click();
       }, 0)
     }
-    $scope.viewProduct = function () {
-      // $('#viewProduct').animate({width:"100%",height:"100%", borderRadius:"0px", right:"0px", bottom:"0px", opacity: 0.25},400, function() { 
-      // 		  // $window.location="product_view.html";
-      // 		  	// setroute('home');	
-      // 		    location.href = '#/home';
-      //   });
+    $scope.viewProduct = function () { 
       location.href = '#/home';
     }
     $scope.addProduct = function () {
-      $('#addProduct').animate({
-        width: "100%"
-        , height: "100%"
-        , borderRadius: "0px"
-        , right: "0px"
-        , bottom: "0px"
-        , opacity: 0.25
-      }, 400, function () {
-        // $window.location="index.html";
-        // setroute('Add_Product');	
-        location.href = '#/Add_Product';
-      });
+      location.href = '#/Add_Product';
     }
+
     $scope.TDinvoice = {};
     $rootScope.$on('viewRecord', function (event, args) {
       $scope.imageDetails = args;
       var fileExt = args.name.split('.').pop()
-      console.log(args.name);
-      console.log(fileExt);
+      //console.log(args.name);
+      //console.log(fileExt);
       if (fileExt == "docx") {
         $scope.progressbrochure = true;
         var client = $objectstore.getClient("productbrochure");
@@ -861,7 +868,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             $scope.brochurebody = [];
             $scope.brochurebody = data;
             var pbody = data
-            console.log(pbody);
+            //console.log(pbody);
             for (var i = $scope.brochurebody.length - 1; i >= 0; i--) {
               var url = 'data:application/msword;base64,' + $scope.brochurebody[i].Body;
               window.location.href = url;
@@ -889,7 +896,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           if (data) {
             $scope.brochurebodypdf = [];
             $scope.brochurebodypdf = data;
-            console.log($scope.brochurebodypdf);
+            //console.log($scope.brochurebodypdf);
             for (var i = $scope.brochurebodypdf.length - 1; i >= 0; i--) {
               var url = 'data:application/pdf;base64,' + $scope.brochurebodypdf[i].Body;
               window.location.href = url;
@@ -917,7 +924,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           if (data) {
             $scope.imageload = [];
             $scope.imageload = data;
-            console.log($scope.imageload);
+            //console.log($scope.imageload);
             for (var i = $scope.imageload.length - 1; i >= 0; i--) {
               var url = 'data:image/png;base64,' + $scope.imageload[i].Body;
               window.location.href = url;
@@ -992,8 +999,8 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           </div> \
           </md-content> \
         </md-dialog> ';
-  }) //END OF AppCtrl
-rasm.controller('testCtrl', function ($scope, employee, $mdDialog) {
+  }]) //END OF AppCtrl
+rasm.controller('testCtrl',["$scope", "employee", "$mdDialog", function ($scope, employee, $mdDialog) {
   $scope.test = employee;
   $scope.hideAccept = function () {
     $mdDialog.hide();
@@ -1001,7 +1008,7 @@ rasm.controller('testCtrl', function ($scope, employee, $mdDialog) {
   $scope.cancelAccept = function () {
     $mdDialog.cancel();
   };
-})
+}])
 
 function containsObject(obj, list) {
   for (var i = 0; i < list.length; i++) {

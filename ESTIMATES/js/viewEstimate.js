@@ -294,7 +294,7 @@ $scope.addTodo = function(todoText) {
     $scope.copyEstimate = function(InvoItem){
         EstimateDetails.removeArray(InvoItem, 1);
          $scope.InvoiceDetails = [];
-       var client = $objectstore.getClient("Estimate12thdoor");
+       var client = $objectstore.getClient("domainClassAttributes");
               client.onGetMany(function(data) {
                  if (data) {
                   $scope.EstimateDetails = data;
@@ -304,7 +304,6 @@ $scope.addTodo = function(todoText) {
             };
             $scope.maxID = parseInt($scope.ID)+1;
             InvoItem.estimateRefNo = $scope.maxID.toString();
-             //console.log( $scope.TDinvoice.invoiceRefNo);
                  }
               });
               client.getByFiltering("select maxCount from domainClassAttributes where class='Estimate12thdoor'");
@@ -315,13 +314,11 @@ $scope.addTodo = function(todoText) {
       }
     
     $scope.deleteRecord = function(deleteform, ev) {
-
       var confirm = $mdDialog.confirm()
         .parent(angular.element(document.body))
         .title('')
         .content('Are You Sure You Want To Delete This Record?')
-
-      .ok('Delete')
+        .ok('Delete')
         .cancel('Cancel')
         .targetEvent(ev);
 
@@ -329,7 +326,6 @@ $scope.addTodo = function(todoText) {
         var client = $objectstore.getClient("Estimate12thdoor");
 
         client.onComplete(function(data) {
-
           $mdDialog.show(
             $mdDialog.alert()
             .parent(angular.element(document.body))
@@ -339,9 +335,7 @@ $scope.addTodo = function(todoText) {
             .targetEvent(data)
           );
 
-          $state.go($state.current, {}, {
-            reload: true
-          });
+          $state.go($state.current, {}, {reload: true});
         });
 
         client.onError(function(data) {
@@ -355,7 +349,7 @@ $scope.addTodo = function(todoText) {
           );
         });
 
-        client.deleteSingle(deleteform.estimateNo, "estimateNo");
+        client.deleteSingle(deleteform.estimateNo.toString(), "estimateNo");
       }, function() {
 
         $mdDialog.hide();
@@ -363,25 +357,25 @@ $scope.addTodo = function(todoText) {
       });
     }
 
-    // $scope.$on('viewRecord', function(event, args) {
-    //   $scope.uploadimages.val.splice(args, 1);
+    $scope.$on('viewRecord', function(event, args) {
+      $scope.uploadimages.val.splice(args, 1);
 
-    // });
-    // $scope.toggleSearch = false;
-    // $scope.headers = [{
-    //   name: 'Name',
-    //   field: 'name'
-    // }, {
-    //   name: 'Size',
-    //   field: 'size'
-    // }];
-    // $scope.custom = {
-    //   name: 'bold',
-    //   size: 'grey'
-    // };
-    // $scope.sortable = ['name', 'size'];
-    // $scope.thumbs = 'thumb';
-    // $scope.count = 3;
+    });
+    $scope.toggleSearch = false;
+    $scope.headers = [{
+      name: 'Name',
+      field: 'name'
+    }, {
+      name: 'Size',
+      field: 'size'
+    }];
+    $scope.custom = {
+      name: 'bold',
+      size: 'grey'
+    };
+    $scope.sortable = ['name', 'size'];
+    $scope.thumbs = 'thumb';
+    $scope.count = 3;
 
     $scope.add = function() {
         location.href = '#/estimate';

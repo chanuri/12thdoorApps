@@ -1,77 +1,131 @@
 
-rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
-	//console.log($stateParams.productID);
+rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$state", "$activityLog","$commentLog","$mdToast","$DownloadPdf","$objectstore", "$auth","$mdDialog", function($scope, $stateParams,$rootScope,$auth, $state, $activityLog,$commentLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
+	$scope.UserName = $auth.getSession()
 
-	// pfd functions passing the whole object as parameters 
 	$scope.ConvertToPdf = function(obj){
-		$scope.downloadPdfArr = [];
-		$scope.downloadPdfArr = angular.copy(obj);
+		
+		if (obj.UploadBrochure.val.length == 0) {
+			$mdDialog.show(
+              $mdDialog.alert()
+              .title("Error Loading Brochures")
+              .content("Brochures Are Not Available")
+              .ariaLabel('Alert Dialog Demo')
+              .ok('OK')
+            );
+		}else{
+			for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
+				var brochureClient = $objectstore.getClient("productbrochureNew");
+				brochureClient.onGetOne(function(data){
+					if (!isEmpty(data)) {
+						var fileExt = data.FileName.split('.').pop();
+			 			var link = document.createElement("a"); // set up <a> tag
+						var url;
 
-		// var context = angular.element('widget')[0].getContext('2d');
-  //   	context.font = "34px Arial";
-		html2canvas($("#widget"),{
-			onrendered : function(canvas){
-				         
-                var imgData = canvas.toDataURL(
-                    'image/png');              
-                var doc = new jsPDF();
-                doc.addImage(imgData, 'PNG', 10, 10,200,100);
-                doc.save('sample-file.pdf');
+						if (fileExt  == "pdf" ) {
+							url = 'data:application/pdf;base64,' + data.Body;
+				        }
+						if (fileExt == "docx") {
+							url = 'data:application/msword;base64,' + data.Body;
+						}
 
-				//theCanvas = canvas;
-				//document.body.appendChild(canvas);
-
+						link.download = data.FileName;					
+			            link.href = url;
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+						delete link;			
+					}
+				})
+				brochureClient.onError(function(data){
+					console.log("error loading brochure Data")
+				})
+				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
 			}
-		})
-
-		//$DownloadPdf.GetPdf($scope.downloadPdfArr,'download'); //pdf type is 'download'
+		} 
 	}
-
-	// print pdf in a new tab , pass whole object as parameters
 	$scope.print = function(obj){
-		$scope.PrintDownloadArr = [];
-		$scope.PrintDownloadArr = angular.copy(obj);
-		$DownloadPdf.GetPdf($scope.PrintDownloadArr,'print'); //ptf type is 'print'
+
+		if (obj.UploadBrochure.val.length == 0) {
+			$mdDialog.show(
+              $mdDialog.alert()
+              .title("Error Loading Brochures")
+              .content("Brochures Are Not Available")
+              .ariaLabel('Alert Dialog Demo')
+              .ok('OK')
+            );
+		}else{
+
+			for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
+				var brochureClient = $objectstore.getClient("productbrochureNew");
+				brochureClient.onGetOne(function(data){
+					if (!isEmpty(data)) {
+						var fileExt = data.FileName.split('.').pop()
+						if (fileExt  == "pdf" ) {
+							var myWindow = window.open("data:application/pdf;base64," + data.Body)
+							myWindow.print(); 
+							myWindow.focus();
+						};
+						if (fileExt == "docx") {window.open("data:application/msword;base64," + data.Body)};					
+					}
+				})
+				brochureClient.onError(function(data){
+					console.log("error loading brochure Data")
+				})
+				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
+			}			
+		}
+	}
+	function isEmpty(obj) {
+	    for(var prop in obj) {
+	        if(obj.hasOwnProperty(prop))
+	            return false;
+	    }
+	    return true;
 	}
 	// check comment label 
 	$scope.CheckText = function(obj,event){
-		if (obj.Commentstxt) {
-			console.log('working')
+		if (obj.Commentstxt) { 
 			$scope.lblVisibility = 'Hidelabel';
 		}else{
 			$scope.lblVisibility = 'Showlabel';
 		}
-		 event.preventDefault();
+		event.preventDefault();
+	}
+	$scope.cancelEdit = function(pro){
+		pro.Commentstxt = "";	
+		$scope.editButtonVisible = false;	
 	}
 	$scope.CommentEdit = function(pro,obj,index){
 		$scope.ProgressBar = false;
+		$scope.editButtonVisible = true;
 		pro.Commentstxt = obj.Comment;
 		$scope.lblVisibility = 'Hidelabel';
-		$scope.CommentDelete(obj,index)
+		$commentLog.addEditObject(obj,index)
+		//$scope.CommentDelete(obj,index,"edit")
 	}
 
 	// current comment delete 
 	$scope.CurrentCommentDelete = function(obj){
 		obj = {};
 		$scope.ProgressBar = false;
-
 	}
 	// comment delete 
-	$scope.CommentDelete = function(item,index){
+	$scope.CommentDelete = function(item,index,type){
 		var client = $objectstore.getClient("productComment");
 		client.onComplete(function(data){
 
 			$scope.ViewExpense[0].Comments.splice(index,1); //remove from array
+			if (type == "edit") {
 
-			var toast = $mdToast.simple()
-		 	.content('Successfully Deleted!')
-		 	.action('OK')
-		 	.highlightAction(false)
-		 	.position("bottom right");
-		 	$mdToast.show(toast).then(function() {
-
-		 	});
-			
+			}else{
+				var toast = $mdToast.simple()
+			 	.content('Successfully Deleted!')
+			 	.action('OK')
+			 	.highlightAction(false)
+			 	.position("bottom right");
+			 	$mdToast.show(toast).then(function() {
+			 	});
+			}			
 		});
 		client.onError(function(data){
 			var toast = $mdToast.simple()
@@ -93,6 +147,9 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 	// comment submit
 	$scope.CommentObj = {};
 	$scope.ProgressBar = false;
+	$scope.editButtonVisible = false;
+	$scope.commentProgress = true;
+
 	$scope.SaveComment = function(obj,event){
 		var result = document.getElementById("CommentTxt").scrollHeight;
 		$scope.Height = angular.element(result);
@@ -102,24 +159,42 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 		}else if ((event.keyCode == 10 || event.keyCode == 13) && !event.shiftKey) {
 			 event.preventDefault(); //prevent actions
 			 if (obj.Commentstxt) { // if comment is not null
-				 var TodayDate = new Date();
-				 $scope.UserName = "test ranawaka"
-				 $scope.CommentObj = {
-				 	UserName : $scope.UserName,
-				 	TodayDate : TodayDate,
-				 	Comment : obj.Commentstxt,
-				 	product_code : $scope.ViewExpense[0].product_code,
-				 	productNum : $stateParams.productID.slice(-4),
-				 	textareaHeight : $scope.Height[0] + 'px;'
-				 };
-				 obj.Commentstxt = ""; //make textare empty
-				 $scope.CommentObj.comment_code = "-999";
-				 $scope.ProgressBar = true;
-				 //console.log("enter working")
-				CommentToObjectstore($scope.CommentObj);
-			};
+				var TodayDate = new Date();
+				if (!$scope.editButtonVisible) {
+					$scope.CommentObj = {
+					 	UserName : $scope.UserName,
+					 	TodayDate : TodayDate,
+					 	Comment : obj.Commentstxt,
+					 	product_code : $scope.ViewExpense[0].product_code,
+					 	productNum : $stateParams.productID.slice(-4),
+					 	textareaHeight : $scope.Height[0] + 'px;',
+					 	type : "comment",
+					 	edited : false
+					}				 	
+				}
+				else if ($scope.editButtonVisible) {
+					var originalObj = $commentLog.returnEditObject()
+					$scope.CommentDelete(originalObj.commentObj,originalObj.index,"edit")
 
-		};
+				 	$scope.CommentObj = {
+					 	UserName : $scope.UserName,
+					 	TodayDate : TodayDate,
+					 	Comment : obj.Commentstxt,
+					 	product_code : $scope.ViewExpense[0].product_code,
+					 	productNum : $stateParams.productID.slice(-4),
+					 	textareaHeight : $scope.Height[0] + 'px;',
+					 	type : "comment",
+					 	edited : true
+					}
+				}
+
+				obj.Commentstxt = ""; //make textare empty
+				$scope.CommentObj.comment_code = "-999";
+				$scope.ProgressBar = true; 
+				CommentToObjectstore($scope.CommentObj);
+				$scope.editButtonVisible = false;
+			}
+		}
 	}
 
 	//function to submit comment to objectstore
@@ -285,7 +360,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 	              .targetEvent(response)
 	            );
 			},function(response){
-				console.log(response)
+				//console.log(response)
 			});
 		}
 		$scope.closeDialog = function(){
@@ -297,6 +372,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 	client.onGetMany(function(data){
 		$scope.ViewExpense = data;
 		$scope.ViewExpense[0].Commentstxt = ""; // ADD empty field to comment 
+		$scope.ViewExpense[0].Comments = [];
 		//console.log($scope.ViewExpense[0])
 		if ($scope.ViewExpense[0].status == 'Active') { //check the status and deside the menu option active or inactive
 			$scope.ProductStatus = "Inactive";
@@ -322,15 +398,32 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
 
 		var client = $objectstore.getClient("product12thdoor");
 		client.onComplete(function(data){
-			$mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              //.title('This is embarracing')
-              .content('Status Sucessfully Changed.')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent(data)
-            );
+			var txtActivity = "Status Changed To " + obj.status + " By ";
+
+			$activityLog.newActivity(txtActivity,obj.product_code,obj.ProductCode,function(status){
+				if (status == "success") {
+					var txt = txtActivity + $scope.UserName;
+					
+					$scope.ViewExpense[0].Comments.unshift({
+					 	TodayDate : new Date(),
+					 	Comment : txt,
+					 	product_code :obj.product_code,
+					 	productNum : obj.ProductCode,
+					 	textareaHeight : '30px;',
+					 	type : "activity"
+					});
+
+					$mdDialog.show(
+		              $mdDialog.alert()
+		              .parent(angular.element(document.body))
+		              //.title('This is embarracing')
+		              .content('Status Sucessfully Changed.')
+		              .ariaLabel('Alert Dialog Demo')
+		              .ok('OK')
+		              .targetEvent(data)
+		            );
+				}
+			})			
 		});
 		client.onError(function(data){
 			$mdDialog.show(
@@ -365,32 +458,33 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
           .ok('Delete')
           .cancel('Cancel');
 	    $mdDialog.show(confirm).then(function() {
-	      
-	      var client  = $objectstore.getClient("product12thdoor");
-	      client.onComplete(function(data){
-	      	$mdDialog.show(
-	          $mdDialog.alert()
-	          .parent(angular.element(document.body))
-	          //.title('This is embarracing')
-	          .content('Product Successfully Deleted')
-	          .ariaLabel('')
-	          .ok('OK')
-	          .targetEvent(data)
-	        );
-	        $state.go("home");
-	      });
-	      client.onError(function(data){
-	      	$mdDialog.show(
-	          $mdDialog.alert()
-	          .parent(angular.element(document.body))
-	          .content('Error Deleting Product')
-	          .ariaLabel('')
-	          .ok('OK')
-	          .targetEvent(data)
-	        );
-	      });
-	      client.deleteSingle(obj.product_code,"product_code");
-
+	    	obj.deleteStatus = true;
+	    	var addClient = $objectstore.getClient("product12thdoor");
+	    	addClient.onComplete(function(data){
+	    		$mdDialog.show(
+		          $mdDialog.alert()
+		          .parent(angular.element(document.body))
+		          .title('Success')
+		          .content('Product Successfully Deleted')
+		          .ariaLabel('')
+		          .ok('OK')
+		          .targetEvent(ev)
+		        );
+		       	$state.go("home");
+	    	});
+	    	addClient.onError(function(data){
+	    		$mdDialog.show(
+		          $mdDialog.alert()
+		          .parent(angular.element(document.body))
+		          .title('Error')
+		          .content('Error Occur While Deleting The Product')
+		          .ariaLabel('')
+		          .ok('OK')
+		          .targetEvent(ev)
+		        );
+		        obj.deleteStatus = false;
+	    	});
+	    	addClient.insert(obj,{KeyProperty : 'product_code'});
 	    }, function() {});  
 	} 
 
@@ -421,7 +515,6 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
       	callback();
       });
       client.getByFiltering("*");
-      // select * from productimagesNew where name = '"+$scope.name+"'
     }
 
     //load all comments
@@ -430,10 +523,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
     	var client = $objectstore.getClient("productComment");
     	client.onGetMany(function(data){
     		if (data) {
-
-    			$scope.ViewExpense[0].Comments = data.sort(function(a,b){
-				  return new Date(b.TodayDate) - new Date(a.TodayDate);
-				});
+    			loadAllActivities(Pcode,data);
     		};    		
     	});
     	client.onError(function(data){
@@ -442,4 +532,30 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope, $state, $
     	client.getByFiltering("select * from productComment where product_code = '"+Pcode+"'")
     }
 
-});
+    function loadAllActivities(Pcode,commentArr){
+    	var ActivityClient = $objectstore.getClient("productActivity");
+    	ActivityClient.onGetMany(function(data){
+    		var fullArr = [];
+    		if (data.length > 0) {
+    			fullArr = commentArr.concat(data)
+    		}else{
+    			fullArr = data;
+    		}
+    		
+			$scope.ViewExpense[0].Comments = fullArr.sort(function(a,b){
+			  return new Date(b.TodayDate) - new Date(a.TodayDate);
+			});
+			$scope.commentProgress = false;
+    	});
+    	ActivityClient.onError(function(data){
+    		console.log("error loading data");
+    	}); 
+    	ActivityClient.getByFiltering("select * from productActivity where product_code = '"+Pcode+"'")
+
+    }
+
+    $scope.cancelBtn = function(){
+    	$state.go("home")
+    }
+
+}]);

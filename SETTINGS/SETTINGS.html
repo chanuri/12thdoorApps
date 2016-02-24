@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="mainApp">
 <head>
+	<meta name="version" description="1.0.3">
 	<link rel="stylesheet" type="text/css" href="/../../bower_components/angular-material/angular-material.css">
 	<link rel="stylesheet" type="text/css" href="/../css/child_app_styles.min.css">
 	<link rel="stylesheet" href="/../css/directive_library.css">
@@ -294,6 +295,23 @@
 		user-select:none
 	}
 
+	md-switch{
+		margin-top: 13px !important; 
+		margin: 16px -8px !important;
+	}
+
+	md-input-container{
+		padding-bottom: 3px !important;
+	}
+
+	md-list-item.md-no-proxy, md-list-item .md-no-style {
+		padding: 0px 43px !important;
+	}
+
+	/*.md-default-theme{  For Stop x scroll at md-Content
+		overflow-x:hidden; 
+	}*/
+
 
 
 </style>
@@ -355,22 +373,10 @@
 <md-content flex style="overflow-x:hidden;background:transparent;">
 <div ui-view></div>
 </md-content>
+
 </section>
 
-<div class="lock-size" layout="row">
-	<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
-	ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
-	<md-fab-trigger>
-	<md-button aria-label="menu" class="md-fab " style="background-color:#db4437;" ng-click="submit()">
-	<md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;"></md-icon>
-</md-button>
-</md-fab-trigger>
-<md-fab-actions>
-</md-fab-actions>
-</md-fab-speed-dial>
-</div>
-
-<script src="/../js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery-2.1.4.min.js"></script>
 <script>
 
 	$body = $(document.body),

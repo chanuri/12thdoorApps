@@ -1,10 +1,38 @@
-angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog, $objectstore,$stateParams, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
+angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog, $objectstore,$stateParams,uiInitilize, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
       $scope.TDinvoice = [];
       $scope.newItems = [];
       $scope.show = false;
       $scope.showTable = false;
       $scope.obtable = [];
       $scope.invoiceArray.shipping = 0;
+
+
+
+
+
+          // ------------------------------------virtual repeat start-----------------
+
+      
+      setInterval(function interval(){
+          $scope.viewPortHeight = window.innerHeight;
+          $scope.viewPortHeight = $scope.viewPortHeight+"px";
+      }, 100);
+
+      $scope.items = uiInitilize.insertIndex($scope.TDinvoice);
+  
+      //This holds the UI logic for the collapse cards
+      $scope.toggles = {};
+      $scope.toggleOne = function($index)
+      { 
+      $scope.toggles = uiInitilize.openOne($scope.TDinvoice, $index);
+      }
+
+      // ------------------------------------virtual repeat end -------------
+
+
+
+
+
       var vm = this;
       $scope.announceClick = function(index) {
          $mdDialog.show(
@@ -160,7 +188,7 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
       $scope.systemMessage = [];
 $scope.cancelStatus = function(obj, ev) {
   var confirm = $mdDialog.confirm()
-          .title('Do you wish to cancel this Invoice'+ obj.profileName+'? This process is not reversible')
+          .title('Do you wish to cancel this Recurring Profile'+ obj.profileName+'? This process is not reversible')
           .content('')
           .ariaLabel('Lucky day')
           .targetEvent(ev)
@@ -170,7 +198,7 @@ $scope.cancelStatus = function(obj, ev) {
          var client = $objectstore.getClient("RecurringProfile");
          obj.profileName = obj.profileName.toString();
          // if(obj.status != "Draft"){
-          $scope.systemMessage.push({text:"The Invoice was Cancelled by mr.Perera", done:false,  date:new Date()});
+          $scope.systemMessage.push({text:"The Recurring Profile was Cancelled by mr.Perera", done:false,  date:new Date()});
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            obj.commentsAndHistory.push($scope.systemMessage[i]);
           };
@@ -242,28 +270,6 @@ $scope.cancelStatus = function(obj, ev) {
 
       $scope.addProfile = function() {
             location.href = '#/NewRecurring_profile';
-      }
-
-      $scope.cancelProfile = function(obj){
-         var client = $objectstore.getClient("RecurringProfile");
-         obj.profileName = obj.profileName.toString();
-         // if(obj.status != "Draft"){
-         client.onComplete(function(data) {
-            obj.status = "Cancelled"
-         });
-         client.onError(function(data) {
-            $mdDialog.show(
-               $mdDialog.alert()
-               .parent(angular.element(document.body))
-               .content('Error Occure while Adding cancelling Invoice')
-               .ariaLabel('')
-               .ok('OK')
-               .targetEvent(data)
-            );
-         });
-        client.insert(obj, {
-            KeyProperty: "profileName"
-         });
       }
 
        $scope.OpenProfile = function(InvoItem){

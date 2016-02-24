@@ -46,7 +46,7 @@
                         <input ng-model="tdi.invoiceRefNo" ng-disabled="true">
                         </md-input-container>
                         <div flex >
-                            <md-date-picker-new model="tdi.Startdate"  label="Date" dialog-md-theme="datePickerTheme" required/></md-date-picker-new>
+                             <md-datepicker ng-model="Startdate" md-placeholder="Due Date" ng-required="true" flex style="margin-top:25px; width:230px;"  ></md-datepicker>
                         </div>
                      
                     </div>
@@ -71,7 +71,8 @@
                         </md-select>
                     </md-input-container>
                     <div flex="30" >
-                        <md-date-picker-new model="tdi.duedate"  label=" Due Date" dialog-md-theme="datePickerTheme" ng-disabled="Showdate" /></md-date-picker>
+                      <!--   <md-date-picker-new model="tdi.duedate"  label=" Due Date" dialog-md-theme="datePickerTheme" ng-if="tdi.termtype != 'multipleDueDates' "/></md-date-picker-new>-->
+                       <md-datepicker ng-model="duedate" md-placeholder="Due Date" flex style="margin-top:25px; width:230px;"></md-datepicker>
                     </div>
 
                     <div style="height:30px; width:30px; margin-top:35px;"> 
@@ -117,7 +118,7 @@
                                                           </md-button>
                                                       </md-menu-item>
                                                       <md-menu-item>
-                                                          <md-button href ng-click="deleteEditproduct(item)">
+                                                          <md-button href ng-click="deleteEditproduct(item, $index)">
                                                               <p>Delete</p>
                                                               <md-icon md-menu-align-target ></md-icon>
                                                           </md-button>
@@ -149,7 +150,7 @@
                                                  <span style="color:#808080;">{{item.tax.taxname}}
                                                   <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
                                                       <md-tooltip>Tax</md-tooltip>
-                                                  </span>
+                                                  
                                                    <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
                                                       <md-tooltip>Tax</md-tooltip>
                                                   </span>
@@ -209,43 +210,29 @@
                       </div>
                       <div flex="30" >
                           <label> - {{finaldiscount(tdi) | currency}}</label>
+                          <span style="display:none">{{CalculateTax()| currency}}</span>
                       </div>
                   </div>
-                  <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                      <div flex="5"></div>
-                      <div flex="20" style="margin-top:35px;"></div>
-                      <div flex="10">
-                          <label>Sales Tax</label>
-                      </div>
-                      
-                          <md-input-container flex="20" >
-                              <input type="text"  ng-model="tdi.salesTax" style="margin-top:-12px;" aria-label="Slaes_tax"/>
-                          </md-input-container>
-                      
-                      <div flex="5">
-                          <label></label>
-                      </div>
-                      <div flex="30" >
-                          <label>{{CalculateTax(tdi)|currency}}</label>
-                      </div>
-                  </div>
-                  <div layout layout-sm="column" layout-margin style="overflow:hidden;">
-                      <div flex="5"></div>
-                      <div flex="20" style="margin-top:35px;"></div>
-                      <div flex="10">
-                          <label>Another Tax</label>
-                      </div>
-                          <md-input-container flex="20" >
-                              <input type="text" ng-model="tdi.anotherTax" style="margin-top:-12px;" aria-label="Another_tax"/>
-                          </md-input-container>
-                      
-                      <div flex="5">
-                          <label></label>
-                      </div>
-                      <div flex="30">
-                          <label>{{CalculateOtherTax(tdi)|currency}}</label>
-                      </div>
-                  </div>
+                   <div layout layout-sm="column" ng-repeat="tt in getTax track by $index" layout-margin 
+                   style="overflow:hidden;">
+                   <!-- {{tt}} -->
+                                <div flex="5"></div>
+                             
+                                <div flex="20" style="margin-top:35px;"></div>
+                                <div flex="10">
+                                    <label>{{tt.taxName}}</label>
+                                </div>
+                                <md-input-container flex="20" >
+                                    <input type="text"  ng-model="tt.rate" aria-label="sales tax" style="margin-top:-12px;"/>
+                                </md-input-container>
+                                <div flex="5">
+                                    <label></label>
+                                </div>
+                                <div flex="30" >
+                                    <label>{{tt.salesTax| currency}}</label>
+                                </div>
+                            </div>
+                  
                   <div layout layout-sm="column" layout-margin style="overflow:hidden;">
                       <div flex="5"></div>
                       <div flex="20" style="margin-top:35px;"></div>
@@ -301,39 +288,39 @@
                               <div layout layout-sm="column" layout-margin>
                                  <section-title > </section-title>
                                   <md-select placeholder="Payment Method" ng-model="tdi.paymentMethod" flex>
-                                      <md-optgroup label="Online Payment Method">
-                                          <md-option value="PayPal">PayPal</md-option>
-                                          <md-option value="Stripe ">Stripe </md-option>
-                                          <md-option value="cash">Cash </md-option>
-                                          <md-option value="Cheque">Cheque </md-option>
-                                      </md-optgroup>
+                                      <md-optgroup >
+                                            <md-option ng-repeat="pay in paymentMethod" value="{{pay.paymentmethod}}">{{pay.paymentmethod}}</md-option>
+                                        </md-optgroup>
                                   </md-select>
                               </div>
-                             <div layout layout-sm="column" layout-margin>
-                                     <section-title > </section-title>
-                                      <div   layout="column" ng-init="DemoCtrl1()"style="margin-left:0px;" class="chipsdemoBasicUsage" flex>
-                                          <md-content class="md-padding" layout="column">
-                                              <md-chips
-                                                      ng-model="tdi.roFruitNames"
-                                                      readonly="readonly"
-                                                      placeholder="Enter a tag"
-                                                      delete-button-label="Remove Tag"
-                                                      delete-hint="Press delete to remove tag"
-                                                      secondary-placeholder="+Tag">
-                                                  <md-chip-template>
-                                                      <strong>{{$chip}}</strong>
-                                                  </md-chip-template>
-                                              </md-chips>
-                                          </md-content>
-                                      </div>
-                                  </div>
+                              <div layout layout-sm="column" layout-margin>
+                      
+                              <section-title > </section-title>
+                                <div layout="column" ng-init="DemoCtrl1()" style="margin-left:0px;" class="chipsdemoBasicUsage" flex>
+                            <md-content class="md-padding"  layout="column">
+                                <md-chips
+                                ng-model="tdi.roFruitNames"
+                                readonly="readonly"
+                                placeholder="Enter a tag"
+                                delete-button-label="Remove Tag"
+                                delete-hint="Press delete to remove tag"
+                                secondary-placeholder="+Tag">
+                                    <md-chip-template>
+                                        <strong>{{$chip}}</strong>
+                                    </md-chip-template>
+                                </md-chips>
+                            </md-content>
+                        </div></div>
                            <div layout layout-sm="column" layout-margin  >
                               
                               <section-title > </section-title>
-                                <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
-                             <md-button href class=" md-primary" style="height:5px; " ng-click="upload()"> upload </md-button>
-                                 </div>
-                              </div>
+                                <div layout layout-sm="column" layout-margin  >
+                                   <section-title > </section-title>
+                                    <div layout="row" layout-sm="column"  flex style="margin-left:-200px; margin-top:0px;">
+                                        <md-button href class=" md-primary" style="height:5px; " ng-click="upload()"> upload </md-button>
+                                    </div>
+                                </div>
+                                </div>
                               <md-divider></md-divider>
                        <div class="md-actions" layout="row" layout-sm="column" layout-align="end start" >
 

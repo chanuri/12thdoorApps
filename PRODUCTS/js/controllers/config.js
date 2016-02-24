@@ -1,4 +1,4 @@
-rasm.config(function($stateProvider, $urlRouterProvider) {    
+rasm.config(["$stateProvider", "$urlRouterProvider",function($stateProvider, $urlRouterProvider) {    
   $urlRouterProvider.otherwise('/home');    
   $stateProvider       
        	  .state('home', {
@@ -22,4 +22,4 @@ rasm.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'product_partials/Product_Copy.html'
            ,controller: 'CopyCtrl'
         });
-    });
+    }]);

@@ -50,16 +50,15 @@
 
             <div  class="card_container" md-virtual-repeat="payment in payments | filter:ctrl.searchText||undefined | orderBy: [prodSearch,latest]" ng-class="{'first_card_top_margin_one': $index == '0'}" style="padding-left:16px;">
                <div class="collapse-card" ng-class="{'active': toggles[$index]}">
-                  <!---->
                   <!--START OF COLLAPSE CARD HEADING| filter:ctrl.actionSearchText||undefined-->
                   <div class="collapse-card__heading" layout="row" layout-align="start start" >
                      <div class="collapse-card_header_content_controls" style="width:5%;" flex="5" layout="column" layout-align="center start">
                         <div style="width:5%">
-                           <div  ng-hide="payment.favoritestar" class="blankspace collapse-card_header_content_info" 
+                           <div ng-hide="payment.favoritestar" class="blankspace collapse-card_header_content_info" 
                               ng-click="favouriteFunction(payment)" layout="row">
                               <img src="img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
                            </div>
-                           <div  ng-show="payment.favoritestar" class="blankspace collapse-card_header_content_info" 
+                           <div ng-show="payment.favoritestar" class="blankspace collapse-card_header_content_info" 
                               ng-click="favouriteFunction(payment)" layout="row">
                               <img src="img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
                            </div>

@@ -3,7 +3,6 @@
    <div id="md-childApp-contentContainerSection" ng-init="loadAllProducts()" >
       <!--START OF FIRST CARD CONTAINER-->
       <div class="header_container" >
-
   <md-whiteframe class="md-whiteframe-z1" layout="row" layout-align="start start" style="background-color: #FFFFFF;max-width: 960px;height:40px;">
 
            <md-autocomplete flex
@@ -28,22 +27,44 @@
 
            </md-autocomplete>            
         
-
-      <!--   <sort-option full-array="products" name-array="testarr" serch-item="prodSearch" star="ctrl.searchText" latest="Latest">  </sort-option> -->
-
-        <div layout style='width:50px;'><md-menu md-position-mode='target-right target' style='z-index:99;box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.084); background:rgb(250,250,250); height:40px; width:50px;'> <md-button type='button' aria-label='Open demo menu' class='md-icon-button' ng-click='$mdOpenMenu()'> <md-icon md-svg-icon='img/ic_reorder_24px.svg' style='margin-top: -9px;'></md-icon> </md-button> <md-menu-content width='4'> <div ng-repeat='item in testarr track by $index'> <md-menu-item> <md-button ng-click='starfunc(item,$index)'> <div layout='row'> <p flex>{{item.name}}</p> <div> <md-icon md-svg-icon='img/ic_arrow_drop_up_48px.svg' style='margin-top:4px; position: absolute; left: 150px;' ng-show='item.upstatus'></md-icon> </div> <div> <md-icon md-svg-icon='img/ic_arrow_drop_down_24px.svg' style='margin-top:9px;position: absolute; left: 150px;' ng-show='item.downstatus'></md-icon> </div> <md-icon md-menu-align-target md-svg-icon='{{item.src}}' style='margin: auto 3px auto 0;'></md-icon> </div> </md-button> </md-menu-item> <md-divider ng-show='item.divider'></md-divider></div> </md-menu-content></md-menu></div>
+         <div layout style='width:50px;'>
+         <md-menu md-position-mode='target-right target' style='z-index:99;box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.084); background:rgb(250,250,250); height:40px; width:50px;'>
+            <md-button type='button' aria-label='Open demo menu' class='md-icon-button' ng-click='$mdOpenMenu()'>
+               <md-icon md-svg-icon='img/ic_reorder_24px.svg' style='margin-top: -9px;'></md-icon>
+            </md-button>
+            <md-menu-content width='4'>
+               <div ng-repeat='item in testarr track by $index'>
+                  <md-menu-item>
+                     <md-button ng-click='starfunc(item,$index)'>
+                        <div layout='row'>
+                           <p flex>{{item.name}}</p>
+                           <div>
+                              <md-icon md-svg-icon='img/ic_arrow_drop_up_48px.svg' style='margin-top:4px; position: absolute; left: 150px;' ng-show='item.upstatus'></md-icon>
+                           </div>
+                           <div>
+                              <md-icon md-svg-icon='img/ic_arrow_drop_down_24px.svg' style='margin-top:9px;position: absolute; left: 150px;' ng-show='item.downstatus'></md-icon>
+                           </div>
+                        </div>
+                     </md-button>
+                     <div ng-click="DefaultCancel(item)" style="width: 18px;z-index: 10;margin-left: -45px; margin-top: 15px;position: relative;" ng-show='item.close'>
+                        <md-icon md-svg-icon='img/ic_close_24px.svg' style='width: 18px;
+                           margin-top:-4px;'></md-icon>
+                     </div>
+                  </md-menu-item>
+                  <md-divider ng-show='item.divider'></md-divider>
+               </div>
+            </md-menu-content>
+         </md-menu>
+      </div>
    </md-whiteframe>
    </div>
-
          
         
-      <!--END OF FIRST CARD CONTAINER-->
-      <!--START OF SECOND CARD CONTAINER-->
       <div class="card_container"  >
       <div class="ui-view-container">
          <!--START OF  COLLAPSE CARDS-->
          <div  class="collapse-card" ng-repeat="product in products | filter:ctrl.searchText||undefined 
-         | orderBy: [prodSearch,Latest] " ng-class="{ active: $active }">
+         | orderBy: [prodSearch,latest] " ng-class="{ active: $active }" ng-if="!product.deleteStatus">
             <!--START OF COLLAPSE CARD HEADING-->
             <div class="collapse-card__heading" layout="row" layout-align="start start"
                ng-click="getuploaddata(product.ProductCode,product.inventory,product.stocklevel)">
@@ -65,7 +86,6 @@
                <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%;"
                 ng-click="$active = !$active;" layout-sm="row">
                  
-<!--  WITHOUT RESPONSIVE -->
                     <div layout-sm="row" flex style="margin-left: 15px;">
                         <div layout-sm="column" flex style="margin-top: 13px;">
 
@@ -94,8 +114,6 @@
                         </div>
                     </div>
                </div>
-               <!--END OF CARD OPEN SECTION-->
-               <!--START OF CARD CONTROLS SECTION-->
                <div class="collapse-card_header_content_controls" style="width:10%; height:100%;" layout="column" layout-align="center end">
                   <md-menu md-position-mode="target-right target">
                                 <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
@@ -124,10 +142,7 @@
                                 </md-menu-content>
                             </md-menu>
                </div>
-               <!--END OF CARD CONTROLS SECTION-->
             </div>
-            <!--END OF COLLAPSE CARD HEADING-->
-            <!--START OF CARD BODY-->
             <div class="collapse-card__body">
                <form name="editForm">
                   
@@ -157,9 +172,7 @@
                         <label>Unit</label>
                         <md-select ng-model="product.ProductUnit" ng-disabled="checkAbility" >
                            <md-optgroup label="Unit">
-                           <md-option value="Months">Months</md-option>
-                           <md-option value="Days">Days</md-option>
-                           <md-option value="Units">Units</md-option>
+                           <md-option ng-repeat="cat in ProUnits" value="{{cat}}">{{cat}}</md-option>
                         </md-select>
                      </md-input-container>
                      </div>
@@ -170,17 +183,16 @@
                            <input required type="text" ng-model="product.productprice" ng-disabled="checkAbilityproduct" /> 
                         </md-input-container>
                         <md-input-container flex>
-                           <label>Tax</label>
-                           <md-select ng-model="product.producttax" ng-disabled="checkAbilityproduct" >
+                           <label>Tax </label>
+                           <md-select ng-model="product.producttax.taxname" >
                               <md-optgroup label="Tax">
-                              <md-option value="10">10</md-option>
-                              <md-option value="20">20</md-option>
+                              <md-option ng-repeat="cat in taxesArr" value="{{cat.taxname}}">{{cat.taxname}}</md-option>
                            </md-select>
                         </md-input-container>
                      </div>
                       <md-divider> </md-divider>
                      <div layout layout-sm="column" layout-margin >
-                         <section-title title="Optional Details"> </section-title>
+                        <section-title title="Optional Details"> </section-title>
                        
                         <md-input-container flex>
                            <label>Cost Price</label>
@@ -201,16 +213,14 @@
                            <label>Product Brand</label>
                            <md-select ng-model="product.brand" class="required" ng-disabled="checkAbilityproduct" >
                               <md-optgroup label="Brand">
-                              <md-option value="Brand 1">Brand 1</md-option>
-                              <md-option value="Brand 2">Brand 2</md-option>
+                              <md-option ng-repeat="cat in ProBrandArray" value="{{cat}}">{{cat}}</md-option>
                            </md-select>
-                        </md-input-container >
+                        </md-input-container>
                         <md-input-container flex>
                            <label>Product Category</label>		
                            <md-select placeholder="Product Category" ng-model="product.ProductCategory" ng-disabled="true"  ng-disabled="checkAbilityproduct">
                               <md-optgroup label="Product Category">
-                              <md-option value="Product">Product</md-option>
-                              <md-option value="Package">Package</md-option>
+                              <md-option ng-repeat="cat in CategoryArray" value="{{cat}}">{{cat}}</md-option>
                            </md-select>
                         </md-input-container>
                      </div>
@@ -235,95 +245,34 @@
                          <div layout="column" class="chipsdemoBasicUsage" flex style="margin-left:-5px; margin-top:-10px;" >
                             <md-content class="md-padding" layout="column">
                               
-                               <md-chips ng-disabled="checkAbility" ng-model="product.tags" readonly="readonly" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tags">
+                              <md-chips ng-disabled="checkAbility" ng-model="product.tags" readonly="readonly" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tags">
                                 
                                   <md-chip-template>
                                      <strong>{{$chip}}</strong>
                                   </md-chip-template>
-                               </md-chips>
+                              </md-chips>
                             </md-content>
                          </div>
                       </div>
 
-                     <input type="hidden" required type="text" ng-model="product.product_code" /> 
-                     <md-divider></md-divider>
-                     <div layout layout-sm="column" layout-margin>
-                         <section-title title="Image"> </section-title>
-                        
-                        <div layout="row" layout-align="center center" flex>
-                           <div flex="98" >
-                              <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="product.UploadImages.val">
-                              </md-table>
-                              <md-progress-circular md-mode="indeterminate" layout-align="center center"  ng-show="progresshow" style="z-index: 11;"></md-progress-circular>
-                           </div>
-                        </div>
-                     </div>
-                     <md-divider> </md-divider>
-                     <div layout layout-sm="column" layout-margin>
-                         <section-title title="Brochure"> </section-title>
-                        
-                        <div layout="row" layout-align="center center" flex>
-                           <div flex="98" >
-                              <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="product.UploadBrochure.val">
-                              </md-table>
-                              <md-progress-circular class="md-accent md-hue-1"  md-mode="indeterminate" ng-show="progressbrochure"></md-progress-circular>
-                           </div>
-                        </div>
-                     </div>
-
-                       
-                   <!--      <hh-table heading="Additional" column-arr="testColumn" full-arr="testArr"></hh-table>
-                    -->  
-
+                    <input type="hidden" required type="text" ng-model="product.product_code" />
                   </md-content>
-               </form>
+              </form>
             </div>
-            <!--END OF CARD BODY-->
-         </div>
-         <!--END OF COLLAPSE CARDS-->
-
-           <footer flex>
-           
-
-            <!-- <md-paging paging-gap="2" full-arr="products" paging-arr="testProducts"> </md-paging> -->
-                
-            </footer>
+        </div>
       </div>
-      <!--START OF SECOND CARD CONTAINER-->
-
-     </div>
-   </div>
-   <!--END OF ALL CONTENT-->
-   <div  class="lock-size" layout="row">
-      <div id="addProduct" class="fab_button_animation" style="background:red;"></div>
-      <!-- <div id="viewPackage" class="fab_button_animation" style="background:#3498db;"></div> -->
-
-
-
-
-      
-      <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
-         ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
-         <md-fab-trigger>
+    </div>
+  </div>
+  <div  class="lock-size" layout="row">
+  <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}" ng-class="demo.selectedMode"
+   style="position:fixed;bottom:20px;right:20px;">
+        <md-fab-trigger>
             <div style="padding:px;">
-               <md-button aria-label="menu" class="md-fab md-warn" style="background-color:#db4437;">
+               <md-button aria-label="menu" class="md-fab md-warn" style="background-color:#db4437;"  ng-click="addProduct()">
                   <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
                </md-button>
             </div>
-         </md-fab-trigger>
-         <md-fab-actions>
-            <div style="padding:5px;">
-               <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="addProduct()" style="background-color:red;">
-                  <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon>
-                  <md-tooltip md-direction="left">Add product</md-tooltip>
-               </md-button>
-          </div>
-          <!--   <div style="padding:5px;">
-               <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="viewPackage()" style="background-color:#3498db;">
-                  <md-icon md-svg-src="img/ic_visibility_24px.svg"></md-icon>
-                  <md-tooltip md-direction="left">View Package</md-tooltip>
-               </md-button>
-            </div> -->
-         </md-fab-actions>
-      </md-fab-speed-dial>
-   </div>
+        </md-fab-trigger>
+        <md-fab-actions> 
+    </md-fab-speed-dial>
+  </div>

@@ -88,566 +88,570 @@ angular
 		angular.element('#'+id).css('background', '#00acc4');
 	}
 
-	
-	$rootScope.Settings12thdoor = {
+	function load12thdoorSettingsJson(){
 
-		profile : {
-			CusFiel:[],
+		$rootScope.Settings12thdoor = {
 
-		},
+			profile : {
+				CusFiel:[],
+			},
 
-		preference : 
-		{
-			invoicepref:
+			preference : 
 			{
-				appName:"invoice",
-				invoicePrefix:"",
-				allowPartialPayments:true,
-				enableDisscounts:true,
-				enableTaxes:true,
-				enableshipping:true,
-				displayshipaddress:false,
-				pdfinvoiceattachment:true,
-				notifyadminwheninvoiceviewed:true,
-				copyadminallinvoices:true,
-				enabletnkuemailforrecipt:true,
-				enableremindersoverdueinvoices:true,
-				ReminderDays:"",
-				defaultComm:"",
-				defaultNote:"",
-				recurringInvoiceDefultAction:"",
-				billdateindays:"",
-				emailcustomeruponsavinginvoice:false,
-				addstockcancelOrdeleteinvoiceincluCreditnote:true,
-				includeaccountstatementwithinvoice:true,
-				CusFiel:[],
-				CheckedOfflinePayments:false,
-				emailcontent:{ emailBody:"Dear Customer,</br> Attached invoice No.{{no}}. To pay online or download click on the below link :{{accounturl}} </br> Thank You for your business! </br> {{companyName}}"}
+				invoicepref:
+				{
+					appName:"invoice",
+					invoicePrefix:"",
+					allowPartialPayments:true,
+					enableDisscounts:true,
+					enableTaxes:true,
+					enableshipping:true,
+					displayshipaddress:false,
+					pdfinvoiceattachment:true,
+					notifyadminwheninvoiceviewed:true,
+					copyadminallinvoices:true,
+					enabletnkuemailforrecipt:true,
+					enableremindersoverdueinvoices:true,
+					ReminderDays:"",
+					defaultComm:"",
+					defaultNote:"",
+					recurringInvoiceDefultAction:"",
+					billdateindays:"",
+					emailcustomeruponsavinginvoice:false,
+					addstockcancelOrdeleteinvoiceincluCreditnote:true,
+					includeaccountstatementwithinvoice:true,
+					CusFiel:[],
+					CheckedOfflinePayments:false,
+					emailcontent:{ emailBody:"Dear Customer,</br> Attached invoice No.{{no}}. To pay online or download click on the below link :{{accounturl}} </br> Thank You for your business! </br> {{companyName}}"}
+
+				},
+				estimatepref:
+				{
+					appName:"estimate",
+					displayshiptoaddressestimate:false,
+					sendpdfestimateAsattachment:true,
+					nofifyadminwhenviewedOraccepted:true,
+					copyadminforallestimate:true,
+					emailcustomeruponsavingestimate:false,
+					includeproductbrochurescustomeremail:true,
+					allowPartialPayments:true,
+					enableDisscounts:true,
+					CusFiel:[]
+				},
+				creditNotepref:
+				{
+					appName:"creditNote",
+					allowPartialPayments:true,
+					enableDisscounts:true,
+					CusFiel:[]
+				},
+				paymentpref:
+				{
+					appName:"payment",
+					CusFiel:[],
+					PaymentMethod:[{activate:true, paymentmethod:"Cash",paymentType:"Offline"},{activate:true, paymentmethod:"Cheque",paymentType:"Offline"},{activate:true, paymentmethod:"TT",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Transfer",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Draft",paymentType:"Offline"}]
+				},
+				expensepref:
+				{
+					appName:"expense",	
+					CusFiel:[],
+					expensecategories:[{activate:true, category:"Advertising"},{activate:true, category:"Petrol"},{activate:true, category:"Fuel"}],
+					billingexpensesincludetax:true
+				},
+				productpref:
+				{
+					appName:"product",
+					units:[{activate:true, unitsOfMeasurement:"each"}],
+					CusFiel:[],
+					Productbrands:[],
+					Productcategories:[]
+				},
+				inventorypref:
+				{
+					appName:"inventory",
+					ReciptCusFiel:[],
+					IssueCusFiel:[]
+				},
+				contactpref:
+				{
+					appName:"contact",
+					supplierCusFiel:[],
+					customerCusFiel:[]
+				},
+				project:
+				{
+					appName:"project",
+					task:[]
+				}
 
 			},
-			estimatepref:
+
+			users : 
 			{
-				appName:"estimate",
-				displayshiptoaddressestimate:false,
-				sendpdfestimateAsattachment:true,
-				nofifyadminwhenviewedOraccepted:true,
-				copyadminforallestimate:true,
-				emailcustomeruponsavingestimate:false,
-				includeproductbrochurescustomeremail:true,
-				allowPartialPayments:true,
-				enableDisscounts:true,
-				CusFiel:[]
+				user:{},
+
+				roles:[
+				{
+					id:1,
+					rolename : "Super admin", 
+					type:"default",
+					appPermission:[
+					{
+						appName : "invoice",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						deletee:true
+					},
+					{
+						appName : "Recurring",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Estimate",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Credit Notes",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Payments",
+
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Expenses",
+
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Product",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Inventory Receipts",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Inventory Receipts",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Project",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "TimeSheets",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Contacts Customer",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Contacts Suppliers",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "360 View",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Reports",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					}
+					]
+				},
+				{
+					id:2,
+					rolename : "Manager",
+					type:"default",
+					appPermission:[
+					{
+						appName : "invoice",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						deletee:true
+					},
+					{
+						appName : "Recurring",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Estimate",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Credit Notes",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Payments",
+
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Expenses",
+
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Product",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Inventory Receipts",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Inventory Receipts",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Project",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "TimeSheets",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Contacts Customer",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Contacts Suppliers",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "360 View",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Reports",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					}
+					]
+				},
+				{
+					id:3,
+					rolename : "User", 
+					type:"default",
+					appPermission:[
+					{
+						appName : "invoice",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						deletee:true
+					},
+					{
+						appName : "Recurring",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Estimate",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Credit Notes",
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Payments",
+
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Expenses",
+
+						add : true,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+
+					},
+					{
+						appName : "Product",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Inventory Receipts",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Inventory Receipts",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Project",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "TimeSheets",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Contacts Customer",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "Contacts Suppliers",
+						add : false,
+						view: true,
+						edit:true,
+						cancel:true,
+						delete:true
+					},
+					{
+						appName : "360 View",
+						add : false,
+						view: false,
+						edit:true,
+						cancel:false,
+						delete:false
+					},
+					{
+						appName : "Reports",
+						add : false,
+						view: false,
+						edit:true,
+						cancel:false,
+						delete:true
+					}
+					]
+
+				}
+
+				]
 			},
-			creditNotepref:
+
+			taxes :
 			{
-				appName:"creditNote",
-				allowPartialPayments:true,
-				enableDisscounts:true,
-				CusFiel:[]
+				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes"}],
+				multipletaxgroup:[],
+
 			},
-			paymentpref:
+
+			templates :
 			{
-				appName:"payment",
-				CusFiel:[],
-				PaymentMethod:[{activate:true, paymentmethod:"Cash",paymentType:"Offline"},{activate:true, paymentmethod:"Cheque",paymentType:"Offline"},{activate:true, paymentmethod:"TT",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Transfer",paymentType:"Offline"},{activate:true, paymentmethod:"Bank Draft",paymentType:"Offline"}]
+				image:[]
+
 			},
-			expensepref:
+
+			payments :
+			[{activate:false, url:"img/payment/paypal.png", paymentType:"online",name:"paypal",label:"Activate"},
+			{activate:false, url:"img/payment/googlewallet.png",paymentType:"online",name:"googlewallet",label:"Activate"},
+			{activate:false, url:"img/payment/stripe.png",paymentType:"online",name:"stripe",label:"Activate"},
+			{activate:false, url:"img/payment/2checkout.png",paymentType:"online",name:"2checkout",label:"Activate"},
+			{activate:false, url:"img/payment/authroizenet.png",paymentType:"online",name:"authroizenet",label:"Activate"},
+			{activate:false, url:"img/payment/worldpay.png",paymentType:"online",name:"worldpay",label:"Activate"}],
+
+
+			languages :
 			{
-				appName:"expense",	
-				CusFiel:[],
-				expensecategories:[{activate:true, category:"Advertising"},{activate:true, category:"Petrol"},{activate:true, category:"Fuel"}],
-				billingexpensesincludetax:true
+
 			},
-			productpref:
+
+			accounts :
 			{
-				appName:"product",
-				units:[{activate:true, unitsOfMeasurement:"each"}],
-				CusFiel:[],
-				Productbrands:[],
-				Productcategories:[]
+				importdata:{},
+				exportdata:{},
+				canceldata:{}
 			},
-			inventorypref:
+
+			upgrades :
 			{
-				appName:"inventory",
-				ReciptCusFiel:[],
-				IssueCusFiel:[]
-			},
-			contactpref:
-			{
-				appName:"contact",
-				supplierCusFiel:[],
-				customerCusFiel:[]
-			},
-			project:
-			{
-				appName:"project",
-				task:[]
+
 			}
 
-		},
+		};
 
-		users : 
-		{
-			user:{},
+	}
 
-			roles:[
-			{
-				id:1,
-				rolename : "Super admin", 
-				type:"default",
-				appPermission:[
-				{
-					appName : "invoice",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					deletee:true
-				},
-				{
-					appName : "Recurring",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Estimate",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Credit Notes",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Payments",
-
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Expenses",
-
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Product",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Inventory Receipts",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Inventory Receipts",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Project",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "TimeSheets",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Contacts Customer",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Contacts Suppliers",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "360 View",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Reports",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				}
-				]
-			},
-			{
-				id:2,
-				rolename : "Manager",
-				type:"default",
-				appPermission:[
-				{
-					appName : "invoice",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					deletee:true
-				},
-				{
-					appName : "Recurring",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Estimate",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Credit Notes",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Payments",
-
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Expenses",
-
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Product",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Inventory Receipts",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Inventory Receipts",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Project",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "TimeSheets",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Contacts Customer",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Contacts Suppliers",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "360 View",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Reports",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				}
-				]
-			},
-			{
-				id:3,
-				rolename : "User", 
-				type:"default",
-				appPermission:[
-				{
-					appName : "invoice",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					deletee:true
-				},
-				{
-					appName : "Recurring",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Estimate",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Credit Notes",
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Payments",
-
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Expenses",
-
-					add : true,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-
-				},
-				{
-					appName : "Product",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Inventory Receipts",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Inventory Receipts",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Project",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "TimeSheets",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Contacts Customer",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "Contacts Suppliers",
-					add : false,
-					view: true,
-					edit:true,
-					cancel:true,
-					delete:true
-				},
-				{
-					appName : "360 View",
-					add : false,
-					view: false,
-					edit:true,
-					cancel:false,
-					delete:false
-				},
-				{
-					appName : "Reports",
-					add : false,
-					view: false,
-					edit:true,
-					cancel:false,
-					delete:true
-				}
-				]
-				
-			}
-
-			]
-		},
-
-		taxes :
-		{
-			individualtaxes:[],
-			multipletaxgroup:[],
-
-		},
-
-		templates :
-		{
-			image:[]
-
-		},
-
-		payments :
-		[{activate:false, url:"img/payment/paypal.png", paymentType:"online",name:"paypal",label:"Activate"},
-		{activate:false, url:"img/payment/googlewallet.png",paymentType:"online",name:"googlewallet",label:"Activate"},
-		{activate:false, url:"img/payment/stripe.png",paymentType:"online",name:"stripe",label:"Activate"},
-		{activate:false, url:"img/payment/2checkout.png",paymentType:"online",name:"2checkout",label:"Activate"},
-		{activate:false, url:"img/payment/authroizenet.png",paymentType:"online",name:"authroizenet",label:"Activate"},
-		{activate:false, url:"img/payment/worldpay.png",paymentType:"online",name:"worldpay",label:"Activate"}],
-
-
-		languages :
-		{
-
-		},
-
-		accounts :
-		{
-			importdata:{},
-			exportdata:{},
-			canceldata:{}
-		},
-
-		upgrades :
-		{
-
-		}
-
-	};
+	load12thdoorSettingsJson();
 
 	console.log($rootScope.Settings12thdoor);	
 
 	var client = $objectstore.getClient("Settings12thdoor");
 
 	client.onGetMany(function(data) {
-		if (data) {
+		if (data.length!==0) {
 			$rootScope.Settings12thdoor=data[0];
 			console.log($rootScope.Settings12thdoor);
 		}
 		else
 		{
-			$rootScope.Settings12thdoor = $rootScope.Settings12thdoor;
+			load12thdoorSettingsJson();
 		}
 	});
 
@@ -2065,9 +2069,8 @@ $scope.inactivatemultipletax = function(data){
 }
 
 $scope.sortableOptions = {
-	containment: '#sortable-container'
-};
 
+};
 
 
 })
@@ -2296,7 +2299,7 @@ function DialogEditprefinvoicecusfieldsController($scope, $mdDialog, $rootScope,
 				$rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push(obj);
 				break;
 			}
-
+			
 		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.splice($scope.Settings12thdoor,1);
 		// $rootScope.Settings12thdoor.preference.invoicepref.CusFiel.push(obj);
 		// console.log($scope.Settings12thdoor);
@@ -3352,7 +3355,8 @@ function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootSco
  		if(!$rootScope.Settings12thdoor.taxes.individualtaxes)
  			$rootScope.Settings12thdoor.taxes.individualtaxes=[];
 
- 		$scope.submit = function() {
+ 		$scope.submit = function(data) {
+ 			console.log(data);
  			var number = Math.random();
  			console.log(Math.random());
 
@@ -3362,7 +3366,8 @@ function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootSco
  				rate:$scope.rate,
  				activate:true,
  				compound:$scope.compound,
- 				type:"individualtaxes"
+ 				type:"individualtaxes",
+ 				positionId:number
  			})
 
  			$mdDialog.hide();
@@ -3439,12 +3444,17 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 
 		$scope.selcetedtax=function(tax){
 			console.log(tax);
-
 		// var obj=eval ("(" + tax + ")");
 		// $scope.individualtaxes.push(obj);
 		// console.log(typeof($scope.individualtax));
 
 		$scope.individualtaxes.push(JSON.parse(tax));
+
+		for(var i=0; i < $scope.individualtaxes.length; i++ ){
+			console.log(i);
+			$scope.individualtaxes[i].positionId=i;
+		}
+
 		console.log($scope.individualtaxes);
 		
 		// $scope.individualtaxes.push(tax);
@@ -3456,6 +3466,7 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 	}
 
 	$scope.submit = function() {
+
 		var number = Math.random();
 		console.log(Math.random());
 
@@ -3473,16 +3484,40 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 	};
 
 	$scope.sortableOptions = {
-		containment: '#sortable-container'
-	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+ orderChanged: function(event) {//Do what you want
+ 	console.log(event);
+ 	console.log(event.dest.index);
+ 	console.log(event.source.itemScope.item.id);
+ 	
+ 	console.log(event.dest.sortableScope.modelValue[event.dest.index].id);
+ 	
+ 	//$scope.individualtaxes.push({positionId:event.dest.index});
+ 	if(event.source.itemScope.item.id == event.dest.sortableScope.modelValue[event.dest.index].id){
+ 		$scope.individualtaxes[event.dest.index].positionId=event.dest.index;
+ 		console.log($scope.individualtaxes[event.dest.index].positionId);
+ 		$scope.individualtaxes[event.source.index].positionId=event.source.index;
+ 		for (var i=0; i< $scope.individualtaxes.length; i++){
+ 			$scope.individualtaxes[i].positionId=i;
+ 		}
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+ 	}
+
+
+
+//when else part others position id hav to change according to current index
+
+}
+
+};
+
+$scope.hide = function() {
+	$mdDialog.hide();
+};
+
+$scope.cancel = function() {
+	$mdDialog.cancel();
+};
 
 };
 
@@ -3539,7 +3574,16 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 		};
 
 		$scope.sortableOptions = {
-			containment: '#sortable-container'
+			orderChanged: function(event) {//Do what you want
+
+				if(event.source.itemScope.item.id == event.dest.sortableScope.modelValue[event.dest.index].id){
+					$scope.individualtaxes[event.dest.index].positionId=event.dest.index;
+					console.log($scope.individualtaxes[event.dest.index].positionId);
+					$scope.individualtaxes[event.source.index].positionId=event.source.index;
+
+				}
+			}
+
 		};
 
 		$scope.hide = function() {

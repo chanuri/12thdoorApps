@@ -40,7 +40,6 @@ if($state.current.name == 'copy') {
       var client = $objectstore.getClient("Estimate12thdoor");
       updatedForm.estimateNo = updatedForm.estimateNo.toString();
 
-
       client.onComplete(function(data) {
         $mdDialog.show(
           $mdDialog.alert()

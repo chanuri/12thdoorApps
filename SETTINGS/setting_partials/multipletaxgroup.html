@@ -30,8 +30,8 @@
 	<li ng-repeat="item in individualtaxes" as-sortable-item>
 		<div style="margin-left:-33px;" class="add-mdcard" as-sortable-item-handle>
 			<div layout="row" layout-align="space-around center" layout-sm="column" style="height:10px; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
-				<div flex="20">
-					<span style="color:#808080;font-size:15px;">{{item.taxname}}({{item.rate}}%)
+				<div flex="20" ng-drag="changeindex($index)">
+					<span style="color:#808080; font-size:15px;" >{{item.taxname}}({{item.rate}}%)
 					</span>
 				</div>
 				<div flex="5">

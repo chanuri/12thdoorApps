@@ -1,1 +1,0 @@
-var rasm = angular.module('mainApp',['ngMaterial', 'directivelibrary', '12thdirective', 'uiMicrokernel', 'ui.router', 'ui.sortable', 'ngAnimate'])

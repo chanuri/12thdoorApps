@@ -139,13 +139,18 @@
                   </div>
 
                      <input type="hidden"  type="text" ng-model="product.product_code" /> 
-                     <div layout layout-sm="column"  layout-margin>
+                     <div layout layout-sm="column" layout-margin>
                         <section-title> </section-title>
-                       
-                        <div style="margin-left: 15px; margin-top:20px;">
-                           <md-button class="md-raised" ng-click="uploader(Edit_Expense)" type="button">Upload</md-button>
-                        </div>
-                     </div>
+                      
+
+                         <div style=" margin-top:20px;margin-left: 15px;">
+                                <md-button class="md-raised" ng-click="imageuploader()" type="button">Upload Image</md-button>
+                       </div>
+                       <div style=" margin-top:20px; margin-left: 15px;">
+                                <md-button class="md-raised" ng-click="brochureuploader()" type="button">Upload Brochure</md-button>
+                       </div>
+                        
+                    </div>
                      <md-divider></md-divider>
                      <div layout="row" layout-align="end start" layout-margin  ng-show="true" >
                         <div>

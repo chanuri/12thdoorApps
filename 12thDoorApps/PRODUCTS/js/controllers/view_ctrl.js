@@ -1,11 +1,6 @@
 
-rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $state, $activityLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
-	//console.log($stateParams.productID);
-
-	// pfd functions passing the whole object as parameters 
-	 
-
-	$scope.UserName = $auth.getSession()
+rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$state", "$activityLog","$commentLog","$mdToast","$DownloadPdf","$objectstore", "$auth","$mdDialog", function($scope, $stateParams,$rootScope,$auth, $state, $activityLog,$commentLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
+	$scope.UserName = $auth.checkSession()
 
 	$scope.ConvertToPdf = function(obj){
 		
@@ -18,22 +13,27 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
               .ok('OK')
             );
 		}else{
-
 			for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
 				var brochureClient = $objectstore.getClient("productbrochureNew");
 				brochureClient.onGetOne(function(data){
 					if (!isEmpty(data)) {
 						var fileExt = data.FileName.split('.').pop();
-						var doc = new jsPDF();
+			 			var link = document.createElement("a"); // set up <a> tag
+						var url;
 
 						if (fileExt  == "pdf" ) {
-							var url = 'data:application/pdf;base64,' + data.Body;
-				            doc.save(data.FileName,url)	
+							url = 'data:application/pdf;base64,' + data.Body;
 				        }
 						if (fileExt == "docx") {
-							var url = 'data:application/msword;base64,' + data.Body;
-				            doc.save(data.FileName,url)	
-						}				
+							url = 'data:application/msword;base64,' + data.Body;
+						}
+
+						link.download = data.FileName;					
+			            link.href = url;
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+						delete link;			
 					}
 				})
 				brochureClient.onError(function(data){
@@ -41,36 +41,8 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 				})
 				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
 			}
-		}
-
-		
-
-  	//------convert to pdf ----------
-
-  		// $scope.downloadPdfArr = [];
-		// $scope.downloadPdfArr = angular.copy(obj);
-
-		// var context = angular.element('widget')[0].getContext('2d');
-  		// context.font = "34px Arial";
-
-		// html2canvas($("#widget"),{
-		// 	onrendered : function(canvas){
-				         
-		//	var imgData = canvas.toDataURL(
-		//	'image/png');              
-		//	var doc = new jsPDF();
-		//	doc.addImage(imgData, 'PNG', 10, 10,200,100);
-		//	doc.save('sample-file.pdf');
-		// 	}
-		// })
-
-  	//------convert to pdf ----------
-
-
-	//$DownloadPdf.GetPdf($scope.downloadPdfArr,'download'); //pdf type is 'download'
+		} 
 	}
-
-	// print pdf in a new tab , pass whole object as parameters
 	$scope.print = function(obj){
 
 		if (obj.UploadBrochure.val.length == 0) {
@@ -88,7 +60,11 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 				brochureClient.onGetOne(function(data){
 					if (!isEmpty(data)) {
 						var fileExt = data.FileName.split('.').pop()
-						if (fileExt  == "pdf" ) {window.open("data:application/pdf;base64," + data.Body)};
+						if (fileExt  == "pdf" ) {
+							var myWindow = window.open("data:application/pdf;base64," + data.Body)
+							myWindow.print(); 
+							myWindow.focus();
+						};
 						if (fileExt == "docx") {window.open("data:application/msword;base64," + data.Body)};					
 					}
 				})
@@ -98,34 +74,34 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
 			}			
 		}
-
-		// $scope.PrintDownloadArr = [];
-		// $scope.PrintDownloadArr = angular.copy(obj);
-		// $DownloadPdf.GetPdf($scope.PrintDownloadArr,'print'); //ptf type is 'print'
 	}
 	function isEmpty(obj) {
 	    for(var prop in obj) {
 	        if(obj.hasOwnProperty(prop))
 	            return false;
 	    }
-
 	    return true;
 	}
 	// check comment label 
 	$scope.CheckText = function(obj,event){
-		if (obj.Commentstxt) {
-			console.log('working')
+		if (obj.Commentstxt) { 
 			$scope.lblVisibility = 'Hidelabel';
 		}else{
 			$scope.lblVisibility = 'Showlabel';
 		}
-		 event.preventDefault();
+		event.preventDefault();
+	}
+	$scope.cancelEdit = function(pro){
+		pro.Commentstxt = "";	
+		$scope.editButtonVisible = false;	
 	}
 	$scope.CommentEdit = function(pro,obj,index){
 		$scope.ProgressBar = false;
+		$scope.editButtonVisible = true;
 		pro.Commentstxt = obj.Comment;
 		$scope.lblVisibility = 'Hidelabel';
-		$scope.CommentDelete(obj,index,"edit")
+		$commentLog.addEditObject(obj,index)
+		//$scope.CommentDelete(obj,index,"edit")
 	}
 
 	// current comment delete 
@@ -171,6 +147,9 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 	// comment submit
 	$scope.CommentObj = {};
 	$scope.ProgressBar = false;
+	$scope.editButtonVisible = false;
+	$scope.commentProgress = true;
+
 	$scope.SaveComment = function(obj,event){
 		var result = document.getElementById("CommentTxt").scrollHeight;
 		$scope.Height = angular.element(result);
@@ -180,24 +159,42 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 		}else if ((event.keyCode == 10 || event.keyCode == 13) && !event.shiftKey) {
 			 event.preventDefault(); //prevent actions
 			 if (obj.Commentstxt) { // if comment is not null
-				 var TodayDate = new Date();
-				 $scope.CommentObj = {
-				 	UserName : $scope.UserName,
-				 	TodayDate : TodayDate,
-				 	Comment : obj.Commentstxt,
-				 	product_code : $scope.ViewExpense[0].product_code,
-				 	productNum : $stateParams.productID.slice(-4),
-				 	textareaHeight : $scope.Height[0] + 'px;',
-				 	type : "comment"
-				 };
-				 obj.Commentstxt = ""; //make textare empty
-				 $scope.CommentObj.comment_code = "-999";
-				 $scope.ProgressBar = true;
-				 //console.log("enter working")
-				CommentToObjectstore($scope.CommentObj);
-			};
+				var TodayDate = new Date();
+				if (!$scope.editButtonVisible) {
+					$scope.CommentObj = {
+					 	UserName : $scope.UserName,
+					 	TodayDate : TodayDate,
+					 	Comment : obj.Commentstxt,
+					 	product_code : $scope.ViewExpense[0].product_code,
+					 	productNum : $stateParams.productID.slice(-4),
+					 	textareaHeight : $scope.Height[0] + 'px;',
+					 	type : "comment",
+					 	edited : false
+					}				 	
+				}
+				else if ($scope.editButtonVisible) {
+					var originalObj = $commentLog.returnEditObject()
+					$scope.CommentDelete(originalObj.commentObj,originalObj.index,"edit")
 
-		};
+				 	$scope.CommentObj = {
+					 	UserName : $scope.UserName,
+					 	TodayDate : TodayDate,
+					 	Comment : obj.Commentstxt,
+					 	product_code : $scope.ViewExpense[0].product_code,
+					 	productNum : $stateParams.productID.slice(-4),
+					 	textareaHeight : $scope.Height[0] + 'px;',
+					 	type : "comment",
+					 	edited : true
+					}
+				}
+
+				obj.Commentstxt = ""; //make textare empty
+				$scope.CommentObj.comment_code = "-999";
+				$scope.ProgressBar = true; 
+				CommentToObjectstore($scope.CommentObj);
+				$scope.editButtonVisible = false;
+			}
+		}
 	}
 
 	//function to submit comment to objectstore
@@ -363,7 +360,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 	              .targetEvent(response)
 	            );
 			},function(response){
-				console.log(response)
+				//console.log(response)
 			});
 		}
 		$scope.closeDialog = function(){
@@ -518,7 +515,6 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
       	callback();
       });
       client.getByFiltering("*");
-      // select * from productimagesNew where name = '"+$scope.name+"'
     }
 
     //load all comments
@@ -549,6 +545,7 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
 			$scope.ViewExpense[0].Comments = fullArr.sort(function(a,b){
 			  return new Date(b.TodayDate) - new Date(a.TodayDate);
 			});
+			$scope.commentProgress = false;
     	});
     	ActivityClient.onError(function(data){
     		console.log("error loading data");
@@ -561,4 +558,4 @@ rasm.controller("ViewScreen",function($scope, $stateParams,$rootScope,$auth, $st
     	$state.go("home")
     }
 
-});
+}]);

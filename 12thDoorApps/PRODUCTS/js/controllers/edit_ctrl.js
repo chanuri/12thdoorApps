@@ -1,15 +1,16 @@
-rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope,$activityLog, $objectstore, $auth, $EditUploadData, $uploader, $mdDialog, $objectstoreAccess, UploaderService) {
+rasm.controller('EditCtrl',["$scope","$state", "$stateParams","$rootScope","$activityLog", "$objectstore", "$auth", "$uploader", "$mdToast", "$EditUploadData", "$uploader", "$mdDialog", "ProductService", "$objectstoreAccess", "UploaderService", function ($scope, $state, $stateParams,$rootScope,$activityLog, $objectstore, $auth, $uploader, $mdToast, $EditUploadData, $uploader, $mdDialog, ProductService, $objectstoreAccess, UploaderService) {
 	console.log($stateParams.Eobject);
+  ProductService.setArraysEmpty();
 
 	$objectstoreAccess.LoadOneDetails("product12thdoor", $stateParams.Eobject, function (data) {
 		$scope.product_edit = [];
 		$scope.product_edit.push(data);	 
 
 	    if ($scope.product_edit[0].inventory == "No") {
-        	$scope.stockdisabledproductview = true;
-        } else if ($scope.product_edit[0].inventory  == "Yes") {
-         	$scope.stockdisabledproductview = false;
-        };
+      	$scope.stockdisabledproductview = true;
+      } else if ($scope.product_edit[0].inventory  == "Yes") {
+       	$scope.stockdisabledproductview = false;
+      };
 		
 	});	
 
@@ -58,6 +59,68 @@ rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope,$a
             .targetEvent()
           );
     }else{
+
+        $scope.brochurearray = [];
+        $scope.imagearray = [];
+
+        $scope.imagearray = ProductService.loadArray();
+        $scope.brochurearray = ProductService.loadArraybrochure();
+
+        if ($scope.imagearray.length > 0) {
+          for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
+            $uploader.upload("ignoreNamespace","productimagesNew", $scope.imagearray[indexx]);
+            $uploader.onSuccess(function (e, data) {
+              var toast = $mdToast.simple()
+                .content('Image Successfully uploaded!')
+                .action('OK')
+                .highlightAction(false)
+                .position("bottom right");
+              $mdToast.show(toast).then(function () {
+
+              });
+            });
+            $uploader.onError(function (e, data) {
+              var toast = $mdToast.simple()
+                .content('There was an error, please upload!')
+                .action('OK')
+                .highlightAction(false)
+                .position("bottom right");
+              $mdToast.show(toast).then(function () {
+                
+              });
+            });
+          }
+          obj.UploadImages = {val:[]}
+          obj.UploadImages.val = ProductService.loadBasicArray();
+
+        };
+        if ($scope.brochurearray.length > 0) {
+          for (indexx = 0; indexx < $scope.brochurearray.length; indexx++) {
+            //console.log($scope.brochurearray[indexx].name);
+            $uploader.upload("ignoreNamespace","productbrochureNew", $scope.brochurearray[indexx]);
+            $uploader.onSuccess(function (e, data) {
+              var toast = $mdToast.simple()
+                .content('Brochure Successfully uploaded !')
+                .action('OK')
+                .highlightAction(false)
+                .position("bottom right");
+              $mdToast.show(toast).then(function () {
+                //whatever
+              });
+            });
+            $uploader.onError(function (e, data) {
+              var toast = $mdToast.simple()
+                .content('There was an error, please upload!')
+                .action('OK')
+                .highlightAction(false)
+                .position("bottom right");
+              $mdToast.show(toast).then(function () {});
+            });
+          }
+          obj.UploadBrochure = {val:[]}
+          obj.UploadBrochure.val = ProductService.loadBasicArraybrochure();
+
+        };
         var client = $objectstore.getClient("product12thdoor");
         client.onComplete(function(data){
 
@@ -216,4 +279,4 @@ rasm.controller('EditCtrl', function ($scope, $state, $stateParams,$rootScope,$a
       callback();
   }
 
-});
+}]);

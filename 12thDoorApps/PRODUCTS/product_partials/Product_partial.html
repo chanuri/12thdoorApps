@@ -4,6 +4,13 @@
       <!--FORM START-->
       <form name="editForm" ng-submit="submit()" style="width:960px;"  >
          <md-content flex>
+          <div ng-show="SubmitProgress" layout="column" layout-sm="column" layout-align="center center" style="background: white;z-index: 10;position: absolute;height: 100%;width: 100%;opacity: 0.8;">
+              <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                <span> 
+                  <b>Submitting Data....</b>
+                </span>
+          </div>
+
             <div layout layout-sm="column" layout-margin>
              <section-title title="Product Details"> </section-title>
                        
@@ -12,10 +19,8 @@
                   <input required type="text" ng-model="product.Productname" ng-blur="GenerateCode(product)"/> 
                </md-input-container>
             </div>
-            <div layout layout-sm="column" layout-margin>
-               <!--KEEP BLANK SPACE - ask why-->
-             <section-title> </section-title>
-               <!--KEEP BLANK SPACE - ask why-->
+            <div layout layout-sm="column" layout-margin> 
+             <section-title> </section-title>  
                <md-input-container flex>
                   <label>Product Description</label>
                   <textarea maxlength="200" type="text" ng-model="product.description">
@@ -114,7 +119,7 @@
                </div>
             </div> 
              <div layout-gt-sm="row" layout-margin ng-repeat="cust in ProCustArr" ng-init="cust.value == cust.inputType">
-               <!--KEEP BLANK SPACE - ask why-->
+               <!-- - ask why-->
                <section-title ng-if="$index == '0'" title="Custom Fields"></section-title>
                <section-title ng-if="$index != '0'" ></section-title>
 

@@ -1,4 +1,4 @@
-rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
+rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploader", "$mdDialog", "$state","$activityLog", "$mdToast", "$objectstore", "$window", "$rootScope", "$interval", "$location", function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
   
 
     $scope.currentPage = 1;
@@ -15,7 +15,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     //  get the settings json object 
     var SettingsApp  = $objectstore.getClient("Settings12thdoor");
     SettingsApp.onGetMany(function(data){
-      console.log(data)
+      //console.log(data)
       //console.log(data)
       GetProductCategory(data,function(){  // return one object of array 
         GetProductBrand(data,function(){
@@ -226,7 +226,6 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     $scope.latest = '-todayDate';
 
     $scope.DefaultCancel = function(item){
-      $scope.testarr[1].close = true;
       $scope.testarr[$scope.indexno].upstatus = false;
       $scope.testarr[$scope.indexno].downstatus = false;
       item.close = false;
@@ -237,12 +236,12 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     $scope.CheckFullArrayStatus = function(type,id){  
         $scope.BackUpArray = [];
         //remove all all object that status = paid and put them into backup array
-            for (var i = $scope.products.length - 1; i >= 0; i--) {
-                if ($scope.products[i].status === type) {
-                   $scope.BackUpArray.push($scope.products[i]);            
-                   $scope.products.splice(i,1);           
-                };
-            };
+          for (var i = $scope.products.length - 1; i >= 0; i--) {
+              if ($scope.products[i].status === type) {
+                 $scope.BackUpArray.push($scope.products[i]);            
+                 $scope.products.splice(i,1);           
+              };
+          };
         $scope.products = MergeArr($scope.BackUpArray,$scope.products);         
     }
 
@@ -392,9 +391,9 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
         if (keyEvent.which === 13) {
           if (self.selectedItem === null) {
             self.selectedItem = query;
-            console.log(results);
+            //console.log(results);
           } else {
-            console.log(self.selectedItem);
+            //console.log(self.selectedItem);
           }
         }
       }
@@ -525,7 +524,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           for (var i = $scope.products.length - 1; i >= 0; i--) {
             $scope.products[i].productprice = parseInt($scope.products[i].productprice);
           }
-          console.log($scope.products);
+          //console.log($scope.products);
           LoadImageData();
         }
       });
@@ -560,7 +559,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           };
         };
 
-        console.log($scope.products);
+        //console.log($scope.products);
       });
       client.onError(function(data){
 
@@ -606,6 +605,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     }
     $scope.newItems = [];
     $scope.product = {};
+    $scope.SubmitProgress = false;
 
     $scope.submit = function () {
       if (!$scope.product.productprice) {
@@ -616,10 +616,10 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       if ($scope.producttax) {
         $scope.product.producttax = JSON.parse($scope.producttax);
       };
-      console.log($scope.product.producttax);
+      //console.log($scope.product.producttax);
 
       if ($scope.product.ProductCode.indexOf('-') === -1) {
-        console.log("dash missing")
+        //console.log("dash missing")
         $mdDialog.show(
               $mdDialog.alert()
               .parent(angular.element(document.body))
@@ -630,7 +630,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent()
             );
       }else if(($scope.product.Productname.substring(0, 3).toUpperCase() != $scope.product.ProductCode.substring(0,3)) || ($scope.product.ProductCode.indexOf('-') != 3)){
-        console.log("first letters not match")
+        //console.log("first letters not match")
         $mdDialog.show(
               $mdDialog.alert()
               .parent(angular.element(document.body))
@@ -641,7 +641,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent()
             );
       }else if(($scope.product.ProductCode.slice(4).toString().length != 4) || (!isNormalInteger($scope.product.ProductCode.slice(4).toString()))){
-        console.log("last numbers are invalid or length is not 4")
+        //console.log("last numbers are invalid or length is not 4")
         $mdDialog.show(
               $mdDialog.alert()
               .parent(angular.element(document.body))
@@ -652,25 +652,28 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
               .targetEvent()
             );
       }else{
-
+        $scope.SubmitProgress = true;
         $scope.AlreadyExsist = false;
         for(i=0; i<=$rootScope.FullArray.length-1; i++){
             if ($rootScope.FullArray[i].ProductCode === $scope.product.ProductCode) {
-              console.log("already exsist");
+              //console.log("already exsist");
+              $scope.SubmitProgress = false;
               $mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              .title('Product Code Already Exsist')
-              .content('Please Enter Different Product Code')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent()
-            );
+                $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .title('Product Code Already Exsist')
+                .content('Please Enter Different Product Code')
+                .ariaLabel('Alert Dialog Demo')
+                .ok('OK')
+                .targetEvent()
+              );
               $scope.AlreadyExsist = true;
               break;
             };
         }
         if (!$scope.AlreadyExsist) {
+
+          $scope.SubmitProgress = true;
 
           var today = new Date();
           var dd = today.getDate();
@@ -688,7 +691,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           $scope.brochurearray = ProductService.loadArraybrochure();
           if ($scope.imagearray.length > 0) {
             for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-              console.log($scope.imagearray[indexx]);
+              //console.log($scope.imagearray[indexx]);
               $uploader.upload("ignoreNamespace","productimagesNew", $scope.imagearray[indexx]);
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
@@ -714,7 +717,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           };
           if ($scope.brochurearray.length > 0) {
             for (indexx = 0; indexx < $scope.brochurearray.length; indexx++) {
-              console.log($scope.brochurearray[indexx].name);
+              //console.log($scope.brochurearray[indexx].name);
               $uploader.upload("ignoreNamespace","productbrochureNew", $scope.brochurearray[indexx]);
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
@@ -751,6 +754,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
                           .ok('OK')
                           .targetEvent(data)
                         );
+                      $scope.SubmitProgress = true;
                       $state.go("home");
                     }else{
 
@@ -788,7 +792,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           };
           $scope.product.UploadImages.val = ProductService.loadBasicArray();
           $scope.product.UploadBrochure.val = ProductService.loadBasicArraybrochure();
-          console.log($scope.product)
+          //console.log($scope.product)
           client.insert($scope.product, {
             KeyProperty: "product_code"
           });
@@ -820,11 +824,11 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
       }
       var balanceClient = $objectstore.getClient("productBalance");
       balanceClient.onComplete(function(data){
-        console.log("Successfully inserted to balance class");
+        //console.log("Successfully inserted to balance class");
         callback("success");
       });
       balanceClient.onError(function(data){
-        console.log("error inserting to balance class")
+        //console.log("error inserting to balance class")
         callback("fail")
       });
       balanceClient.insert($scope.balanceArr,{KeyProperty:"balance_code"})
@@ -854,8 +858,8 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
     $rootScope.$on('viewRecord', function (event, args) {
       $scope.imageDetails = args;
       var fileExt = args.name.split('.').pop()
-      console.log(args.name);
-      console.log(fileExt);
+      //console.log(args.name);
+      //console.log(fileExt);
       if (fileExt == "docx") {
         $scope.progressbrochure = true;
         var client = $objectstore.getClient("productbrochure");
@@ -864,7 +868,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
             $scope.brochurebody = [];
             $scope.brochurebody = data;
             var pbody = data
-            console.log(pbody);
+            //console.log(pbody);
             for (var i = $scope.brochurebody.length - 1; i >= 0; i--) {
               var url = 'data:application/msword;base64,' + $scope.brochurebody[i].Body;
               window.location.href = url;
@@ -892,7 +896,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           if (data) {
             $scope.brochurebodypdf = [];
             $scope.brochurebodypdf = data;
-            console.log($scope.brochurebodypdf);
+            //console.log($scope.brochurebodypdf);
             for (var i = $scope.brochurebodypdf.length - 1; i >= 0; i--) {
               var url = 'data:application/pdf;base64,' + $scope.brochurebodypdf[i].Body;
               window.location.href = url;
@@ -920,7 +924,7 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           if (data) {
             $scope.imageload = [];
             $scope.imageload = data;
-            console.log($scope.imageload);
+            //console.log($scope.imageload);
             for (var i = $scope.imageload.length - 1; i >= 0; i--) {
               var url = 'data:image/png;base64,' + $scope.imageload[i].Body;
               window.location.href = url;
@@ -995,8 +999,8 @@ rasm.controller('AppCtrl', function ($scope, $auth, $http,ProductService, $uploa
           </div> \
           </md-content> \
         </md-dialog> ';
-  }) //END OF AppCtrl
-rasm.controller('testCtrl', function ($scope, employee, $mdDialog) {
+  }]) //END OF AppCtrl
+rasm.controller('testCtrl',["$scope", "employee", "$mdDialog", function ($scope, employee, $mdDialog) {
   $scope.test = employee;
   $scope.hideAccept = function () {
     $mdDialog.hide();
@@ -1004,7 +1008,7 @@ rasm.controller('testCtrl', function ($scope, employee, $mdDialog) {
   $scope.cancelAccept = function () {
     $mdDialog.cancel();
   };
-})
+}])
 
 function containsObject(obj, list) {
   for (var i = 0; i < list.length; i++) {

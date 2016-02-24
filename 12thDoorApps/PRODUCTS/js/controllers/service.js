@@ -1,7 +1,40 @@
 
-rasm.service("$activityLog",function($objectstore,$auth){
-	
-	var userName = $auth.getSession()
+rasm.directive('embedSrc', function () {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var current = element;
+      scope.$watch(function() { return attrs.embedSrc; }, function () {
+        var clone = element
+                      .clone()
+                      .attr('src', attrs.embedSrc);
+        current.replaceWith(clone);
+        current = clone;
+      });
+    }
+  };
+})
+
+rasm.service("$commentLog",function(){
+	var commentObj = {};
+	var index;
+
+	this.addEditObject = function(obj,inx){
+		commentObj = {};
+		commentObj = obj;
+		index = inx;
+	}
+	this.returnEditObject = function(){
+		return {
+			commentObj : commentObj,
+			index : index
+		}
+	}
+})
+
+rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
+
+	var userName = $auth.checkSession()
 	this.newActivity = function(ActivityTxt,pCode,pNum,callback){
 		var txt = ActivityTxt + userName;
 		
@@ -27,7 +60,7 @@ rasm.service("$activityLog",function($objectstore,$auth){
 		});
 		activityClient.insert(activityObj, {KeyProperty:'activity_code'})
 	}
-});
+}]);
 
 rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'ProductService', function($uploader,$rootScope, $mdToast, ProductService) {
   return {
@@ -183,90 +216,88 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 	} //end of link
   };
 }]);
-rasm.factory('ProductService', function($rootScope){
-      $rootScope.testArray = [];
-      $rootScope.basicinfo = [];
-      $rootScope.testArraybrochure = [];
-      $rootScope.basicinfobrochure = [];
-  return {
-
-     setArraybrochure: function(newVal) {
-        $rootScope.testArraybrochure.push(newVal);
-      return $rootScope.testArraybrochure;
-    },
-  loadArraybrochure: function() {    
-      return $rootScope.testArraybrochure;
-   },
-   loadBasicArraybrochure: function() {    
-      return $rootScope.basicinfobrochure;
-   },
-  BasicArraybrochure: function(name,size) { 
-
-    $rootScope.basicinfobrochure.push({'name': name , 'size': size});
-      console.log($rootScope.basicinfobrochure);
-      return $rootScope.basicinfobrochure;
-   },
-  
-  setArray: function(newVal) {
-        $rootScope.testArray.push(newVal);
-      return $rootScope.testArray;
-    },
-  loadArray: function() {    
-      return $rootScope.testArray;
-   },
-   loadBasicArray: function() {    
-      return $rootScope.basicinfo;
-   },
-  BasicArray: function(name,size) { 
-
-    $rootScope.basicinfo.push({'name': name , 'size': size});
-      console.log($rootScope.basicinfo);
-      return $rootScope.basicinfo;
-   },
-  removeArray: function(arr,type){
-
-      if (type == "image") {
-        for (var i = arr.length - 1; i >= 0; i--) {
-        $rootScope.testArray.splice(arr[i], 1);
-        };
-        console.log($rootScope.testArray);
-        return $rootScope.testArray;
-
-     }
-     else if (type == "brochure") {
-
-        for (var i = arr.length - 1; i >= 0; i--) {
-        $rootScope.testArraybrochure.splice(arr[i], 1);
-        };
-        console.log($rootScope.testArraybrochure);
-        return $rootScope.testArraybrochure;
-     };
+rasm.factory('ProductService',["$rootScope", function($rootScope){
     
-   },
+    $rootScope.testArray = [];
+    $rootScope.basicinfo = [];
+    $rootScope.testArraybrochure = [];
+    $rootScope.basicinfobrochure = [];
 
-   removebasicArraybrochure: function(arr){
+	  return {
 
-        for (var i = arr.length - 1; i >= 0; i--) {
+	  	setArraysEmpty: function(){
 
-          $rootScope.basicinfobrochure.splice(arr[i], 1);
+	  		$rootScope.testArray = [];
+		    $rootScope.basicinfo = [];
+		    $rootScope.testArraybrochure = [];
+		    $rootScope.basicinfobrochure = [];
+	  	},
+	    setArraybrochure: function(newVal) {
+	        $rootScope.testArraybrochure.push(newVal);
+	      	return $rootScope.testArraybrochure;
+	    },
+	  	loadArraybrochure: function() {    
+	      	return $rootScope.testArraybrochure;
+	   	},
+	   	loadBasicArraybrochure: function() {    
+	      	return $rootScope.basicinfobrochure;
+	   	},
+	  	BasicArraybrochure: function(name,size) {
+	    	$rootScope.basicinfobrochure.push({'name': name , 'size': size});
+	      	console.log($rootScope.basicinfobrochure);
+	      	return $rootScope.basicinfobrochure;
+	   	},  
+	  	setArray: function(newVal) {
+	        $rootScope.testArray.push(newVal);
+	      	return $rootScope.testArray;
+	    },
+	  	loadArray: function() {    
+	      	return $rootScope.testArray;
+	   	},
+	   	loadBasicArray: function() {    
+	      	return $rootScope.basicinfo;
+	   	},
+	  	BasicArray: function(name,size) { 
 
-          };
-          console.log($rootScope.basicinfobrochure);
-          return $rootScope.basicinfobrochure;
+	    	$rootScope.basicinfo.push({'name': name , 'size': size});
+	      	console.log($rootScope.basicinfo);
+	      	return $rootScope.basicinfo;
+	   	},
+	  	removeArray: function(arr,type){
 
-   },
-   removebasicArray: function(arr){
-   
-        for (var i = arr.length - 1; i >= 0; i--) {
-          $rootScope.basicinfo.splice(arr[i], 1);
-        };
-        console.log($rootScope.basicinfo);
-        return $rootScope.basicinfo;
-    
-   }
-  }  
+	      	if(type == "image") {
+		        for (var i = arr.length - 1; i >= 0; i--) {
+			        $rootScope.testArray.splice(arr[i], 1);
+			    }
+		        console.log($rootScope.testArray);
+		        return $rootScope.testArray;
+	     	}
+	     	else if(type == "brochure") {
+		        for (var i = arr.length - 1; i >= 0; i--) {
+		        	$rootScope.testArraybrochure.splice(arr[i], 1);
+		        };
+		        console.log($rootScope.testArraybrochure);
+		        return $rootScope.testArraybrochure;
+	     	}    
+	   	},
+
+	   	removebasicArraybrochure: function(arr){
+	        for (var i = arr.length - 1; i >= 0; i--) {
+	          	$rootScope.basicinfobrochure.splice(arr[i], 1);
+	        };
+	        console.log($rootScope.basicinfobrochure);
+	        return $rootScope.basicinfobrochure;
+	   	},
+	   	removebasicArray: function(arr){	   
+	        for (var i = arr.length - 1; i >= 0; i--) {
+	          	$rootScope.basicinfo.splice(arr[i], 1);
+	        };
+	        console.log($rootScope.basicinfo);
+	        return $rootScope.basicinfo;    
+	   	}
+	  }  
   
-});
+}]);
 
 rasm.service('$DownloadPdf',function(){
 	this.GetPdf = function(obj,type){
@@ -382,7 +413,7 @@ rasm.service('$objectstoreAccess', ['$objectstore', '$auth', '$mdDialog'
 	}
 ]);
 
-rasm.factory('$EditUploadData',function($rootScope){
+rasm.factory('$EditUploadData',["$rootScope", function($rootScope){
 	$rootScope.UploadData = [];
 	return{
 		PutData:function(arr){
@@ -392,7 +423,7 @@ rasm.factory('$EditUploadData',function($rootScope){
 			return $rootScope.UploadData;
 		}
 	}
-});
+}]);
 
 rasm.filter('unique', function () {
 
@@ -432,7 +463,7 @@ rasm.filter('unique', function () {
     return items;
   };
 });
-rasm.filter('datetime', function($filter)
+rasm.filter('datetime',["$filter", function($filter)
 {
  return function(input)
  {
@@ -443,7 +474,7 @@ rasm.filter('datetime', function($filter)
   return _date.toUpperCase();
 
  };
-});
+}]);
 
 // remove all the null values in an array 
 // pass the array as a parameter and return not null element array 

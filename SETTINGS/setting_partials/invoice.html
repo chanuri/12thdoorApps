@@ -56,10 +56,10 @@
 </md-switch>
 </md-list-item>
 
-<md-list-item ng-if="$root.Settings12thdoor.preference.invoicepref.enableDisscounts"><!-- when disscount enable this input Display -->
+<md-list-item ng-show="$root.Settings12thdoor.preference.invoicepref.enableDisscounts"><!-- when disscount enable this input Display -->
 <md-input-container flex="40" >
 <md-select ng-model="$root.Settings12thdoor.preference.invoicepref.disscountItemsOption" >
-<md-option selected>Individual Items</md-option>
+<md-option>Individual Items</md-option>
 <md-option>SubTotal Items</md-option>
 </md-select>
 </md-input-container>

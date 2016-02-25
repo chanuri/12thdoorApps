@@ -13,8 +13,11 @@
   </div>
 
 </div>
-<div  class="card_container" md-virtual-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch " ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
-    <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:20px">
+<!-- md-virtual-repeat="tdi in TDinvoice -->
+<div  class="card_container" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch " ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
+<custome-progressbar invoice-obj="tdi"></custome-progressbar>
+ <!-- ng-class="{'active': toggles[$index]}" -->
+    <div class="collapse-card"ng-class="{ active: $active }" style="margin-left:20px">
 
             <!--START OF COLLAPSE CARD HEADING-->
             <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi);toggleOne($index)" >
@@ -47,7 +50,16 @@
                                 <b>Amount {{tdi.finalamount|currency:tdi.BaseCurrency}}</b>
                             </span>
                         </div>
-                        <div layout-sm="column" ng-repeat="tt in tdi.MultiDueDAtesArr" style="margin-top:10px;" flex>
+                        <div layout-sm="column" ng-if="tdi.termtype == 'multipleDueDates'" style="margin-top:10px;" flex>
+                        <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
+                                     Balace Due $200.00
+                         </span>
+                        
+                        <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; " >
+                                        Due Date. Multiple Due Dates
+                                        </span></div>
+
+                        <div layout-sm="column" ng-repeat="tt in tdi.MultiDueDAtesArr" ng-if="tdi.termtype != 'multipleDueDates'" style="margin-top:10px;" flex>
                         <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
                                      Balace Due $200.00
                          </span>

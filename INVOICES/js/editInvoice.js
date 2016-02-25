@@ -96,9 +96,12 @@ $scope.Settings = {};
 
 
 for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
-  if($rootScope.invoiceArray[i].status == "Draft"){
+  for (var x = $rootScope.invoiceArray[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
+     if($rootScope.invoiceArray[i].MultiDueDAtesArr[x].paymentStatus == "Draft"){
     $scope.showSave = true;
   }
+  }
+ 
 };
 
  if($state.current.name == 'copy') {
@@ -117,8 +120,10 @@ for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
 
 $scope.edit = function(updatedForm) {
          updatedForm.invoiceNo = updatedForm.invoiceNo.toString();
-
-        if(updatedForm.status == "Draft"){
+         for (var x = updatedForm.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+       
+         if(updatedForm.MultiDueDAtesArr[x].paymentStatus == "Draft"){
+        
           var client = $objectstore.getClient("invoice12thdoorDraft");
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
@@ -178,6 +183,7 @@ $scope.edit = function(updatedForm) {
          });
        }
       }
+    }
           $scope.calAMount = function(data) {
          $scope.Amount = 0;
          $scope.Amount = (((data.price * data.quantity) - ((data.price * data.quantity) * data.discount / 100)) + ((data.price * data.quantity)) * data.tax / 100);
@@ -244,7 +250,7 @@ $scope.edit = function(updatedForm) {
               });
               client.getByFiltering("select maxCount from domainClassAttributes where class='invoice12thdoor'");
 
-       $scope.savetoInvoices = function(obj) {
+          $scope.savetoInvoices = function(obj) {
          var confirm = $mdDialog.confirm()
             .parent(angular.element(document.body))
             .title('')
@@ -270,7 +276,9 @@ $scope.edit = function(updatedForm) {
           obj.MultiDueDAtesArr = $rootScope.dateArray.value;
         }
               obj.invoiceRefNo = $scope.refNo;
-            obj.status = "Unpaid";
+           for (var x = obj.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+       
+         if(obj.MultiDueDAtesArr[x].paymentStatus == "Draft"){}}
             obj.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
                var newInsert = $objectstore.getClient("invoice12thdoor");
                newInsert.onComplete(function(data) {
@@ -318,6 +326,8 @@ $scope.edit = function(updatedForm) {
             $mdDialog.hide();
          });
       }
+
+       
        $scope.viewSavedProducts = function(obj) {
          $mdDialog.show({
             templateUrl: 'Invoicepartials/showproduct.html',

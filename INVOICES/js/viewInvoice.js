@@ -1,4 +1,157 @@
 angular.module('mainApp')
+
+
+.directive('customeProgressbar',[ function(){
+  return{
+    restrict : 'E',
+    template : " <div ng-if='invoiceObj.termtype == \"multipleDueDates\"'  style='margin-left:20px;height:10px; display:flex' md-swipe-right='onSwipeRight(invoiceObj.startPage,invoiceObj.endPage)' md-swipe-left='onSwipeLeft(invoiceObj.startPage,invoiceObj.endPage)'> <md-icon  ng-if='leftArrow'  style='height: 13px;z-index: 10; background-color: white; margin-top: -3px' md-svg-src='img/ic_keyboard_arrow_left_24px.svg' class='iconColor'  md-ink-ripple style='' ng-click='onSwipeRight(invoiceObj.startPage,invoiceObj.endPage)'></md-icon> <div  ng-repeat='item in invoiceObj.fullArr' style='height: 10px;    display: inline-block;' ng-style='{   \"width\" : item.fullWidth }'  >   <div style='display: flex;'> <div ng-if='$index != 0 ' ng-style='{ \"width\": item.whiteSpace }' > </div> <div ng-style='{ \"background-color\": item.color,\"width\": \"100%\" }' style='height: 10px;     display: inline-block;'  ></div>  </div> </div> <md-icon ng-if='rightArrow' md-svg-src='img/ic_keyboard_arrow_right_24px.svg' class='iconColor'  md-ink-ripple style='z-index: 10;     height: 13px;background-color: white; margin-top: -3px' ng-click='onSwipeLeft(invoiceObj.startPage,invoiceObj.endPage)'></md-icon> </div>",
+    scope : {
+      invoiceObj : '='
+    },
+    controller : 'viewCtrl',
+    link : function(scope){
+      
+      var fullArrayLength = 0; 
+      scope.fullArr = [];
+      scope.paidArr = [];
+      scope.unpaidArr = [];
+      scope.partialArr = [];
+      scope.cancelArr = [];
+
+      scope.leftArrow = false;
+      scope.rightArrow = false;
+
+      scope.onSwipeLeft = function(startPage,endPage){
+        scope.overload = false;  
+        scope.leftArrow = true;
+        var newStartPage = parseInt(endPage) + 1;
+        var newEndPage = parseInt(endPage) + 12;
+        if (scope.sortArr.length > newStartPage) {
+
+          scope.invoiceObj.startPage = newStartPage;
+          scope.invoiceObj.endPage = newEndPage;
+          scope.invoiceObj.fullArr = []
+
+          for(i=newStartPage; i<=newEndPage; i++){
+            if (scope.sortArr[i]) scope.invoiceObj.fullArr.push(scope.sortArr[i])
+            else scope.overload = true;         
+          }
+          if (scope.overload) {
+            var newLength = 100 / scope.invoiceObj.fullArr.length
+            for(p=0; p<= scope.invoiceObj.fullArr.length-1; p++){
+              scope.invoiceObj.fullArr[p].fullWidth = newLength + '%';
+              scope.invoiceObj.fullArr[p].maxWidth = (newLength - 1) + '%';
+              scope.rightArrow = false;
+            }
+          }
+          if (scope.sortArr.length == parseInt(newEndPage +1 )) {
+            scope.rightArrow = false;
+          } 
+        }         
+      }
+      scope.onSwipeRight = function(startPage,endPage){
+        var newStartPage = parseInt(startPage) - 12;
+        var newEndPage = parseInt(startPage) -1;
+        scope.rightArrow = true;
+        if (newStartPage >=0) {
+
+          scope.invoiceObj.startPage = newStartPage;
+          scope.invoiceObj.endPage = newEndPage;
+          scope.invoiceObj.fullArr = []
+          for(i=newStartPage; i<=newEndPage; i++){
+            scope.invoiceObj.fullArr.push(scope.sortArr[i])
+          }
+        }
+        if (newStartPage ==0) {
+          scope.leftArrow = false;
+        }
+      }      
+
+      if (scope.invoiceObj.MultiDueDAtesArr.length > 0) {
+
+        fullArrayLength = scope.invoiceObj.MultiDueDAtesArr.length;
+        var originalVal;
+        if (fullArrayLength > 12) {
+          originalVal = (100 / 12);
+          scope.rightArrow = true;
+        }else{
+          originalVal = (100 / fullArrayLength);
+        }
+        var originVal = originalVal + '%';
+        var withSpaceVal = (originalVal - 1) + '%';
+
+
+        for(l=0; l<=scope.invoiceObj.MultiDueDAtesArr.length-1; l++){
+          switch(scope.invoiceObj.MultiDueDAtesArr[l].paymentStatus){
+            case "Unpaid":
+                scope.unpaidCount += 1;
+                scope.unpaidArr.push({
+                  type : 'Unpaid',
+                  color : 'red',
+                  maxWidth : withSpaceVal,
+                  fullWidth : originVal,
+                  whiteSpace : '2%'
+                })
+                break;
+            case "Paid" :
+                scope.paidCount += 1;
+                scope.paidArr.push({
+                  type : 'Paid',
+                  color : 'green',
+                  maxWidth : withSpaceVal,
+                  fullWidth : originVal,
+                  whiteSpace : '2%'
+                })
+                break;
+            case "Partially Paid" :
+                scope.partialCount += 1;
+                scope.partialArr.push({
+                  type : 'Partially Paid',
+                  color : 'orange',
+                  maxWidth : withSpaceVal,
+                  fullWidth : originVal,
+                  whiteSpace : '2%'
+                })
+                break;
+            case "Cancelled":
+                scope.cancelCount += 1;
+                scope.cancelArr.push({
+                  type : 'Cancelled',
+                  color : 'black',
+                  maxWidth : withSpaceVal,
+                  fullWidth : originVal,
+                  whiteSpace : '2%'
+                })
+                break;
+            default : 
+                console.log("incorrect payment status")
+          }          
+        }
+
+        scope.fullArr = scope.unpaidArr.concat(scope.partialArr)
+        scope.fullArr = scope.fullArr.concat(scope.paidArr)
+        scope.fullArr = scope.fullArr.concat(scope.cancelArr)
+
+        scope.sortArr = scope.fullArr.sort(function(a,b){
+            return new Date(a.DueDate) - new Date(b.DueDate)
+        })
+
+        scope.invoiceObj.fullArr = [];
+        scope.invoiceObj.startPage = 0;
+        scope.invoiceObj.endPage = 11;
+
+
+        if (scope.sortArr.length > 12) {
+          for(k=0; k<= 11; k++ ){
+            scope.invoiceObj.fullArr.push(scope.sortArr[k])
+          }
+        }else{
+          scope.invoiceObj.fullArr = scope.sortArr;
+        }
+      }
+    }
+  }
+}])
 .controller('viewCtrl', function($scope,$mdBottomSheet,$interval, $mdDialog, $state,uiInitilize, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope,invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
       $scope.TDinvoice =[];
       $scope.Payment =[];
@@ -131,7 +284,9 @@ $scope.toggles = {};
       $scope.Approve = function(obj){
         var client = $objectstore.getClient("invoice12thdoor");
          obj.invoiceNo = obj.invoiceNo.toString();
-         obj.status = "Unpaid";
+          for (var x = obj.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+         obj.MultiDueDAtesArr[x].paymentStatus = "Unpaid";
+       }
          client.onComplete(function(data) {
              $mdDialog.show(
                // $mdDialog.alert()
@@ -172,8 +327,10 @@ $scope.cancelStatus = function(obj, ev) {
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            obj.commentsAndHistory.push($scope.systemMessage[i]);
           };
-           
-          obj.status = "Cancelled";
+
+          for (var x = obj.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+                obj.MultiDueDAtesArr[x].paymentStatus = "Cancelled";
+           } 
          client.onComplete(function(data) {
              $mdDialog.show(
                $mdDialog.alert()
@@ -262,8 +419,9 @@ $scope.cancelStatus = function(obj, ev) {
         if(deleteform.invoiceNo == "-999"){
           deleteform.invoiceNo = angular.copy(deleteform.invoiceRefNo);
         }
-        
-         if(deleteform.status == "Draft"){
+        for (var x = deleteform.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+       
+         if(deleteform.MultiDueDAtesArr[x].paymentStatus == "Draft"){
           var confirm = $mdDialog.confirm()
             .parent(angular.element(document.body))
             .title('')
@@ -345,6 +503,7 @@ $scope.cancelStatus = function(obj, ev) {
 
          });
   }
+}
         location.href = '#/invoice_app';
       }
 
@@ -490,7 +649,9 @@ $scope.cancelStatus = function(obj, ev) {
                data[i].invoiceNo = parseInt(data[i].invoiceNo);
                $scope.TDinvoice.push(data[i]);
 
-               if($stateParams.invoiceno == data[i].invoiceNo && data[i].status == "Draft"){
+        for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
+
+               if($stateParams.invoiceno == data[i].invoiceNo && data[i].MultiDueDAtesArr[x].paymentStatus == "Draft"){
                 invoiceDetails.removeArray(data[i], 1);
                   invoiceDetails.setArray(data[i]);
                   $scope.Address = data[i].billingAddress.split(',');
@@ -503,7 +664,7 @@ $scope.cancelStatus = function(obj, ev) {
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
-
+            }
             };
          }
       });
@@ -568,10 +729,8 @@ $scope.cancelStatus = function(obj, ev) {
                  if($stateParams.invoiceno == data[i].paidInvoice[x].invono){
                 
                  $scope.Payment.push(data[i]);
-                 //console.log($scope.Payment);
                }
                };
-               
             };
          }
       });

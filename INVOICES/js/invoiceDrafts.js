@@ -277,14 +277,16 @@ angular.module('mainApp')
           }
         },
         ReverseTax: function(obj, index){
-          var tt = [];
           var arr = [];
           var results = [];
           $rootScope.compoundcal=[];
-                $rootScope.calculateCompound = [];
-                $rootScope.falseComp = [];
-                $rootScope.trueComp = [];
-
+          $rootScope.calculateCompound = [];
+          $rootScope.falseComp = [];
+          $rootScope.trueComp = [];
+          var tcopmAmount = 0;
+                  var fcompAmount = 0;
+                  var finalCal = 0;
+                  var tax = 0;
           for (var i = $rootScope.testArray.val.length - 1; i >= 0; i--) {
 
             if($rootScope.testArray.val[i].tax.type == "individualtaxes"){
@@ -297,15 +299,6 @@ angular.module('mainApp')
             }
           }
 
-          for (var y =  $rootScope.taxArr.length - 1; y >= 0; y--) {
-                        tt.push({
-                            taxName : $rootScope.taxArr[y].taxName,
-                           rate : $rootScope.taxArr[y].rate,
-                           salesTax : $rootScope.taxArr[y].salesTax,
-                           compoundCheck: $rootScope.taxArr[y].compoundCheck
-                          })
-                        }
-
           var sorted_arr = arr.sort(); 
                 var results = [];
                 for (var i = 0; i < arr.length - 1; i++) {
@@ -313,7 +306,7 @@ angular.module('mainApp')
                         results.push(sorted_arr[i]);
                     }
                 }
-
+                console.log(results)
                 if(obj.tax.type == "individualtaxes"){
 
                    for (var x =  $rootScope.taxArr.length - 1; x >= 0; x--) {
@@ -326,7 +319,6 @@ angular.module('mainApp')
                         }else if($.inArray(obj.tax.taxname, results) == 0){
 
                           $rootScope.taxArr[x].salesTax = parseInt($rootScope.taxArr[x].salesTax - (obj.amount*obj.tax.rate/100));
-                          //results.splice(obj.tax.taxname,1);
                         }
                     }
                    }
@@ -342,9 +334,8 @@ angular.module('mainApp')
                     });
                   }
                   $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
-                   var tcopmAmount = 0;
-                  var fcompAmount = 0;
-                  var finalCal = 0;
+                  
+                  tax = obj.tax.individualtaxes[x].rate/100;
 
                     for (var y =  $rootScope.taxArr.length - 1; y >= 0; y--) {
                        
@@ -353,20 +344,18 @@ angular.module('mainApp')
                        if($.inArray(obj.tax.individualtaxes[x].taxname, results) == 0){
                         for (var z = 0;  z <= $rootScope.calculateCompound.length - 1; z++) {
                           if($rootScope.calculateCompound[z].compound == false){
-                            $rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - (obj.amount*obj.tax.individualtaxes[x].rate/100));
-                       fcompAmount= parseInt(obj.amount*obj.tax.individualtaxes[x].rate/100)
+                            $rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - 
+                              (obj.amount*tax));
                     }
                     else if(obj.tax.individualtaxes[y].compound == true){
-                       tcopmAmount = parseInt(fcompAmount + obj.amount);
-                         finalCal = (parseInt(finalCal+tcopmAmount)* obj.tax.individualtaxes[x].rate/100);
+                       // tcopmAmount = parseInt(fcompAmount + obj.amount);
+                         finalCal = (parseInt(finalCal+obj.amount)* tax);
                          $rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - finalCal);
                       }   
                         }
-                          //$rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - (obj.amount*obj.tax.individualtaxes[x].rate/100));
                         }
                       else if($.inArray(obj.tax.individualtaxes[x].taxname, results) == -1){
-                        $rootScope.taxArr.splice(y,1)
-
+                        $rootScope.taxArr.splice(y,1);
                         }
                       }
                     }

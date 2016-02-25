@@ -211,8 +211,8 @@ angular
       client.getByFiltering("*");
 
      
-      if($scope.dis == "SubTotal Items" ){
-        checkDiscout = false;
+      if($scope.dis == "SubTotal Items" && $scope.dis == true){
+        $scope.checkDiscout = false;
       }
 
       $scope.ss=[];
@@ -370,6 +370,7 @@ angular
           $scope.TDinvoice.duedate = null;
           $scope.showPercentage = false;
             $rootScope.showmsg = false;
+
 
             $mdDialog.show({
                templateUrl: 'Invoicepartials/MultipleDuedates.html',
@@ -610,12 +611,14 @@ angular
                $scope.taxType = [];
                $scope.AllUnitOfMeasures = [];
                  $scope.discount = 0;
-                $rootScope.displayDiscountLine = false;
+                $scope.displayDiscountLine = false;
                 $scope.showPercentage = false;
                 $scope.showPrice = false;
+                 $scope.showQuantity = false;
+                 $scope.showProduct = false;
 
-                if($rootScope.discounts == "Individual Items"){
-                $rootScope.displayDiscountLine = true;
+                if($rootScope.discounts == "Individual Items" && $rootScope.discounts==true){
+                $scope.displayDiscountLine = true;
               }
 
                $scope.addproductToarray = function(item) {
@@ -630,19 +633,11 @@ angular
                       status:$scope.Sstatus
                   }
                   for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
-                    if($scope.promoItems[i].qty == null){
-                       $scope.showActionToast = function() {
-                        var toast = $mdToast.simple()
-                              .content('Action Toast!')
-                              .action('OK')
-                              .highlightAction(false)
-                              .position($scope.getToastPosition());
-                        $mdToast.show(toast).then(function(response) {
-                          if ( response == 'ok' ) {
-                            alert('You clicked \'OK\'.');
-                          }
-                        });
-                      };
+                    if($scope.promoItems[i].productName == null){
+                      $scope.showProduct = true;
+                    }
+                    else if($scope.promoItems[i].qty == null){
+                        $scope.showQuantity = true;
                      }else if($scope.promoItems[i].ProductUnit == null){
                        $scope.showPercentage = true;
 
@@ -721,6 +716,7 @@ angular
                        $scope.prod.favouriteStar = false;
                        $scope.prod.favouriteStarNo = 1;
                        $scope.prod.tags = [];
+                       $scope.prod.status = "Active"
                        $scope.prod.todaydate = new Date();
                        $scope.prod.UploadImages = {val: []};
                        $scope.prod.UploadBrochure = {val: []};
@@ -923,11 +919,11 @@ angular
                templateUrl: 'Invoicepartials/addCustomer.html',
                controller: function DialogController($scope, $mdDialog) {
 
-               var last = {
-              bottom: false,
-              top: true,
-              left: false,
-              right: true
+                     var last = {
+                    bottom: false,
+                    top: true,
+                    left: false,
+                    right: true
                       };
                     $scope.toastPosition = angular.extend({},last);
                     $scope.getToastPosition = function() {
@@ -975,10 +971,8 @@ angular
                  $scope.contact.saddress["s_country"]="";
                  $scope.contact.saddress["s_zip"]="";
                  $scope.contact.saddress["s_state"] ="";
-                
                 }
         }
-       
                   $scope.AddCus = function() {
                      var client = $objectstore.getClient("contact12thdoor");
                      if($scope.contact.Name == null){         
@@ -1023,6 +1017,7 @@ angular
                              for (var i = $rootScope.customerNames.length - 1; i >= 0; i--) {
                                if ($rootScope.customerNames[i].display == $scope.contact.Name ) {
                                  $rootScope.selectedItem1 = $rootScope.customerNames[i];
+                                 console.log($rootScope.selectedItem1);
                                }; 
                              };
 
@@ -1209,10 +1204,6 @@ angular
          $scope.TDleger = {};
       //save invoice details
        $scope.submit = function() {
-         $scope.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
-         $scope.ProgressBar.PaymentScheme = $scope.TDinvoice.termtype;
-          $scope.ProgressBar.PaymentSchemeActive= "false";
-        
           if($scope.TDinvoice.termtype != "multipleDueDates"){
          $scope.TDinvoice.MultiDueDAtesArr= [{
                            DueDate: $scope.TDinvoice.duedate,
@@ -1224,8 +1215,6 @@ angular
         }else{
           $scope.TDinvoice.MultiDueDAtesArr = $rootScope.dateArray.val;
         }
-
-    $scope.ProgressBar.PaymentSchemeData.push($scope.TDinvoice.MultiDueDAtesArr);
 
          $scope.imagearray = UploaderService.loadArray();
          if ($scope.imagearray.length > 0) {
@@ -1264,7 +1253,7 @@ angular
          $scope.TDinvoice.finalamount = $scope.famount;
          $scope.TDinvoice.discountAmount = $scope.finalDisc;
          $scope.TDinvoice.salesTaxAmount = $scope.salesTax;
-         // $scope.TDinvoice.status = "Unpaid";
+         $scope.TDinvoice.cardOpen = false;
          $scope.TDinvoice.favourite = false;
          $scope.TDinvoice.favouriteStarNo = 1;
          $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
@@ -1297,7 +1286,7 @@ angular
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
-               .title('')
+               .title('Confirmation')
                .content('invoice Successfully Saved')
                .ariaLabel('Alert Dialog Demo')
                .ok('OK')
@@ -1371,14 +1360,21 @@ angular
            $scope.finalDisc = 0;
        }
        return $scope.finalDisc;
+       $scope.CalculateTax();
       }
 
       $scope.CalculateTax = function() {
          $scope.salesTax=0;
-         for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
-          //console.log($rootScope.taxArr[i])
-            $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
+         $scope.tt = 0;
+
+         if($scope.dis == "SubTotal Items" ){
+            for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
+          $scope.salesTax += parseInt(($scope.total - $scope.finalDisc)+($rootScope.taxArr[i].rate/100));
           }
+         }else if ($scope.dis == "Individual Items" ){
+           $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
+       }
+         
            return $scope.salesTax;
       }
      
@@ -1514,9 +1510,12 @@ angular
                 $rootScope.dateArray.val = "";
                  $scope.total = "";
                  $scope.famount="";
-                 $rootScope.selectedItem1.display="";
+                 if($rootScope.selectedItem1 != null){
+                   $rootScope.selectedItem1.display="";
                  $rootScope.selectedItem1.BillingValue="";
                  $rootScope.selectedItem1.shippingValue="";
+                 }
+                
                  $scope.dateArray.value="";
                  $rootScope.searchText = null;
                  $scope.TDinvoice.poNum = "";
@@ -1526,11 +1525,12 @@ angular
                  $scope.TDinvoice.anotherTax = "";
                  $scope.TDinvoice.shipping = "";
                  $scope.TDinvoice.notes = "";
+                 $scope.TDinvoice.termtype = "";
                  $scope.TDinvoice.paymentMethod = "";
                  $scope.TDinvoice.roFruitNames = "";
                  $rootScope.taxArr = "";
                  // location.href = '#/invoice_app';
-                  $state.go('settings.invoice_app');
+                 $state.go('settings.invoice_app');
             });
       }
    })

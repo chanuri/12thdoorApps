@@ -1,6 +1,4 @@
 angular.module('mainApp')
-
-
 .directive('customeProgressbar',[ function(){
   return{
     restrict : 'E',
@@ -289,13 +287,7 @@ $scope.toggles = {};
        }
          client.onComplete(function(data) {
              $mdDialog.show(
-               // $mdDialog.alert()
-               // .parent(angular.element(document.body))
-               // .title('')
-               // .content('invoice Successfully Cancelled')
-               // .ariaLabel('Alert Dialog Demo')
-               // .ok('OK')
-               // .targetEvent(data)
+
             );
          });
          client.onError(function(data) {
@@ -469,11 +461,15 @@ $scope.cancelStatus = function(obj, ev) {
             .targetEvent(ev);
          $mdDialog.show(confirm).then(function() {
             var client = $objectstore.getClient("invoice12thdoor");
-          //   $scope.systemMessage.push({text:"The Invoice was Deleted by mr.Perera", done:false,  date:new Date()});
-          // for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
-          //  obj.commentsAndHistory.push($scope.systemMessage[i]);
-          // };
-            client.onComplete(function(data) {
+            $scope.systemMessage.push({text:"The Invoice was Deleted by mr.Perera", done:false,  date:new Date()});
+          for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
+           deleteform.commentsAndHistory.push($scope.systemMessage[i]);
+          };
+         deleteform.invoiceNo = deleteform.invoiceNo.toString();
+          for (var x = deleteform.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+         deleteform.MultiDueDAtesArr[x].paymentStatus = "Deleted";
+       }
+         client.onComplete(function(data) {
                $mdDialog.show(
                   $mdDialog.alert()
                   .parent(angular.element(document.body))
@@ -486,21 +482,19 @@ $scope.cancelStatus = function(obj, ev) {
                   reload: true
                });
             });
-            client.onError(function(data) {
-               $mdDialog.show(
-                  $mdDialog.alert()
-                  .parent(angular.element(document.body))
-                  .content('Error Deleting Record')
-                  .ariaLabel('')
-                  .ok('OK')
-                  .targetEvent(data)
-               );
-            });
-            
-            client.deleteSingle(deleteform.invoiceNo.toString(), "invoiceNo");
+         client.onError(function(data) {
+            $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .content('Error Occure while Adding Invoice')
+               .ariaLabel('')
+               .ok('OK')
+               .targetEvent(data)
+            );
+         });
+        client.insert(deleteform, {KeyProperty: "invoiceNo"});
          }, function() {
             $mdDialog.hide();
-
          });
   }
 }
@@ -704,7 +698,6 @@ $scope.cancelStatus = function(obj, ev) {
                $scope.ShippingCity = $scope.shippingAddress[1]+$scope.shippingAddress[3];
                $scope.ShippingCountry = $scope.shippingAddress[2]+$scope.shippingAddress[4];
                }
- 
             };
          }
       });
@@ -725,12 +718,15 @@ $scope.cancelStatus = function(obj, ev) {
       client.onGetMany(function(data) {
          if (data) {
             for (var i = data.length - 1; i >= 0; i--) {
+              if(data[i].paymentStatus != "Cancelled"){
                for (var x = data[i].paidInvoice.length - 1; x >= 0; x--) {
                  if($stateParams.invoiceno == data[i].paidInvoice[x].invono){
-                
+                  
                  $scope.Payment.push(data[i]);
+                 console.log($scope.Payment)
                }
                };
+             }
             };
          }
       });

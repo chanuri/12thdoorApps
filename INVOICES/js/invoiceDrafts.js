@@ -317,116 +317,53 @@ angular.module('mainApp')
                         $rootScope.taxArr.splice(x,1); 
 
                         }else if($.inArray(obj.tax.taxname, results) == 0){
-
-                          $rootScope.taxArr[x].salesTax = parseInt($rootScope.taxArr[x].salesTax - (obj.amount*obj.tax.rate/100));
+                          console.log( parseInt($rootScope.taxArr[x].salesTax))
+                          console.log( parseInt(obj.amount*obj.tax.rate/100))
+                          $rootScope.taxArr[x].salesTax = parseFloat($rootScope.taxArr[x].salesTax) - parseFloat(obj.amount*obj.tax.rate/100);
                         }
                     }
                    }
-                }else if(obj.tax.type == "multipletaxgroup"){
+                }else if (obj.tax.type == "multipletaxgroup") {
                   for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
 
-                    if(obj.tax.individualtaxes[x].compound == false ){
-                    $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
-                  }else if(obj.tax.individualtaxes[x].compound == true){
-                    $rootScope.trueComp.push(obj.tax.individualtaxes[x])
-                    $rootScope.compountTrue = $rootScope.trueComp.sort(function(a,b){
-                      return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
-                    });
-                  }
-                  $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
-                  
-                  tax = obj.tax.individualtaxes[x].rate/100;
-
-                    for (var y =  $rootScope.taxArr.length - 1; y >= 0; y--) {
-                       
-                     if( $rootScope.taxArr[y].taxName == obj.tax.individualtaxes[x].taxname){
-
-                       if($.inArray(obj.tax.individualtaxes[x].taxname, results) == 0){
-                        for (var z = 0;  z <= $rootScope.calculateCompound.length - 1; z++) {
-                          if($rootScope.calculateCompound[z].compound == false){
-                            $rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - 
-                              (obj.amount*tax));
-                    }
-                    else if(obj.tax.individualtaxes[y].compound == true){
-                       // tcopmAmount = parseInt(fcompAmount + obj.amount);
-                         finalCal = (parseInt(finalCal+obj.amount)* tax);
-                         $rootScope.taxArr[y].salesTax = parseInt($rootScope.taxArr[y].salesTax - finalCal);
-                      }   
-                        }
-                        }
-                      else if($.inArray(obj.tax.individualtaxes[x].taxname, results) == -1){
-                        $rootScope.taxArr.splice(y,1);
+                        if (obj.tax.individualtaxes[x].compound == false) {
+                            $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
+                            
+                        } else if (obj.tax.individualtaxes[x].compound == true) {
+                            $rootScope.trueComp.push(obj.tax.individualtaxes[x])
+                            $rootScope.compountTrue = $rootScope.trueComp.sort(function(a, b) {
+                                return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
+                            });
                         }
                       }
-                    }
-                  }
-                }
-        },
-        setTempArr : function(obj){
-            this.setArray2(obj);
-            $rootScope.correctArr1 = [];
-            $rootScope.multiTax = [];
-               $rootScope.total = 0;
-                $rootScope.calCompound=[];
-            if(obj.tax.type == "individualtaxes"){
-               if(obj.tax.rate == 0){
-
-              }else{
-               $rootScope.taxArr.push({
-                 taxName: obj.tax.taxname,
-                 rate: obj.tax.rate,
-                 salesTax: parseInt(obj.amount*obj.tax.rate/100),
-                 compoundCheck: obj.tax.compound
-               })
-             }
-               }else if(obj.tax.type == "multipletaxgroup"){
-                  for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
-                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate);
-                     if(obj.tax.individualtaxes[i].rate == 0){
-
-                     }else{
-                     $rootScope.taxArr.push({
-                      taxName:obj.tax.individualtaxes[i].taxname,
-                      rate:obj.tax.individualtaxes[i].rate,
-                      salesTax: parseInt(obj.amount*obj.tax.individualtaxes[i].rate/100),
-                      compoundCheck: obj.tax.individualtaxes[i].compound
-                     })
-                     }       
-                  }; 
-                   
-               }
-            $rootScope.calTax = $rootScope.calTax.sort(function(a,b){
-              return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
-                 });
-
-            if($rootScope.calTax.length > 1){
-               for(l=0; l<=$rootScope.calTax.length-1; l++){
-                  if ($rootScope.calTax[l+1]) {
-
-                     if ($rootScope.calTax[l].taxName == $rootScope.calTax[l+1].taxName) {
-                        var sumSalesTax = 0;
-                        var txtName = $rootScope.calTax[l].taxName;
-                        var rate = $rootScope.calTax[l].rate;
-                        var compound = $rootScope.calTax[l].compoundCheck;
-
-                        sumSalesTax = $rootScope.calTax[l].salesTax + $rootScope.calTax[l+1].salesTax;
-
-                        $rootScope.calTax.splice(l,2);
-                        $rootScope.calTax.push({
-                           taxName : txtName,
-                           rate : rate,
-                           salesTax : sumSalesTax,
-                           compoundCheck: $rootScope.calCompound
-                        })
+                      $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
+                    for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
                         
-                        $rootScope.calTax.sort(function(a,b){
-                            return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
-                        });
-                      
-                     };
-                  };                  
-               }
-            }
+
+
+                        tax = obj.tax.individualtaxes[x].rate / 100;
+
+                        for (var y = $rootScope.taxArr.length - 1; y >= 0; y--) {
+
+                            if ($rootScope.taxArr[y].taxName == obj.tax.individualtaxes[x].taxname) {
+
+                                if ($.inArray(obj.tax.individualtaxes[x].taxname, results) == 0) {
+                                    for (var z = 0; z <= $rootScope.calculateCompound.length - 1; z++) {
+                                        if ($rootScope.calculateCompound[z].compound == false) {
+                                            $rootScope.taxArr[y].salesTax = parseFloat($rootScope.taxArr[y].salesTax -
+                                                (obj.amount * tax));
+                                        } else if (obj.tax.individualtaxes[y].compound == true) {
+                                            finalCal = (parseFloat(finalCal + obj.amount) * tax);
+                                            $rootScope.taxArr[y].salesTax = parseFloat($rootScope.taxArr[y].salesTax - finalCal);
+                                        }
+                                    }
+                                } else if ($.inArray(obj.tax.individualtaxes[x].taxname, results) == -1) {
+                                    $rootScope.taxArr.splice(y, 1);
+                                }
+                            }
+                        }
+                    }
+                }
         }
       }
    })

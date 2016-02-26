@@ -5,7 +5,7 @@ angular.module('mainApp')
 $scope.editInvoiceB = false;
 $scope.saveInvoiceB = false;
  $scope.systemMessage = [];
-
+$scope.payterm = false;
 
 $scope.Settings = {};
  $scope.AllTaxes = [];
@@ -15,9 +15,32 @@ $scope.Settings = {};
  $scope.roles = [];
  $scope.permission = [];
 
- $scope.termtype = $rootScope.invoiceArray[0].termtype;
- $scope.duedate = new Date($rootScope.invoiceArray[0].duedate);
- $scope.Startdate = new Date($rootScope.invoiceArray[0].Startdate);
+ // $scope.termtype = $rootScope.invoiceArray[0].termtype;
+ // $scope.duedate = new Date($rootScope.invoiceArray[0].duedate);
+ // $scope.Startdate = new Date($rootScope.invoiceArray[0].Startdate);
+
+
+  for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
+     $scope.termtype = $rootScope.invoiceArray[i].termtype;
+    $scope.duedate = new Date($rootScope.invoiceArray[i].duedate);
+     $scope.Startdate = new Date($rootScope.invoiceArray[i].Startdate)
+    for (var x = $rootScope.invoiceArray[i].invoiceProducts.length - 1; x >= 0; x--) {
+      // for (var y = $rootScope.invoiceArray[i].invoiceProducts[x].tax.length - 1; y >= 0; y--) {
+
+        // InvoiceService.setTempArr({
+        //                 Productname: $rootScope.invoiceArray[i].invoiceProducts[x].Productname,
+        //                 price: $rootScope.invoiceArray[i].invoiceProducts[x].price,
+        //                 quantity: $rootScope.invoiceArray[i].invoiceProducts[x].quantity,
+        //                 ProductUnit: $rootScope.invoiceArray[i].invoiceProducts[x].ProductUnit,
+        //                 discount: $rootScope.invoiceArray[i].invoiceProducts[x].discount,
+        //                 tax: $rootScope.invoiceArray[i].invoiceProducts[x].tax,
+        //                 olp: $rootScope.invoiceArray[i].invoiceProducts[x].olp,
+        //                 amount: $rootScope.invoiceArray[i].invoiceProducts[x].amount,
+        //                 status:$rootScope.invoiceArray[i].invoiceProducts[x].status,
+        //              });
+      }
+    }
+  
 
  var client = $objectstore.getClient("Settings12thdoor");
       client.onGetMany(function(data) {
@@ -101,41 +124,38 @@ for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
     $scope.showSave = true;
   }
   }
- 
 };
 
  if($state.current.name == 'copy') {
-        $scope.saveInvoiceB = true;
+      $scope.saveInvoiceB = true;
+      $rootScope.invoiceArray[0].invoiceRefNo =  $scope.refNo;
      }else if($state.current.name == 'estimateInvoice'){
       $scope.saveInvoiceB = true;
      }else{
         $scope.editInvoiceB = true;
+        $scope.payterm = true;
      }
-
-     // for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
-       console.log($rootScope.invoiceArray[0].termtype)
-     // };
-
-     
+    
 
 $scope.edit = function(updatedForm) {
          updatedForm.invoiceNo = updatedForm.invoiceNo.toString();
          for (var x = updatedForm.MultiDueDAtesArr.length - 1; x >= 0; x--) {
-       
-         if(updatedForm.MultiDueDAtesArr[x].paymentStatus == "Draft"){
+           $scope.status = updatedForm.MultiDueDAtesArr[x].paymentStatus; 
+        }
+       console.log($scope.status)  
+         if( $scope.status == "Draft"){
         
           var client = $objectstore.getClient("invoice12thdoorDraft");
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
          updatedForm.Startdate = $scope.Startdate;
-         updatedForm.termtype = $scope.termtype;
+         //updatedForm.termtype = $scope.termtype;
          updatedForm.duedate = $scope.duedate;
          updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
           $scope.systemMessage.push({text:"The Invoice was Edited by mr.Perera", done:false,  date:new Date()});
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
           };
-         //console.log(updatedForm);
          client.onComplete(function(data) {
             $mdDialog.show(
                $mdDialog.alert()
@@ -151,22 +171,37 @@ $scope.edit = function(updatedForm) {
          client.insert(updatedForm, {
             KeyProperty: "invoiceNo"
          });
-        }else{
-       
+        }else if($scope.status == "Cancelled"){
+          $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('Alert')
+               .content('You Cannot edit a cancelled invoice')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+            );
+        }else if($scope.status == "Deleted"){
+          $mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('Alert')
+               .content('You Cannot edit a deleted invoice')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+            );
+        }
+        else{
          var client = $objectstore.getClient("invoice12thdoor");
          //updatedForm.invoiceProducts = $rootScope.showprodArray.val;
          updatedForm.total = $scope.total;
          updatedForm.finalamount = $scope.famount;
-          //updatedForm.termtype = $scope.termtype;
           updatedForm.Startdate = $scope.Startdate;
          updatedForm.duedate = $scope.duedate;
          $scope.systemMessage.push({text:"The Invoice was Edited by mr.Perera", done:false,  date:new Date()});
           for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
            updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
           };
-         //console.log(updatedForm.invoiceProducts);
          client.onComplete(function(data) {
-           $state.go('view', {'invoiceno': updatedForm.invoiceRefNo});
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
@@ -176,13 +211,24 @@ $scope.edit = function(updatedForm) {
                .ok('OK')
                .targetEvent(data)
             );
+            $rootScope.invoiceArray.splice(0, 1);
+            invoiceDetails.setArray(updatedForm);
+            $state.go('view', {'invoiceno': updatedForm.invoiceRefNo});
          });
-         client.onError(function(data) {});
-         client.insert(updatedForm, {
-            KeyProperty: "invoiceNo"
+         client.onError(function(data) {
+          mdDialog.show(
+               $mdDialog.alert()
+               .parent(angular.element(document.body))
+               .title('')
+               .content('error updating')
+               .ariaLabel('Alert Dialog Demo')
+               .ok('OK')
+               .targetEvent(data)
+            );
          });
+         console.log(updatedForm)
+         client.insert(updatedForm, {KeyProperty: "invoiceNo"});
        }
-      }
     }
           $scope.calAMount = function(data) {
          $scope.Amount = 0;

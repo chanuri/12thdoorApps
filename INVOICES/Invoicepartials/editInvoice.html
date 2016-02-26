@@ -55,7 +55,7 @@
                        
                         <md-input-container flex >
                             <label>Payment Terms</label>
-                            <md-select ng-model="tdi.termtype" flex required/>
+                            <md-select ng-model="tdi.termtype" flex ng-disabled="payterm" required/>
                             <md-optgroup label="Terms type">
                                 <md-option value="DueonReceipt" ng-show"dueDtaesShow">Due on Receipt</md-option>
                                  <md-option value="Custom" >Custom</md-option>
@@ -213,7 +213,7 @@
                           <span style="display:none">{{CalculateTax()| currency}}</span>
                       </div>
                   </div>
-                   <div layout layout-sm="column" ng-repeat="tt in getTax track by $index" layout-margin 
+                   <div layout layout-sm="column" ng-repeat="tt in taxArr" layout-margin 
                    style="overflow:hidden;">
                    <!-- {{tt}} -->
                                 <div flex="5"></div>

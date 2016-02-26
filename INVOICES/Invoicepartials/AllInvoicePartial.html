@@ -15,7 +15,7 @@
 </div>
 <!-- md-virtual-repeat="tdi in TDinvoice -->
 <div  class="card_container" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch " ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
-<custome-progressbar invoice-obj="tdi"></custome-progressbar>
+
  <!-- ng-class="{'active': toggles[$index]}" -->
     <div class="collapse-card"ng-class="{ active: $active }" style="margin-left:20px">
 
@@ -57,7 +57,9 @@
                         
                         <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; " >
                                         Due Date. Multiple Due Dates
-                                        </span></div>
+                                        </span>
+                                        <custome-progressbar invoice-obj="tdi"></custome-progressbar>
+                                        </div>
 
                         <div layout-sm="column" ng-repeat="tt in tdi.MultiDueDAtesArr" ng-if="tdi.termtype != 'multipleDueDates'" style="margin-top:10px;" flex>
                         <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">

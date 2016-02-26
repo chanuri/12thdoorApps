@@ -365,12 +365,22 @@ angular
 
       //pops a dialog box which enble the user to add Multiple du dates
       $scope.MultiDuDates = function(data) {
+        if($rootScope.famount == 0){
+                  $mdDialog.show(
+                   $mdDialog.alert()
+                   .parent(angular.element(document.body))
+                   .title('Sorry')
+                   .content('Please add a line item')
+                   .ariaLabel('Alert Dialog Demo')
+                   .ok('OK')
+                   .targetEvent(data)
+                );
+                }else{
          $scope.showdate = true;
          $scope.TDinvoice.termtype = "multipleDueDates";
           $scope.TDinvoice.duedate = null;
           $scope.showPercentage = false;
             $rootScope.showmsg = false;
-
 
             $mdDialog.show({
                templateUrl: 'Invoicepartials/MultipleDuedates.html',
@@ -380,6 +390,7 @@ angular
                $scope.newfamount = angular.copy($rootScope.famount)
                 $scope.editDueDates = false;
                 $scope.DueDateprice = 0;
+
 
                   $scope.testarr = [{
                      duedate: '',
@@ -417,7 +428,6 @@ angular
                   $scope.addItem = function() {
                     $scope.arrr = [];
                     $scope.perCount = 0;
-                    // $scope.numbers = 0;
                        $scope.focus = 0;
                     for(i=0; i<=$scope.testarr.length - 1; i++){
                       $scope.perCount += parseInt($scope.testarr[i].percentage);
@@ -582,6 +592,7 @@ angular
                   }
                }
             })
+            }
          }
 
 //---------------------------Delete added products-----------------------------------------
@@ -596,7 +607,7 @@ angular
       $scope.addproduct = function(ev) {
           $rootScope.taxType = angular.copy($scope.AllTaxes);
           $rootScope.AllUnitOfMeasures = angular.copy($scope.UOM)
-          //$rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
+          $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
           $rootScope.discounts = angular.copy($scope.dis);
           $rootScope.DisplayTaxes =  angular.copy($scope.ShowTaxes); 
           $rootScope.BaseCurrency1 = angular.copy($scope.BaseCurrency)  
@@ -616,8 +627,8 @@ angular
                 $scope.showPrice = false;
                  $scope.showQuantity = false;
                  $scope.showProduct = false;
-
-                if($rootScope.discounts == "Individual Items" && $rootScope.discounts==true){
+                 console.log($rootScope.Showdiscount)
+                if($rootScope.discounts == "Individual Items" && $rootScope.Showdiscount == true){
                 $scope.displayDiscountLine = true;
               }
 
@@ -1355,26 +1366,19 @@ angular
         
          $scope.Discount = 0;
          if($scope.dis == "SubTotal Items" ){
-            $scope.finalDisc = parseInt($scope.total*$scope.TDinvoice.fdiscount/100)
+            $scope.finalDisc = parseInt(($scope.salesTax+$scope.total)*$scope.TDinvoice.fdiscount/100)
          }else if ($scope.dis == "Individual Items" ){
            $scope.finalDisc = 0;
        }
        return $scope.finalDisc;
-       $scope.CalculateTax();
       }
 
       $scope.CalculateTax = function() {
          $scope.salesTax=0;
-         $scope.tt = 0;
-
-         if($scope.dis == "SubTotal Items" ){
-            for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
-          $scope.salesTax += parseInt(($scope.total - $scope.finalDisc)+($rootScope.taxArr[i].rate/100));
+         for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
+            $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
+            $scope.salesTax = tt;
           }
-         }else if ($scope.dis == "Individual Items" ){
-           $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
-       }
-         
            return $scope.salesTax;
       }
      

@@ -13,7 +13,7 @@
             <md-content flex>
                 <div layout layout-sm="column" layout-margin  >
                    <section-title title="Customer Details"> </section-title>
-                    <md-autocomplete flex="67" required="" 
+                    <md-autocomplete flex="70" required="" 
                     md-input-name="autocompleteField"
                          md-no-cache="ctrl.noCache" 
                          md-selected-item="$root.selectedItem1" 
@@ -58,11 +58,11 @@
                 <div layout layout-sm="column" layout-margin>
                     <section-title> </section-title>
                      
-                    <md-input-container flex="67" ng-show="Billingaddress">
+                    <md-input-container flex="70" ng-show="Billingaddress">
                         <label>Billing Address</label>
                         <input  ng-model="$root.selectedItem1.BillingValue " aria-label="billing" ng-disabled="true"/>
                     </md-input-container>
-                    <md-input-container flex="67" ng-show="Shippingaddress" >
+                    <md-input-container flex="70" ng-show="Shippingaddress" >
                         <label>Shipping Address</label>
                         <input  ng-model="$root.selectedItem1.shippingValue" aria-label="shipping" ng-disabled="true"/>
                     </md-input-container>

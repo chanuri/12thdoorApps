@@ -15,15 +15,9 @@
             </div>
         </md-toolbar>
         <md-dialog-content style="width:850px;" >
-           <!--  {{pay}} -->
+          
             <div layout layout-sm="column" layout-margin >
-                <div flex="5" class="blankspace">
-                    <img src="img/material alperbert/avatar_tile_p_28.png" style="border-radius:20px"/>
-                </div>
-                <div flex="20" class="blankspace">
-                    <label style="font-weight:700">Payment Details</label>
-                </div>
-
+                <section-title title="Payment Details"> </section-title>
                 <md-datepicker ng-model="TDinvoice.date" md-placeholder="Enter date" required flex style="margin-top:25px; width:230px;"></md-datepicker>
                 
                     <md-input-container flex>
@@ -33,8 +27,7 @@
             </div>
 
             <div layout layout-sm="column" layout-margin>
-                <div flex="5" class="blankspace"></div>
-                <div flex="20" class="blankspace"></div>
+                <section-title> </section-title>
                 
                 <md-input-container flex>
                     <label>Amount Recieved</label>
@@ -47,8 +40,7 @@
                 </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
-                <div flex="5" class="blankspace"></div>
-                <div flex="20" class="blankspace"></div>
+                <section-title> </section-title>
                 
                 <md-input-container flex>
                     <label>Comment</label>

@@ -482,40 +482,66 @@ $scope.cancelStatus = function(obj, ev) {
             $rootScope.correctArr = [];
             $rootScope.multiTax = [];
                $rootScope.total = 0;
-           // for(i=0; i<= $rootScope.fullArr.val.length-1; i++){
+                $rootScope.compoundcal=[];
+                $rootScope.calculateCompound = [];
+                $rootScope.falseComp = [];
+                $rootScope.trueComp = [];
+
+            if(obj.tax != null){
             if(obj.tax.type == "individualtaxes"){
+              if(obj.tax.rate == 0){
+              }else{
                $rootScope.taxArr.push({
                  taxName: obj.tax.taxname,
                  rate: obj.tax.rate,
-                 salesTax: parseInt(obj.amount*obj.tax.rate/100)
+                 salesTax: parseInt(obj.amount*obj.tax.rate/100),
+                 compoundCheck: obj.tax.compound
                })
+             }
                }else if(obj.tax.type == "multipletaxgroup"){
-                  for (var i = obj.tax.individualtaxes.length - 1; i >= 0; i--) {
-                     $rootScope.multiTax.push(obj.tax.individualtaxes[i].rate); 
-                  }; 
+                for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
 
-                   angular.forEach($rootScope.multiTax, function(tdIinvoice) {
-                     $rootScope.total += parseInt(obj.amount*tdIinvoice/100)
+                  if(obj.tax.individualtaxes[x].compound == false ){
+                    $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
+                  }else if(obj.tax.individualtaxes[x].compound == true){
+                    $rootScope.trueComp.push(obj.tax.individualtaxes[x])
+                    $rootScope.compountTrue = $rootScope.trueComp.sort(function(a,b){
+                      return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
+                    });
+                  }
+                }
+                  $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
+                  var tcopmAmount = 0;
+                  var fcompAmount = 0;
+                  var finalCal = 0;
+                  for (var y = 0;  y <= $rootScope.calculateCompound.length - 1; y++) {
+                  
+                    if($rootScope.calculateCompound[y].compound == false){
+                       fcompAmount= parseInt(obj.amount*obj.tax.individualtaxes[y].rate/100)
+                      $rootScope.total = fcompAmount;
+                    }
+                    else if(obj.tax.individualtaxes[y].compound == true){
+                       tcopmAmount = parseInt(fcompAmount + obj.amount);
+                         finalCal = (parseInt(finalCal+tcopmAmount)* obj.tax.individualtaxes[y].rate/100);
+                          $rootScope.total = finalCal;
+                      }
+                     if($rootScope.calculateCompound[y].rate == 0){
 
-                     return $rootScope.total
-                   })
-
-
-                      console.log($rootScope.total)
-
-                   $rootScope.taxArr.push({
-                       taxName: obj.tax.taxname,
-                       rate:$rootScope.multiTax ,
-                       salesTax: $rootScope.total
+                     }else{
+                     $rootScope.taxArr.push({
+                      taxName:$rootScope.calculateCompound[y].taxname,
+                      rate:$rootScope.calculateCompound[y].rate,
+                      salesTax: $rootScope.total,
+                      compoundCheck: $rootScope.calculateCompound[y].compound
                      })
-                   console.log( $rootScope.taxArr)
+                     }      
+                  }
                }
-            
             $rootScope.taxArr = $rootScope.taxArr.sort(function(a,b){
-                                     return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
-                                 });
+              return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                 });
+
             if($rootScope.taxArr.length > 1){
-            
                for(l=0; l<=$rootScope.taxArr.length-1; l++){
                   if ($rootScope.taxArr[l+1]) {
 
@@ -523,26 +549,25 @@ $scope.cancelStatus = function(obj, ev) {
                         var sumSalesTax = 0;
                         var txtName = $rootScope.taxArr[l].taxName;
                         var rate = $rootScope.taxArr[l].rate;
-
+                        var compound = $rootScope.taxArr[l].compoundCheck;
                         sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l+1].salesTax;
+
                         $rootScope.taxArr.splice(l,2);
-                        //$rootScope.taxArr.splice(l+1,1);
                         $rootScope.taxArr.push({
                            taxName : txtName,
                            rate : rate,
-                           salesTax : sumSalesTax
+                           salesTax : sumSalesTax,
+                           compoundCheck: compound
                         })
-                        
                         $rootScope.taxArr.sort(function(a,b){
                             return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
                         });
-                      
                      };
                   };                  
                }
-               console.log($rootScope.taxArr)
             }
-        }    
+          }
+        },  
 
       }
    })

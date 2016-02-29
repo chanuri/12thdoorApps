@@ -61,8 +61,19 @@ rasm.controller('AppCtrlAddSuppliers', function($scope, $state, $objectstore, $l
               'OK')
             .targetEvent(data));
         });
+        var result = document.getElementById("noteTxt").scrollHeight;
+        var height = angular.element(result);
+        $scope.supplier.notes = [];
+        var name  ="name" + ( $scope.supplier.notes.length + 1 ).toString();
+        $scope.supplier.notes.push({
+          note : $scope.notes,
+          height : height[0] + 'px;',
+          editable : false,
+          idName : name
+        });
         $scope.supplier.favoritestar = false;
         $scope.supplier.supplierid = "-999";
+        $scope.supplier.status = "Active";
         client.insert($scope.supplier, {
           KeyProperty: "supplierid"
         })

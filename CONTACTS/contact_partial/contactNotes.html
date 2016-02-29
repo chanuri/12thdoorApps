@@ -1,0 +1,44 @@
+<md-dialog style="width: 800px; overflow:hidden;resize: both;">
+   <md-toolbar modal-header style="height: 48px">
+      <div class="md-toolbar-tools" >
+         <h2>Customer Notes</h2>
+         <span flex></span>
+         <md-button class="md-icon-button" ng-click="closeDialog()">
+            <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+         </md-button>
+      </div>
+   </md-toolbar>
+  <div class="card-container" style="overflow-y:auto;">
+      <form style="width:100%">
+         <md-content flex>
+            <div layout layout-sm="column" layout-margin>
+            <ul flex>
+	            <li ng-repeat="item in noteArr" style="min-height:{{item.height}} width:100%" >
+	            	  <textarea id="{{item.idName}}"  ng-disabled="!item.editable" ng-model="item.note" style="min-height:{{item.height}}     background: white;width:88%;color: #A9A9A9; overflow:hidden;border: none; resize:none; margin-top:10px;"> </textarea>
+	            	   <md-button ng-hide="item.editable" type="button"   ng-click="item.editable = !item.editable" style="height:30px;" aria-label="change address" >
+                          <md-icon md-svg-icon="img/ic_edit_24px.svg" style="height:20px; width:20px;"></md-icon>
+                        </md-button>
+                         <md-button  ng-hide="item.editable" type="button"  ng-click="deleteNote($index,item)" style="height:30px;" aria-label="change address" >
+                          <md-icon md-svg-icon="img/ic_highlight_remove_24px.svg" style="height:20px; width:20px;"></md-icon>
+                        </md-button>
+
+                         <md-button ng-show="item.editable" type="button" ng-click="saveEditedNote(item)" style="height:30px;" aria-label="change address" >
+                          <md-icon md-svg-icon="img/ic_save_24px.svg" style="height:20px; width:20px;"></md-icon>
+                        </md-button>
+
+	            </li> 
+            </ul> 
+            </div> 
+         </md-content>
+      </form>
+   </div>
+     <footer>
+        <div class="md-actions" layout layout="row">         
+           <textarea flex id="noteTxt" ng-model="newNote" style="width:70%; resize: none; color: #A9A9A9;"  maxlength="200" > </textarea>
+           <md-button  flex="15" ng-click="addNewNote()" class="md-primary" >
+              Add
+           </md-button>
+            
+        </div>         
+     </footer>
+</md-dialog>

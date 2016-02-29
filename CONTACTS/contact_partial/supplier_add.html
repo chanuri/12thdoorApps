@@ -185,11 +185,17 @@
                <!--KEEP BLANK SPACE - ask why-->
                <md-input-container id="accContainer" flex >
                   <label>Fax</label>
-                  <input id="accNo" ng-model="supplier.Fax" required></input>
-               </md-input-container>
+                  <input id="accNo" ng-model="supplier.Fax" required>  
                <md-input-container id="accContainer" flex >
                   <label>Website</label>
-                  <input id="accNo" ng-model="supplier.Website" required></input>
+                  <input id="accNo" ng-model="supplier.Website" required> 
+               </md-input-container>
+            </div>
+            <div layout layout-sm="column" layout-margin>
+               <section-title title = "Optional Details"> </section-title>
+               <md-input-container flex>
+                  <label>Notes</label>
+                  <textarea id="noteTxt" maxlength="200" type="text" ng-model="notes"></textarea>  
                </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>

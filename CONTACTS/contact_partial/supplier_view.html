@@ -23,17 +23,22 @@
             <md-icon md-svg-icon="img/ic_check_box_24px.svg"></md-icon>
          </md-button>
       </div>
-      <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();">
+      <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();" style="margin-top: 1.4%;">
          <div layout-sm="row" flex>
             <div layout-sm="column" flex>
                <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>{{supplier.Name}}</b></span>
                <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{supplier.Email}}</b></span>
                <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-width:1px;"><b>{{supplier.CustomerFname}} {{supplier.CustomerLname}} </b></span>
-            </div>
-            <div layout-sm="column" style="margin-top:10px;" flex>
-               <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">Mobile {{supplier.Mobile}}</span>
-               <span style="padding-right: 15px; padding-left: 15px; border-right-style: solid; border-width:1px; font-size:13px;">City {{supplier.baddress.city}}</span>
-               <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">Country {{supplier.baddress.country}}</span>
+               <span style="padding-left: 16px; background-color: #339C38; margin-left: 16px; width:15%" ng-if="supplier.status == 'Active'">
+                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+                      <font color="white">{{supplier.status}}</font>
+                  </b>
+               </span>
+               <span style="padding-left: 16px; background-color: #212121; margin-left: 16px; width: 18%" ng-if="supplier.status == 'Inactive'">
+                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+                      <font color="white">{{supplier.status}}</font>
+                  </b>
+               </span>
             </div>
          </div>
       </div>
@@ -53,17 +58,44 @@
                      </md-button>
                   </md-menu-item>
                   <md-menu-item>
-                     <md-button ng-click="deleteSupplier(supplier,supplier.supplierid)">
+                   <md-menu>
+                     <md-button style="width:100%"  ng-click="$mdOpenMenu()">
                         <div layout="row">
-                           <p flex>Delete</p>
-                           <md-icon md-svg-icon="img/ic_delete_24px.svg"></md-icon>
+                           <p flex>new</p>
+                           <div flex="45"></div>
+                           <md-icon flex="33" layout="row" layout-align="start start" md-svg-icon="img/ic_keyboard_arrow_right_24px.svg"></md-icon>
+                        </div>
+                     </md-button>
+                     <md-menu-content width="4">
+                       <md-menu-item><md-button  >Document</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Spreadsheet</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Presentation</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Form</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Drawing</md-button></md-menu-item>
+                     </md-menu-content>
+                   </md-menu>
+                 </md-menu-item>
+                  </md-menu-item>
+                  <md-menu-item>
+                     <md-button ng-click="customerNotes(supplier)">
+                        <div layout="row">
+                           <p flex>Customer Notes</p>
+                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                         </div>
                      </md-button>
                   </md-menu-item>
-                  <md-menu-item >
-                     <md-button ng-click="">
+                  <md-menu-item ng-if="supplier.status == 'Active' ">
+                     <md-button ng-click="changeStatus(supplier)">
                         <div layout="row">
-                           <p flex>Print Request</p>
+                           <p flex>Inactive</p>
+                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                        </div>
+                     </md-button>
+                  </md-menu-item>
+                  <md-menu-item ng-if="supplier.status == 'Inactive' ">
+                     <md-button ng-click="changeStatus(supplier)">
+                        <div layout="row">
+                           <p flex>Active</p>
                            <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                         </div>
                      </md-button>

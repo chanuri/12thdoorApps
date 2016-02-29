@@ -1,6 +1,7 @@
 rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $location, $mdDialog, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast) {
 
   $scope.contact = {};
+
   $scope.contact["baddress"] = {
     city: "",
     country: "",
@@ -16,11 +17,27 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
     s_zip: ""
   };
 
+  $scope.emailExsist = false;
+
+  $scope.validateEmail = function(obj){
+    $scope.emailExsist = false;
+    var emailClient = $objectstore.getClient("contact12thdoor");
+    emailClient.onGetMany(function(data){
+      if (data.length > 0) {
+        console.log("exsist")
+        $scope.emailExsist = true;
+      }
+    });
+    emailClient.onError(function(data){
+
+    });
+    emailClient.getByFiltering("select Email from contact12thdoor where Email = '"+obj.Email+"'")
+  }
 
   $scope.showShipping = $scope.showShipping;
   $scope.showBilling = !$scope.showBilling;
   $scope.cb = false;
-  /*__________________________onChange_______________________________________*/
+
   $scope.onChange = function(cb) {
 
     $scope.contact.saddress["s_street"] = $scope.contact.baddress["street"];
@@ -38,37 +55,54 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
     }
   }
 
-  /*_________________________submit_____________________________________________*/
   $scope.submit = function() {
-      var client = $objectstore.getClient("contact12thdoor");
-      client.onComplete(function(data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          .content('Customer Registed Successfully Saved.')
-          .ariaLabel('Alert Dialog Demo')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      client.onError(function(data) {
-        $mdDialog.show(
-          $mdDialog.alert()
-          .parent(angular.element(document.body))
-          .content('There was an error saving the data.')
-          .ariaLabel('Alert Dialog Demo')
-          .ok('OK')
-          .targetEvent(data)
-        );
-      });
-      
-      $scope.contact.favoritestar = false;
-      $scope.contact.customerid = "-999";
-      client.insert($scope.contact, {
-        KeyProperty: "customerid"
-      })
+      if (!$scope.emailExsist) {
+          var client = $objectstore.getClient("contact12thdoor");
+          client.onComplete(function(data) {
+            $mdDialog.show(
+              $mdDialog.alert()
+              .parent(angular.element(document.body))
+              .content('Customer Registed Successfully Saved.')
+              .ariaLabel('Alert Dialog Demo')
+              .ok('OK')
+              .targetEvent(data)
+            );
+          });
+          client.onError(function(data) {
+            $mdDialog.show(
+              $mdDialog.alert()
+              .parent(angular.element(document.body))
+              .content('There was an error saving the data.')
+              .ariaLabel('Alert Dialog Demo')
+              .ok('OK')
+              .targetEvent(data)
+            );
+          });
 
-    }
+          var result = document.getElementById("noteTxt").scrollHeight;
+          var height = angular.element(result);
+
+          $scope.contact.notes = [];
+          var name  ="name" + ( $scope.contact.notes.length + 1 ).toString();
+          $scope.contact.notes.push({
+            note : $scope.notes,
+            height : height[0] + 'px;',
+            editable : false,
+            idName : name
+          });
+
+          $scope.contact.favoritestar = false;
+          $scope.contact.status = "Active";
+          $scope.contact.customerid = "-999";
+          $scope.contact.favouriteStarNo = 1;
+          $scope.contact.deleteStatus = false;
+          $scope.contact.todayDate = new Date();
+          
+          client.insert($scope.contact, {
+            KeyProperty: "customerid"
+          })
+      }
+  }
 
     // check whether object is empty or not 
     function isEmpty(obj) {

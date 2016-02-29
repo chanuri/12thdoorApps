@@ -21,18 +21,23 @@
             <md-icon md-svg-icon="img/ic_check_box_24px.svg"></md-icon>
          </md-button>
       </div>
-      <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();">
+      <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();" style="margin-top: 1.4%;">
          <div layout-sm="row" flex>
             <div layout-sm="column" flex>
                <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>   {{contact.Name}}</b></span>
                <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{contact.Email}}</b></span>
                <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-width:1px;"><b>{{contact.CustomerFname}} {{contact.CustomerLname}} </b></span>
-            </div>
-            <div layout-sm="column" style="margin-top:10px;" flex>
-               <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">Mobile {{contact.Mobile}}</span>
-               <span style="padding-right: 15px; padding-left: 15px; border-right-style: solid; border-width:1px; font-size:13px;">City {{contact.baddress.city}}</span>
-               <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">Country {{contact.baddress.country}}</span>
-            </div>
+               <span style="padding-left: 16px; background-color: #339C38; margin-left: 16px; width:15%" ng-if="contact.status == 'Active'">
+                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+                      <font color="white">{{contact.status}}</font>
+                  </b>
+               </span>
+               <span style="padding-left: 16px; background-color: #212121; margin-left: 16px; width: 18%" ng-if="contact.status == 'Inactive'">
+                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+                      <font color="white">{{contact.status}}</font>
+                  </b>
+               </span>
+            </div> 
          </div>
       </div>
       <div style="width:5%;padding-left:10%;">
@@ -58,10 +63,26 @@
                         </div>
                      </md-button>
                   </md-menu-item>
-                  <md-menu-item >
-                     <md-button ng-click="">
+                   <md-menu-item>
+                     <md-button ng-click="customerNotes(contact)">
                         <div layout="row">
-                           <p flex>Print Request</p>
+                           <p flex>Customer Notes</p>
+                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                        </div>
+                     </md-button>
+                  </md-menu-item>
+                  <md-menu-item ng-if="contact.status == 'Active' ">
+                     <md-button ng-click="changeStatus(contact)">
+                        <div layout="row">
+                           <p flex>Inactive</p>
+                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                        </div>
+                     </md-button>
+                  </md-menu-item>
+                  <md-menu-item ng-if="contact.status == 'Inactive' ">
+                     <md-button ng-click="changeStatus(contact)">
+                        <div layout="row">
+                           <p flex>Active</p>
                            <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                         </div>
                      </md-button>

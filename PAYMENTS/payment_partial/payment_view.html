@@ -48,7 +48,7 @@
       <div class="container">
          <div md-virtual-repeat-container style="height: {{viewPortHeight}};">
 
-            <div  class="card_container" md-virtual-repeat="payment in payments | filter:ctrl.searchText||undefined | orderBy: [prodSearch,latest]" ng-class="{'first_card_top_margin_one': $index == '0'}" style="padding-left:16px;">
+            <div  class="card_container" md-virtual-repeat="payment in payments | filter:ctrl.searchText||undefined | orderBy: [prodSearch,latest]" ng-class="{'first_card_top_margin_one': $index == '0'}" style="padding-left:32px;">
                <div class="collapse-card" ng-class="{'active': toggles[$index]}">
                   <!--START OF COLLAPSE CARD HEADING| filter:ctrl.actionSearchText||undefined-->
                   <div class="collapse-card__heading" layout="row" layout-align="start start" >

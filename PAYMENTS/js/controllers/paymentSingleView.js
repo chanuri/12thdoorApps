@@ -8,11 +8,11 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
 
         $scope.advancePaymentData = [];
 
-        var advanceClient = $objectstore.getClient("advancedPayment");
+        var advanceClient = $objectstore.getClient("advancedPayment12thdoor");
         advanceClient.onGetMany(function(data){
             $scope.viewPyamentArr[0].outStandingPayment = 0;
 
-            if (data) {
+            if (data.length > 0) {
                 $scope.advancePaymentData = data[0];
                 $scope.viewPyamentArr[0].outStandingPayment = data[0].uAmount;
             }
@@ -22,7 +22,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         advanceClient.onError(function(data){
             console.log("error retriveing advance payment data");
         });
-        advanceClient.getByFiltering("select * from advancedPayment where customer = '"+$scope.viewPyamentArr[0].customer+"'");
+        advanceClient.getByFiltering("select * from advancedPayment12thdoor where customer = '"+$scope.viewPyamentArr[0].customer+"' and status = 'Active'");
 
     });
     client.onError(function(data) {
@@ -47,7 +47,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         client.getByFiltering("select * from paymentComment where paymentid = '"+Pcode+"'")
     }
 
-    function reverseInvoice(item,callback){        
+    function reverseInvoice(item,type,callback){        
         var status = "error";
         var invoiceData = $objectstore.getClient("invoice12thdoor");
         invoiceData.onGetMany(function(data){
@@ -61,14 +61,19 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
                                 // if ( parseInt(data[j].MultiDueDAtesArr[k].dueDateprice) == parseInt(item.paidInvoice[i].amount) ){
                                     if ( parseInt(data[j].MultiDueDAtesArr[k].dueDateprice) != parseInt(item.paidInvoice[i].balance) ) {
                                         var diff = parseInt(item.paidInvoice[i].amount) - parseInt(item.paidInvoice[i].balance);
-                                        data[j].MultiDueDAtesArr[k].balance = parseInt(data[j].MultiDueDAtesArr[k].balance) + diff; 
+                                        data[j].MultiDueDAtesArr[k].balance = parseInt(data[j].MultiDueDAtesArr[k].balance) + diff;
+                                        
+                                        if (parseInt(data[j].MultiDueDAtesArr[k].balance) == parseInt(data[j].MultiDueDAtesArr[k].dueDateprice)) {
+                                            data[j].MultiDueDAtesArr[k].paymentStatus = "Unpaid";
+                                        }else if (parseInt(data[j].MultiDueDAtesArr[k].balance) != parseInt(data[j].MultiDueDAtesArr[k].dueDateprice)) {
+                                            data[j].MultiDueDAtesArr[k].paymentStatus = "Partially Paid";
+                                        }
                                                                          
                                     }else{
                                         data[j].MultiDueDAtesArr[k].balance = 0;
                                     }
-                                    data[j].MultiDueDAtesArr[k].paymentStatus = "Unpaid";
-                                    $scope.invoiceStatus = true;  
-                                // }
+                                    $scope.invoiceStatus = true;
+                                    addToLegger(type,data[j],diff)
                             }
                         }
                     }
@@ -123,9 +128,22 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         deletePayment.deleteSingle(item.paymentid,"paymentid");
     }
 
-    function updateAdvancePayment(item){
+    function updateAdvancePayment(item,status){
+        $scope.advenceFullArr = [];
+        $scope.advancePaymentOld = {}
+        $scope.advancePaymentOld = angular.copy($scope.advancePaymentData)        
+        $scope.advancePaymentData.uAmount = parseInt($scope.advancePaymentData.uAmount) + parseInt(item.total);
+        $scope.advancePaymentData.advancedPayment_code = "-999";
+        
+        if (status == "cancel") {
+           $scope.advancePaymentOld.status = "cancel" 
+        }else if (status == "delete") {
+            $scope.advancePaymentOld.status = "delete"
+        }
+        $scope.advenceFullArr.push($scope.advancePaymentOld)
+        $scope.advenceFullArr.push($scope.advancePaymentData) 
 
-        var updateaAdvancePayment = $objectstore.getClient("advancedPayment");
+        var updateaAdvancePayment = $objectstore.getClient("advancedPayment12thdoor");
         updateaAdvancePayment.onComplete(function(data){
             $state.go("home");
         });
@@ -134,8 +152,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
             console.log("error updating advance payment ")
         });
 
-        $scope.advancePaymentData.uAmount = parseInt($scope.advancePaymentData.uAmount) + parseInt(item.total);
-        updateaAdvancePayment.insert($scope.advancePaymentData, {KeyProperty: "advancedPayment_code"})
+        updateaAdvancePayment.insertMultiple($scope.advenceFullArr,"advancedPayment_code")
     }
 
     $scope.deletePayment = function(item){
@@ -153,17 +170,47 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         });
     }
 
+    function addToLegger(type,arr,amount){
+        var desc = type +" payment "
+        var Name = arr.Name +" "+ arr.Email
+
+        var leggerObj = {            
+            "AccountNo": arr.customerid,
+            "Amount": amount,
+            "Date": new Date(),
+            "Description": desc,
+            "ID": "-999",
+            "InvoiceRefID": arr.invoiceNo,
+            "Name": Name,
+            "RefID": $stateParams.paymentid,
+            "Type": "Receipt"
+        }
+
+        var leggerClient = $objectstore.getClient("leger12thdoor");
+        leggerClient.onComplete(function(data) {
+            console.log("successfully legger added '"+data.Data[0].ID+"'");
+        });
+        leggerClient.onError(function(data) {
+            console.log("error updating legger");
+        });
+        console.log(leggerObj.InvoiceRefID)
+        leggerClient.insert(leggerObj, {
+            KeyProperty: "ID"
+        });
+    }
+
     function deleteFunc(item){
         reverseInvoice(item,function(reverseStatus){
 
-            rollbackInvoicePayment(item,reverseStatus);
+            rollbackInvoicePayment(item,"delete",reverseStatus);
             function rollbackInvoicePayment(item,reverseStatus){
                 if(reverseStatus = "save"){
                     removePayment(item,function(status){
+
                         rollbackremovePayment(item,status);
                         function rollbackremovePayment(item,status){
                             if (status == "save") {
-                                updateAdvancePayment(item);  
+                                updateAdvancePayment(item,"delete");  
                             }else if (status == "error") {
                                 rollbackremovePayment(item,status);
                             }
@@ -178,7 +225,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
 
     $scope.cancelPayment = function(item){
         item.paymentStatus = "Cancelled";
-        reverseInvoice(item,function(reverseStatus){
+        reverseInvoice(item,"cancel",function(reverseStatus){
 
             rollbackInvoicePayment(item,reverseStatus);
             function rollbackInvoicePayment(item,reverseStatus){
@@ -188,8 +235,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
                         rollbackSavePayment(item,status);
                         function rollbackSavePayment(item,status){
                             if (status == "save") {
-                            updateAdvancePayment(item);
-
+                                updateAdvancePayment(item,"cancel");
                             }else if (status == "error") {
                                 rollbackSavePayment(item,status);
                             };

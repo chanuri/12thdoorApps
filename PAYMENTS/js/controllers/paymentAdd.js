@@ -352,15 +352,16 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     $scope.checkItem = function(index, invo) { //outstanding invoice check box
             if (invo.checked) { //if checkbox is checked 
               
-               
-                if ($scope.fullArr[index].invono == $scope.fullArr[index +1].invono) {
-                    $scope.fullArr[index + 1].checkDisable = false;
+                if ( $scope.fullArr[index + 1]) {                    
+                    if ($scope.fullArr[index].invono == $scope.fullArr[index +1].invono) {
+                        $scope.fullArr[index + 1].checkDisable = false;
+                    }
                 }
                 if ($scope.fullArr[index -1]) {                    
                     if ($scope.fullArr[index].invono == $scope.fullArr[index -1].invono) {
                         $scope.fullArr[index - 1].inputDisable = true;
                     }
-                };
+                }
 
                 // $scope.payment.total = 0;
                 invo.amount = 0;

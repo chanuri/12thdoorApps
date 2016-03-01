@@ -404,25 +404,31 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                     }
                 }
                 
-                for(o=index; o<=$scope.fullArr.length-1; o++){                      
+                for(o=index; o<=$scope.fullArr.length-1; o++){ 
 
-                    if ($scope.fullArr[o].invono == $scope.fullArr[o +1].invono) {
-                       
-                        if ($scope.fullArr[o + 1].checked) {                            
-                            $scope.fullArr[o + 1].checked = false;
-                            $scope.fullArr[o + 1].checkDisable = true;
-                            $scope.fullArr[o + 1].inputDisable = true;
-                            reverseCheckItem(o);
-                        }else{
-                            reverseCheckItem(o);
-                            $scope.fullArr[o + 1].checkDisable = true;
-                            break;
-                        }
+                    if ($scope.fullArr[o+1]) {
+                        if ($scope.fullArr[o].invono == $scope.fullArr[o +1].invono) {                       
+                            if ($scope.fullArr[o + 1].checked) {                            
+                                $scope.fullArr[o + 1].checked = false;
+                                $scope.fullArr[o + 1].checkDisable = true;
+                                $scope.fullArr[o + 1].inputDisable = true;
+                                reverseCheckItem(o);
+                            }else{
+                                reverseCheckItem(o);
+                                $scope.fullArr[o + 1].checkDisable = true;
+                                break;
+                            }
 
-                    }else if ($scope.fullArr[o].invono != $scope.fullArr[o +1].invono){
+                        }else if ($scope.fullArr[o].invono != $scope.fullArr[o +1].invono){
+                            reverseCheckItem(o);
+                            break; 
+                        }  
+                    }else{
                         reverseCheckItem(o);
                         break; 
                     }                    
+
+                                      
                 }              
               
                 function reverseCheckItem(o){

@@ -517,9 +517,9 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             $scope.advancedPayment.uAmount = $scope.payment.uAmount;
         }
 
-        if ((parseInt($scope.payment.namoun) == parseInt($scope.payment.total)) || parseInt($scope.payment.namoun) == 0){
+        if ((parseInt($scope.payment.namoun) == parseInt($scope.payment.total)) || parseInt($scope.nAmount) == 0){
             savePaymentToObjectstore(function(){
-                uInvoice(function(data){
+                updateInvoice(function(){
                     uploadImage();
                 });//update invoice
             }); // save payment

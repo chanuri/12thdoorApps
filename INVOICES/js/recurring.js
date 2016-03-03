@@ -784,11 +784,7 @@ var client = $objectstore.getClient("Settings12thdoor");
          $scope.TDinvoice.UploadImages = {
             val: []
          };
-         if($scope.TDinvoice.saveOption == "saveAsPending"){
-          $scope.invoicDEtails.status = "Pending";
-         }else{
-          $scope.invoicDEtails.status = "Unpaid";
-         }
+         
          
          $scope.invoicDEtails.favourite = false;
          $scope.invoicDEtails.favouriteStarNo = 1;
@@ -821,20 +817,22 @@ var client = $objectstore.getClient("Settings12thdoor");
               text: "Invoice was created by Mr.dddd",
               date:new Date()
          });
+
+          if($scope.TDinvoice.saveOption == "saveAsPending"){
+          $scope.status = "Pending";
+         }else{
+          $scope.status = "Unpaid";
+         }
+         
          $scope.invoicDEtails.MultiDueDAtesArr= [{
                            DueDate: $scope.invoicDEtails.duedate,
                            Percentage: "0",
                            dueDateprice: $rootScope.famount,
-                           paymentStatus:'Unpaid',
+                           paymentStatus:$scope.status,
                            balance :$rootScope.famount
                         }];
 
-          $scope.invoicDEtails.ProgressBarDetails = $scope.ProgressBar;
          
-          $scope.ProgressBar = {PaymentScheme:"",PaymentSchemeActive:"",PaymentSchemeData:[]};
-         $scope.ProgressBar.PaymentScheme = "Recurring Profile";
-          $scope.ProgressBar.PaymentSchemeActive= "false";
-          $scope.ProgressBar.PaymentSchemeData.push($scope.invoicDEtails.MultiDueDAtesArr);
 
          if($rootScope.prodArray.val.length >0){
          $scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();

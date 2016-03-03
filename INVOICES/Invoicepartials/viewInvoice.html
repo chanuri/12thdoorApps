@@ -79,14 +79,14 @@
                                 <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:10px;" ></md-icon>
                             </md-button>
                             <md-menu-content width="4">
-                            <md-menu-item ng-repeat="tt in item.MultiDueDAtesArr" ng-if="tt.paymentStatus != 'Paid'">
+                            <md-menu-item >
                                     <md-button href  ng-click="enterPayment(item)">
                                         <p>Enter Payment</p>
                                         <md-icon href md-menu-align-target ></md-icon>
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item >
-                                    <md-button href ng-click="EditInvoice(item)">
+                                    <md-button href ng-show="showEdit" ng-click="EditInvoice(item)">
                                         <p>Edit</p>
                                         <md-icon href md-menu-align-target ></md-icon>
                                     </md-button>

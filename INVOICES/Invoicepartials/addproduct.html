@@ -27,7 +27,7 @@
             </md-item-template>
             <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
                    <div ng-message="ng-required="true"" ng-show="showProduct">
-                       <b>Enter A line Item </b>
+                       <b>Please enter a product or service </b>
                    </div> 
                </div>
          </md-autocomplete >
@@ -39,7 +39,7 @@
             <input type="number" ng-model="qty" ng-change="setSelectedClient($root.searchTextt)" ng-required="true"/>
             <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
                    <div ng-message="ng-required="true"" ng-show="showQuantity">
-                       <b>Please Enter Quantity </b>
+                       <b>Please enter a quantity </b>
                    </div> 
                </div>
          </md-input-container>
@@ -75,6 +75,7 @@
          <md-input-container ng-show="displayDiscountLine"  flex>
             <label>Discount</label>
             <input type="text" ng-model="discount" />
+            <md-icon md-svg-src="img/disc.svg"  md-ink-ripple style="margin-left:-30px;margin-top:-5px;" ></md-icon>
          </md-input-container>
          <div flex ng-repeat="pim in promoItems" ng-show="$root.DisplayTaxes">
             <md-input-container flex style=" margin-top:2px;">

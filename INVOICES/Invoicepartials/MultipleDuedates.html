@@ -26,6 +26,7 @@
                                         <md-input-container flex style=" padding-left:5px;">
                                             <label>Percentage</label>
                                             <input  ng-model="cn.percentage" id="{{cn.uniqueKey}}" ng-change="DueAmount(cn,$index)" >
+                                            <md-icon md-svg-src="img/disc.svg"  md-ink-ripple style="margin-left:-30px;margin-top:9px;" ></md-icon>
                                                 <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
                                                     <div ng-message="required" ng-show="showPercentage">
                                                         <b>percentage is exceeded</b>

@@ -1,4 +1,34 @@
- rasm.factory('invoiceDetails', function($rootScope) {
+
+rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
+
+    var userName = $auth.getSession()
+    this.newActivity = function(ActivityTxt,pCode,callback){
+        var txt = ActivityTxt + userName;
+        
+        var activityObj = {
+            UserName : userName,
+            TodayDate : new Date(),
+            Comment : txt,
+            payment_code :pCode,
+            textareaHeight : '30px;',
+            activity_code : "-999",
+            type : "activity"
+        };
+
+        var activityClient = $objectstore.getClient("paymentActivity");
+        activityClient.onComplete(function(data){
+            console.log("activity Successfully added")
+            callback("success")
+        });
+        activityClient.onError(function(data){
+            console.log("error Adding new activity")
+            callback("error")
+        });
+        activityClient.insert(activityObj, {KeyProperty:'activity_code'})
+    }
+}]);
+
+rasm.factory('invoiceDetails', function($rootScope) {
     $rootScope.invoiceArray = [];
     return {
         setArray: function(newVal) {

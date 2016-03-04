@@ -1,6 +1,9 @@
 rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $stateParams,$state,$mdToast) {
-    console.log($stateParams.paymentid)
+ 
     $scope.viewPyamentArr = [];
+    $scope.progressBar = false;
+
+
     var client = $objectstore.getClient('payment');
     client.onGetOne(function(data) {
         $scope.viewPyamentArr = [];
@@ -34,12 +37,15 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         $scope.viewPyamentArr[0].Comments = [];
         var client = $objectstore.getClient("paymentComment");
         client.onGetMany(function(data){
-            if (data) {
+            // if (data) {
 
-                $scope.viewPyamentArr[0].Comments = data.sort(function(a,b){
-                  return new Date(b.TodayDate) - new Date(a.TodayDate);
-                });
-            };          
+            //     $scope.viewPyamentArr[0].Comments = data.sort(function(a,b){
+            //       return new Date(b.TodayDate) - new Date(a.TodayDate);
+            //     });
+            // };
+            if (data) {
+                loadAllActivities(Pcode,data);
+            };           
         });
         client.onError(function(data){
             console.log("error Loading comments");
@@ -72,6 +78,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
                                     }else{
                                         data[j].MultiDueDAtesArr[k].balance = 0;
                                     }
+                                    
                                     $scope.invoiceStatus = true;
                                     addToLegger(type,data[j],diff)
                             }
@@ -87,14 +94,28 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
                         client.onError(function(data) {
                             console.log("error updating invoice");
                             status = "error";
+                            $scope.progressBar = false;
                         });
 
                         client.insert(data[j], {
                             KeyProperty: "invoiceNo"
                         });  
-                    }; 
+                    }
                 }
             }
+            if ($scope.leggerFullArr.length>0) {
+
+                var leggerClient = $objectstore.getClient("leger12thdoor");
+                leggerClient.onComplete(function(data) {
+                    console.log("successfully legger added '"+data.Data[0].ID+"'")
+                });
+                leggerClient.onError(function(data) {
+                    console.log("error updating legger")
+                    $scope.progressBar = false;
+                }); 
+                leggerClient.insertMultiple($scope.leggerFullArr,"ID");
+            }
+
             callback(status);
         });
         invoiceData.onError(function(data){
@@ -112,6 +133,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         });
         updatePayment.onError(function(data){
             callback("error");
+            $scope.progressBar = false;
         });
         updatePayment.insert(item, {KeyProperty: "paymentid"})
     }
@@ -124,6 +146,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         deletePayment.onError(function(data){
             console.log("error deleting payment");
             callback("error");
+            $scope.progressBar = false;
         });
         deletePayment.deleteSingle(item.paymentid,"paymentid");
     }
@@ -150,6 +173,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
 
         updateaAdvancePayment.onError(function(data){
             console.log("error updating advance payment ")
+            $scope.progressBar = false;
         });
 
         updateaAdvancePayment.insertMultiple($scope.advenceFullArr,"advancedPayment_code")
@@ -170,6 +194,8 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         });
     }
 
+    $scope.leggerFullArr = [];
+
     function addToLegger(type,arr,amount){
         var desc = type +" payment "
         var Name = arr.Name +" "+ arr.Email
@@ -186,20 +212,12 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
             "Type": "Receipt"
         }
 
-        var leggerClient = $objectstore.getClient("leger12thdoor");
-        leggerClient.onComplete(function(data) {
-            console.log("successfully legger added '"+data.Data[0].ID+"'");
-        });
-        leggerClient.onError(function(data) {
-            console.log("error updating legger");
-        });
-        console.log(leggerObj.InvoiceRefID)
-        leggerClient.insert(leggerObj, {
-            KeyProperty: "ID"
-        });
+        $scope.leggerFullArr.push(leggerObj)      
     }
 
     function deleteFunc(item){
+
+        $scope.progressBar = true;
         reverseInvoice(item,function(reverseStatus){
 
             rollbackInvoicePayment(item,"delete",reverseStatus);
@@ -225,6 +243,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
 
     $scope.cancelPayment = function(item){
         item.paymentStatus = "Cancelled";
+        $scope.progressBar = true;
         reverseInvoice(item,"cancel",function(reverseStatus){
 
             rollbackInvoicePayment(item,reverseStatus);
@@ -244,8 +263,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
                 }else if(reverseStatus = "error"){
                     rollbackInvoicePayment(item,reverseStatus);
                 }
-            }
-            
+            }            
         });
     }
     // check comment label 
@@ -269,7 +287,6 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
     $scope.CurrentCommentDelete = function(obj){
         obj = {};
         $scope.ProgressBar = false;
-
     }
     // comment delete 
     $scope.CommentDelete = function(item,index){
@@ -307,7 +324,9 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
     }
     // comment submit
     $scope.CommentObj = {};
-    $scope.ProgressBar = false;
+    $scope.ProgressBar = false;    
+    $scope.commentProgress = true;
+
     $scope.SaveComment = function(obj,event){
         var result = document.getElementById("CommentTxt").scrollHeight;
         $scope.Height = angular.element(result);
@@ -324,12 +343,13 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
                     TodayDate : TodayDate,
                     Comment : obj.Commentstxt,
                     paymentid : $scope.viewPyamentArr[0].paymentid,
-                    textareaHeight : $scope.Height[0] + 'px;'
+                    textareaHeight : $scope.Height[0] + 'px;',
+                    type : "comment",
+                    edited : false
                  };
                  obj.Commentstxt = ""; //make textare empty
                  $scope.CommentObj.comment_code = "-999";
                  $scope.ProgressBar = true;
-                 //console.log("enter working")
                 CommentToObjectstore($scope.CommentObj);
             };
 
@@ -341,10 +361,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
          var client = $objectstore.getClient("paymentComment");
          client.onComplete(function(data){
             //console.log(data.Data[0])
-             obj.comment_code = data.Data[0].ID;
-             //console.log(obj.TodayDate);
-             //obj.TodayDate = obj.TodayDate.replace(/^"(.*)"$/, '$1'); //remove double quates
-             //add new comment to array 
+             obj.comment_code = data.Data[0].ID; 
              if (!$scope.viewPyamentArr[0].Comments) {
                 $scope.viewPyamentArr[0].Comments = [];
                 $scope.viewPyamentArr[0].Comments.unshift(obj);
@@ -376,6 +393,29 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
          client.insert(obj, {
             KeyProperty: "comment_code"
          });
+
+    }
+
+
+    function loadAllActivities(Pcode,commentArr){
+        var ActivityClient = $objectstore.getClient("paymentActivity");
+        ActivityClient.onGetMany(function(data){
+            var fullArr = [];
+            if (data.length > 0) {
+                fullArr = commentArr.concat(data)
+            }else{
+                fullArr = data;
+            }
+
+            $scope.viewPyamentArr[0].Comments = fullArr.sort(function(a,b){
+              return new Date(b.date) - new Date(a.date);
+            });
+            $scope.commentProgress = false;
+        });
+        ActivityClient.onError(function(data){
+            console.log("error loading data");
+        }); 
+        ActivityClient.getByFiltering("select * from paymentActivity where payment_code = '"+Pcode+"'")
 
     }
 

@@ -47,10 +47,8 @@
    <div class="span12 ui-view-container">
       <div class="container">
          <div md-virtual-repeat-container style="height: {{viewPortHeight}};">
-
-            <div  class="card_container" md-virtual-repeat="payment in payments | filter:ctrl.searchText||undefined | orderBy: [prodSearch,latest]" ng-class="{'first_card_top_margin_one': $index == '0'}" style="padding-left:32px;">
+            <div  class="card_container" md-virtual-repeat="payment in payments | filter:ctrl.actionSearchText||undefined | orderBy: [prodSearch,latest]" ng-class="{'first_card_top_margin_one': $index == '0'}" style="padding-left:16px;">
                <div class="collapse-card" ng-class="{'active': toggles[$index]}">
-                  <!--START OF COLLAPSE CARD HEADING| filter:ctrl.actionSearchText||undefined-->
                   <div class="collapse-card__heading" layout="row" layout-align="start start" >
                      <div class="collapse-card_header_content_controls" style="width:5%;" flex="5" layout="column" layout-align="center start">
                         <div style="width:5%">
@@ -72,8 +70,6 @@
                            <md-icon md-svg-icon="img/ic_check_box_24px.svg"></md-icon>
                         </md-button>
                      </div>
-                     <!--END OF CARD CONTROLS SECTION-->
-                     <!--START OF CARD OPEN SECTION-->
                      <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="toggleOne($index);">
                         <div layout-sm="row" flex>
                            <div layout-sm="column" flex>
@@ -93,8 +89,6 @@
                            </div>
                         </div>
                      </div>
-                     <!--END OF CARD OPEN SECTION-->
-                     <!--START OF CARD CONTROLS SECTION-->
                      <div style="width:5%;padding-left:10%;">
                         <div class="collapse-card_header_content_controls" flex="10" style="width:5%;" layout="column" layout-align="center start">
                            <md-menu md-position-mode="target-right target">
@@ -130,27 +124,20 @@
                            </md-menu>
                         </div>
                      </div>
-                     <!--END OF CARD CONTROLS SECTION-->
                   </div>
-                  <!--END OF COLLAPSE CARD HEADING-->
-                  <!--START OF CARD BODY-->
                   <div class="collapse-card__body">
                      <md-content>
                         <form id="form" name="editForm">
                            <md-divider></md-divider>
                            <div layout-gt-sm="row">
-                              <!--KEEP BLANK SPACE - ask why-->
                               <section-title title="Payment Details"></section-title>
-                              <!--KEEP BLANK SPACE - ask why-->
                               <md-input-container  class="md-block" flex-gt-sm>
                                  <label>Customer</label>
                                  <input ng-model="payment.customer" required>
                               </md-input-container>
                            </div>
                            <div layout-gt-sm="row">
-                              <!--KEEP BLANK SPACE - ask why-->
                               <section-title></section-title>
-                              <!--KEEP BLANK SPACE - ask why-->
                               <md-input-container  class="md-block" flex-gt-sm >
                                  <label>Payment Number</label>
                                  <input ng-model="payment.paymentid" required>
@@ -160,9 +147,7 @@
                               </div>
                            </div>
                            <div layout-gt-sm="row">
-                              <!--KEEP BLANK SPACE - ask why-->
                               <section-title></section-title>
-                              <!--KEEP BLANK SPACE - ask why-->
                               <md-input-container  class="md-block" flex-gt-sm >
                                  <label>Payment method</label>
                                  <md-select  ng-model="payment.paymentMethod" flex>
@@ -176,24 +161,18 @@
                               </md-input-container>
                            </div>
                            <div layout-gt-sm="row">
-                              <!--KEEP BLANK SPACE - ask why-->
                               <section-title></section-title>
-                              <!--KEEP BLANK SPACE - ask why-->
                               <md-input-container  class="md-block" flex-gt-sm >
                                  <label>Bank Charges</label>
                                  <input ng-model="payment.bankCharges" required  ng-keyup="netAmount()">
                               </md-input-container>
                               <md-input-container  class="md-block" flex-gt-sm >
                                  <label>Comments</label>
-                                 <input ng-model="payment.comments">
+                                 <input ng-model="payment.paymentComments">
                               </md-input-container>
                            </div>
                            <div  layout-gt-sm="row">
                               <section-title></section-title>
-                              <!-- <div flex>
-                                 <label><b>Unapplied Advances :</b></label>
-                                 <span style="margin-left:1%;"><b>{{}}</b></span>
-                                 </div> -->
                               <div flex>
                                  <label><b>Total Available :</b></label>
                                  <span style="margin-left:1%;"><b>{{payment.total | currency}}</b></span>
@@ -231,9 +210,7 @@
                               </div>
                            </div>
                            <div layout-gt-sm="row" style="margin-top:-20px;"ng-repeat="invo in payment.paidInvoice">
-                              <!--KEEP BLANK SPACE - ask why-->
                               <section-title></section-title>
-                              <!--KEEP BLANK SPACE - ask why-->
                               <div style="padding-left:40px;" flex>
                                  <md-whiteframe class="md-whiteframe" layout="row" layout-sm="column" style="background-color:#ffffff; margin-top:12px;height:40px;">
                                     <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;width:101%;font-size:12px;">
@@ -252,7 +229,7 @@
                                        <div flex >
                                           <lable>{{invo.balance}}</lable>
                                        </div>
-                                       <div style="margin-top:-1.5%;"flex >
+                                       <div style="margin-top:-5%;"flex >
                                           <md-input-container flex md-no-float>
                                              <input placeholder="Paid Amount" ng-model="invo.paidAmount" ng-disabled="true">
                                           </md-input-container>
@@ -276,62 +253,42 @@
                                  </md-whiteframe>
                               </div>
                            </div>
-                           <!---END OF TABLE------>
                            <md-divider></md-divider>
 
-
-
-                           <div layout-gt-sm="row" ng-repeat="cust in payment.custField">
-                             
+                           <div layout-gt-sm="row" ng-repeat="cust in payment.custField">                             
                               <section-title ng-if="$index == '0'" title="Custom Fields"></section-title>
                               <section-title ng-if="$index != '0'" ></section-title>
 
                               <div  flex-gt-sm  style=" margin-top:35px;">
                                  <label><b>{{cust.lable}}</b></label>
-                               </div>
-
+                              </div>
                               <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'textBox'" class="md-block" flex-gt-sm >
                                  <label></label>
                                  <input ng-model="cust.value" ng-disabled="true">
                               </md-input-container>
-
                                <md-input-container style="margin-top: 18px;" ng-if="cust.type == 'selectBox'" class="md-block" flex-gt-sm >
-                                 <!-- <label></label>
-                                 <md-select  ng-model="cust.value" flex>
-                                    <md-optgroup label="">
-                                    <md-option ng-repeat="item in cust.fields" value="{{item}}">{{item}}</md-option>
-                                 </md-select> -->
                                   <label></label>
                                  <input ng-model="cust.value"  ng-disabled="true">
                               </md-input-container>
-
                               <div flex="40"></div>
                            </div>
                         </form>
                      </md-content>
                   </div>
-                  <!--END OF CARD BODY-->
                </div>
             </div>
          </div>
       </div>
    </div>
-<!--END OF COLLAPSE CARDS-->
-<md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
-   ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
-   <md-fab-trigger>
-      <div style="padding:0px;">
-         <md-button aria-label="menu" class="md-fab md-warn" style="background-color:red;">
-            <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
-         </md-button>
-      </div>
-   </md-fab-trigger>
-   <md-fab-actions>
-      <div style="padding:5px;">
-         <md-button aria-label="Google hangout" class="md-fab md-raised md-mini" ng-click="addCustomer()" style="background-color:red;">
-            <md-icon md-svg-src="img/ic_note_add_24px.svg"></md-icon>
-            <md-tooltip md-direction="left">Add Payment</md-tooltip>
-         </md-button>
-      </div>
-   </md-fab-actions>
-</md-fab-speed-dial>
+
+   <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+      ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;">
+      <md-fab-trigger>
+         <div style="padding:0px;">
+            <md-button aria-label="menu"  ng-click="addCustomer()" class="md-fab md-warn" style="background-color:red;">
+               <md-icon md-svg-src="img/ic_add_24px.svg" style="width:30px;" ></md-icon>
+            </md-button>
+         </div>
+      </md-fab-trigger>
+     
+   </md-fab-speed-dial>

@@ -273,17 +273,19 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                         }
                     }
                 }
-                loadAdvancePaymentDetails(name,function(status){                    
-                    $scope.allInvoiceArr = remove_duplicates($scope.allInvoiceArr); 
-                    sortInvoiceArr();
-                })
             }
+
+            loadAdvancePaymentDetails(name,function(status){                    
+                $scope.allInvoiceArr = remove_duplicates($scope.allInvoiceArr); 
+                sortInvoiceArr();
+            })
         });
         invoiceClient.onError(function(data) {
             console.log("Error retrieving invoice data");
         });
         invoiceClient.getByFiltering("select * from invoice12thdoor where Name = '"+name+"'");             
         
+       
     }
 
     function sortInvoiceArr(){

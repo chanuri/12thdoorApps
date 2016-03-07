@@ -1,5 +1,5 @@
-angular.module('mainApp').
-controller('editRecurring', function($scope, $mdDialog, $objectstore, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
+// angular.module('mainApp').
+app.controller('editRecurring', function($scope, $mdDialog, $objectstore, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
 
     for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
         if ($rootScope.invoiceArray[i].status == "Draft") {

@@ -6,21 +6,21 @@
 
 
 <div md-virtual-repeat-container style="height: {{viewPortHeight}};">
-    <div layout="column" class="progressCirculardemoBasicUsage" ng-app="MyApp">
+    <!-- <div layout="column" class="progressCirculardemoBasicUsage" >
 
         <div layout="row" layout-sm="column" layout-align="space-around">
             <md-progress-circular id="loader" md-mode="indeterminate"></md-progress-circular>
         </div>
 
-    </div>
+    </div> -->
     <!-- md-virtual-repeat="tdi in TDinvoice -->
-    <div class="card_container" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch " ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" ng-controller="viewCtrl as ctrl">
+    <div class="card_container" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:prodSearch " ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;" >
 
         <!-- ng-class="{'active': toggles[$index]}" -->
-        <div class="collapse-card" ng-class="{ active: $active }" style="margin-left:20px">
+        <div class="collapse-card" ng-class="{ active: $active }" style="margin-left:20px; ">
 
             <!--START OF COLLAPSE CARD HEADING-->
-            <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi);toggleOne($index)">
+            <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi);toggleOne($index)" style="height:100px;">
                 <!--  -->
                 <div style="width:56px;">
                     <div ng-hide="tdi.favourite" class="collapse-card_header_content_controls" ng-click="favouriteFunction(tdi)" layout="row">
@@ -57,9 +57,11 @@
                             <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">
                         Due Date. Multiple Due Dates
                         </span>
-                            <custome-progressbar invoice-obj="tdi"></custome-progressbar>
+                           
                         </div>
-
+                    <div layout-sm="column" ng-if="tdi.termtype == 'multipleDueDates'" style="margin-top:10px;" flex>
+                     <custome-progressbar invoice-obj="tdi"></custome-progressbar>
+                    </div>
                         <div layout-sm="column" ng-repeat="tt in tdi.MultiDueDAtesArr" ng-if="tdi.termtype != 'multipleDueDates'" style="margin-top:10px;" flex>
                             <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
                                      Balace Due {{tt.balance|currency}}
@@ -252,37 +254,28 @@
                                            <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;">
                                                         <div flex >
                                                             <span style="color:#808080;">{{item.quantity}} 
-                               
-                                                                
                                                                 <md-tooltip>Quantity</md-tooltip>
                                                             </span>
                                                             <span style="color:#808080;">{{item.ProductUnit}} 
-                               
-                                                                
                                                                 <md-tooltip>UOM</md-tooltip>
                                                             </span>
                                                         </div>
                                                         <div flex>
                                                             <span style="color:#808080;">{{item.price|currency:BaseCurrency}}
-                               
-                                                                
                                                                 <md-tooltip>Price</md-tooltip>
                                                             </span>
                                                         </div>
-                                                        <div flex >
+                                                        <div flex="5">
                                                             <span style="color:#808080;">{{item.discount}}%
-                               
-                                                                
                                                                 <md-tooltip>Discount</md-tooltip>
                                                             </span>
                                                         </div>
-                                                        <div flex="35" >
+                                                        <div flex="30" >
                                                             <span style="color:#808080;">{{item.tax.taxname}}
                                                             
                                                                 <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
                                                                 <md-tooltip>Tax</md-tooltip>
                                                                 <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
-                                                                <!-- <md-tooltip>Tax</md-tooltip> -->
                                                             </span>
                                                         </div>
                                                         <div flex >

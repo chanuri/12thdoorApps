@@ -194,7 +194,7 @@ angular
 
     function loadAll() {
 
-      var client = $objectstore.getClient("contact");
+      var client = $objectstore.getClient("contact12thdoor");
       client.onGetMany(function(data) {
         if (data) {
         $rootScope.customerNames = [];
@@ -562,7 +562,7 @@ angular
             }
 
             $scope.AddCus = function() {
-              var client = $objectstore.getClient("contact");
+              var client = $objectstore.getClient("contact12thdoor");
                        client.onComplete(function(data) {
                         $mdDialog.show(
                           $mdDialog.alert()

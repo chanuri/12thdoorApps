@@ -1,4 +1,5 @@
-angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $stateParams, uiInitilize, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
+// angular.module('mainApp')
+app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $stateParams, uiInitilize, $window, $rootScope, recurringInvoiceService, $filter, $state, $location, invoiceDetails, InvoiceService) {
         $scope.TDinvoice = [];
         $scope.newItems = [];
         $scope.show = false;
@@ -446,10 +447,10 @@ angular.module('mainApp').controller('ViewRecurring', function($scope, $mdDialog
         };
 
 
-    }) //END OF viewCtrl
+    }); //END OF viewCtrl
     //-----------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------
-    .factory('recurringInvoiceService', function($rootScope) {
+    app.factory('recurringInvoiceService', function($rootScope) {
         $rootScope.prodArray = {
             val: []
         };

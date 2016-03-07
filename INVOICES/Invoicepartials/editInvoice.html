@@ -41,9 +41,13 @@
                    
                    <section-title> </section-title>
                    
-                    <md-input-container flex >
+                    <md-input-container flex ng-show="ShoweditNo">
                         <label>Invoice No.</label>
                         <input ng-model="tdi.invoiceRefNo" ng-disabled="true">
+                        </md-input-container>
+                        <md-input-container flex ng-show="showCopyNo">
+                        <label>Invoice No.</label>
+                        <input ng-model="refNo" ng-disabled="true">
                         </md-input-container>
                         <div flex >
                              <md-datepicker ng-model="Startdate" md-placeholder="Due Date" ng-required="true" flex style="margin-top:25px; width:230px;"  ></md-datepicker>

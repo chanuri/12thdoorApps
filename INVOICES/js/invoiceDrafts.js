@@ -1,10 +1,13 @@
-angular.module('mainApp')
-    .controller('testCtrl', function($scope, $mdDialog, $rootScope, $objectstore, $uploader, $state, InvoiceService, item) {
+// angular.module('mainApp')
+    app.controller('testCtrl', function($scope, $mdDialog, $rootScope, $objectstore, $uploader, $state, InvoiceService, item) {
         $scope.settings = {};
         $scope.UnitOfMeasure = [];
         $scope.taxType = []
         $scope.AllTaxes = [];
         $scope.individualTax = [];
+         $scope.test = item;
+        $scope.prevTrax = angular.copy($scope.test)
+
         var client = $objectstore.getClient("Settings12thdoor");
         client.onGetMany(function(data) {
             if (data) {
@@ -33,7 +36,6 @@ angular.module('mainApp')
         client.onError(function(data) {});
         client.getByFiltering("*");
 
-        $scope.test = item;
 
         $scope.cancel = function() {
             $mdDialog.cancel();
@@ -57,7 +59,8 @@ angular.module('mainApp')
 
         $scope.edit = function(tst, index) {
             $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(tst), 1);
-
+            InvoiceService.ReverseTax($scope.prevTrax, index);
+            // console.log($scope.prevTrax);
             InvoiceService.setFullArr({
                 Productname: item.Productname,
                 price: item.price,
@@ -87,18 +90,389 @@ angular.module('mainApp')
 
             return $scope.Amount;
         }
-    })
+    });
     //----------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
-    .controller('paymentCtrl', function($scope, $mdDialog, $rootScope, pim) {
+    app.controller('paymentCtrl', function($scope, $mdDialog, $rootScope, pim, $objectstore) {
         $scope.pay = pim;
-        $scope.cancel = function() {
-            $mdDialog.cancel();
+        $scope.payment = {};
+        $scope.payment.paymentMethod = pim.paymentMethod
+        $scope.payment.namount = 0;
+        $scope.fullArr = [];
+        $scope.payment.paidInvoice = [];
+        $scope.payment.total = 0
+        $scope.advancedPayment = {};
+        $scope.submitVisible = true;
+        $scope.advancePayVisible = false;
+        $scope.AdvancefullArr = [];
+
+        $scope.confirmOk = function(){
+            if (parseInt($scope.payment.namount) > 0) {                
+                $scope.submitVisible = false;
+                $scope.advancePayVisible = true;
+            }else if(parseInt($scope.payment.namount) == 0){                
+                $scope.submitVisible = true;
+                $scope.advancePayVisible = false;
+                $scope.addPayement()
+            }else if(parseInt($scope.payment.namount) < 0){
+                //create toast
+            }
         }
-    })
+        $scope.cancelAdvance = function(){   
+            $scope.submitVisible = true;
+            $scope.advancePayVisible = false;          
+        }
+
+        console.log(pim)
+        $scope.cancel = function() {    $mdDialog.cancel()  }
+
+        for(j=0; j<= pim.MultiDueDAtesArr.length-1; j++){
+            if (pim.MultiDueDAtesArr[j].paymentStatus == 'Partially Paid' || pim.MultiDueDAtesArr[j].paymentStatus == 'Unpaid') {
+                if (pim.MultiDueDAtesArr[j].dueDateprice == "0") {
+                                    
+                    $scope.fullArr.push({
+                        invono: pim.invoiceNo,
+                        sdate: pim.Startdate,
+                        duedate: pim.MultiDueDAtesArr[j].DueDate,
+                        famount: pim.MultiDueDAtesArr[j].dueDateprice,
+                        mduedate: pim.MultiDueDAtesArr[j].DueDate,
+                        instalment: pim.finalamount,
+                        termtype: pim.termtype,
+                        checked: false,
+                        checkDisable : false,
+                        inputDisable : true
+                    });
+                }else{                                
+                    $scope.fullArr.push({
+                        invono: pim.invoiceNo,
+                        sdate: pim.Startdate,
+                        duedate: pim.MultiDueDAtesArr[j].DueDate,
+                        famount: pim.MultiDueDAtesArr[j].dueDateprice,
+                        mduedate: pim.MultiDueDAtesArr[j].DueDate,
+                        instalment: pim.MultiDueDAtesArr[j].balance,
+                        termtype: pim.termtype,
+                        checked: false,
+                        checkDisable : false,
+                        inputDisable : true
+                    });   
+                }
+            }
+        }
+
+        $scope.fullArr = $scope.fullArr.sort(function(a,b){
+            return new Date(a.duedate) - new Date(b.duedate)
+        })
+
+        if ($scope.fullArr.length > 1) {
+           for(i=1; i<=$scope.fullArr.length-1; i++){
+            $scope.fullArr[i].checkDisable = true;
+           }
+        }
+
+        $scope.checkItem = function(index,invo){
+            if (invo.checked) { //if checkbox is checked 
+              
+                if ( $scope.fullArr[index + 1]) {                    
+                    if ($scope.fullArr[index].invono == $scope.fullArr[index +1].invono) {
+                        $scope.fullArr[index + 1].checkDisable = false;
+                    }
+                }
+                if ($scope.fullArr[index -1]) {                    
+                    if ($scope.fullArr[index].invono == $scope.fullArr[index -1].invono) {
+                        $scope.fullArr[index - 1].inputDisable = true;
+                    }
+                }
+
+                invo.amount = invo.instalment;
+                $scope.payment.namount = parseInt($scope.payment.namount) - parseInt(invo.instalment);
+
+                $scope.payment.paidInvoice.push({ //array for insert paid invoices             
+                    amount: invo.amount,
+                    invono: invo.invono,
+                    sdate: invo.sdate,
+                    duedate: invo.mduedate,
+                    balance : "0",
+                    termtype : invo.termtype
+                });
+
+                invo.inputDisable = false;
+                $scope.payment.total = (parseInt($scope.payment.total) + parseInt(invo.amount))
+
+            } else if (!invo.checked) { //if checkbox is unchecked
+                for(o=index; o<=$scope.fullArr.length-1; o++){  
+                    if ($scope.fullArr[o-1]) {   
+                        if ($scope.fullArr[o].invono == $scope.fullArr[o -1].invono) {
+                            $scope.fullArr[o - 1].inputDisable = false;
+                            $scope.fullArr[o].inputDisable = true;
+                            break;
+                        }else{
+                            $scope.fullArr[o].inputDisable = true;
+                            break;
+                        }
+                    }else{
+                        $scope.fullArr[o].inputDisable = true;
+                        break;
+                    }
+                }
+                
+                for(o=index; o<=$scope.fullArr.length-1; o++){ 
+
+                    if ($scope.fullArr[o+1]) {
+                        if ($scope.fullArr[o].invono == $scope.fullArr[o +1].invono) {                       
+                            if ($scope.fullArr[o + 1].checked) {                            
+                                $scope.fullArr[o + 1].checked = false;
+                                $scope.fullArr[o + 1].checkDisable = true;
+                                $scope.fullArr[o + 1].inputDisable = true;
+                                reverseCheckItem(o);
+                            }else{
+                                reverseCheckItem(o);
+                                $scope.fullArr[o + 1].checkDisable = true;
+                                break;
+                            }
+
+                        }else if ($scope.fullArr[o].invono != $scope.fullArr[o +1].invono){
+                            reverseCheckItem(o);
+                            break; 
+                        }  
+                    }else{
+                        reverseCheckItem(o);
+                        break; 
+                    }                  
+                }
+                function reverseCheckItem(o){
+                    for (var i = 0; i < $scope.payment.paidInvoice.length; i++) { //removing invoice details from paid invoice array
+                        if ($scope.payment.paidInvoice[i]['invono'] == $scope.fullArr[o].invono) { //cheking index for praticular invoice details
+                            $scope.payment.paidInvoice.splice(i,1);
+                        }
+                    }
+                    if ($scope.fullArr[o].termtype != "multipleDueDates") {
+                        $scope.payment.total = parseInt($scope.payment.total) - parseInt($scope.fullArr[o].amount)
+                        $scope.payment.namount = parseInt($scope.payment.namount) + parseInt($scope.fullArr[o].amount)  
+                    }
+                    else if ($scope.fullArr[o].termtype == "multipleDueDates") {
+                        $scope.payment.total = parseInt($scope.payment.total) - parseInt($scope.fullArr[o].amount)
+                        $scope.payment.namount = parseInt($scope.payment.namount) + parseInt($scope.fullArr[o].amount)
+                    }
+                    $scope.fullArr[o].amount = "";
+                }
+            }
+        }
+
+        $scope.netAmount = function() { 
+
+            
+            if( parseInt($scope.payment.total) != 0){
+                $scope.payment.namount = ( ( parseInt($scope.payment.advancePayment) -  parseInt($scope.payment.total) )    + parseInt($scope.payment.amountReceived) );
+            }
+            else {           
+                $scope.payment.namount = (parseInt($scope.payment.advancePayment) + parseInt($scope.payment.amountReceived));
+            }
+            if ($scope.payment.amountReceived == "") {
+                $scope.payment.namount =   parseInt($scope.payment.advancePayment) -  parseInt($scope.payment.total)  
+            } 
+
+        }
+
+        var paymentClient = $objectstore.getClient("advancedPayment12thdoor");
+        paymentClient.onGetMany(function(data) {
+            console.log(data)   
+            if (data.length == 0) {
+               $scope.payment.advancePayment = 0
+            }else if (data.length > 0)  {
+
+                data[0].status = "Inactive"
+                $scope.AdvancefullArr.push(data[0]);
+                $scope.payment.advancePayment = parseFloat(data[0].uAmount)
+                $scope.payment.namount = parseFloat( $scope.payment.namount) + parseFloat($scope.payment.advancePayment)
+            }
+        });
+        paymentClient.onError(function(data) {
+            console.log("error loading payment details")
+        });
+        paymentClient.getByFiltering("select * from advancedPayment12thdoor where status ='Active' and customer = '"+pim.Name+"'");
+
+        $scope.getPaidAmount = function(obj, oldValue,e,index){
+            if (obj.amount == "")   obj.amount = 0;      
+            else if (oldValue == "")    oldValue = 0;       
+            
+            if (parseInt(obj.amount) > parseInt(obj.instalment))    obj.amount = oldValue
+
+            else{
+
+                $scope.payment.total = ( parseInt($scope.payment.total) - parseInt(oldValue) ) + parseInt(obj.amount); 
+                var difference = parseInt(oldValue) - parseInt(obj.amount);
+
+                if ($scope.payment.namount >= 0)    $scope.payment.namount =  parseInt($scope.payment.namount) + difference;            
+                else    $scope.payment.namount = ( parseInt($scope.payment.namount) + parseInt(oldValue) ) - parseInt(obj.amount);            
+
+                for (var i = 0; i < $scope.payment.paidInvoice.length; i++) {  
+                    if ( ($scope.payment.paidInvoice[i]['invono'] == obj.invono) && ($scope.payment.paidInvoice[i]['duedate'] == obj.mduedate) ) {
+                        $scope.payment.paidInvoice[i].balance = parseInt($scope.payment.paidInvoice[i].amount) - parseInt(obj.amount);
+                    }
+                } 
+            }
+            if (parseInt(obj.amount) < parseInt(obj.instalment) ){
+                if ($scope.fullArr[index +1]) {
+                    if ($scope.fullArr[index].invono == $scope.fullArr[index +1].invono) {
+                        $scope.fullArr[index + 1].checkDisable = true;
+                    }                    
+                }
+            }else if(parseInt(obj.amount) == parseInt(obj.instalment)){
+                if ($scope.fullArr[index +1]) {
+                    $scope.fullArr[index + 1].checkDisable = false;
+                }
+            }
+        }
+
+
+        $scope.addPayement = function(){
+            $scope.payment.favoritestar = false;
+            $scope.payment.favouriteStarNo = 1; 
+            $scope.payment.paymentid = "-999";
+            $scope.payment.paymentStatus = "active";
+            $scope.payment.customer = pim.Name      
+            $scope.payment.UploadImages = {
+                val: []
+            };
+            $scope.payment.custField = [];
+
+
+            $scope.advancedPayment.advancedPayment_code = "-999";
+            $scope.advancedPayment.name = $scope.payment.customer +' '+ pim.Email;
+            $scope.advancedPayment.customer = $scope.payment.customer;
+            $scope.advancedPayment.uAmount = $scope.payment.uAmount;  
+            $scope.advancedPayment.status = "Active"; 
+
+            if ($scope.payment.total == 0) {
+                $scope.payment.uAmount = $scope.payment.namount;
+                $scope.advancedPayment.uAmount = $scope.payment.uAmount;
+            } else if ($scope.payment.namount > 0) {
+                $scope.payment.uAmount = $scope.payment.namount;
+                $scope.advancedPayment.uAmount = $scope.payment.uAmount;
+            }
+
+            $scope.submitVisible = true;
+            $scope.advancePayVisible = false;
+            savePaymentToObjectstore(function(){
+                saveAdvancePaymentToObjectstore(function(){
+                    updateInvoice(function(){                            
+                       $mdDialog.hide();
+                       console.log("all saved")
+                    });
+                }); // save payment and advance payment 
+            })
+        }
+
+        function savePaymentToObjectstore(callback){
+
+            var payment = $objectstore.getClient("payment");
+            payment.onComplete(function(data){
+                $scope.savePaymentId = data.Data[0].ID;
+                callback();
+            });
+            payment.onError(function(data){
+                console.log("error saving payment");
+                callback();
+            });
+            payment.insert($scope.payment, {KeyProperty: "paymentid"})
+        }
+
+        function saveAdvancePaymentToObjectstore(callback){
+
+            $scope.AdvancefullArr.push($scope.advancedPayment)
+            var paymentSave = $objectstore.getClient("advancedPayment12thdoor");
+            paymentSave.onComplete(function(data){
+                callback();
+            });
+            paymentSave.onError(function(data){
+                console.log("error saving Advanced payment");
+                callback();
+            });
+            paymentSave.insertMultiple($scope.AdvancefullArr,"advancedPayment_code"); 
+        }
+        function updateInvoice(callback){
+            for(kal=0; kal<=pim.MultiDueDAtesArr.length-1; kal++){
+                for(pay=0; pay<=$scope.payment.paidInvoice.length-1; pay++){
+
+                    if (pim.MultiDueDAtesArr[kal]['DueDate'] == $scope.payment.paidInvoice[pay].duedate) {
+
+                        if ($scope.payment.paidInvoice[pay].termtype == "multipleDueDates") {
+                            if ( parseFloat($scope.payment.paidInvoice[pay].balance) != 0) {
+                                    console.log(pim.invoiceNo + 'Partially Paid' );
+                                    pim.MultiDueDAtesArr[kal]['balance'] = parseFloat($scope.payment.paidInvoice[pay].balance);                                    
+                                    pim.MultiDueDAtesArr[kal]['paymentStatus'] = "Partially Paid";  
+                                    
+                                }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
+                                    
+                                    console.log(parseFloat($scope.payment.paidInvoice[pay].balance) )
+                                    console.log(pim.invoiceNo + 'Paid' );
+                                    pim.MultiDueDAtesArr[kal]['paymentStatus'] = "Paid"; 
+                                    pim.MultiDueDAtesArr[kal]['balance'] = 0;                               
+                                }
+
+                        }else{
+
+                            if ( parseFloat($scope.payment.paidInvoice[pay].balance) != 0) {
+
+                                console.log(pim.invoiceNo + 'Partially Paid' );
+                                pim.MultiDueDAtesArr[kal]['dueDateprice'] = parseFloat($scope.payment.paidInvoice[pay].amount);                                    
+                                pim.MultiDueDAtesArr[kal]['balance'] = parseFloat($scope.payment.paidInvoice[pay].balance);                                    
+                                pim.MultiDueDAtesArr[kal]['paymentStatus'] = "Partially Paid";  
+                                
+                            }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
+                                console.log(pim.invoiceNo + ' Paid' );
+                                pim.MultiDueDAtesArr[kal]['dueDateprice'] = parseFloat($scope.payment.paidInvoice[pay].amount);
+                                pim.MultiDueDAtesArr[kal]['paymentStatus'] = "Paid"; 
+                                pim.MultiDueDAtesArr[kal]['balance'] = 0;                     
+                            }
+                        }
+                    }
+                }
+            }
+            var client = $objectstore.getClient("invoice12thdoor");
+            client.onComplete(function(data) {
+                console.log("successfully invoice updated '"+data.Data[0].ID+"'");
+                addTOLegger(data.Data[0].ID)
+                callback("success")
+            })
+            client.onError(function(data) {
+                console.log("error updating invoice");
+            })
+            pim.invoiceNo = pim.invoiceNo.toString();
+            client.insert(pim, {
+                KeyProperty: "invoiceNo"
+            })
+        }
+
+        function addTOLegger(invoiceID){
+            var leggerObj = {            
+                "AccountNo": pim.customerid,
+                "Amount": $scope.payment.total,
+                "Date": new Date(),
+                "Description": "Payment added",
+                "ID": "-999",
+                "InvoiceRefID": pim.invoiceNo,
+                "Name": pim.Name,
+                "RefID": $scope.savePaymentId,
+                "Type": "Receipt"
+            }
+
+            var leggerClient = $objectstore.getClient("leger12thdoor");
+            leggerClient.onComplete(function(data) {
+                console.log("successfully legger updated '"+data.Data[0].ID+"'");
+            });
+            leggerClient.onError(function(data) {
+                console.log("error updating legger");
+            });
+            leggerClient.insert(leggerObj, {
+                KeyProperty: "ID"
+            });
+        }
+
+    });
     //-------------------------------------------------------------------------------------------------------  
     //------------------------------------------------------------------------------------------------------
-    .controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService) {
+    app.controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService) {
         $scope.uploadimages = {
             val: []
         };
@@ -129,10 +503,10 @@ angular.module('mainApp')
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
-    })
+    });
     //---------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------
-    .factory('InvoiceService', function($rootScope) {
+    app.factory('InvoiceService', function($rootScope) {
         $rootScope.testArray = {
             val: []
         };
@@ -468,10 +842,10 @@ angular.module('mainApp')
         } 
 
         }
-    })
+    });
     //------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------
-    .factory('MultipleDudtesService', function($rootScope) {
+    app.factory('MultipleDudtesService', function($rootScope) {
         $rootScope.dateArray = {
             val: []
         };
@@ -524,10 +898,10 @@ angular.module('mainApp')
                 }
             }
         }
-    })
+    });
     //-----------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------
-    .factory('invoiceDetails', function($rootScope) {
+    app.factory('invoiceDetails', function($rootScope) {
         $rootScope.invoiceArray = [];
         $rootScope.invoiceArray2 = [];
         return {
@@ -548,12 +922,12 @@ angular.module('mainApp')
                 return $rootScope.invoiceArray;
             }
         }
-    })
+    });
 
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 
-.controller('showproductCtrl', function($scope, $mdDialog, $rootScope, InvoiceService, item) {
+app.controller('showproductCtrl', function($scope, $mdDialog, $rootScope, InvoiceService, item) {
     $scope.test = item;
     $scope.cancel = function() {
         $mdDialog.cancel();
@@ -578,4 +952,4 @@ angular.module('mainApp')
         $scope.Amount = (item.price * item.quantity);
         return $scope.Amount;
     }
-})
+});

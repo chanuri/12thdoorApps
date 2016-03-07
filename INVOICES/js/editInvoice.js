@@ -1,12 +1,13 @@
 //Angular Material Design - v0.11.0
-angular.module('mainApp')
-    .controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $rootScope, invoiceDetails, $stateParams, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
+// angular.module('mainApp')
+    app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $rootScope, invoiceDetails, $stateParams, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
         // console.log($rootScope.invoiceArray);
         $scope.editInvoiceB = false;
         $scope.saveInvoiceB = false;
         $scope.systemMessage = [];
         $scope.payterm = false;
-
+        $scope.ShoweditNo = true;
+        $scope.showCopyNo = false;
         $scope.Settings = {};
         $scope.AllTaxes = [];
         $scope.individualTax = [];
@@ -15,29 +16,28 @@ angular.module('mainApp')
         $scope.roles = [];
         $scope.permission = [];
 
-        // $scope.termtype = $rootScope.invoiceArray[0].termtype;
-        // $scope.duedate = new Date($rootScope.invoiceArray[0].duedate);
-        // $scope.Startdate = new Date($rootScope.invoiceArray[0].Startdate);
-
-
         for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
             $scope.termtype = $rootScope.invoiceArray[i].termtype;
-            $scope.duedate = new Date($rootScope.invoiceArray[i].duedate);
+            if($rootScope.invoiceArray[i].termtype != "multipleDueDates"){
+                 $scope.duedate = new Date($rootScope.invoiceArray[i].duedate);
+            }
+           
             $scope.Startdate = new Date($rootScope.invoiceArray[i].Startdate)
             for (var x = $rootScope.invoiceArray[i].invoiceProducts.length - 1; x >= 0; x--) {
-                // for (var y = $rootScope.invoiceArray[i].invoiceProducts[x].tax.length - 1; y >= 0; y--) {
+                for (var y = $rootScope.invoiceArray[i].invoiceProducts[x].tax.length - 1; y >= 0; y--) {
 
-                // InvoiceService.setTempArr({
-                //                 Productname: $rootScope.invoiceArray[i].invoiceProducts[x].Productname,
-                //                 price: $rootScope.invoiceArray[i].invoiceProducts[x].price,
-                //                 quantity: $rootScope.invoiceArray[i].invoiceProducts[x].quantity,
-                //                 ProductUnit: $rootScope.invoiceArray[i].invoiceProducts[x].ProductUnit,
-                //                 discount: $rootScope.invoiceArray[i].invoiceProducts[x].discount,
-                //                 tax: $rootScope.invoiceArray[i].invoiceProducts[x].tax,
-                //                 olp: $rootScope.invoiceArray[i].invoiceProducts[x].olp,
-                //                 amount: $rootScope.invoiceArray[i].invoiceProducts[x].amount,
-                //                 status:$rootScope.invoiceArray[i].invoiceProducts[x].status,
-                //              });
+                InvoiceService.setTempArr({
+                                Productname: $rootScope.invoiceArray[i].invoiceProducts[x].Productname,
+                                price: $rootScope.invoiceArray[i].invoiceProducts[x].price,
+                                quantity: $rootScope.invoiceArray[i].invoiceProducts[x].quantity,
+                                ProductUnit: $rootScope.invoiceArray[i].invoiceProducts[x].ProductUnit,
+                                discount: $rootScope.invoiceArray[i].invoiceProducts[x].discount,
+                                tax: $rootScope.invoiceArray[i].invoiceProducts[x].tax,
+                                olp: $rootScope.invoiceArray[i].invoiceProducts[x].olp,
+                                amount: $rootScope.invoiceArray[i].invoiceProducts[x].amount,
+                                status:$rootScope.invoiceArray[i].invoiceProducts[x].status,
+                             });
+            }
             }
         }
 
@@ -127,7 +127,9 @@ angular.module('mainApp')
 
         if ($state.current.name == 'copy') {
             $scope.saveInvoiceB = true;
-            $rootScope.invoiceArray[0].invoiceRefNo = $scope.refNo;
+             $scope.ShoweditNo = false;
+        $scope.showCopyNo = true;
+            //$rootScope.invoiceArray[0].invoiceRefNo = $scope.refNo;
         } else if ($state.current.name == 'estimateInvoice') {
             $scope.saveInvoiceB = true;
         } else {
@@ -296,7 +298,6 @@ angular.module('mainApp')
         client.onGetMany(function(data) {
             if (data) {
                 $scope.InvoiceDetails = data;
-
                 for (var i = $scope.InvoiceDetails.length - 1; i >= 0; i--) {
                     $scope.ID = $scope.InvoiceDetails[i].maxCount;
                 };
@@ -319,6 +320,10 @@ angular.module('mainApp')
                 obj.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
                 obj.termtype = $scope.termtype;
                 obj.duedate = $scope.duedate;
+                obj.cardOpen = false;
+                obj.favourite = false;
+                obj.favouriteStarNo = 1;
+                obj.DeleteStatus = false;
                 draftdelete.onComplete(function(data) {
                     if (obj.termtype != "multipleDueDates") {
                         obj.MultiDueDAtesArr = [{
@@ -331,6 +336,12 @@ angular.module('mainApp')
                     } else {
                         obj.MultiDueDAtesArr = $rootScope.dateArray.value;
                     }
+                    obj.commentsAndHistory = [];
+                    obj.commentsAndHistory.push({
+                        done: false,
+                        text: "Invoice was created by Mr.dddd",
+                        date: new Date()
+                    });
                     obj.invoiceRefNo = $scope.refNo;
                     for (var x = obj.MultiDueDAtesArr.length - 1; x >= 0; x--) {
 
@@ -348,11 +359,7 @@ angular.module('mainApp')
                             .ok('OK')
                             .targetEvent(data)
                         );
-                        $state.go('view', {
-                            'invoiceNo': $scope.refNo
-                        }, {
-                            reload: true
-                        });
+                        $state.go('view', {'invoiceNo': $scope.refNo},{reload: true});
                     });
                     newInsert.onError(function(data) {
                         $mdDialog.show(
@@ -366,9 +373,7 @@ angular.module('mainApp')
                         );
                     });
                     obj.invoiceNo = "-999";
-                    newInsert.insert(obj, {
-                        KeyProperty: "invoiceNo"
-                    });
+                    newInsert.insert(obj, {KeyProperty: "invoiceNo"});
                 });
                 draftdelete.onError(function(data) {
                     $mdDialog.show(
@@ -385,7 +390,6 @@ angular.module('mainApp')
                 $mdDialog.hide();
             });
         }
-
 
         $scope.viewSavedProducts = function(obj) {
             $mdDialog.show({
@@ -486,7 +490,6 @@ angular.module('mainApp')
 
                                                 $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
                                                 if ($scope.product.length > 0) {
-                                                    //if array is not empty
                                                     $scope.PatternExsist = false;
                                                     $scope.MaxID = 0;
                                                     for (y = 0; y <= $scope.product.length - 1; y++) {
@@ -574,7 +577,7 @@ angular.module('mainApp')
                                 }
                             }
                         }
-                        //close dialog box
+
                     $scope.cancel = function() {
                         $mdDialog.cancel();
                     }
@@ -733,69 +736,68 @@ angular.module('mainApp')
                     $scope.TDinvoice.push(data[i]);
 
                     if ($stateParams.invoiceno == data[i].invoiceNo) {
-                        invoiceDetails.removeArray(data[i], 1);
-                        invoiceDetails.setArray(data[i]);
+                        // invoiceDetails.removeArray(data[i], 1);
+                        // invoiceDetails.setArray(data[i]);
 
+                        // for (var x = data[i].invoiceProducts.length - 1; x >= 0; x--) {
+                        //     $scope.getTotal = angular.copy(data[i].invoiceProducts[x].amount);
+                        //     if (data[i].invoiceProducts[x].tax.type == "individualtaxes") {
+                        //         $rootScope.getTax.push({
+                        //             taxName: data[i].invoiceProducts[x].tax.taxname,
+                        //             rate: data[i].invoiceProducts[x].tax.rate,
+                        //             salesTax: parseInt($scope.getTotal * data[i].invoiceProducts[x].tax.rate / 100),
+                        //             compoundCheck: data[i].invoiceProducts[x].tax.compound
+                        //         })
+                        //     } else if (data[i].invoiceProducts[x].tax.type == "multipletaxgroup") {
+                        //         for (var y = data[i].invoiceProducts[x].tax.individualtaxes.length - 1; y >= 0; y--) {
+                        //             $scope.groupTax.push(data[i].invoiceProducts[x].tax.individualtaxes[y].rate)
+                        //         };
+                        //         angular.forEach($scope.groupTax, function(tdIinvoice) {
+                        //             $scope.calTotal += parseInt($scope.getTotal * tdIinvoice / 100)
+                        //             return $scope.calTotal
+                        //         })
 
-                        for (var x = data[i].invoiceProducts.length - 1; x >= 0; x--) {
-                            $scope.getTotal = angular.copy(data[i].invoiceProducts[x].amount);
-                            if (data[i].invoiceProducts[x].tax.type == "individualtaxes") {
-                                $rootScope.getTax.push({
-                                    taxName: data[i].invoiceProducts[x].tax.taxname,
-                                    rate: data[i].invoiceProducts[x].tax.rate,
-                                    salesTax: parseInt($scope.getTotal * data[i].invoiceProducts[x].tax.rate / 100),
-                                    compoundCheck: data[i].invoiceProducts[x].tax.compound
-                                })
-                            } else if (data[i].invoiceProducts[x].tax.type == "multipletaxgroup") {
-                                for (var y = data[i].invoiceProducts[x].tax.individualtaxes.length - 1; y >= 0; y--) {
-                                    $scope.groupTax.push(data[i].invoiceProducts[x].tax.individualtaxes[y].rate)
-                                };
-                                angular.forEach($scope.groupTax, function(tdIinvoice) {
-                                    $scope.calTotal += parseInt($scope.getTotal * tdIinvoice / 100)
-                                    return $scope.calTotal
-                                })
+                        //         $rootScope.getTax.push({
+                        //             taxName: data[i].invoiceProducts[x].tax.taxname,
+                        //             rate: $scope.groupTax,
+                        //             salesTax: $scope.total,
+                        //             compoundCheck: $scope.compoundcal
+                        //         })
 
-                                $rootScope.getTax.push({
-                                    taxName: data[i].invoiceProducts[x].tax.taxname,
-                                    rate: $scope.groupTax,
-                                    salesTax: $scope.total,
-                                    compoundCheck: $scope.compoundcal
-                                })
+                        //     }
+                        //     $rootScope.getTax = $rootScope.getTax.sort(function(a, b) {
+                        //         return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                        //     });
 
-                            }
-                            $rootScope.getTax = $rootScope.getTax.sort(function(a, b) {
-                                return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
-                            });
+                        //     if ($rootScope.getTax.length > 1) {
+                        //         for (l = 0; l <= $rootScope.getTax.length - 1; l++) {
+                        //             if ($rootScope.getTax[l + 1]) {
 
-                            if ($rootScope.getTax.length > 1) {
-                                for (l = 0; l <= $rootScope.getTax.length - 1; l++) {
-                                    if ($rootScope.getTax[l + 1]) {
+                        //                 if ($rootScope.getTax[l].taxName == $rootScope.getTax[l + 1].taxName) {
+                        //                     var sumSalesTax = 0;
+                        //                     var txtName = $rootScope.getTax[l].taxName;
+                        //                     var rate = $rootScope.getTax[l].rate;
+                        //                     var compound = $rootScope.getTax[l].compoundCheck
 
-                                        if ($rootScope.getTax[l].taxName == $rootScope.getTax[l + 1].taxName) {
-                                            var sumSalesTax = 0;
-                                            var txtName = $rootScope.getTax[l].taxName;
-                                            var rate = $rootScope.getTax[l].rate;
-                                            var compound = $rootScope.getTax[l].compoundCheck
+                        //                     sumSalesTax = $rootScope.getTax[l].salesTax + $rootScope.getTax[l + 1].salesTax;
 
-                                            sumSalesTax = $rootScope.getTax[l].salesTax + $rootScope.getTax[l + 1].salesTax;
+                        //                     $rootScope.getTax.splice(l, 2);
+                        //                     $rootScope.getTax.push({
+                        //                         taxName: txtName,
+                        //                         rate: rate,
+                        //                         salesTax: sumSalesTax,
+                        //                         compoundCheck: compound
+                        //                     })
 
-                                            $rootScope.getTax.splice(l, 2);
-                                            $rootScope.getTax.push({
-                                                taxName: txtName,
-                                                rate: rate,
-                                                salesTax: sumSalesTax,
-                                                compoundCheck: compound
-                                            })
+                        //                     $rootScope.getTax.sort(function(a, b) {
+                        //                         return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                        //                     });
 
-                                            $rootScope.getTax.sort(function(a, b) {
-                                                return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
-                                            });
-
-                                        };
-                                    };
-                                }
-                            }
-                        };
+                        //                 };
+                        //             };
+                        //         }
+                        //     }
+                        // };
                     }
                 };
             }
@@ -819,13 +821,6 @@ angular.module('mainApp')
             updatedForm.termtype = $scope.termtype;
             updatedForm.duedate = $scope.duedate;
 
-            updatedForm.commentsAndHistory = [];
-            updatedForm.commentsAndHistory.push({
-                done: false,
-                text: "Invoice was created by Mr.dddd",
-                date: new Date()
-            });
-
             $scope.imagearray = UploaderService.loadArray();
             if ($scope.imagearray.length > 0) {
                 for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
@@ -848,7 +843,7 @@ angular.module('mainApp')
                     });
                 }
             };
-            // $scope.tt = {};
+             $scope.multi = [];
             $scope.tt = [{
                 DueDate: updatedForm.duedate,
                 Percentage: "0",
@@ -856,11 +851,29 @@ angular.module('mainApp')
                 paymentStatus: 'Unpaid',
                 balance: $scope.famount
             }];
+            for (var i = updatedForm.MultiDueDAtesArr.length - 1; i >= 0; i--) {
+                 $scope.multi.push({
+                    DueDate: updatedForm.MultiDueDAtesArr[i].DueDate,
+                    Percentage: updatedForm.MultiDueDAtesArr[i].Percentage,
+                    dueDateprice: updatedForm.MultiDueDAtesArr[i].dueDateprice,
+                    paymentStatus: 'Unpaid',
+                    balance: updatedForm.MultiDueDAtesArr[i].balance
+                 })
+            }
             var client = $objectstore.getClient("invoice12thdoor");
-            updatedForm.commentsAndHistory = {};
             updatedForm.invoiceRefNo = $scope.refNo;
             updatedForm.total = $scope.total;
+            updatedForm.cardOpen = false;
+            updatedForm.favourite = false;
+            updatedForm.favouriteStarNo = 1;
+            // updatedForm.DeleteStatus = false;
             updatedForm.finalamount = $scope.famount;
+             updatedForm.commentsAndHistory = [];
+            updatedForm.commentsAndHistory.push({
+                done: false,
+                text: "Invoice was created by Mr.dddd",
+                date: new Date()
+            });
             updatedForm.discountAmount = $scope.finalDisc;
             updatedForm.salesTaxAmount = $scope.salesTax;
             updatedForm.otherTaxAmount = $scope.otherTax;
@@ -874,7 +887,7 @@ angular.module('mainApp')
             if (updatedForm.termtype != "multipleDueDates") {
                 updatedForm.MultiDueDAtesArr = $scope.tt
             } else {
-                $scope.TDinvoice.MultiDueDAtesArr = updatedForm.MultiDueDAtesArr;
+                updatedForm.MultiDueDAtesArr = $scope.multi;
             }
 
             updatedForm.UploadImages.val = UploaderService.loadBasicArray();
@@ -894,9 +907,7 @@ angular.module('mainApp')
             });
 
             updatedForm.invoiceNo = "-999";
-            client.insert(updatedForm, {
-                KeyProperty: "invoiceNo"
-            });
+            client.insert(updatedForm, {KeyProperty: "invoiceNo"});
 
             client.onError(function(data) {
                 $mdDialog.show(
@@ -970,8 +981,8 @@ angular.module('mainApp')
                 });
             }
         }
-    })
-    .controller('estimateCtrl', function($scope, $mdDialog, $objectstore, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
+    });
+    app.controller('estimateCtrl', function($scope, $mdDialog, $objectstore, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
 
         $scope.editInvoiceB = false;
         $scope.saveInvoiceB = true;

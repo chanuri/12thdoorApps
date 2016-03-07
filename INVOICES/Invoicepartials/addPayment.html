@@ -20,9 +20,9 @@
                 <section-title title="Payment Details"> </section-title>
                 <md-datepicker ng-model="TDinvoice.date" md-placeholder="Enter date" required flex style="margin-top:25px; width:230px;"></md-datepicker>
                 
-                    <md-input-container flex>
+                    <md-input-container style="margin-top: 25px;" flex>
                         <label>Payment Method</label>
-                        <input type="text" ng-model="pay.paymentMethod"  required>
+                        <input type="text" ng-model="payment.paymentMethod"  required>
                     </md-input-container>
             </div>
 
@@ -31,12 +31,12 @@
                 
                 <md-input-container flex>
                     <label>Amount Recieved</label>
-                    <input type="text" ng-model="amountRecieved" />
+                    <input type="text" ng-model="payment.amountReceived" ng-change="netAmount()"  />
                 </md-input-container>
 
                 <md-input-container flex>
                     <label>Bank charge</label>
-                    <input ng-model="bankCharge" >
+                    <input ng-model="payment.bankCharge" >
                 </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>
@@ -44,12 +44,151 @@
                 
                 <md-input-container flex>
                     <label>Comment</label>
-                    <input type="text" ng-model="comments"/>
+                    <input type="text" ng-model="payment.comments"/>
                 </md-input-container>
             </div>
+            <div layout-gt-sm="row" style="overflow:hidden;">
+               <section-title></section-title>
+               <div layout="row" layout-sm="column" layout-align="start start" flex>                  
+                  <div flex layout="row" layout-sm="row" flex-sm="100" style="width: 100%;" >
+                     <div flex>
+                        <label><b>Unapplied Advances :</b></label>                        
+                     </div>
+                     <div flex="40">
+                         <span><b>{{payment.advancePayment | currency}}</b></span>
+                     </div>
+                  </div>
+                  <div flex layout="row" layout-sm="row" flex-sm="100" style="width: 100%;">
+                     <div flex>
+                        <label><b>Total Available :</b></label>                     
+                     </div>
+                     <div flex>                        
+                        <span><b>{{payment.namount | currency}}</b></span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+             <div layout-gt-sm="row">
+                  <section-title title="invoice details"></section-title>
+                  
+                  <div layout="column" layout-align="center start" flex>
+                     <div layout="row" hide-sm layout-align="start center" flex style="width:100%">
+                        <md-whiteframe class="md-whiteframe" flex layout="row"> 
+                        <div flex="5" hide-sm></div>
+                           <div flex >
+                              <label style="font-size: 12px;"><b>Date</b></label>
+                           </div>
+                           <div flex>
+                              <label style="font-size: 12px;"><b>Invoice no</b></label>
+                           </div>
+                           <div flex >
+                              <label style="font-size: 12px;"><b>Due date</b></label> 
+                           </div>
+                           <div flex>
+                              <label style="font-size: 12px;"><b>Amount</b></label> 
+                           </div>
+                           <div flex >
+                              <lable style="font-size: 12px;"><b>Balance</b></lable>
+                           </div>
+                           <div flex >
+                              <lable style="font-size: 12px;"><b>Paid amount</b></lable>
+                           </div> 
+                        </md-whiteframe>
+                     </div>                                 
+                  </div>
+               </div>
+
+             <div layout-gt-sm="row" ng-repeat="invo in fullArr track by $index">
+                  <section-title></section-title>
+                  <div layout="column" layout-align="center start" flex>
+                     <div layout="row" layout-align="start center" flex style="width:100%">
+                        <md-whiteframe class="md-whiteframe" flex layout="row" layout-sm="column"> 
+                           <div flex="5">
+                              <md-checkbox md-no-ink ng-disabled="invo.checkDisable"   aria-label="Checkbox No Ink" ng-model="invo.checked" class="md-primary" ng-change="checkItem($index,invo)" style="margin-top: -6px; margin-left: 0px;"></md-checkbox>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>date</b></label>
+                              </div>
+                              <div flex>
+                                <label style="font-size: 12px;">{{invo.duedate|date}}</label>
+                              </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Invoice no</b></label>
+                              </div>
+                              <div flex>
+                                 <label  style="font-size: 12px;">{{invo.invono}}</label>
+                              </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Due date</b></label>
+                              </div>
+                           <div  flex>
+                              <label  style="font-size: 12px;" >{{invo.mduedate|date}}</label> 
+                           </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25"hide-gt-sm >
+                                <label style="font-size: 12px;"><b>Amount</b></label>
+                              </div>
+                           <div flex>
+                              <lable  style="font-size: 12px;">{{invo.famount|currency}}</lable>
+                           </div>
+                           </div>
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Balance</b></label>
+                              </div>
+                              <div flex>
+                                 <label style="font-size: 12px;" >{{invo.instalment|currency}}</label>
+                              </div>
+                           </div> 
+
+                             
+                           <div layout-sm="row" flex>
+                              <div flex-sm="25" hide-gt-sm>
+                                <label style="font-size: 12px;"><b>Paid Amount</b></label>
+                              </div>                                                 
+                         
+                              <div flex>
+                                 <md-input-container flex md-no-float style="    margin-top: 0px;">
+                                    <input placeholder="Paid Amount" ng-disabled="invo.inputDisable" ng-model="invo.amount" 
+                                    ng-change="getPaidAmount(invo, '{{invo.amount}}', $event,$index)" style="height: 25px; font-size: 13px;    margin-top: -9px; width: 100%;">
+                                 </md-input-container>
+                              </div>
+                           </div> 
+
+                        </md-whiteframe>
+                     </div>                                 
+                  </div>
+
+               </div>
+                 <div layout-gt-sm="row" style="overflow:visible;">
+                               <section-title></section-title>
+
+                               <div layout="row" layout-sm="column" layout-align="start center" flex>                  
+                                   
+                                  <div flex layout="row" layout-sm="row" flex-sm="100" style="width: 100%;">
+                                     <div flex>
+                                        <label><b>Total Payments Applied :</b></label>
+                                     </div>
+                                     <div flex flex-gt-sm="40">
+                                        <span ><b>{{payment.total|currency}}</b></span>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
          </md-dialog-content>
-            <div class="md-actions" layout="row">
+            <div ng-show="submitVisible" class="md-actions" layout="row">
                 <span flex></span>
+                <md-button href ng-click="confirmOk()" class="md-primary">OK</md-button>
+            </div>
+            <div  ng-show="advancePayVisible" class="md-actions" layout="row">
+                <span style="color:red" flex>Unapplied advances USD  {{payment.namount | currency}} This amount can be applied on future invoices.</span>
+                <md-button href ng-click="cancelAdvance()" class="md-primary">Cancel</md-button>
                 <md-button href ng-click="addPayement()" class="md-primary">OK</md-button>
             </div>
     </md-dialog>

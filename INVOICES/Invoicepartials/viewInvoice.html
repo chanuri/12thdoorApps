@@ -52,16 +52,11 @@
                                 </b>
                             </span>
                         </div>
-                        <div ng-if="item.termtype == 'multipleDueDates'">
-                        	<span style="padding-right: 15px; padding-left: 15px;" flex="60"> </span> 
+                        <div ng-if="item.termtype == 'multipleDueDates'" flex="60">
+                        	<span style="padding-right: 15px; padding-left: 15px;" > </span> 
                         </div>
                         
-                           <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #696969;background-color: #696969;" ng-if="(item.RecurringProfileNo)">
-                                <b style="width:70px; font-color:#FFFFFF;">
-                                    <font color="white">{{item.RecurringProfileNo}}</font>
-                                </b>
-                            </span>
-                     <div  style="margin-top:-20px;">
+                     <div  style="margin-top:-5px;">
                         	 <md-button ng-click="printDetails()" style="height:30px;" aria-label="change address" href>
                                     <md-icon md-svg-icon="img/ic_print_24px.svg" style="height:20px; width:20px;"></md-icon>
                                 </md-button>
@@ -73,10 +68,10 @@
                         	 <md-button ng-click="email(item)" style="height:30px;" aria-label="change address" href>
                                     <md-icon md-svg-icon="img/ic_email_24px.svg" style="height:20px; width:20px;"></md-icon>
                                </md-button>
-                               <md-button ng-if="item.paymentStatus == 'Pending'" class="md-raised md-primary"ng-click="Approve(item)" href style="background:green; margin-top:5px;">Approve</md-button>
+                               <md-button ng-if="item.paymentStatus == 'Pending'" class="md-raised md-primary"ng-click="Approve(item)" href style="background:green; margin-top:-5px;">Approve</md-button>
                                <md-menu md-position-mode="target-right target" >
                             <md-button href aria-label="Open demo menu" class="md-icon-button"  ng-click="$mdOpenMenu()">
-                                <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:10px;" ></md-icon>
+                                <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:2px;" ></md-icon>
                             </md-button>
                             <md-menu-content width="4">
                             <md-menu-item >

@@ -1,5 +1,5 @@
-angular.module('mainApp')
-.controller('newRecurringCtrl', function($scope, $state, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
+// angular.module('mainApp')
+app.controller('newRecurringCtrl', function($scope, $state, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
       $scope.list = [];
       $scope.TDinvoice = {};
       $scope.invoicDEtails = {};
@@ -1132,11 +1132,11 @@ var client = $objectstore.getClient("Settings12thdoor");
             };
          };
       }
-   })
+   });
 //-------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------
  
- .controller('productCtrl', function($scope, $mdDialog, $rootScope, recurringInvoiceService, item) {
+ app.controller('productCtrl', function($scope, $mdDialog, $rootScope, recurringInvoiceService, item) {
       $scope.test = item;
       $scope.cancel = function() {
          $mdDialog.cancel();

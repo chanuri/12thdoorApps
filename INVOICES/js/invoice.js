@@ -1,10 +1,10 @@
 //Angular Material Design - v0.11.0
-angular
-    .module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'uiMicrokernel', 'ui.router', 'ui.sortable'])
-    .config(function($mdThemingProvider) {
+var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'uiMicrokernel', 'ui.router', 'ui.sortable']);
+    
+    app.config(function($mdThemingProvider) {
         $mdThemingProvider.theme('datePickerTheme').primaryPalette('teal');
-    })
-    .factory('$focus', function($timeout, $window) {
+    });
+    app.factory('$focus', function($timeout, $window) {
         return function(id) {
             $timeout(function() {
                 var element = $window.document.getElementById(id);
@@ -12,8 +12,8 @@ angular
                     element.focus();
             });
         };
-    })
-    .config(function($stateProvider, $urlRouterProvider) {
+    });
+    app.config(function($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/settings/invoice_app');
         $stateProvider
             .state('settings', {
@@ -23,8 +23,8 @@ angular
             })
             .state('settings.invoice_app', {
                 url: '/invoice_app',
-                templateUrl: 'Invoicepartials/AllInvoicePartial.html',
-                controller: 'viewCtrl'
+                templateUrl: 'Invoicepartials/AllInvoicePartial.html'
+                // controller: 'viewCtrl'
             })
             .state('app', {
                 url: '/NewInvoice_app',
@@ -36,11 +36,11 @@ angular
                 templateUrl: 'Invoicepartials/viewInvoice.html',
                 controller: 'viewCtrl'
             })
-            .state('contactView', {
-                url: '/contactView/INo=:invoiceno',
-                templateUrl: 'Invoicepartials/suplierInterface.html',
-                controller: 'viewCtrl'
-            })
+            // .state('contactView', {
+            //     url: '/contactView/INo=:invoiceno',
+            //     templateUrl: 'Invoicepartials/suplierInterface.html',
+            //     controller: 'viewCtrl'
+            // })
             .state('settings.AllRecurring_Invoices', {
                 url: '/AllRecurring_Invoices',
                 templateUrl: 'Invoicepartials/AllRecurringInvoices.html',
@@ -88,7 +88,7 @@ angular
     })
 
 //------------APPCtrl starts--------------------------------------------------------------------------------------------------------
-.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
+app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
 
     $scope.list = [];
     $scope.TDinvoice = {};
@@ -361,31 +361,31 @@ angular
         })
     }
 
-    $.getJSON("http://openexchangerates.org/api/latest.json?app_id=32c5a0d1a1204a57be97937c10121785",
-        function(data) {
-            console.log(data.rates)
-            for (var key in data.rates) {
-                if (data.rates.hasOwnProperty(key)) {
-                    var text = document.createTextNode(key);
-                    var select = document.getElementsByClassName('form-control')[1];
+    // $.getJSON("http://openexchangerates.org/api/latest.json?app_id=32c5a0d1a1204a57be97937c10121785",
+    //     function(data) {
+    //         console.log(data.rates)
+    //         for (var key in data.rates) {
+    //             if (data.rates.hasOwnProperty(key)) {
+    //                 var text = document.createTextNode(key);
+    //                 var select = document.getElementsByClassName('form-control')[1];
 
-                    console.log(select);
+    //                 console.log(select);
 
-                    select.appendChild(document.createElement('option')).appendChild(text);
-                }
-            }
-            for (var value in data.rates) {
-                if (data.rates.hasOwnProperty(value)) {
-                    var text = document.createTextNode(value);
-                    var select = document.getElementsByClassName('form-control')[2];
+    //                 select.appendChild(document.createElement('option')).appendChild(text);
+    //             }
+    //         }
+    //         for (var value in data.rates) {
+    //             if (data.rates.hasOwnProperty(value)) {
+    //                 var text = document.createTextNode(value);
+    //                 var select = document.getElementsByClassName('form-control')[2];
 
-                    console.log(select);
+    //                 console.log(select);
 
-                    select.appendChild(document.createElement('option')).appendChild(text);
-                }
-            }
+    //                 select.appendChild(document.createElement('option')).appendChild(text);
+    //             }
+    //         }
 
-        });
+    //     });
 
     //pops a dialog box which enble the user to add Multiple du dates
     $scope.MultiDuDates = function(data) {
@@ -623,8 +623,6 @@ angular
     $scope.deleteproduct = function(name, index) {
         InvoiceService.ReverseTax(name, index);
         $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(name), 1);
-        // $rootScope.taxArr.splice($rootScope.taxArr.indexOf(name.tax),1)
-        // console.log( $rootScope.taxArr)
     }
 
     //dialog box pop up to add product
@@ -751,6 +749,7 @@ angular
                                         $scope.prod.favouriteStarNo = 1;
                                         $scope.prod.tags = [];
                                         $scope.prod.status = "Active"
+                                        $scope.prod.deleteStatus = "false"
                                         $scope.prod.todaydate = new Date();
                                         $scope.prod.UploadImages = {
                                             val: []
@@ -1288,6 +1287,7 @@ angular
         $scope.TDinvoice.ProgressBarDetails = $scope.ProgressBar;
         $scope.TDinvoice.invoiceProducts = $rootScope.testArray.val;
         $scope.TDinvoice.commentsAndHistory = [];
+        $scope.TDinvoice.DeleteStatus = false;
         $scope.TDinvoice.commentsAndHistory.push({
             done: false,
             text: "Invoice was created by Mr.dddd",
@@ -1404,7 +1404,7 @@ angular
 
         $scope.Discount = 0;
         if ($scope.dis == "SubTotal Items") {
-            $scope.finalDisc = parseInt(($scope.salesTax + $scope.total) * $scope.TDinvoice.fdiscount / 100)
+            $scope.finalDisc = parseFloat(($scope.salesTax + $scope.total) * $scope.TDinvoice.fdiscount / 100)
         } else if ($scope.dis == "Individual Items") {
             $scope.finalDisc = 0;
         }
@@ -1414,7 +1414,7 @@ angular
     $scope.CalculateTax = function() {
         $scope.salesTax = 0;
         for (var i = $rootScope.taxArr.length - 1; i >= 0; i--) {
-            $scope.salesTax += parseInt($rootScope.taxArr[i].salesTax);
+            $scope.salesTax += parseFloat($rootScope.taxArr[i].salesTax);
             // $scope.salesTax = tt;
         }
         return $scope.salesTax;
@@ -1422,8 +1422,8 @@ angular
 
     $scope.finalamount = function() {
         $rootScope.famount = 0;
-        $rootScope.famount = parseInt($scope.total - $scope.finalDisc) + parseInt($scope.salesTax) +
-            parseInt($scope.TDinvoice.shipping);
+        $rootScope.famount = parseFloat($scope.total - $scope.finalDisc) + parseFloat($scope.salesTax) +
+            parseFloat($scope.TDinvoice.shipping);
 
         return $rootScope.famount;
     };
@@ -1519,6 +1519,7 @@ angular
                 $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
                 $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
                 $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
+                $scope.TDinvoice.DeleteStatus = false;
                 client.onComplete(function(data) {
                     $mdDialog.show(
                         $mdDialog.alert()

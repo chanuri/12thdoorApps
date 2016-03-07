@@ -1,4 +1,4 @@
-rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $stateParams,$state,$mdToast) {
+rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast) {
  
     $scope.viewPyamentArr = [];
     $scope.progressBar = false;
@@ -135,6 +135,7 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
             callback("error");
             $scope.progressBar = false;
         });
+        $scope.paymentCode = item.paymentid;
         updatePayment.insert(item, {KeyProperty: "paymentid"})
     }
 
@@ -168,7 +169,9 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
 
         var updateaAdvancePayment = $objectstore.getClient("advancedPayment12thdoor");
         updateaAdvancePayment.onComplete(function(data){
-            $state.go("home");
+            saveToActivityClass($scope.paymentCode,status, function(){
+                $state.go("home");
+            })
         });
 
         updateaAdvancePayment.onError(function(data){
@@ -220,22 +223,22 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         $scope.progressBar = true;
         reverseInvoice(item,function(reverseStatus){
 
-            rollbackInvoicePayment(item,"delete",reverseStatus);
-            function rollbackInvoicePayment(item,reverseStatus){
-                if(reverseStatus = "save"){
+            rollbackInvoicePayment(item,"delete",reverseStatus)
+            function rollbackInvoicePayment(item,type,reverseStatus1){
+                if(reverseStatus1 = "save"){
                     removePayment(item,function(status){
 
                         rollbackremovePayment(item,status);
-                        function rollbackremovePayment(item,status){
-                            if (status == "save") {
+                        function rollbackremovePayment(item,status1){
+                            if (status1 == "save") {
                                 updateAdvancePayment(item,"delete");  
-                            }else if (status == "error") {
+                            }else if (status1 == "error") {
                                 rollbackremovePayment(item,status);
                             }
                         }                        
                     });
-                }else if (reverseStatus == "error") {
-                    rollbackInvoicePayment(item,reverseStatus);
+                }else if (reverseStatus1 == "error") {
+                    rollbackInvoicePayment(item,"delete",reverseStatus);
                 };
             }             
         });
@@ -247,25 +250,43 @@ rasm.controller('View_Payment', function($scope, $objectstore, $mdDialog, $state
         reverseInvoice(item,"cancel",function(reverseStatus){
 
             rollbackInvoicePayment(item,reverseStatus);
-            function rollbackInvoicePayment(item,reverseStatus){
-                if(reverseStatus = "save"){
+            function rollbackInvoicePayment(item,reverseStatus1){
+                if(reverseStatus1 = "save"){
                     savePayment(item,function(status){
 
                         rollbackSavePayment(item,status);
-                        function rollbackSavePayment(item,status){
-                            if (status == "save") {
+                        function rollbackSavePayment(item,status1){
+                            if (status1 == "save") {
                                 updateAdvancePayment(item,"cancel");
-                            }else if (status == "error") {
+                            }else if (status1 == "error") {
                                 rollbackSavePayment(item,status);
                             };
                         }                        
                     })
-                }else if(reverseStatus = "error"){
+                }else if(reverseStatus1 = "error"){
                     rollbackInvoicePayment(item,reverseStatus);
                 }
             }            
         });
     }
+
+    function saveToActivityClass(pcode,type,callback){ 
+        var txt;
+
+        if (type == 'cancel') {
+            txt = "Payment Cancelled By ";
+        }else if (type == 'delete') {
+            txt = "Payment Deleted By ";
+        }
+
+        $activityLog.newActivity(txt,pcode,function(status){
+          if (status == "success") {
+            callback()
+          }
+        });
+    }
+
+
     // check comment label 
     $scope.CheckText = function(obj,event){
         if (obj.Commentstxt) {

@@ -24,6 +24,7 @@ rasm.controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, Up
         $scope.count = 3;
         $scope.AddImage = function() {
             $scope.uploadimages.val = UploaderService.loadBasicArray();
+            $mdDialog.cancel();
         }
         $scope.cancel = function() {
             $mdDialog.cancel();

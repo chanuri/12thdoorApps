@@ -177,10 +177,12 @@
             if (item.upstatus == false && item.downstatus == false) {
                 item.upstatus = !item.upstatus;
                 item.close = true;
-                $scope.testarr[$scope.indexno].upstatus = false;
-                $scope.testarr[$scope.indexno].downstatus = false;
-                $scope.testarr[$scope.indexno].close = false;
-                $scope.indexno = index;
+                if ($scope.indexno != index) {
+                    $scope.testarr[$scope.indexno].upstatus = false;
+                    $scope.testarr[$scope.indexno].downstatus = false;
+                    $scope.testarr[$scope.indexno].close = false;
+                    $scope.indexno = index;                    
+                }
             } else {
                 item.upstatus = !item.upstatus;
                 item.downstatus = !item.downstatus;
@@ -286,8 +288,10 @@
                     }
                 }
                 for(i=0; i<= $scope.payments.length-1; i++){
-                    for(y=0; y<= $scope.payments[i].paidInvoice.length-1; y++){
-                        $scope.payments[i].paidInvoice[y].paidAmount = parseInt($scope.payments[i].paidInvoice[y].amount) - parseInt($scope.payments[i].paidInvoice[y].balance);
+                    if ($scope.payments[i].paidInvoice.length > 0) {
+                        for(y=0; y<= $scope.payments[i].paidInvoice.length-1; y++){
+                            $scope.payments[i].paidInvoice[y].paidAmount = parseInt($scope.payments[i].paidInvoice[y].amount) - parseInt($scope.payments[i].paidInvoice[y].balance);
+                        }                        
                     }
                 }
             }

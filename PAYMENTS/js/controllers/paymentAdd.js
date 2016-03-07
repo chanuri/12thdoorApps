@@ -757,7 +757,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         $scope.count = 3;
         //directive table conten end.
         $scope.closeDialog = function () {  $mdDialog.hide()    }
-        $scope.AddImage = function () { $scope.uploadimages.val = UploaderService.loadBasicArray()  }
+        $scope.AddImage = function () { $scope.uploadimages.val = UploaderService.loadBasicArray(); $mdDialog.hide() }
     }
 
     $scope.getPaidAmount = function(obj, oldValue,e,index){

@@ -51,7 +51,6 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
       $scope.contact.saddress["s_country"] = "";
       $scope.contact.saddress["s_zip"] = "";
       $scope.contact.saddress["s_state"] = "";
-
     }
   }
 
@@ -105,27 +104,25 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
   }
 
     // check whether object is empty or not 
-    function isEmpty(obj) {
-      for(var prop in obj) {
-            if(obj.hasOwnProperty(prop))
-                return false;
-        }
-        return true;
-    }
+  function isEmpty(obj) {
+    for(var prop in obj) {
+          if(obj.hasOwnProperty(prop))
+              return false;
+      }
+      return true;
+  }
 
-    /*____________________________addressChange_________________________________________*/
   $scope.addressChange = function() {
       $scope.showShipping = !$scope.showShipping;
       $scope.showBilling = !$scope.showBilling;
-    }
-    /*_____________________________save_________________________________________________*/
+  }
+
   $scope.save = function() {
       $timeout(function() {
         $('#mySignup')
           .click();
       })
-    }
-    /*_________________________addCustomer_______________________________________________*/
+  }
   $scope.addCustomer = function() {
       $('#add').animate({
         width: "100%",
@@ -137,13 +134,10 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
       }, 400, function() {
         location.href = '#/Add_Contact';
       });
-    }
-    /*_______________________Customerview________________________________________________________*/
-  $scope.Customerview = function() {
-      location.href = '#/home';
+  }
 
-    }
-    /*______________________savebtn_______________________________________________________________*/
+  $scope.Customerview = function() {      location.href = '#/home'  }
+
   $scope.savebtn = function() {
     $('#save').animate({
       width: "100%",
@@ -156,4 +150,4 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
       $('#mySignup').click();
     });
   }
-}) /*_______________________________END OF AppCtrlAddCustomer_____________________________________*/
+})

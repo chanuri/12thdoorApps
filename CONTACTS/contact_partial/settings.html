@@ -109,7 +109,7 @@
    </div> 
 </div>
 <div  class="lock-size" layout="row">
-   <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
+  <!--  <md-fab-speed-dial md-open="demo.isOpen" md-direction="{{demo.selectedDirection}}"
       ng-class="demo.selectedMode" style="position:fixed;bottom:20px;right:20px;"ng-if="showaddProject == true">
       <md-fab-trigger>
          <div style="padding:0px;">
@@ -144,5 +144,20 @@
             </md-button>
          </div>
       </md-fab-actions>
-   </md-fab-speed-dial>
+   </md-fab-speed-dial> -->
+
+   <div  class="lock-size" layout="row" ng-if="showaddProject == true">
+<md-button class="md-fab" aria-label="Profile" ng-click="addCustomer()" style="position:fixed;top:270px;right:50px;background:#db4437">
+            <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+            <md-tooltip md-direction="left">New Contact</md-tooltip>
+        </md-button>
+    </div>
+      
+
+<div  class="lock-size" layout="row" ng-if="showaddProject== false">
+<md-button class="md-fab" aria-label="Profile" ng-click="addSupplier()" style="position:fixed;top:270px;right:50px;background:#db4437">
+    <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+    <md-tooltip md-direction="left">New Supplier</md-tooltip>
+</md-button>
+</div>
 </div>

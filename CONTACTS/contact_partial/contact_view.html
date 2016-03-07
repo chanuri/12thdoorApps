@@ -27,13 +27,14 @@
                <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>   {{contact.Name}}</b></span>
                <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{contact.Email}}</b></span>
                <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-width:1px;"><b>{{contact.CustomerFname}} {{contact.CustomerLname}} </b></span>
-               <span style="padding-left: 16px; background-color: #339C38; margin-left: 16px; width:15%" ng-if="contact.status == 'Active'">
-                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+               <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid green;background-color: #4CAF50;" ng-if="contact.status == 'Active'">
+                  <b style=" width:70px; font-color:#FFFFFF;">
                       <font color="white">{{contact.status}}</font>
                   </b>
                </span>
-               <span style="padding-left: 16px; background-color: #212121; margin-left: 16px; width: 18%" ng-if="contact.status == 'Inactive'">
-                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+               <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000; background-color: #000000;" ng-if="contact.status == 'Inactive'">
+                 <b style="width:70px; font-color:#FFFFFF;"> 
+                  
                       <font color="white">{{contact.status}}</font>
                   </b>
                </span>
@@ -211,6 +212,14 @@
                <md-input-container id="accContainer" flex >
                   <label>Website</label>
                   <input id="accNo" ng-model="contact.Website" ng-disabled="true">
+               </md-input-container>
+            </div>
+            <md-divider></md-divider>
+             <div layout layout-sm="column" layout-margin>
+               <section-title title = "Optional Details"> </section-title>
+               <md-input-container flex>
+                  <label>Notes</label>
+                  <textarea id="noteTxt" maxlength="200" type="text" ng-model="contact.cnotes" ng-disabled="true"></textarea>  
                </md-input-container>
             </div>
          </md-content>

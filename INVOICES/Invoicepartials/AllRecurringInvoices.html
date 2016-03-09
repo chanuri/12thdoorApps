@@ -2,7 +2,7 @@
     
 
 
-<div  class="card_container" md-virtual-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch "
+<div  class="card_container" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch "
  ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;">
     <!--START OF COLLAPSE CARD HEADING-->
     <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:33px">
@@ -124,11 +124,11 @@
                             </div>
                             <div layout layout-sm="column" layout-margin>
                                  <section-title > </section-title>
-                                <md-input-container flex="67" ng-show="Billingaddress">
+                                <md-input-container flex="70" ng-show="Billingaddress">
                                     <label>Billing Address</label>
                                     <input  ng-model="tdi.billingAddress" ng-disabled="true"/>
                                 </md-input-container>
-                                <md-input-container flex="67" ng-show="Shippingaddress" >
+                                <md-input-container flex="70" ng-show="Shippingaddress" >
                                     <label>Shipping Address</label>
                                     <input  ng-model="tdi.shippingAddress" ng-disabled="true"/>
                                 </md-input-container>
@@ -144,15 +144,18 @@
                                     <label>Profile Name</label>
                                     <input ng-model="tdi.profileName" ng-disabled="true">
                                     </md-input-container>
-                                    <div flex >
-                                        <md-date-picker model="tdi.Startdate"  label="Start Date" dialog-md-theme="datePickerTheme"></md-date-picker>
-                                    </div>
+                                     <md-input-container flex >
+                                    <label>Start Date</label>
+                                    <input ng-model="tdi.Startdate|date" ng-disabled="true">
+                                    </md-input-container>
+                                    
                                 </div>
                                 <div layout layout-sm="column" layout-margin>
                                    <section-title> </section-title>
                                     <md-input-container flex >
                                         <label>Billing Frequency</label>
-                                        <md-select ng-model="tdi.billingFrequency" flex required>
+                                         <input ng-model="tdi.billingFrequency" ng-disabled="true">
+                                        <!-- <md-select ng-model="tdi.billingFrequency" flex required>
                                             <md-option value="weekly">Weekly</md-option>
                                             <md-option value="2weeks">2 Weeks</md-option>
                                             <md-option value="4weeks">4 Weeks</md-option>
@@ -163,22 +166,22 @@
                                             <md-option value="Yearly">Yearly</md-option>
                                             <md-option value="2Years">2 Years</md-option>
                                             <md-option value="3Years">3 Years</md-option>
-                                    </md-select>
+                                    </md-select> -->
                                 </md-input-container>
                                 <md-input-container flex >
                                     <label>Occurences</label>
-                                    <input ng-model="tdi.occurences" >
+                                    <input ng-model="tdi.occurences" ng-disabled="true">
                                     </md-input-container>
                                 </div>
                                 <div layout layout-sm="column" layout-margin>
                                     <section-title> </section-title>
                                     <md-input-container flex >
                                         <label>Internal Note.</label>
-                                        <input ng-model="tdi.inNote" >
+                                        <input ng-model="tdi.inNote" ng-disabled="true">
                                         </md-input-container>
                                         <md-input-container flex >
                                             <label>Comment</label>
-                                            <input ng-model="tdi.comments">
+                                            <input ng-model="tdi.comments" ng-disabled="true">
                                             </md-input-container>
                                         </div>
                                         <md-divider></md-divider>
@@ -373,38 +376,28 @@
                                                 <section-title title="Optional Details"> </section-title>
                                                     <md-input-container flex >
                                                         <label>Notes</label>
-                                                        <input ng-model="tdi.notes">
+                                                        <input ng-model="tdi.notes" ng-disabled="true">
                                                         </md-input-container>
                                                     </div>
                                                     <div layout layout-sm="column" layout-margin>
                                                        <section-title > </section-title>
                                                         <md-input-container flex >
                                                             <label>Payment Method</label>
-                                                            <md-select  ng-model="tdi.paymentMethod" flex>
-                                                                <md-optgroup label="Online Payment Method">
-                                                                    <md-option value="Credit">Credit</md-option>
-                                                                    <md-option value="Debit">Debit</md-option>
-                                                                </md-optgroup>
-                                                            </md-select>
+                                                            <input ng-model="tdi.paymentMethod" ng-disabled="true">
+                                                           
                                                         </md-input-container>
                                                     </div>
                                                     <div layout layout-sm="column" layout-margin>
                                                        <section-title > </section-title>
-                                                        <div layout="column" style="margin-left:0px;" class="chipsdemoBasicUsage" flex>
-                                                            <md-content class="md-padding" layout="column">
-                                                                <md-chips
-                                                                ng-model="tdi.roFruitNames"
-                                                                readonly="readonly"
-                                                                placeholder="Enter a tag"
-                                                                delete-button-label="Remove Tag"
-                                                                delete-hint="Press delete to remove tag"
-                                                                secondary-placeholder="+Tag">
-                                                                    <md-chip-template>
-                                                                        <strong>{{$chip}}</strong>
-                                                                    </md-chip-template>
-                                                                </md-chips>
-                                                            </md-content>
-                                                        </div>
+                                                         <div layout="column" ng-init="DemoCtrl2()" style="margin-left:0px;" class="chipsdemoBasicUsage" flex>
+                                                                <md-content class="md-padding" layout="column">
+                                                                    <md-chips ng-model="tdi.roFruitNames" readonly="readonly" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
+                                                                        <md-chip-template>
+                                                                            <strong>{{$chip}}</strong>
+                                                                        </md-chip-template>
+                                                                    </md-chips>
+                                                                </md-content>
+                                                            </div>
                                                     </div>
                                                     <md-divider></md-divider>
                                                     <div class="md-actions" layout="row" layout-align="center center" style="display:none">

@@ -13,24 +13,36 @@
     <!--   -->
             <md-content ng-repeat="tdi in invoiceArray"  flex>
            <!--   -->
-           
-                <div layout layout-sm="column" layout-margin>
+            <div layout layout-sm="column" layout-margin>
                   <section-title title="Customer Details"> </section-title>
-                  <md-input-container flex>
-                      <label>Select Customer</label>
-                      <input ng-model="tdi.Name">
-                      </md-input-container>
+           <md-autocomplete 
+                      flex="70" 
+                      md-input-name="autocompleteField"
+                      md-no-cache="ctrl.noCache" 
+                      md-selected-item="$root.selctedName" 
+                      md-search-text="ctrl.searchText"
+                      md-items="item in ctrl.querySearch(ctrl.searchText)" 
+                      md-item-text="item.display" 
+                      md-floating-label="Customer"
+                      md-autofocus="true"
+                      md-selected-item-change="selectedItemChange($root.selctedName)">
+                        <md-item-template>
+                            <span  md-highlight-text="ctrl.searchText"  md-highlight-flags="^i">
+                            {{item.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
                   </div>
-                  <div layout layout-sm="column" layout-margin>
+                
+                  <div layout layout-sm="column" style="margin-top:-50px;" layout-margin>
                      <section-title > </section-title>
-                      <md-input-container flex="70" ng-show="Billingaddress">
-                          <label>Billing Address</label>
-                          <input  ng-model="tdi.billingAddress" ng-disabled="true"/>
-                      </md-input-container>
-                      <md-input-container flex="70" ng-show="Shippingaddress" >
-                          <label>Shipping Address</label>
-                          <input  ng-model="tdi.shippingAddress" ng-disabled="true"/>
-                      </md-input-container>
+                       <md-input-container flex="70" ng-show="Billingaddress">
+                        <label>Billing Address</label>
+                        <input  ng-model="$root.selctedName.BillingAddress " ng-disabled="true"/>
+                    </md-input-container>
+                    <md-input-container flex="70" ng-show="Shippingaddress" >
+                        <label>Shipping Address</label>
+                        <input  ng-model="$root.selctedName.ShippingAddress " ng-disabled="true"/>
+                    </md-input-container>
                       <div style="height:30px;width:30px;margin-top:35px;"> 
                       <md-button ng-click="changeAddress()" style="height:30px;" aria-label="change_Address" href>
                       <md-icon md-svg-src="img/ic_swap_vert_24px.svg" class="iconColor"  md-ink-ripple style="right:1px;left:95%;top:20px;" ></md-icon>
@@ -116,7 +128,7 @@
                                                   </md-button>
                                                   <md-menu-content width="4">
                                                       <md-menu-item>
-                                                          <md-button href ng-click="viewSavedProducts(item)">
+                                                          <md-button href ng-click="viewSavedProducts(item,$index)">
                                                               <p>view</p>
                                                               <md-icon md-menu-align-target ></md-icon>
                                                           </md-button>
@@ -170,7 +182,7 @@
                                   </md-card>
                               </li>
                           </ul>
-                      <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
+                      <div layout="row" ng-show="AddProd" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
                            <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addProductArray(tdi.invoiceProducts)">New Line</md-button>
                       </div>
                      </div>
@@ -217,7 +229,7 @@
                           <span style="display:none">{{CalculateTax()| currency}}</span>
                       </div>
                   </div>
-                   <div layout layout-sm="column" ng-repeat="tt in taxArr" layout-margin 
+                   <div layout layout-sm="column" ng-repeat="tt in taxArr1" layout-margin 
                    style="overflow:hidden;">
                    <!-- {{tt}} -->
                                 <div flex="5"></div>

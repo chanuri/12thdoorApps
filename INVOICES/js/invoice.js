@@ -112,14 +112,16 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
     $scope.CusFields = [];
     $scope.roles = [];
     $scope.permission = [];
-
+    $scope.TDinvoice.paymentOptions = [];
 
     var client = $objectstore.getClient("Settings12thdoor");
     client.onGetMany(function(data) {
         if (data) {
             $scope.Settings = data;
             for (var i = $scope.Settings.length - 1; i >= 0; i--) {
-
+                if($scope.Settings[i].payments){
+                    $scope.TDinvoice.paymentOptions = $scope.Settings[i].payments;
+                }
                 if ($scope.Settings[i].preference.invoicepref) {
                     $scope.com = $scope.Settings[i].preference.invoicepref.defaultComm;
                     $scope.note = $scope.Settings[i].preference.invoicepref.defaultNote;
@@ -135,6 +137,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
                     $scope.cusF = $scope.Settings[i].preference.invoicepref.CusFiel
 
                     $scope.ShowDiscount = $scope.Settings[i].preference.invoicepref.enableDisscounts;
+                    $rootScope.email = $scope.Settings[i].preference.invoicepref.emailcontent.emailBody;
 
                     if ($scope.Settings[i].preference.invoicepref.enableDisscounts == true) {
                         $scope.dis = $scope.Settings[i].preference.invoicepref.disscountItemsOption;
@@ -248,7 +251,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
         }
     });
 
-    //----------set date according to the payment term type----------------------------
+//----------set date according to the payment term type----------------------------
     $scope.$watch("TDinvoice.termtype", function() {
         if ($scope.TDinvoice.termtype == "DueonReceipt") {
             $scope.dueOnReceiptDay = new Date();
@@ -325,7 +328,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
         }
     });
 
-    //-------------------------------------------------------------------------------------
+ //-------------------------------------------------------------------------------------
 
     $scope.sortableOptions = {
         containment: '#sortable-container'
@@ -361,33 +364,33 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
         })
     }
 
-    // $.getJSON("http://openexchangerates.org/api/latest.json?app_id=32c5a0d1a1204a57be97937c10121785",
-    //     function(data) {
-    //         console.log(data.rates)
-    //         for (var key in data.rates) {
-    //             if (data.rates.hasOwnProperty(key)) {
-    //                 var text = document.createTextNode(key);
-    //                 var select = document.getElementsByClassName('form-control')[1];
+//----------------------------Currency exchange (get currency by openexchangerates API)-------------------------------------
+$scope.Currency = [];
+$scope.ll = [];
 
-    //                 console.log(select);
+    $http({
+        url : 'http://openexchangerates.org/api/latest.json?app_id=32c5a0d1a1204a57be97937c10121785&base=USD',
+        method : 'GET'
+    }).then(function(response){
+        for (var key in response.data.rates) {
+            $scope.Currency.push(key)
+            if($scope.TDinvoice.currency == key){
+                $scope.TDinvoice.exchangeRate = response.data.rates[key];
+            }
 
-    //                 select.appendChild(document.createElement('option')).appendChild(text);
-    //             }
-    //         }
-    //         for (var value in data.rates) {
-    //             if (data.rates.hasOwnProperty(value)) {
-    //                 var text = document.createTextNode(value);
-    //                 var select = document.getElementsByClassName('form-control')[2];
-
-    //                 console.log(select);
-
-    //                 select.appendChild(document.createElement('option')).appendChild(text);
-    //             }
-    //         }
-
-    //     });
-
-    //pops a dialog box which enble the user to add Multiple du dates
+        }
+        $scope.changeCurrency = function(){
+            for (var key in response.data.rates) {
+            $scope.Currency.push(key)
+            if($scope.TDinvoice.currency == key){
+                $scope.TDinvoice.exchangeRate = response.data.rates[key];
+            }
+        }
+        }
+    },function(response){
+        console.log(response)
+    })
+//------------------pops a dialog box which enble the user to add Multiple du dates--------------------------------
     $scope.MultiDuDates = function(data) {
         if ($rootScope.famount == 0) {
             $mdDialog.show(
@@ -1039,10 +1042,11 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
                                 );
                             });
                             $scope.contact.favoritestar = false;
+                            $scope.contact.status = 'Active';
+                            $scope.contact.deleteStatus = 'false'
+                            $scope.contact.cb = true;
                             $scope.contact.customerid = "-999";
-                            client.insert($scope.contact, {
-                                KeyProperty: "customerid"
-                            });
+                            client.insert($scope.contact, {KeyProperty: "customerid"});
 
                             $rootScope.customerNames.push({
                                 display: $scope.contact.Name.toLowerCase(),
@@ -1191,7 +1195,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
             }
         });
         client.onError(function(data) {});
-        client.getByFiltering("select * from contact12thdoor where status = 'Active'");
+        client.getByFiltering("select * from contact12thdoor Where status = 'Active'");
     }
 
     $scope.Billingaddress = true;
@@ -1204,6 +1208,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
     $scope.cancel = function() {
         $mdDialog.cancel();
     }
+
     $scope.productCode = [];
     var client = $objectstore.getClient("product12thdoor");
     client.onGetMany(function(data) {
@@ -1226,7 +1231,9 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
     client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
 
     $scope.view = function() {
+        $rootScope.taxArr1 = [];
         location.href = '#/invoice_app';
+
     }
     $scope.check = function(cc) {
         $scope.TDinvoice.CuSFields = {};

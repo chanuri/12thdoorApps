@@ -68,7 +68,7 @@
                         	 <md-button ng-click="email(item)" style="height:30px;" aria-label="change address" href>
                                     <md-icon md-svg-icon="img/ic_email_24px.svg" style="height:20px; width:20px;"></md-icon>
                                </md-button>
-                               <md-button ng-if="item.paymentStatus == 'Pending'" class="md-raised md-primary"ng-click="Approve(item)" href style="background:green; margin-top:-5px;">Approve</md-button>
+                               <md-button ng-repeat="tt in item.MultiDueDAtesArr" ng-if="tt.paymentStatus == 'Pending'" class="md-raised md-primary"ng-click="Approve(item)" href style="background:green; margin-top:-5px;">Approve</md-button>
                                <md-menu md-position-mode="target-right target" >
                             <md-button href aria-label="Open demo menu" class="md-icon-button"  ng-click="$mdOpenMenu()">
                                 <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:2px;" ></md-icon>

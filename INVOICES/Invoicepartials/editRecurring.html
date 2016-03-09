@@ -23,7 +23,7 @@
                             {{item.display}}</span>
                         </md-item-template>
                     </md-autocomplete> -->
-                    <md-input-container flex="67" >
+                    <md-input-container flex="70" >
                         <label>Customer Name</label>
                         <input  ng-model="TDinvoice.Name " />
                     </md-input-container>
@@ -31,11 +31,11 @@
                 <div layout layout-sm="column" layout-margin>
                     <section-title> </section-title>
                      
-                    <md-input-container flex="67" ng-show="Billingaddress">
+                    <md-input-container flex="70" ng-show="Billingaddress">
                         <label>Billing Address</label>
                         <input  ng-model="TDinvoice.billingAddress " />
                     </md-input-container>
-                    <md-input-container flex="67" ng-show="Shippingaddress" >
+                    <md-input-container flex="70" ng-show="Shippingaddress" >
                         <label>Shipping Address</label>
                         <input  ng-model="TDinvoice.shippingAddress " />
                     </md-input-container>
@@ -179,7 +179,7 @@
             </md-card-content>
             </md-card></li>
           </ul>
-            <div layout="row" layout-sm="column"  flex style="margin-left:10px; margin-top:25px;">
+            <div layout="row" layout-sm="column"   flex style="margin-left:10px; margin-top:25px;">
                              <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addprofProduct(TDinvoice.recurringProducts)">New Line</md-button>
                         </div>
                        </div>

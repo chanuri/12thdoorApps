@@ -154,6 +154,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         $scope.edit = function(updatedForm) {
             updatedForm.invoiceNo = updatedForm.invoiceNo.toString();
             for (var x = updatedForm.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+                console.log(updatedForm.MultiDueDAtesArr[x])
                 $scope.status = updatedForm.MultiDueDAtesArr[x].paymentStatus;
             }
             console.log($scope.status)
@@ -416,10 +417,33 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         }
 //---------------Deelete Product---------------------------------------------------------------------------------------------
         $scope.deleteEditproduct = function(name, index) {
+            for (var i = $rootScope.invoiceArray[0].MultiDueDAtesArr.length - 1; i >= 0; i--) {
+            $scope.ttt = $rootScope.invoiceArray[0].MultiDueDAtesArr[i].paymentStatus;
+            }
+            if($state.current.name == 'edit'){
+               if( $scope.ttt== "Paid"){
+                 $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .title('Warning')
+                    .content('Since you have done a payment to this invoice you cannot delete this nvoice')
+                    .ariaLabel('Alert Dialog Demo')
+                    .ok('OK')
+                );
+               }else{
+                $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
+                InvoiceService.ReverseEditTax(name, index);
+                console.log($rootScope.getTax)
+                $scope.CalculateTax();
+               }
+           }else{
             $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
             InvoiceService.ReverseEditTax(name, index);
             console.log($rootScope.getTax)
             $scope.CalculateTax();
+           }
+
+            
         }
 //--------------add product --------------------------------------------------------------------------------------------
         $scope.addProductArray = function(ev, arr) {
@@ -498,7 +522,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                                         $mdDialog.show(confirm).then(function(item) {
                                             for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
                                                 $scope.prod.Productname = $scope.promoItems[i].productName;
-                                                $scope.prod.costprice = $scope.promoItems[i].price;
+                                                $scope.prod.productprice = $scope.promoItems[i].price;
                                                 $scope.prod.ProductUnit = $scope.promoItems[i].ProductUnit;
                                                 $scope.prod.producttax = $scope.promoItems[i].tax;
 
@@ -615,7 +639,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
 
                             if ($scope.product[i].Productname.toLowerCase() === package.toLowerCase()) {
                                 $scope.SproductName = package;
-                                $scope.Sprice = $scope.product[i].costprice;
+                                $scope.Sprice = $scope.product[i].productprice;
                                 $scope.SProductUnit = $scope.product[i].ProductUnit;
                                 $scope.Sqty = $scope.qty;
                                 $scope.Solp = $scope.olp;
@@ -624,7 +648,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                                 $scope.promoItems.splice(0, 1)
                                 $scope.promoItems.push({
                                     productName: package,
-                                    price: $scope.product[i].costprice,
+                                    price: $scope.product[i].productprice,
                                     tax: $scope.product[i].producttax,
                                     ProductUnit: $scope.product[i].ProductUnit,
                                     qty: $scope.qty,

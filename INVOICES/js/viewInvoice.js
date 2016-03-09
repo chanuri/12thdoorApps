@@ -678,6 +678,7 @@
 
         }, 100, 0, true);
 
+        $scope.calBalance = 0;
         //retrieve Data from invoice class
         var client = $objectstore.getClient("invoice12thdoorDraft");
         client.onGetMany(function(data) {
@@ -703,6 +704,8 @@
                             $scope.ShippingStreet = $scope.shippingAddress[0];
                             $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
                             $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
+
+                            $scope.calBalance += data[i].MultiDueDAtesArr.balance;
                         }
                     }
                 };
@@ -745,6 +748,8 @@
                             $scope.ShippingStreet = $scope.shippingAddress[0];
                             $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
                             $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
+                            
+                            $scope.calBalance += data[i].MultiDueDAtesArr.balance;
                         }
                     };
                 }

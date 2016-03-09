@@ -252,7 +252,7 @@ app.controller('editRecurring', function($scope, $mdDialog, $objectstore, $windo
                                     $mdDialog.show(confirm).then(function(item) {
                                         for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
                                             $scope.prod.Productname = $scope.promoItems[i].productName;
-                                            $scope.prod.costprice = $scope.promoItems[i].price;
+                                            $scope.prod.productprice = $scope.promoItems[i].price;
                                             $scope.prod.ProductUnit = $scope.promoItems[i].ProductUnit;
                                             $scope.prod.producttax = $scope.promoItems[i].tax;
 
@@ -370,7 +370,7 @@ app.controller('editRecurring', function($scope, $mdDialog, $objectstore, $windo
 
                         if ($scope.product[i].Productname.toLowerCase() === package.toLowerCase()) {
                             $scope.SproductName = package;
-                            $scope.Sprice = $scope.product[i].costprice;
+                            $scope.Sprice = $scope.product[i].productprice;
                             $scope.SProductUnit = $scope.product[i].ProductUnit;
                             $scope.Sqty = $scope.qty;
                             $scope.Solp = $scope.olp;
@@ -379,7 +379,7 @@ app.controller('editRecurring', function($scope, $mdDialog, $objectstore, $windo
                             $scope.promoItems.splice(0, 1)
                             $scope.promoItems.push({
                                 productName: package,
-                                price: $scope.product[i].costprice,
+                                price: $scope.product[i].productprice,
                                 tax: $scope.product[i].producttax,
                                 ProductUnit: $scope.product[i].ProductUnit,
                                 qty: $scope.qty,

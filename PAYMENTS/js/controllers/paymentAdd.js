@@ -198,20 +198,20 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         client.getByFiltering("select * from contact12thdoor where status = 'Active'");
     }
 
-    // load payment details
-    $scope.AdvancefullArr = [];
-    function loadAdvancePaymentDetails(name, callback){
+    // load payment details 
+    $scope.advancePaymentExsist = false;
+    function loadAdvancePaymentDetails(name,cusId,callback){
 
-        var paymentClient = $objectstore.getClient("advancedPayment12thdoor");
+        var paymentClient = $objectstore.getClient("advancedPayments12thdoor");
         paymentClient.onGetMany(function(data) {
-            $scope.AdvancefullArr = [];
-            if (data.length > 0) {
-                data[0].status = "Inactive"
-                $scope.paymentDetails = data[0];
-                $scope.AdvancefullArr.push(data[0]);
+            
+            if (data.length > 0) { 
+                if (!data[0].uAmount)  data[0].uAmount = 0;
+
+                $scope.advancedPayment = data[0]; 
 
                 var copyUamount = 0;               
-                copyUamount +=  angular.copy(parseInt($scope.paymentDetails.uAmount));
+                copyUamount +=  angular.copy(parseInt($scope.advancedPayment.uAmount));
                  
                 $scope.payment.uAmount = copyUamount;
 
@@ -219,19 +219,19 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                     $scope.nAmount = parseInt($scope.payment.amountReceived) + copyUamount;  
                 }else{
                     $scope.nAmount = copyUamount;
-                }            
+                } 
+                $scope.advancePaymentExsist = true;           
             }
-
             callback("success")
         });
         paymentClient.onError(function(data) {
             console.log("error loading payment details")
             callback("error")
         });
-        paymentClient.getByFiltering("select * from advancedPayment12thdoor where status ='Active' and customer = '"+name+"'");
+        paymentClient.getByFiltering("select * from advancedPayments12thdoor where customerid = '"+cusId+"'");
 
     }
-    $scope.selectedItemChange = function(name) {        
+    $scope.selectedItemChange = function(name,cusId) {        
         $scope.outstandingInvoices = [];
         $scope.fullArr = [];
 
@@ -250,8 +250,8 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                 $scope.allInvoiceArr = [];
                 $scope.TDInvoice.updateInvoice = angular.copy(data)
 
-                for (i = 0; i < $scope.TDInvoice.updateInvoice.length; i++) {
-                    for (j = 0; j < $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr.length; j++) {
+                for (i = 0; i <= $scope.TDInvoice.updateInvoice.length-1; i++) {
+                    for (j = 0; j <= $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr.length-1; j++) {
                         if (name == null) {
                             $scope.outstandingInvoices.splice(name, 1);
                             $scope.payment.uAmount = 0;
@@ -275,7 +275,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                 }
             }
 
-            loadAdvancePaymentDetails(name,function(status){                    
+            loadAdvancePaymentDetails(name,cusId,function(status){                    
                 $scope.allInvoiceArr = remove_duplicates($scope.allInvoiceArr); 
                 sortInvoiceArr();
             })
@@ -315,12 +315,32 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                     }
                 }else{
                     if ($scope.outstandingInvoices.length != i) {
-                        $scope.fullArr.push($scope.outstandingInvoices[i])
+                        if (oneInvoiceNoArr.length >= 1) {
+                            var sampleObj = oneInvoiceNoArr[oneInvoiceNoArr.length - 1];
+                            if (sampleObj.invono == $scope.outstandingInvoices[i].invono ) {
+                                
+                                oneInvoiceNoArr.push($scope.outstandingInvoices[i])
+                               
+                                oneInvoiceNoArr = oneInvoiceNoArr.sort(function(a,b){
+                                    return new Date(a.duedate) - new Date(b.duedate)
+                                })
+
+                                for(k=0; k<=oneInvoiceNoArr.length-1; k++){
+                                    if ( k!= 0) {
+                                        oneInvoiceNoArr[k].checkDisable = true;
+                                    }
+                                }
+                                $scope.fullArr = $scope.fullArr.concat(oneInvoiceNoArr)
+                                oneInvoiceNoArr = [];
+                            }
+
+                        }else{
+                            $scope.fullArr.push($scope.outstandingInvoices[i])
+                        } 
                     }
                 }
             }
-        }
-    
+        }    
     }
 
     function remove_duplicates(objectsArray) {  //remove duplicates object in an array 
@@ -392,8 +412,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                         $scope.fullArr[o].inputDisable = true;
                         break;
                     }
-                }
-                
+                }                
                 for(o=index; o<=$scope.fullArr.length-1; o++){ 
 
                     if ($scope.fullArr[o+1]) {
@@ -416,9 +435,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                     }else{
                         reverseCheckItem(o);
                         break; 
-                    }                    
-
-                                      
+                    }                
                 }              
               
                 function reverseCheckItem(o){
@@ -435,7 +452,6 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                         $scope.payment.total = parseInt($scope.payment.total) - parseInt($scope.fullArr[o].amount)
                         $scope.nAmount = parseInt($scope.nAmount) + parseInt($scope.fullArr[o].amount)
                     }
-
                     $scope.fullArr[o].amount = "";
                 }
             }
@@ -459,9 +475,8 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     }
 
     function saveAdvancePaymentToObjectstore(callback){
-
-        $scope.AdvancefullArr.push($scope.advancedPayment)
-        var paymentSave = $objectstore.getClient("advancedPayment12thdoor");
+ 
+        var paymentSave = $objectstore.getClient("advancedPayments12thdoor");
         paymentSave.onComplete(function(data){
             callback();
         });
@@ -470,7 +485,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             callback();
             $scope.submitProgress = false;
         });
-        paymentSave.insertMultiple($scope.AdvancefullArr,"advancedPayment_code"); 
+        paymentSave.insert($scope.advancedPayment,{'KeyProperty': 'advancedPayment_code'}); 
     }
 
     function saveToActivityClass(pcode,callback){ 
@@ -492,10 +507,14 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         $scope.payment.namount = $scope.nAmount;
         $scope.payment.paymentid = "-999";
         $scope.payment.paymentStatus = "active";
+        $scope.payment.customerid = $rootScope.selectedItem1.customerid;
         $scope.payment.customer = $rootScope.selectedItem1.display;        
         $scope.payment.UploadImages = {
             val: []
         };
+
+        if (!$scope.payment.paymentMethod)  $scope.payment.paymentMethod = "none" 
+        
         $scope.payment.custField = [];
 
         if ($scope.payCustArr.length > 0) {
@@ -508,15 +527,19 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             }            
         }
         
-        $scope.payment.UploadImages.val = UploaderService.loadBasicArray();
-        $scope.advancedPayment.advancedPayment_code = "-999";
-        $scope.advancedPayment.name = $scope.payment.customer +' '+ $rootScope.selectedItem1.Email;
-        $scope.advancedPayment.customer = $scope.payment.customer;
-        $scope.advancedPayment.uAmount = $scope.payment.uAmount;  
-        $scope.advancedPayment.status = "Active";       
+        $scope.payment.UploadImages.val = UploaderService.loadBasicArray()
+
+        $scope.advancedPayment.uAmount = $scope.payment.namount;
+        if (!$scope.advancePaymentExsist) {
+
+            $scope.advancedPayment.name = $scope.payment.customer +' '+ $rootScope.selectedItem1.Email;
+            $scope.advancedPayment.customer = $scope.payment.customer;            
+            $scope.advancedPayment.customerid = $rootScope.selectedItem1.customerid;
+            $scope.advancedPayment_code = "-999";
+
+        }       
 
         $scope.payment.uAmount = $scope.payment.namount;
-        $scope.advancedPayment.uAmount = $scope.payment.uAmount;
 
 
         if ((parseInt($scope.payment.namoun) == parseInt($scope.payment.total)) || parseInt($scope.nAmount) == 0){

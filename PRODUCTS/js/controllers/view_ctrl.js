@@ -279,7 +279,7 @@ rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$s
 			console.log("error Loading Contact Details")
 		});
 		client.getByFiltering("*");
-
+		
 		// auto complete chips 
 		$scope.selectedItem = null;
 		$scope.searchText = null;

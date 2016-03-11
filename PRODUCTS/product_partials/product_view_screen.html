@@ -230,9 +230,9 @@ md-input-container.md-input-focused label {
                       <div flex>
                          <span>Tags</span>
                       </div>
-                      <div flex layout="row"  layout-sm="row" style="margin-left: -20px;">
-                            <span  ng-repeat="item in product.tags"><span style="margin-left: 10px;">{{item}}
-                            </span></span>                                 
+                      <div flex layout="column"  layout-sm="row" style="margin-left: -20px;">
+                             <span ng-repeat="item in product.tags" style="margin-left: 10px;">{{item}}
+                            </span>                                 
                            <br>
 
                       </div>

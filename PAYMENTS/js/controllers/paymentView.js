@@ -49,7 +49,7 @@
       close: false
     }, {
       name: "Amount",
-      id: "total",
+      id: "amountReceived",
       src: "img/ic_add_shopping_cart_48px.svg",
       upstatus : false,
       downstatus : false,
@@ -279,6 +279,7 @@
         var client = $objectstore.getClient("payment");
         client.onGetMany(function(data) {
             if (data) {
+
                 $scope.payments = uiInitilize.insertIndex(data);
                 //$scope.payments = data;
                 if ($scope.PayArr) {
@@ -288,7 +289,10 @@
                     }
                 }
                 for(i=0; i<= $scope.payments.length-1; i++){
-                    if ($scope.payments[i].paidInvoice.length > 0) {
+                    $scope.payments[i].amountReceived = parseInt($scope.payments[i].amountReceived)
+                    $scope.payments[i].paymentid = parseInt($scope.payments[i].paymentid)
+
+                    if ($scope.payments[i].paidInvoice) {
                         for(y=0; y<= $scope.payments[i].paidInvoice.length-1; y++){
                             $scope.payments[i].paidInvoice[y].paidAmount = parseInt($scope.payments[i].paidInvoice[y].amount) - parseInt($scope.payments[i].paidInvoice[y].balance);
                         }                        
@@ -324,6 +328,8 @@
                 obj.favouriteStarNo = 1;
             }
 
+            obj.amountReceived  = obj.amountReceived.toString();
+            obj.paymentid = obj.paymentid.toString();
             obj.favoritestar = !obj.favoritestar;
             client.insert(obj, {
                 KeyProperty: "paymentid"

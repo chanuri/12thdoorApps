@@ -23,7 +23,7 @@
                   md-selected-item="$root.selectedItem1" md-search-text="ctrl.searchText" 
                   md-items="item in ctrl.querySearch(ctrl.searchText, $event)" md-item-text="item.display" 
                   md-floating-label="Customer" md-autofocus="true"
-                  md-selected-item-change="selectedItemChange(item.display)" 
+                  md-selected-item-change="selectedItemChange(item.display, item.customerid)" 
                   ng-keyup="keyPressAutoComplete($event)" >
                   <md-item-template>
                             <span class="item-title">

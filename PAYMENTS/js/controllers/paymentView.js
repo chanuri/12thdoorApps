@@ -289,12 +289,12 @@
                     }
                 }
                 for(i=0; i<= $scope.payments.length-1; i++){
-                    $scope.payments[i].amountReceived = parseInt($scope.payments[i].amountReceived)
-                    $scope.payments[i].paymentid = parseInt($scope.payments[i].paymentid)
+                    $scope.payments[i].amountReceived = parseFloat($scope.payments[i].amountReceived)
+                    $scope.payments[i].paymentid = parseFloat($scope.payments[i].paymentid)
 
                     if ($scope.payments[i].paidInvoice) {
                         for(y=0; y<= $scope.payments[i].paidInvoice.length-1; y++){
-                            $scope.payments[i].paidInvoice[y].paidAmount = parseInt($scope.payments[i].paidInvoice[y].amount) - parseInt($scope.payments[i].paidInvoice[y].balance);
+                            $scope.payments[i].paidInvoice[y].paidAmount = parseFloat($scope.payments[i].paidInvoice[y].amount) - parseFloat($scope.payments[i].paidInvoice[y].balance);
                         }                        
                     }
                 }

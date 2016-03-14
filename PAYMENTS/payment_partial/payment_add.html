@@ -24,7 +24,7 @@
                   md-items="item in ctrl.querySearch(ctrl.searchText, $event)" md-item-text="item.display" 
                   md-floating-label="Customer" md-autofocus="true"
                   md-selected-item-change="selectedItemChange(item.display, item.customerid)" 
-                  ng-keyup="keyPressAutoComplete($event)" >
+                  ng-keyup="keyPressAutoComplete($event)" ng-required="true" >
                   <md-item-template>
                             <span class="item-title">
                                 <span>{{item.display}}</span>
@@ -42,7 +42,7 @@
                <section-title></section-title> 
                <md-input-container class="md-block" flex-gt-sm >
                   <label>Payment Number</label>
-                  <input ng-model="payment.paymentref" required>
+                  <input ng-model="payment.paymentref" required ng-disabled="true">
                </md-input-container class="md-block" flex-gt-sm>
                <div flex style="margin-top:19px;">
                   <md-datepicker ng-model="payment.date" date-disabled="disabled(payment.date, mode)" md-placeholder="Enter date"

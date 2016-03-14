@@ -5,13 +5,12 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
     $scope.maxNumber = 0;
 
 
-    var domainClient = $objectstore.getClient("domainClassAttributes");
+    var domainClient = $objectstore.getClient("payment");
     domainClient.onGetMany(function(data) {
-        if (data.length > 0) {
-            $scope.maxNumber = data[0].maxCount;
-        }
+        console.log(data)
+       $scope.maxNum
     });
-    domainClient.getByFiltering("select maxCount from domainClassAttributes where class='payment'");
+    domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' order by date desc ").skip(0).take(1);
 
     var client = $objectstore.getClient('payment');
     client.onGetOne(function(data) {
@@ -73,14 +72,14 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
                         if (data[j].invoiceNo == item.paidInvoice[i].invono) {
                             for(k=0; k<=data[j].MultiDueDAtesArr.length-1; k++ ){
                                 if (data[j].MultiDueDAtesArr[k]['DueDate'] == item.paidInvoice[i].duedate) {
-                                    // console.log(data[j].MultiDueDAtesArr[k]['DueDate'] +"=="+ item.paidInvoice[i].duedate)
-                                    //     if ( parseInt(data[j].MultiDueDAtesArr[k].dueDateprice) != parseInt(item.paidInvoice[i].balance) ) {
-                                    //         var diff = parseInt(item.paidInvoice[i].amount) - parseInt(item.paidInvoice[i].balance);
-                                    //         data[j].MultiDueDAtesArr[k].balance = parseInt(data[j].MultiDueDAtesArr[k].balance) + diff;
+                                    //     console.log(data[j].MultiDueDAtesArr[k]['DueDate'] +"=="+ item.paidInvoice[i].duedate)
+                                    //     if ( parseFloat(data[j].MultiDueDAtesArr[k].dueDateprice) != parseFloat(item.paidInvoice[i].balance) ) {
+                                    //         var diff = parseFloat(item.paidInvoice[i].amount) - parseFloat(item.paidInvoice[i].balance);
+                                    //         data[j].MultiDueDAtesArr[k].balance = parseFloat(data[j].MultiDueDAtesArr[k].balance) + diff;
                                             
-                                    //         if (parseInt(data[j].MultiDueDAtesArr[k].balance) == parseInt(data[j].MultiDueDAtesArr[k].dueDateprice)) {
+                                    //         if (parseFloat(data[j].MultiDueDAtesArr[k].balance) == parseFloat(data[j].MultiDueDAtesArr[k].dueDateprice)) {
                                     //             data[j].MultiDueDAtesArr[k].paymentStatus = "Unpaid";
-                                    //         }else if (parseInt(data[j].MultiDueDAtesArr[k].balance) != parseInt(data[j].MultiDueDAtesArr[k].dueDateprice)) {
+                                    //         }else if (parseFloat(data[j].MultiDueDAtesArr[k].balance) != parseFloat(data[j].MultiDueDAtesArr[k].dueDateprice)) {
                                     //             data[j].MultiDueDAtesArr[k].paymentStatus = "Partially Paid";
                                     //         }
                                                                              
@@ -90,17 +89,17 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
                                         
                                     //     $scope.invoiceStatus = true;
                                     //     addToLegger(type,data[j],diff)
-                                    if (parseInt(item.paidInvoice[i].balance) !=  parseInt(data[j].MultiDueDAtesArr[k].dueDateprice) ) {
+                                    if (parseFloat(item.paidInvoice[i].balance) !=  parseFloat(data[j].MultiDueDAtesArr[k].dueDateprice) ) {
                                         
-                                        data[j].MultiDueDAtesArr[k].balance = parseInt(item.paidInvoice[i].balance)
-                                        if (parseInt(data[j].MultiDueDAtesArr[k].balance) == 0) {
+                                        data[j].MultiDueDAtesArr[k].balance = parseFloat(item.paidInvoice[i].balance)
+                                        if (parseFloat(data[j].MultiDueDAtesArr[k].balance) == 0) {
                                             data[j].MultiDueDAtesArr[k].paymentStatus = "Paid"
                                         }else {
                                             data[j].MultiDueDAtesArr[k].paymentStatus = "Partially Paid"
                                         }
                                         
                                     }else{
-                                        data[j].MultiDueDAtesArr[k].balance = parseInt(item.paidInvoice[i].balance);
+                                        data[j].MultiDueDAtesArr[k].balance = parseFloat(item.paidInvoice[i].balance);
                                         data[j].MultiDueDAtesArr[k].paymentStatus = "Unpaid"
                                     }
                                     $scope.invoiceStatus = true;
@@ -288,7 +287,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
 
     $scope.cancelPayment2 = function(item){
         var advancePayment =  $scope.advancePaymentData.uAmount
-        var amountReceived = parseInt(item.amountReceived)
+        var amountReceived = parseFloat(item.amountReceived)
         var payDiff;
 
         if (amountReceived <= advancePayment) {
@@ -319,14 +318,14 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
       if (item.paidInvoice) {
             var diff;
             for(r=item.paidInvoice.length-1; r>=0; r--){           
-                diff = parseInt(item.paidInvoice[r].amount) - parseInt(item.paidInvoice[r].balance) // amount that already paid 
+                diff = parseFloat(item.paidInvoice[r].amount) - parseFloat(item.paidInvoice[r].balance) // amount that already paid 
                 console.log("diff "+ diff)
                 if (diff <= payDiff) {
                     item.paidInvoice[r].balance =item.paidInvoice[r].amount  // new balance of that invoice 
                     console.log("diff <= payDiff balance" + item.paidInvoice[r].balance)
                     payDiff = payDiff - diff
                 }else if (diff > payDiff) {
-                    item.paidInvoice[r].balance = parseInt(item.paidInvoice[r].balance) + payDiff // new balance of that invoice 
+                    item.paidInvoice[r].balance = parseFloat(item.paidInvoice[r].balance) + payDiff // new balance of that invoice 
                     console.log("diff > payDiff balance" + item.paidInvoice[r].balance)
                     break;
                 }else break;

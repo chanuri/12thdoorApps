@@ -747,13 +747,13 @@ $scope.ll = [];
                                         }
 
                                         $scope.prod.ProductCategory = "Product";
-                                        $scope.prod.progressshow = "false"
+                                        $scope.prod.progressshow = false
                                         $scope.prod.deleteStatus = false
                                         $scope.prod.favouriteStar = false;
                                         $scope.prod.favouriteStarNo = 1;
                                         $scope.prod.tags = [];
                                         $scope.prod.status = "Active"
-                                        $scope.prod.deleteStatus = "false"
+                                        $scope.prod.deleteStatus = false
                                         $scope.prod.todaydate = new Date();
                                         $scope.prod.UploadImages = {
                                             val: []

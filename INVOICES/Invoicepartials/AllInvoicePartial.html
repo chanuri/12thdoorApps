@@ -50,11 +50,11 @@
                                 <b>Amount {{tdi.finalamount|currency:tdi.BaseCurrency}}</b>
                             </span>
                         </div>
-                        <div layout-sm="column" ng-if="tdi.termtype == 'multipleDueDates'" style="margin-top:10px;" flex>
-                            <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
-                                    Balace Due {{tt.balance|currency}}</span>
+                    <div layout-sm="column" ng-if="tdi.termtype == 'multipleDueDates'"  style="margin-top:10px;" flex>
+                        <span  style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
+                                    Balace Due {{Totalbalance(tdi)|currency:tdi.BaseCurrency}}</span>
 
-                            <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">
+                        <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; ">
                         Due Date. Multiple Due Dates
                         </span>
                            
@@ -63,13 +63,13 @@
                      <custome-progressbar invoice-obj="tdi"></custome-progressbar>
                     </div>
                         <div layout-sm="column" ng-repeat="tt in tdi.MultiDueDAtesArr" ng-if="tdi.termtype != 'multipleDueDates'" style="margin-top:10px;" flex>
-                            <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
-                                     Balace Due {{tt.balance|currency}}
+                        <span style="padding-right: 15px; border-right-style: solid; border-width:1px; font-size:13px;">
+                                     Balace Due {{tt.balance|currency:tdi.BaseCurrency}}
                          </span>
-                            <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; " ng-if="tdi.termtype != 'multipleDueDates'">
+                            <span style="padding-right: 15px; padding-left: 15px; border-width:1px; font-size:13px; " ng-if="tdi.termtype != 'multipleDueDates'">
                                         Due Date {{tdi.duedate|date}}
                                         </span>
-                            <span style="padding-right: 15px; padding-left: 15px;  border-width:1px; font-size:13px; " ng-if="tdi.termtype == 'multipleDueDates'">
+                            <span style="padding-right: 15px; padding-left: 15px; border-width:1px; font-size:13px; " ng-if="tdi.termtype == 'multipleDueDates'">
                                         Due Date. Multiple Due Dates
                                         </span>
 
@@ -210,7 +210,7 @@
                             </md-input-container>
                             <md-input-container flex>
                                 <label>Date</label>
-                                <input ng-model="tdi.Startdate|date" ng-disabled="true">
+                                <input ng-model="tdi.Startdate" ng-disabled="true">
                             </md-input-container>
 
                         </div>
@@ -222,7 +222,7 @@
                             </md-input-container>
                             <md-input-container flex>
                                 <label>Due Date</label>
-                                <input ng-model="tdi.duedate|date" ng-disabled="true">
+                                <input ng-model="tdi.duedate" ng-disabled="true">
                             </md-input-container>
 
                         </div>
@@ -261,7 +261,7 @@
                                                             </span>
                                                         </div>
                                                         <div flex>
-                                                            <span style="color:#808080;">{{item.price|currency:BaseCurrency}}
+                                                            <span style="color:#808080;">{{item.price|currency:tdi.BaseCurrency}}
                                                                 <md-tooltip>Price</md-tooltip>
                                                             </span>
                                                         </div>
@@ -279,7 +279,7 @@
                                                             </span>
                                                         </div>
                                                         <div flex >
-                                                            <span style="color:#808080;">{{item.amount|currency:BaseCurrency}}
+                                                            <span style="color:#808080;">{{item.amount|currency:tdi.BaseCurrency}}
                                
                                                                 
                                                                 <md-tooltip>Amount</md-tooltip>

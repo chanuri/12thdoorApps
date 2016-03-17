@@ -11,8 +11,8 @@
         <!--FORM START-->
         <form name="editForm" ng-submit="submit()" style="width:960px;"  >
             <md-content flex>
-                <div layout layout-sm="column" layout-margin  >
-                   <section-title title="Customer Details"> </section-title>
+                <div layout layout-sm="column" layout-margin>
+                   <section-title title="Customer Details"></section-title>
                     <md-autocomplete flex="70" required="" 
                     md-input-name="autocompleteField"
                          md-no-cache="ctrl.noCache" 
@@ -22,8 +22,7 @@
                           md-item-text="item.display" 
                           md-floating-label="Customer"
                           md-autofocus="true"
-                           md-selected-item-change="selectedItemChange($root.selectedItem2)"
-                          >
+                          md-selected-item-change="selectedItemChange($root.selectedItem2)">
                         <md-item-template>
                             <span  md-highlight-text="ctrl.searchText"  md-highlight-flags="^i">{{item.display}}</span>
                             <span class="item-metadata">
@@ -60,9 +59,9 @@
                      
                     <md-input-container flex="70" ng-show="Billingaddress">
                         <label>Billing Address</label>
-                        <input  ng-model="$root.selectedItem2.BillingValue " aria-label="billing" ng-disabled="true"/>
+                        <input  ng-model="$root.selectedItem2.BillingValue" aria-label="billing" ng-disabled="true"/>
                     </md-input-container>
-                    <md-input-container flex="70" ng-show="Shippingaddress" >
+                    <md-input-container flex="70" ng-show="Shippingaddress">
                         <label>Shipping Address</label>
                         <input  ng-model="$root.selectedItem2.shippingValue" aria-label="shipping" ng-disabled="true"/>
                     </md-input-container>
@@ -108,7 +107,7 @@
                     
                      <md-input-container flex >
                             <label>Occurences</label>
-                            <input ng-model="TDinvoice.occurences"  ng-required="true" >
+                            <input ng-model="TDinvoice.occurences" ng-required="true" >
                             </md-input-container>
                 </div>
                 <div layout layout-sm="column" layout-margin>
@@ -125,7 +124,7 @@
                             </md-input-container>
                         </div>
                         <md-divider></md-divider>
-                        <div >
+                        <div>
                             <div layout layout-sm="row" layout-margin  >
                                 
                                  <section-title title="Invoice Items"> </section-title>

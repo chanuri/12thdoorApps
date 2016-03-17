@@ -231,299 +231,242 @@ var client = $objectstore.getClient("Settings12thdoor");
                 $scope.showPrice = false;
                 $scope.showQuantity = false;
                 $scope.showProduct = false;
-               //add product to the invoice
-              $scope.addproductToarray = function(item,ev) {
-                 // console.log(item)
-                  $scope.promoItems[0] = {
-                      productName: $scope.SproductName,
-                      price : $scope.Sprice,
-                      tax : $scope.Stax,
-                      ProductUnit : $scope.SProductUnit,
-                      qty : $scope.Sqty,
-                      discount: $scope.discount,
-                      olp: $scope.olp,
-                      status:$scope.Sstatus
-                  }
-                  // console.log($scope.promoItems)
-                  // console.log($scope.discount)
-                  for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
+                //console.log($rootScope.Showdiscount)
+                if ($rootScope.discounts == "Individual Items" && $rootScope.Showdiscount == true) {
+                    $scope.displayDiscountLine = true;
+                }
 
-                    if ($scope.promoItems[i].productName == null) {
-                        $scope.showProduct = true;
-                    } else if ($scope.promoItems[i].qty == null) {
-                        $scope.showQuantity = true;
-                    } else if ($scope.promoItems[i].ProductUnit == null) {
-                        $scope.showPercentage = true;
-
-                    } else if ($scope.promoItems[i].price == null) {
-                        $scope.showPrice = true;
-                    } else {
-                     recurringInvoiceService.setFullArr({
-                        Productname: $scope.promoItems[i].productName,
-                        price: $scope.promoItems[i].price,
-                        quantity: $scope.promoItems[i].qty,
-                        ProductUnit: $scope.promoItems[i].ProductUnit,
-                        discount: $scope.promoItems[i].discount,
-                        tax: $scope.promoItems[i].tax,
-                        olp: $scope.promoItems[i].olp,
-                        amount: $scope.Amount,
-                        status:$scope.promoItems[i].status,
-                     });
-                      // console.log($scope.promoItems[i].discount)
-                      // $rootScope.calculatetotal(); 
-                      if($scope.promoItems[i].status == 'notavailable'){
-                           var confirm = $mdDialog.confirm()
-                            .title('Would you like to save this product for future use?')
-                            .content('')
-                            .ariaLabel('Lucky day')
-                            .targetEvent(ev)
-                            .ok('save')
-                            .cancel('cancel');
-                      $mdDialog.show(confirm).then(function(item) {
+                $scope.addproductToarray = function(item) {
+                        $scope.promoItems[0] = {
+                            productName: $scope.SproductName,
+                            price: $scope.Sprice,
+                            tax: $scope.Stax,
+                            ProductUnit: $scope.SProductUnit,
+                            qty: $scope.Sqty,
+                            discount: $scope.discount,
+                            olp: $scope.olp,
+                            status: $scope.Sstatus
+                        }
                         for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
-                        $scope.prod.Productname = $scope.promoItems[i].productName;
-                         $scope.prod.productprice = $scope.promoItems[i].price;
-                         $scope.prod.ProductUnit=$scope.promoItems[i].ProductUnit;
-                         $scope.prod.producttax = $scope.promoItems[i].tax;                       
-                         
-                         console.log($scope.promoItems[i].tax);
-                         $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
-                          if ($scope.product.length>0) {
-                            //if array is not empty
-                             $scope.PatternExsist = false; // use to check pattern match the object of a array 
-                             $scope.MaxID = 0;
-                              for(y=0; y<=$scope.product.length-1; y++){
-                                if ($scope.product[y].ProductCode.substring(0, 3) === $scope.FirstLetters) {
-                                  $scope.CurrendID = $scope.product[y].ProductCodeID;
-                                  if ($scope.CurrendID > $scope.MaxID) {
-                                    $scope.MaxID = $scope.CurrendID;
-                                  };
-                                   $scope.PatternExsist = true;
-                                };
-                              }
-                              if (!$scope.PatternExsist) {
-                                $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
-                                $scope.prod.ProductCodeID = 1;
-                              }else if($scope.PatternExsist){
-                                $scope.GetMaxNumber($scope.prod,$scope.FirstLetters,$scope.MaxID)
-                              }       
-                          }else{
-                            $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
-                            $scope.prod.ProductCodeID = 1;
-                          }
+                            if ($scope.promoItems[i].productName == null) {
+                                $scope.showProduct = true;
+                            } else if ($scope.promoItems[i].qty == null) {
+                                $scope.showQuantity = true;
+                            } else if ($scope.promoItems[i].ProductUnit == null) {
+                                $scope.showPercentage = true;
 
-                       }
+                            } else if ($scope.promoItems[i].price == null) {
+                                $scope.showPrice = true;
+                            } else {
+                                recurringInvoiceService.setFullArr({
+                                    Productname: $scope.promoItems[i].productName,
+                                    price: $scope.promoItems[i].price,
+                                    quantity: $scope.promoItems[i].qty,
+                                    ProductUnit: $scope.promoItems[i].ProductUnit,
+                                    discount: $scope.promoItems[i].discount,
+                                    tax: $scope.promoItems[i].tax,
+                                    olp: $scope.promoItems[i].olp,
+                                    amount: $scope.Amount,
+                                    status: $scope.promoItems[i].status,
+                                });
 
-                       $scope.GetMaxNumber = function(obj,name,MaxID){
-                        $scope.FinalNumber = MaxID + 1;
-                        $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
-                        $scope.Zerros = "";
-                        for (i = 0; i < 4 - $scope.FinalNumberLength; i++) {
-                            var str = "0";
-                            $scope.Zerros = $scope.Zerros + str;
+                                if ($scope.promoItems[i].status == 'notavailable') {
+                                    var confirm = $mdDialog.confirm()
+                                        .title('Would you like to save this product for future use?')
+                                        .content('')
+                                        .ariaLabel('Lucky day')
+                                        .targetEvent(ev)
+                                        .ok('save')
+                                        .cancel('cancel');
+                                    $mdDialog.show(confirm).then(function(item) {
+                                        for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
+                                            $scope.prod.Productname = $scope.promoItems[i].productName;
+                                            $scope.prod.productprice = $scope.promoItems[i].price;
+                                            $scope.prod.ProductUnit = $scope.promoItems[i].ProductUnit;
+                                            $scope.prod.producttax = $scope.promoItems[i].tax;
+
+                                            $scope.FirstLetters = $scope.promoItems[i].productName.substring(0, 3).toUpperCase();
+                                            if ($scope.product.length > 0) {
+                                                //if array is not empty
+                                                $scope.PatternExsist = false; // use to check pattern match the object of a array 
+                                                $scope.MaxID = 0;
+                                                for (y = 0; y <= $scope.product.length - 1; y++) {
+                                                    if ($scope.product[y].ProductCode.substring(0, 3) === $scope.FirstLetters) {
+                                                        $scope.CurrendID = $scope.product[y].ProductCodeID;
+                                                        if ($scope.CurrendID > $scope.MaxID) {
+                                                            $scope.MaxID = $scope.CurrendID;
+                                                        };
+                                                        $scope.PatternExsist = true;
+                                                    };
+                                                }
+                                                if (!$scope.PatternExsist) {
+                                                    $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                                                    $scope.prod.ProductCodeID = 1;
+                                                } else if ($scope.PatternExsist) {
+                                                    $scope.GetMaxNumber($scope.prod, $scope.FirstLetters, $scope.MaxID)
+                                                }
+                                            } else {
+                                                $scope.prod.ProductCode = $scope.FirstLetters + '-0001';
+                                                $scope.prod.ProductCodeID = 1;
+                                            }
+                                        }
+
+                                        $scope.GetMaxNumber = function(obj, name, MaxID) {
+                                            $scope.FinalNumber = MaxID + 1;
+                                            $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
+                                            $scope.Zerros = "";
+                                            for (i = 0; i < 4 - $scope.FinalNumberLength; i++) {
+                                                var str = "0";
+                                                $scope.Zerros = $scope.Zerros + str;
+                                            }
+                                            $scope.Zerros = $scope.Zerros + $scope.FinalNumber.toString();
+                                            obj.ProductCodeID = $scope.FinalNumber;
+                                            obj.ProductCode = name + '-' + $scope.Zerros;
+                                        }
+
+                                        $scope.prod.ProductCategory = "Product";
+                                        $scope.prod.progressshow = "false"
+                                        $scope.prod.deleteStatus = false
+                                        $scope.prod.favouriteStar = false;
+                                        $scope.prod.favouriteStarNo = 1;
+                                        $scope.prod.tags = [];
+                                        $scope.prod.status = "Active"
+                                        $scope.prod.deleteStatus = "false"
+                                        $scope.prod.todaydate = new Date();
+                                        $scope.prod.UploadImages = {
+                                            val: []
+                                        };
+                                        $scope.prod.UploadBrochure = {
+                                            val: []
+                                        };
+                                        var client = $objectstore.getClient("product12thdoor");
+                                        client.onComplete(function(data) {
+                                            $mdDialog.show(
+                                                $mdDialog.alert()
+                                                .parent(angular.element(document.body))
+                                                .title('')
+                                                .content('product Successfully Saved')
+                                                .ariaLabel('Alert Dialog Demo')
+                                                .ok('OK')
+                                                .targetEvent(data)
+                                            );
+                                        });
+                                        client.onError(function(data) {
+                                            $mdDialog.show(
+                                                $mdDialog.alert()
+                                                .parent(angular.element(document.body))
+                                                .title('Sorry')
+                                                .content('Error saving product')
+                                                .ariaLabel('Alert Dialog Demo')
+                                                .ok('OK')
+                                                .targetEvent(data)
+                                            );
+                                        });
+                                        $scope.prod.product_code = "-999";
+                                        client.insert([$scope.prod], {
+                                            KeyProperty: "product_code"
+                                        });
+                                    }, function() {});
+                                }
+                                $mdDialog.hide();
+                            }
                         }
-                        $scope.Zerros = $scope.Zerros + $scope.FinalNumber.toString();
-                        obj.ProductCodeID = $scope.FinalNumber;
-                        obj.ProductCode = name + '-' + $scope.Zerros;
                     }
+                    //close dialog box
+                $scope.cancel = function() {
+                    $mdDialog.cancel();
+                }
 
-                    $scope.prod.ProductCategory = "Product";
-                    $scope.prod.progressshow = "false"
-                    $scope.prod.deleteStatus = false
-                    $scope.prod.favouriteStar = false;
-                    $scope.prod.favouriteStarNo = 1;
-                    $scope.prod.tags = [];
-                    $scope.prod.status = "Active"
-                    $scope.prod.deleteStatus = "false"
-                    $scope.prod.todaydate = new Date();
-                    $scope.prod.UploadImages = {
-                        val: []
-                    };
-                    $scope.prod.UploadBrochure = {
-                        val: []
-                    };
+                $scope.promoItems.push({
+                    productName: '',
+                    price: '',
+                    tax: '',
+                    ProductUnit: '',
+                    qty: '',
+                    discount: '',
+                    olp: '',
+                    status: ''
+                });
+                $scope.TaxDisabled = false;
+                $scope.setSelectedClient = function(package) {
+                    $scope.promoItems.tax = 0;
 
-                         var client = $objectstore.getClient("product12thdoor");
-                         client.onComplete(function(data) {
-                            $mdDialog.show(
-                               $mdDialog.alert()
-                               .parent(angular.element(document.body))
-                               .title('')
-                               .content('product Successfully Saved')
-                               .ariaLabel('Alert Dialog Demo')
-                               .ok('OK')
-                               .targetEvent(data)
-                            );
-                         });
-                         client.onError(function(data) {
-                            $mdDialog.show(
-                               $mdDialog.alert()
-                               .parent(angular.element(document.body))
-                               .title('Sorry')
-                               .content('Error saving product')
-                               .ariaLabel('Alert Dialog Demo')
-                               .ok('OK')
-                               .targetEvent(data)
-                            );
-                         });
-                         $scope.prod.product_code = "-999";
-                         client.insert([$scope.prod], {
-                            KeyProperty: "product_code"
-                         });
-                      }, function() {
-                      });
+                    for (var i = 0; i < $scope.product.length; i++) {
+
+                        if ($scope.product[i].Productname.toLowerCase() === package.toLowerCase()) {
+                            $scope.SproductName = package;
+                            $scope.Sprice = $scope.product[i].productprice;
+                            $scope.SProductUnit = $scope.product[i].ProductUnit;
+                            $scope.Sqty = $scope.qty;
+                            $scope.Solp = $scope.olp;
+                            $scope.Stax = $scope.product[i].producttax;
+                            $scope.Sstatus = "available"
+                            $scope.promoItems.splice(0, 1)
+                            $scope.promoItems.push({
+                                productName: package,
+                                price: $scope.product[i].productprice,
+                                tax: $scope.product[i].producttax,
+                                ProductUnit: $scope.product[i].ProductUnit,
+                                qty: $scope.qty,
+                                discount: $scope.discount,
+                                olp: $scope.olp,
+                                status: "available"
+                            });
+                            $scope.TaxDisabled = false;
+                            break;
+                        } else if ($scope.product[i].Productname.toLowerCase() != package.toLowerCase()) {
+                            $scope.SproductName = package;
+                            $scope.Sprice = $scope.productPrice;
+                            $scope.SProductUnit = $scope.promoItems[0].ProductUnit;
+                            $scope.Sqty = $scope.qty;
+                            $scope.Solp = $scope.olp;
+                            $scope.Stax = $scope.Ptax;
+                            $scope.Sstatus = "notavailable"
+                            $scope.promoItems.splice(0, 1)
+                            $scope.promoItems.push({
+                                productName: '',
+                                price: '',
+                                tax: '',
+                                qty: '',
+                                discount: '',
+                                ProductUnit: "each",
+                                olp: '',
+                                status: "notavailable"
+                            });
+                            $scope.TaxDisabled = false;
                         }
-                        //console.log($rootScope.testArray.val)
-                         $mdDialog.hide();
-                     }
                     }
-                  }
-                  //close dialog box
-               $scope.cancel = function() {
-                     $mdDialog.cancel();
-                  }
-                   
-                   $scope.promoItems.push({
-                     productName:'',
-                     price : '',
-                     tax : '',
-                     ProductUnit :'',
-                     qty:'',
-                     discount:'',
-                     olp:'',
-                     status:''
-                   });
-                  $scope.TaxDisabled = false;
-                  $scope.setSelectedClient = function (package){
-                         $scope.promoItems.tax = 0;
-                        $scope.discount = 0;
+                };
 
-                       for (var i = 0; i < $scope.product.length; i++) {
-                        
-                           if($scope.product[i].Productname.toLowerCase() === package.toLowerCase()){
-                              $scope.SproductName = package;
-                              $scope.Sprice = $scope.product[i].productprice;
-                              $scope.SProductUnit = $scope.product[i].ProductUnit;
-                              $scope.Sqty = $scope.qty;
-                              $scope.Solp = $scope.olp;
-                              $scope.Stax = $scope.product[i].producttax;
-                              $scope.Sstatus = "available"
-                              $scope.promoItems.splice(0,1)
-                               $scope.promoItems.push({
-                                     productName: package,
-                                     price : $scope.product[i].productprice,
-                                     tax : $scope.product[i].producttax,
-                                     ProductUnit : $scope.product[i].ProductUnit,
-                                     qty : $scope.qty,
-                                     discount: $scope.discount,
-                                     olp: $scope.olp,
-                                     status:"available"
-                             });
-                              $scope.TaxDisabled = false;
-                              break;
-                           }
-                           else if($scope.product[i].Productname.toLowerCase() != package.toLowerCase()){
-                              $scope.SproductName = package;
-                              $scope.Sprice = $scope.productPrice;
-                              $scope.SProductUnit = $scope.promoItems.ProductUnit;
-                              $scope.Sqty = $scope.qty;
-                              $scope.Solp = $scope.olp;
-                              $scope.Stax = $scope.Ptax;
-                              $scope.Sstatus = "notavailable"
-                              $scope.promoItems.splice(0,1)
-                              $scope.promoItems.push({
-                                  productName:'',
-                                  price : '',
-                                  tax :'',
-                                  qty : '',
-                                  discount: '',
-                                  ProductUnit :"each",
-                                  olp: '',
-                                 status:"notavailable"
-                             });
-                              $scope.TaxDisabled = false;
-                           }
-                       }
-                   };
+                $scope.setprice = function(pd) {
+                    $scope.Sprice = pd.price;
+                    $scope.calAMount()
+                }
 
-                   $scope.setprice = function(pd){
-                      $scope.Sprice = pd.price;
-                   }
-                   $scope.setTax = function(pDis){
-                    // if(pDis.status == "notavailable"){
-                      for (var i = $rootScope.taxType.length - 1; i >= 0; i--) {
-                       if($rootScope.taxType[i].taxname == pDis.tax.taxname){
+                $scope.setUOM = function(val) {
+                    $scope.SProductUnit = val.ProductUnit;
+                }
+
+                $scope.setTax = function(pDis) {
+                    for (var i = $rootScope.taxType.length - 1; i >= 0; i--) {
+                        if ($rootScope.taxType[i].taxname == pDis.tax.taxname) {
                             $scope.Ptax = ({
-                               taxname:$rootScope.taxType[i].taxname,
-                               activate: $rootScope.taxType[i].activate, 
-                               compound:$rootScope.taxType[i].compound,
-                               rate:$rootScope.taxType[i].rate, 
-                               type: $rootScope.taxType[i].type, 
-                               individualtaxes:$rootScope.taxType[i].individualtaxes});
-                           
+                                taxname: $rootScope.taxType[i].taxname,
+                                activate: $rootScope.taxType[i].activate,
+                                compound: $rootScope.taxType[i].compound,
+                                rate: $rootScope.taxType[i].rate,
+                                type: $rootScope.taxType[i].type,
+                                individualtaxes: $rootScope.taxType[i].individualtaxes
+                            });
                         }
-                      };
-                     $scope.Stax = $scope.Ptax;
-                     // console.log($scope.Stax);
+                    };
+                    $scope.Stax = $scope.Ptax;
+                }
 
-                   }
-                   $scope.setUOM = function(pUOM){
-                      $scope.SProductUnit = pUOM.ProductUnit;
-                   }
+                $scope.Amount = 0;
+                $scope.calAMount = function() {
 
-                  var client = $objectstore.getClient("product12thdoor");
-                     client.onGetMany(function(data) {
-                        if (data) {
-                           $scope.product = data;
-                        }
-                     });
-                     client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
-
-               //Uses auto complete to get the product details 
-               $rootScope.proload = loadpro();
-               $rootScope.selectedItemm = null;
-               $rootScope.searchTextt = null;
-               $rootScope.querySearchh = querySearchh;
-
-               function querySearchh(query) {
-                  $scope.enter = function(keyEvent) {
-                     if (keyEvent.which === 13) {
-                        if ($rootScope.selectedItemm === null) {
-                           $rootScope.selectedItemm = query;
-                        } else {}
-                     }
-                  }
-                  $rootScope.results = [];
-                  for (i = 0, len = $rootScope.proName.length; i < len; ++i) {
-                     if ($rootScope.proName[i].dis.indexOf(query.toLowerCase()) != -1) {
-                        $rootScope.results.push($rootScope.proName[i]);
-                     }
-                  }
-                  return $rootScope.results;
-               }
-               $rootScope.proName = [];
-
-               function loadpro() {
-                     var client = $objectstore.getClient("product12thdoor");
-                     client.onGetMany(function(data) {
-                        if (data) {
-                           for (i = 0, len = data.length; i < len; ++i) {
-                              $rootScope.proName.push({
-                                 dis: data[i].Productname.toLowerCase(),
-                                 valuep: data[i]
-                              });
-                           }
-                        }
-                     });
-                     client.onError(function(data) {
-                     });
-                     client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
-                  }
-
-                  //calculate the invoice amount for each product
-                  $scope.Amount = 0;
-               $scope.calAMount = function() {
-                  $scope.disc = 0;
+                    $scope.disc = 0;
                     $scope.totall = 0;
                     $scope.totall = $scope.Sprice * $scope.Sqty;
                     if ($rootScope.discounts == "Individual Items") {
@@ -533,10 +476,58 @@ var client = $objectstore.getClient("Settings12thdoor");
                         $scope.Amount = $scope.totall;
                     }
                     return $scope.Amount;
-               }
+                }
+
+                var client = $objectstore.getClient("product12thdoor");
+                client.onGetMany(function(data) {
+                    if (data) {
+                        $scope.product = data;
+                    }
+                });
+                client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
+
+                //Uses auto complete to get the product details 
+                $rootScope.proload = loadpro();
+                $rootScope.selectedItemm = null;
+                $rootScope.searchTextt = null;
+                $rootScope.querySearchh = querySearchh;
+
+                function querySearchh(query) {
+                    $scope.enter = function(keyEvent) {
+                        if (keyEvent.which === 13) {
+                            if ($rootScope.selectedItemm === null) {
+                                $rootScope.selectedItemm = query;
+                            } else {}
+                        }
+                    }
+                    $rootScope.results = [];
+                    for (i = 0, len = $rootScope.proName.length; i < len; ++i) {
+                        if ($rootScope.proName[i].dis.indexOf(query.toLowerCase()) != -1) {
+                            $rootScope.results.push($rootScope.proName[i]);
+                        }
+                    }
+                    return $rootScope.results;
+                }
+                $rootScope.proName = [];
+
+                function loadpro() {
+                    var client = $objectstore.getClient("product12thdoor");
+                    client.onGetMany(function(data) {
+                        if (data) {
+                            for (i = 0, len = data.length; i < len; ++i) {
+                                $rootScope.proName.push({
+                                    dis: data[i].Productname.toLowerCase(),
+                                    valuep: data[i]
+                                });
+                            }
+                        }
+                    });
+                    client.onError(function(data) {});
+                    client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
+                }
             }
-         })
-      }
+        })
+    }
 
 
       $scope.contacts = [];

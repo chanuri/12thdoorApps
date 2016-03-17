@@ -168,7 +168,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 updatedForm.duedate = $scope.duedate;
                 updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
                 $scope.systemMessage.push({
-                    text: "The Invoice was Edited by mr.Perera",
+                    text: "The Invoice was Edited by mr.dddd",
                     done: false,
                     date: new Date()
                 });
@@ -216,7 +216,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 updatedForm.Startdate = $scope.Startdate;
                 updatedForm.duedate = $scope.duedate;
                 $scope.systemMessage.push({
-                    text: "The Invoice was Edited by mr.Perera",
+                    text: "The Invoice was Edited by mr.dddd",
                     done: false,
                     date: new Date()
                 });
@@ -872,7 +872,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                     Percentage: updatedForm.MultiDueDAtesArr[i].Percentage,
                     dueDateprice: updatedForm.MultiDueDAtesArr[i].dueDateprice,
                     paymentStatus: 'Unpaid',
-                    balance: updatedForm.MultiDueDAtesArr[i].balance
+                    balance: updatedForm.MultiDueDAtesArr[i].dueDateprice
                  })
             }
             var client = $objectstore.getClient("invoice12thdoor");

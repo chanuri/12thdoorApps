@@ -1060,9 +1060,11 @@ app.controller('showproductCtrl', function($scope, $mdDialog, $rootScope, Invoic
         });
         client.onError(function(data) {});
         client.getByFiltering("*");
+
     $scope.cancel = function() {
         $mdDialog.cancel();
     };
+
     $scope.setTax = function(pDis) {
             for (var i = $scope.AllTaxes.length - 1; i >= 0; i--) {
                 if ($scope.AllTaxes[i].taxname == pDis.tax.taxname) {
@@ -1085,7 +1087,7 @@ app.controller('showproductCtrl', function($scope, $mdDialog, $rootScope, Invoic
             $scope.ttt = $rootScope.invoiceArray[0].MultiDueDAtesArr[i].paymentStatus;
             }
             if($state.current.name == 'edit'){
-               if( $scope.ttt== "Paid"){
+               if( $scope.ttt == "Paid"){
 
                 $mdDialog.show(
                     $mdDialog.alert()
@@ -1095,6 +1097,7 @@ app.controller('showproductCtrl', function($scope, $mdDialog, $rootScope, Invoic
                     .ariaLabel('Alert Dialog Demo')
                     .ok('OK')
                 );
+
             }else{
                 $rootScope.editProdArray.val.splice($rootScope.editProdArray.val.indexOf(tst), 1);
                 $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(tst), 1);
@@ -1144,9 +1147,6 @@ app.controller('showproductCtrl', function($scope, $mdDialog, $rootScope, Invoic
             };
                 $mdDialog.cancel();
             }
-            
-        
-        
     };
     $scope.calAMount = function() {
          $scope.Amount = 0;

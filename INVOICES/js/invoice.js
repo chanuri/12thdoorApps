@@ -636,6 +636,7 @@ $scope.ll = [];
         $rootScope.discounts = angular.copy($scope.dis);
         $rootScope.DisplayTaxes = angular.copy($scope.ShowTaxes);
         $rootScope.BaseCurrency1 = angular.copy($scope.BaseCurrency)
+        
             // console.log($scope.BaseCurrency1);
         $mdDialog.show({
             templateUrl: 'Invoicepartials/addproduct.html',

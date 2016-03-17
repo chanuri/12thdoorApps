@@ -15,7 +15,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
             };
             var doc = new jsPDF(options, '', '', '');
             doc.addImage(imgData, 'jpeg', 0, 0, 220, 0);
-            var corte = 1620; // configura tamanho do corte
+            var corte = 1295; // configura tamanho do corte
             var image = new Image();
             image = Canvas2Image.convertToJPEG(canvas);
 

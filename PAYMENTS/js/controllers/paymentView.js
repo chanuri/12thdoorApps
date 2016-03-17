@@ -223,15 +223,7 @@
     });
     settingClient.getByFiltering("*");
 
-    var allPaymentData;
-    var payClient = $objectstore.getClient("payment");
-    payClient.onGetMany(function(data) {
-        allPaymentData = data; // pass this array in mdDialog locals in history function 
-    });
-    payClient.onError(function(data) {
-        console.log("Error Loading Payment data")
-    });
-    payClient.getByFiltering("*")
+  
         /*_________________________________________history_________________________________________*/
     $scope.history = function(item) { //payment history dialog box
         //console.log(ev)
@@ -250,8 +242,11 @@
         $scope.historyDetails = obj;
         console.log(obj)
 
-        $scope.moveToInvoice = function(item){
-            console.log("working")
+        $scope.moveToPayment = function(item){
+           $state.go('View_Payment', {
+                'paymentid': item.payNo
+            })
+           $mdDialog.hide()
         }
 
         $scope.close = function() {
@@ -260,7 +255,7 @@
         $scope.invoiceHistory = [];
         for (i = 0; i <= data.length - 1; i++) {
             for (j = 0; j <= data[i].paidInvoice.length - 1; j++) {
-                if (data[i].paidInvoice[j].invono == obj.invono) {
+                if (data[i].paidInvoice[j].invono == obj.invono && data[i].paymentStatus != "Cancelled") {
                     $scope.invoiceHistory.push({
                         date: data[i].date,
                         payNo: data[i].paymentid,
@@ -273,13 +268,13 @@
         }
         console.log($scope.invoiceHistory);
     }
-
+    var allPaymentData;
         /*___________________________loadAllpayments______________________________________*/
     $scope.loadAllpayments = function() {
         var client = $objectstore.getClient("payment");
         client.onGetMany(function(data) {
-            if (data) {
-
+            if (data.length > 0) {
+                allPaymentData = data; 
                 $scope.payments = uiInitilize.insertIndex(data);
                 //$scope.payments = data;
                 if ($scope.PayArr) {
@@ -303,7 +298,7 @@
         client.onError(function(data) {
             $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('This is embarracing').content('There was an error retreving the data.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
         });
-        client.getByFiltering("*");
+        client.getByFiltering("select * from payment where paymentStatus <> 'delete' ");
     };
         /*___________________________________favouriteFunction________________________________________*/
     $scope.favouriteFunction = function(obj) {

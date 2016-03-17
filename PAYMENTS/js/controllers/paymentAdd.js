@@ -94,9 +94,9 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         $scope.PayArr = [];
         var payMethod = obj[0].preference.paymentpref.PaymentMethod;
         for (i = 0; i <= payMethod.length - 1; i++) {
-            if (payMethod[i].activate) {
+            if (payMethod[i].activate) 
                 $scope.PayArr.push(payMethod[i].paymentmethod);
-            }
+            
         }
         callback();
         //console.log($scope.PayArr);
@@ -122,7 +122,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     });
     payClient.getByFiltering("*")
         /*_________________________________________history_________________________________________*/
-    $scope.history = function(item) { 
+    $scope.history = function(item) {  
         $mdDialog.show({
             templateUrl: 'payment_partial/paymentHistory.html',
             controller: paymentHistory,
@@ -137,43 +137,57 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         $scope.historyDetails = obj;
         console.log(obj)
 
-        $scope.moveToInvoice = function(item){
-            console.log("working")
+        $scope.moveToPayment = function(item){
+           $state.go('View_Payment', {
+                'paymentid': item.payNo
+            })
+           $mdDialog.hide()
         }
 
         $scope.close = function() {
             $mdDialog.hide();
         }
         $scope.invoiceHistory = [];
-        for (i = 0; i <= data.length - 1; i++) {
-            for (j = 0; j <= data[i].paidInvoice.length - 1; j++) {
-                if (data[i].paidInvoice[j].invono == obj.invono) {
-                    $scope.invoiceHistory.push({
-                        date: data[i].date,
-                        payNo: data[i].paymentid,
-                        payMethod: data[i].paymentMethod,
-                        paidAmount: data[i].paidInvoice[j].balance,
-                        comments: data[i].comments
-                    });
+   
+        var invoiceClient = $objectstore.getClient("payment");
+        invoiceClient.onGetMany(function(data){
+            console.log(data)
+            if (data.length > 0) {
+                for (i = 0; i <= data.length - 1; i++) {
+                    if (data[i].paidInvoice) {
+                        for (j = 0; j <= data[i].paidInvoice.length - 1; j++) {
+                            if (data[i].paidInvoice[j].invono == obj.invono) { 
+                                $scope.invoiceHistory.push({
+                                    date: data[i].date,
+                                    payNo: data[i].paymentid,
+                                    payMethod: data[i].paymentMethod,
+                                    paidAmount: data[i].paidInvoice[j].balance,
+                                    comments: data[i].comments
+                                });
+                            }
+                        }
+                    }
                 }
             }
-        }
-        console.log($scope.invoiceHistory);
+        });
+        invoiceClient.onError(function(data){
+            console.log("error loading legger data")
+        });
+        invoiceClient.getByFiltering("select * from payment where customerid = '"+obj.customerid+"' and paymentStatus <> 'Cancelled'")
+       
     }
-    $scope.cancel = function() {
-        $mdDialog.cancel();
-    };
+
+    $scope.cancel = function() {    $mdDialog.cancel()    };
     $scope.keyPressAutoComplete = function(keyEvent) {
-        if (keyEvent.which == 40) {
+        if (keyEvent.which == 40) 
             console.log("working");  
-        }
+        
     }
     function querySearch(query, event) { 
         $rootScope.results = [];
         for (i = 0, len = $scope.customerNames.length; i < len; ++i) {
-            if ($scope.customerNames[i].display.indexOf(query) != -1) {
-                $rootScope.results.push($scope.customerNames[i]);
-            }
+            if ($scope.customerNames[i].display.indexOf(query) != -1) 
+                $rootScope.results.push($scope.customerNames[i]);            
         }
         return $rootScope.results;
     }
@@ -216,11 +230,11 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                  
                 $scope.payment.uAmount = copyUamount;
 
-                if ($scope.payment.amountReceived) {
+                if ($scope.payment.amountReceived) 
                     $scope.nAmount = parseFloat($scope.payment.amountReceived) + copyUamount;  
-                }else{
+                else
                     $scope.nAmount = copyUamount;
-                } 
+                
                 $scope.advancePaymentExsist = true;           
             }
             callback("success")
@@ -237,11 +251,11 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         $scope.fullArr = [];
 
         $scope.payment.uAmount = 0
-        if ( $scope.payment.amountReceived) {
+        if ( $scope.payment.amountReceived) 
             $scope.nAmount = $scope.payment.amountReceived;
-        }else{
+        else
             $scope.nAmount = 0
-        }
+        
 
         var invoiceClient = $objectstore.getClient("invoice12thdoor")
         invoiceClient.onGetMany(function(data) {
@@ -266,6 +280,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                 mduedate: $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr[j].DueDate,
                                 instalment: $scope.TDInvoice.updateInvoice[i].MultiDueDAtesArr[j].balance,
                                 termtype: $scope.TDInvoice.updateInvoice[i].termtype,
+                                customerid : $scope.TDInvoice.updateInvoice[i].customerid,
                                 checked: false,
                                 checkDisable : false,
                                 inputDisable : true
@@ -325,11 +340,10 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                 oneInvoiceNoArr = oneInvoiceNoArr.sort(function(a,b){
                                     return new Date(a.duedate) - new Date(b.duedate)
                                 })
-
+                                
                                 for(k=0; k<=oneInvoiceNoArr.length-1; k++){
-                                    if ( k!= 0) {
-                                        oneInvoiceNoArr[k].checkDisable = true;
-                                    }
+                                    if ( k!= 0) 
+                                        oneInvoiceNoArr[k].checkDisable = true;                                    
                                 }
                                 $scope.fullArr = $scope.fullArr.concat(oneInvoiceNoArr)
                                 oneInvoiceNoArr = [];
@@ -591,7 +605,14 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
                 $uploader.upload("45.55.83.253", "paymentImage", $scope.imagearray[indexx]);
                 $uploader.onSuccess(function (e, data) {
+                    var toast = $mdToast.simple()
+                      .content('Image Successfully uploaded!')
+                      .action('OK')
+                      .highlightAction(false)
+                      .position("bottom right");
+                    $mdToast.show(toast).then(function () {});
                     $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('Payment Added Successfully.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent(data));
+                    
                 });
                 $uploader.onError(function (e, data) {
                     var toast = $mdToast.simple()
@@ -605,7 +626,9 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                     $scope.submitProgress = false;
                 });
             }
-        };
+        }else 
+            $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).content('Payment Added Successfully.').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent());
+         
     }
     $scope.invoiceStatus = false;
 

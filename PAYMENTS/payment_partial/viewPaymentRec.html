@@ -19,7 +19,7 @@ md-input-container.md-input-focused label {
    <!--WHITEFRAME START-->
    <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto" ng-repeat="item in viewPyamentArr">
       <form name="editForm"  style="width:960px;" ng-controller="AppCtrlAdd as ctrl"  >
-         <md-content flex>
+         <md-content flex id="canvas">
          <div ng-show="progressBar" layout="column" layout-sm="column" layout-align="center center" style="background: white;z-index: 10;position: absolute;height: 100%;width: 100%;opacity: 0.8;">
               <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                 <span> 
@@ -44,23 +44,23 @@ md-input-container.md-input-focused label {
                   </span>
                </div>
                <div layout layout-align="end start" flex style="margin-top:-5px;">
-                  <md-button ng-click="print()" style="height:30px;" aria-label="change address" href>
+                  <md-button ng-click="printPdf(item)" style="height:30px;" aria-label="change address" href>
                      <md-icon md-svg-icon="img/ic_print_24px.svg" style="height:20px; width:20px;"></md-icon>
                   </md-button>
-                  <md-button ng-click="download()" style="height:30px;" aria-label="change address" href>
+                  <md-button ng-click="downloadPdf(item)" style="height:30px;" aria-label="change address" href>
                      <md-icon md-svg-icon="img/ic_file_download_24px.svg" style="height:20px; width:20px;"></md-icon>
                   </md-button>
                   <md-button ng-click="email()" style="height:30px;" aria-label="change address" href>
                      <md-icon md-svg-icon="img/ic_email_24px.svg" style="height:20px; width:20px;"></md-icon>
                   </md-button>
-                  <md-menu ng-if="item.paymentStatus != 'Cancelled'" md-position-mode="target-right target" >
+                  <md-menu ng-if="item.paymentStatus != 'Cancelled' && item.paymentid == latestPaymentId" md-position-mode="target-right target" >
                      <md-button href aria-label="Open demo menu" class="md-icon-button"  ng-click="$mdOpenMenu()">
                         <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:-5px;" ></md-icon>
                      </md-button>
                      <md-menu-content width="4">
                         <md-menu-item >
                            <md-button href ng-click="cancelPayment2(item)">
-                              <p>Cancel</p>
+                              <p> Cancel</p>
                               <md-icon md-menu-align-target ></md-icon>
                            </md-button>
                         </md-menu-item>

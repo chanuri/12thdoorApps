@@ -4,36 +4,122 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
     $scope.progressBar = false;
     $scope.maxNumber = 0;
 
+    function pdfFuntions(type, item){
+        html2canvas($("#canvas"), {
+            onrendered: function(canvas) {                      
+                var imgData = canvas.toDataURL('image/jpeg');              
+            options = {
+                orientation: "0",
+                unit: "mm",
+                format: "a4"
+            };
+            var doc = new jsPDF(options, '', '', '');
+            doc.addImage(imgData, 'jpeg', 0, 0, 220, 0);
+            var corte = 1620; // configura tamanho do corte
+            var image = new Image();
+            image = Canvas2Image.convertToJPEG(canvas);
 
-    var domainClient = $objectstore.getClient("payment");
-    domainClient.onGetMany(function(data) {
-        console.log(data)
-       $scope.maxNum
-    });
-    domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' order by date desc ").skip(0).take(1);
+            var croppingYPosition = corte;
+            var count = (image.height)/corte;
+            var i =1;
+
+            while ( i < count) {
+                    doc.addPage();
+ 
+
+                    var sourceX = 0;
+                    var sourceY = croppingYPosition;
+                    var sourceWidth = image.width;
+                    var sourceHeight = corte;
+                    var destWidth = sourceWidth;
+                    var destHeight = sourceHeight;
+                    var destX = 0;
+                    var destY = 0;
+                    var canvas1 = canvas;
+                    canvas1.setAttribute('height', (image.height)-(corte*i));
+                    canvas1.setAttribute('width', destWidth);                         
+                    var ctx = canvas1.getContext("2d");
+                    ctx.drawImage(image, sourceX, 
+                                         sourceY,
+                                         sourceWidth,
+                                         sourceHeight, 
+                                         destX, 
+                                         destY, 
+                                         destWidth, 
+                                         destHeight);
+                    var image2 = new Image();
+                    image2 = Canvas2Image.convertToJPEG(canvas1);
+                    image2Data = image2.src;
+                    doc.addImage(image2Data, 'JPEG', 0, 0, 220, 0);
+                    croppingYPosition += destHeight; 
+
+                    count =  (image.height)/croppingYPosition; 
+                             
+                } 
+
+                if (type == 'download')     doc.save(item.paymentid+'.pdf')
+                else if (type == 'print') {
+                    doc.autoPrint();
+                    doc.output('dataurlnewwindow');
+                }
+            }
+        });
+    }
+
+    $scope.downloadPdf = function(item){
+        pdfFuntions('download', item)
+    }
+
+    $scope.printPdf = function(item){        
+        pdfFuntions('print', item)
+    } 
+
+    function getLatestPaymentId(custID){
+        var domainClient = $objectstore.getClient("payment");
+        domainClient.onGetMany(function(data) {
+            if (data.length > 0) {            
+                data = data.sort(function(a,b){
+                    return b.auotIncrement - a.auotIncrement
+                })
+                $scope.latestPaymentId = data[0].paymentid;
+                console.log(data) 
+            }else{
+                $scope.latestPaymentId = "0"
+            }        
+        });
+        // domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' order by auotIncrement desc").skip(0).take(1);
+        domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' and customerid = '"+custID+"'");
+    }
+    
 
     var client = $objectstore.getClient('payment');
     client.onGetOne(function(data) {
         $scope.viewPyamentArr = [];
-        $scope.viewPyamentArr.push(data);
+        if (data.paymentStatus == 'delete') {
+              $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('Already Deleted').content('This record already deleted').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent());
+       
+        }else{
+            $scope.viewPyamentArr.push(data);
 
-        $scope.advancePaymentData = {}
+            $scope.advancePaymentData = {}
+            getLatestPaymentId($scope.viewPyamentArr[0].customerid)
 
-        var advanceClient = $objectstore.getClient("advancedPayments12thdoor");
-        advanceClient.onGetMany(function(data){
-            $scope.viewPyamentArr[0].outStandingPayment = 0;
+            var advanceClient = $objectstore.getClient("advancedPayments12thdoor");
+            advanceClient.onGetMany(function(data){
+                $scope.viewPyamentArr[0].outStandingPayment = 0;            
 
-            if (data.length > 0) {
-                $scope.advancePaymentData = data[0];
-                $scope.viewPyamentArr[0].outStandingPayment = data[0].uAmount;
-            }
+                if (data.length > 0) {
+                    $scope.advancePaymentData = data[0];
+                    $scope.viewPyamentArr[0].outStandingPayment = data[0].uAmount;
+                }
 
-            LoadAllComments($stateParams.paymentid);
-        });
-        advanceClient.onError(function(data){
-            console.log("error retriveing advance payment data");
-        });
-        advanceClient.getByFiltering("select * from advancedPayments12thdoor where customerid = '"+$scope.viewPyamentArr[0].customerid+"' ");
+                LoadAllComments($stateParams.paymentid);
+            });
+            advanceClient.onError(function(data){
+                console.log("error retriveing advance payment data");
+            });
+            advanceClient.getByFiltering("select * from advancedPayments12thdoor where customerid = '"+$scope.viewPyamentArr[0].customerid+"' ");
+        }
 
     });
     client.onError(function(data) {
@@ -163,6 +249,9 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
     }
 
     function removePayment(item,callback){
+        var oldStatus = item.paymentStatus;
+        item.paymentStatus = "delete";
+
         var deletePayment = $objectstore.getClient("payment");
         deletePayment.onComplete(function(data){
             callback("save")
@@ -171,8 +260,9 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
             console.log("error deleting payment");
             callback("error");
             $scope.progressBar = false;
+            item.paymentStatus = oldStatus
         });
-        deletePayment.deleteSingle(item.paymentid,"paymentid");
+        deletePayment.insert(item,{"KeyProperty":"paymentid"});      
     }
 
     function updateAdvancePayment(item,status){   

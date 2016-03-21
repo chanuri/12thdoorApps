@@ -469,11 +469,10 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
         $rootScope.invoiceArray = [];
         $rootScope.fullArr = {val: []};
         $rootScope.editProdArray = {val: []};
-        $rootScope.taxArr = [];
         $rootScope.correctArr = [];
 
         $rootScope.fullArr = {val: []};
-        $rootScope.taxArr = [];
+        $rootScope.taxArr2 = [];
         $rootScope.taxArr1 = [];
         $rootScope.correctArr = [];
         $rootScope.compoundcal = [];
@@ -529,7 +528,7 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                 if (obj.tax != null) {
                     if (obj.tax.type == "individualtaxes") {
                         if (obj.tax.rate == 0) {} else {
-                            $rootScope.taxArr.push({
+                            $rootScope.taxArr2.push({
                                 taxName: obj.tax.taxname,
                                 rate: obj.tax.rate,
                                 salesTax: parseInt(obj.amount * obj.tax.rate / 100),
@@ -555,17 +554,17 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                         for (var y = 0; y <= $rootScope.calculateCompound.length - 1; y++) {
 
                             if ($rootScope.calculateCompound[y].compound == false) {
-                                fcompAmount = parseInt(obj.amount * obj.tax.individualtaxes[y].rate / 100)
+                                fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
                                 $rootScope.total = fcompAmount;
                             } else if (obj.tax.individualtaxes[y].compound == true) {
-                                tcopmAmount = parseInt(fcompAmount + obj.amount);
-                                finalCal = (parseInt(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
+                                tcopmAmount = parseFloat(fcompAmount + obj.amount);
+                                finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
                                 $rootScope.total = finalCal;
                             }
                             if ($rootScope.calculateCompound[y].rate == 0) {
 
                             } else {
-                                $rootScope.taxArr.push({
+                                $rootScope.taxArr2.push({
                                     taxName: $rootScope.calculateCompound[y].taxname,
                                     rate: $rootScope.calculateCompound[y].rate,
                                     salesTax: $rootScope.total,
@@ -574,29 +573,29 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                             }
                         }
                     }
-                    $rootScope.taxArr = $rootScope.taxArr.sort(function(a, b) {
+                    $rootScope.taxArr2 = $rootScope.taxArr2.sort(function(a, b) {
                         return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
                     });
 
-                    if ($rootScope.taxArr.length > 1) {
-                        for (l = 0; l <= $rootScope.taxArr.length - 1; l++) {
-                            if ($rootScope.taxArr[l + 1]) {
+                    if ($rootScope.taxArr2.length > 1) {
+                        for (l = 0; l <= $rootScope.taxArr2.length - 1; l++) {
+                            if ($rootScope.taxArr2[l + 1]) {
 
-                                if ($rootScope.taxArr[l].taxName == $rootScope.taxArr[l + 1].taxName) {
+                                if ($rootScope.taxArr2[l].taxName == $rootScope.taxArr2[l + 1].taxName) {
                                     var sumSalesTax = 0;
-                                    var txtName = $rootScope.taxArr[l].taxName;
-                                    var rate = $rootScope.taxArr[l].rate;
-                                    var compound = $rootScope.taxArr[l].compoundCheck;
-                                    sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l + 1].salesTax;
+                                    var txtName = $rootScope.taxArr2[l].taxName;
+                                    var rate = $rootScope.taxArr2[l].rate;
+                                    var compound = $rootScope.taxArr2[l].compoundCheck;
+                                    sumSalesTax = $rootScope.taxArr2[l].salesTax + $rootScope.taxArr2[l + 1].salesTax;
 
-                                    $rootScope.taxArr.splice(l, 2);
-                                    $rootScope.taxArr.push({
+                                    $rootScope.taxArr2.splice(l, 2);
+                                    $rootScope.taxArr2.push({
                                         taxName: txtName,
                                         rate: rate,
                                         salesTax: sumSalesTax,
                                         compoundCheck: compound
                                     })
-                                    $rootScope.taxArr.sort(function(a, b) {
+                                    $rootScope.taxArr2.sort(function(a, b) {
                                         return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
                                     });
                                 };
@@ -637,15 +636,15 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                 }
                 if (obj.tax.type == "individualtaxes") {
 
-                    for (var x = $rootScope.taxArr.length - 1; x >= 0; x--) {
+                    for (var x = $rootScope.taxArr2.length - 1; x >= 0; x--) {
 
-                        if ($rootScope.taxArr[x].taxName == obj.tax.taxname) {
+                        if ($rootScope.taxArr2[x].taxName == obj.tax.taxname) {
 
                             if ($.inArray(obj.tax.taxname, results) == -1) {
-                                $rootScope.taxArr.splice(x, 1);
+                                $rootScope.taxArr2.splice(x, 1);
 
                             } else if ($.inArray(obj.tax.taxname, results) == 0) {
-                                $rootScope.taxArr[x].salesTax = parseFloat($rootScope.taxArr[x].salesTax) - parseFloat(obj.amount * obj.tax.rate / 100);
+                                $rootScope.taxArr2[x].salesTax = parseFloat($rootScope.taxArr2[x].salesTax) - parseFloat(obj.amount * obj.tax.rate / 100);
                             }
                         }
                     }
@@ -669,9 +668,9 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                     for (var x = 0; x <= obj.tax.individualtaxes.length - 1; x++) {
 
                         tax = obj.tax.individualtaxes[x].rate / 100;
-                        for (var y = $rootScope.taxArr.length - 1; y >= 0; y--) {
+                        for (var y = $rootScope.taxArr2.length - 1; y >= 0; y--) {
 
-                            if ($rootScope.taxArr[y].taxName == obj.tax.individualtaxes[x].taxname) {
+                            if ($rootScope.taxArr2[y].taxName == obj.tax.individualtaxes[x].taxname) {
 
                                 for(ps=0; ps <= results.length; ps++){
                                     if (results[ps] == obj.tax.individualtaxes[x].taxname) {
@@ -682,17 +681,17 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                                                 }
                                                 
                                             if(obj.tax.individualtaxes[x].compound == false){
-                                                $rootScope.taxArr[y].salesTax = parseFloat($rootScope.taxArr[y].salesTax - (obj.amount * obj.tax.individualtaxes[x].rate / 100));
+                                                $rootScope.taxArr2[y].salesTax = parseFloat($rootScope.taxArr2[y].salesTax - (obj.amount * obj.tax.individualtaxes[x].rate / 100));
                                                 results.splice(ps, 1);
                                             }else if (obj.tax.individualtaxes[x].compound == true){
                                                 tcopmAmount = parseFloat(fcompAmount + obj.amount);
                                                 finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[x].rate / 100);
                                                     
-                                                $rootScope.taxArr[y].salesTax = parseFloat($rootScope.taxArr[y].salesTax - finalCal);
+                                                $rootScope.taxArr2[y].salesTax = parseFloat($rootScope.taxArr2[y].salesTax - finalCal);
                                             }
 
                                     } else if ($.inArray(obj.tax.individualtaxes[x].taxname, results) == -1) {
-                                        $rootScope.taxArr.splice(y, 1);
+                                        $rootScope.taxArr2.splice(y, 1);
                                     }                                        
                                 }
                             }

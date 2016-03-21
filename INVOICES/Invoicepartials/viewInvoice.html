@@ -141,7 +141,7 @@
                <div flex="65" class="blankspace"></div>
                <label>To:</label>
             </div>
-            <div layout layout-sm="column" layout-margin style="margin-top:-5px;" flex>
+            <div layout layout-sm="column" layout-margin style="margin-top:-10px;" flex>
                <div flex="10" class="blankspace"></div>
                <label flex="10">Invoice Date</label>
                <label flex="15"> {{item.Startdate|date}}</label>
@@ -179,7 +179,7 @@
                <div flex="10" class="blankspace"></div>
                <table >
                   <tr>
-                     <th style=" width:450px;" flex="50">Description</th>
+                     <th style=" width:400px;" flex="50">Description</th>
                      <th style="padding: 10px;" flex>Qty</th>
                      <th style="padding: 10px;" flex>Unit</th>
                      <th style="padding: 10px;" flex>Price</th>
@@ -255,8 +255,9 @@
             <div layout layout-sm="column"  layout-margin style="margin-top:40px; " flex>
                <div flex="5" class="blankspace" ></div>
                <label>Payment Options</label>
-               <!-- ng-if="tt.activate == 'true'" -->
-               <img  ng-repeat="tt in item.paymentOptions" src="{{tt.url}}" width="80px" height="60px" style="margin-top:-20px; padding:10px;">
+               <!--  -->
+              
+               <img ng-repeat="tt in item.paymentOptions" ng-if="tt.activate == true" src="{{tt.url}}" width="80px" height="60px" style="margin-top:-20px; padding:10px;">
             </div>
             <div layout layout-sm="column" layout-margin  flex>
                <div flex="5" class="blankspace"></div>
@@ -309,7 +310,7 @@
                      <!-- <md-divider></md-divider> -->
                   </tr>
                   <tr ng-repeat="cc in Payment">
-                     <td style="padding: 5px;" ng-repeat="cd in cc.paidInvoice" flex>{{cd.duedate|date}}</td>
+                     <td style="padding: 5px;" flex>{{cc.date|date}}</td>
                      <td style="padding: 20px;"flex>{{cc.paymentid}}</td>
                      <td style="padding: 20px;"flex>{{cc.paymentMethod}}</td>
                      <td style="padding: 20px;"flex>{{cc.total|currency:item.BaseCurrency}}</td>

@@ -22,7 +22,7 @@
                             <tr animate ng:repeat="cn in testarr">
                                 <td data-title="Item Detail" >
                                     <div layout layout-sm="column" layout-margin>
-                                        <md-datepicker ng-model="cn.duedate" md-placeholder="Due Date" required flex style=" width:230px; margin-left:-20px;" ></md-datepicker>
+                                        <md-datepicker ng-model="cn.duedate" md-min-date="minDate" md-placeholder="Due Date" required flex style=" width:230px; margin-left:-20px;" ></md-datepicker>
                                         <md-input-container flex style=" padding-left:5px;">
                                             <label>Percentage</label>
                                             <input  ng-model="cn.percentage" id="{{cn.uniqueKey}}" ng-change="DueAmount(cn,$index)" >

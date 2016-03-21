@@ -18,7 +18,7 @@
           
             <div layout layout-sm="column" layout-margin >
                 <section-title title="Payment Details"> </section-title>
-                <md-datepicker ng-model="TDinvoice.date" md-placeholder="Enter date" required flex style="margin-top:25px; width:230px;"></md-datepicker>
+                <md-datepicker ng-model="TDinvoice.date" date-disabled="disabled(TDinvoice.date, mode)" md-placeholder="Enter date" ng-required="true" md-max-date="maxDate" flex style="margin-top:25px; width:230px;"></md-datepicker>
                 
                     <md-input-container style="margin-top: 25px;" flex>
                         <label>Payment Method</label>

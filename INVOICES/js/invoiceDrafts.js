@@ -106,16 +106,17 @@
         $scope.submitVisible = true;
         $scope.advancePayVisible = false;
         $scope.AdvancefullArr = [];
+        $scope.maxDate = new Date();
 
         $scope.confirmOk = function(){
-            if (parseInt($scope.payment.namount) > 0) {                
+            if (parseFloat($scope.payment.namount) > 0) {                
                 $scope.submitVisible = false;
                 $scope.advancePayVisible = true;
-            }else if(parseInt($scope.payment.namount) == 0){                
+            }else if(parseFloat($scope.payment.namount) == 0){                
                 $scope.submitVisible = true;
                 $scope.advancePayVisible = false;
                 $scope.addPayement()
-            }else if(parseInt($scope.payment.namount) < 0){
+            }else if(parseFloat($scope.payment.namount) < 0){
                 //create toast
             }
         }
@@ -184,7 +185,7 @@
                 }
 
                 invo.amount = invo.instalment;
-                $scope.payment.namount = parseInt($scope.payment.namount) - parseInt(invo.instalment);
+                $scope.payment.namount = parseFloat($scope.payment.namount) - parseFloat(invo.instalment);
 
                 $scope.payment.paidInvoice.push({ //array for insert paid invoices             
                     amount: invo.amount,
@@ -196,7 +197,7 @@
                 });
 
                 invo.inputDisable = false;
-                $scope.payment.total = (parseInt($scope.payment.total) + parseInt(invo.amount))
+                $scope.payment.total = (parseFloat($scope.payment.total) + parseFloat(invo.amount))
 
             } else if (!invo.checked) { //if checkbox is unchecked
                 for(o=index; o<=$scope.fullArr.length-1; o++){  
@@ -246,12 +247,12 @@
                         }
                     }
                     if ($scope.fullArr[o].termtype != "multipleDueDates") {
-                        $scope.payment.total = parseInt($scope.payment.total) - parseInt($scope.fullArr[o].amount)
-                        $scope.payment.namount = parseInt($scope.payment.namount) + parseInt($scope.fullArr[o].amount)  
+                        $scope.payment.total = parseFloat($scope.payment.total) - parseFloat($scope.fullArr[o].amount)
+                        $scope.payment.namount = parseFloat($scope.payment.namount) + parseFloat($scope.fullArr[o].amount)  
                     }
                     else if ($scope.fullArr[o].termtype == "multipleDueDates") {
-                        $scope.payment.total = parseInt($scope.payment.total) - parseInt($scope.fullArr[o].amount)
-                        $scope.payment.namount = parseInt($scope.payment.namount) + parseInt($scope.fullArr[o].amount)
+                        $scope.payment.total = parseFloat($scope.payment.total) - parseFloat($scope.fullArr[o].amount)
+                        $scope.payment.namount = parseFloat($scope.payment.namount) + parseFloat($scope.fullArr[o].amount)
                     }
                     $scope.fullArr[o].amount = "";
                 }
@@ -259,18 +260,15 @@
         }
 
         $scope.netAmount = function() { 
-
-            
-            if( parseInt($scope.payment.total) != 0){
-                $scope.payment.namount = ( ( parseInt($scope.payment.advancePayment) -  parseInt($scope.payment.total) )    + parseInt($scope.payment.amountReceived) );
+            if( parseFloat($scope.payment.total) != 0){
+                $scope.payment.namount = ( ( parseFloat($scope.payment.advancePayment) -  parseFloat($scope.payment.total) )    + parseFloat($scope.payment.amountReceived) );
             }
             else {           
-                $scope.payment.namount = (parseInt($scope.payment.advancePayment) + parseInt($scope.payment.amountReceived));
+                $scope.payment.namount = (parseFloat($scope.payment.advancePayment) + parseFloat($scope.payment.amountReceived));
             }
             if ($scope.payment.amountReceived == "") {
-                $scope.payment.namount =   parseInt($scope.payment.advancePayment) -  parseInt($scope.payment.total)  
+                $scope.payment.namount =   parseFloat($scope.payment.advancePayment) -  parseFloat($scope.payment.total)  
             } 
-
         }
 
         var paymentClient = $objectstore.getClient("advancedPayment12thdoor");
@@ -294,29 +292,29 @@
             if (obj.amount == "")   obj.amount = 0;      
             else if (oldValue == "")    oldValue = 0;       
             
-            if (parseInt(obj.amount) > parseInt(obj.instalment))    obj.amount = oldValue
+            if (parseFloat(obj.amount) > parseFloat(obj.instalment)) obj.amount = oldValue
 
             else{
 
-                $scope.payment.total = ( parseInt($scope.payment.total) - parseInt(oldValue) ) + parseInt(obj.amount); 
-                var difference = parseInt(oldValue) - parseInt(obj.amount);
+                $scope.payment.total = ( parseFloat($scope.payment.total) - parseFloat(oldValue) ) + parseFloat(obj.amount); 
+                var difference = parseFloat(oldValue) - parseFloat(obj.amount);
 
-                if ($scope.payment.namount >= 0)    $scope.payment.namount =  parseInt($scope.payment.namount) + difference;            
-                else    $scope.payment.namount = ( parseInt($scope.payment.namount) + parseInt(oldValue) ) - parseInt(obj.amount);            
+                if ($scope.payment.namount >= 0)    $scope.payment.namount =  parseFloat($scope.payment.namount) + difference;            
+                else    $scope.payment.namount = ( parseFloat($scope.payment.namount) + parseFloat(oldValue) ) - parseFloat(obj.amount);            
 
                 for (var i = 0; i < $scope.payment.paidInvoice.length; i++) {  
                     if ( ($scope.payment.paidInvoice[i]['invono'] == obj.invono) && ($scope.payment.paidInvoice[i]['duedate'] == obj.mduedate) ) {
-                        $scope.payment.paidInvoice[i].balance = parseInt($scope.payment.paidInvoice[i].amount) - parseInt(obj.amount);
+                        $scope.payment.paidInvoice[i].balance = parseFloat($scope.payment.paidInvoice[i].amount) - parseFloat(obj.amount);
                     }
                 } 
             }
-            if (parseInt(obj.amount) < parseInt(obj.instalment) ){
+            if (parseFloat(obj.amount) < parseFloat(obj.instalment) ){
                 if ($scope.fullArr[index +1]) {
                     if ($scope.fullArr[index].invono == $scope.fullArr[index +1].invono) {
                         $scope.fullArr[index + 1].checkDisable = true;
                     }                    
                 }
-            }else if(parseInt(obj.amount) == parseInt(obj.instalment)){
+            }else if(parseFloat(obj.amount) == parseFloat(obj.instalment)){
                 if ($scope.fullArr[index +1]) {
                     $scope.fullArr[index + 1].checkDisable = false;
                 }
@@ -329,7 +327,8 @@
             $scope.payment.favouriteStarNo = 1; 
             $scope.payment.paymentid = "-999";
             $scope.payment.paymentStatus = "active";
-            $scope.payment.customer = pim.Name      
+            $scope.payment.customer = pim.Name; 
+            $scope.payment.date = new Date();     
             $scope.payment.UploadImages = {
                 val: []
             };
@@ -605,9 +604,9 @@
                         var fcompAmount = 0;
                         var finalCal = 0;
                         for (var y = 0; y <= $rootScope.calculateCompound.length - 1; y++) {
-
+                            
                             if ($rootScope.calculateCompound[y].compound == false) {
-                                fcompAmount = parseFloat(obj.amount * obj.tax.individualtaxes[y].rate / 100)
+                                fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
                                 $rootScope.total = fcompAmount;
                             } else if (obj.tax.individualtaxes[y].compound == true) {
                                 tcopmAmount = parseFloat(fcompAmount + obj.amount);
@@ -623,6 +622,7 @@
                                     salesTax: $rootScope.total,
                                     compoundCheck: $rootScope.calculateCompound[y].compound
                                 })
+                                console.log($rootScope.taxArr)
                             }
                         }
                     }
@@ -783,6 +783,8 @@
                                     return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
                                 });
                             }
+
+
                         }
                         $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
                         var tcopmAmount = 0;
@@ -791,13 +793,14 @@
                         for (var y = 0; y <= $rootScope.calculateCompound.length - 1; y++) {
 
                             if ($rootScope.calculateCompound[y].compound == false) {
-                                fcompAmount = parseFloat(obj.amount * obj.tax.individualtaxes[y].rate / 100)
+                                fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
                                 $rootScope.total = fcompAmount;
                             } else if (obj.tax.individualtaxes[y].compound == true) {
                                 tcopmAmount = parseFloat(fcompAmount + obj.amount);
                                 finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
                                 $rootScope.total = finalCal;
                             }
+
                             if ($rootScope.calculateCompound[y].rate == 0) {
 
                             } else {

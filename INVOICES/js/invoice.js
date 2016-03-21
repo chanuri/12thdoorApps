@@ -232,6 +232,8 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $sta
             }
         };
     }
+    $scope.minDate = new Date();
+
 
     $scope.selectedItemChange = function(c) {
         $scope.showEditCustomer = true;
@@ -412,6 +414,7 @@ $scope.ll = [];
             $mdDialog.show({
                 templateUrl: 'Invoicepartials/MultipleDuedates.html',
                 controller: function addMultipleDueDates($scope, $mdDialog) {
+                    $scope.minDate = new Date();
                     $scope.aDatearr = {
                         val: []
                     };
@@ -467,9 +470,9 @@ $scope.ll = [];
                             $scope.testarr.push({
                                 duedate: '',
                                 percentage: '',
-                                duDatePrice: parseInt($rootScope.famount - $scope.newfamount),
+                                duDatePrice: '',
                                 paymentStatus: 'Unpaid',
-                                balance: parseInt($rootScope.famount - $scope.newfamount),
+                                balance: parseFloat($rootScope.famount - $scope.newfamount),
                                 count: numbers,
                                 uniqueKey: $scope.focus
 
@@ -547,7 +550,7 @@ $scope.ll = [];
                                 $scope.showPercentage = true;
                             }
                         }
-                        $scope.newfamount = (parseInt($rootScope.famount * cn.percentage) / 100);
+                        $scope.newfamount = (parseFloat($rootScope.famount * cn.percentage) / 100);
                         $scope.testarr[index] = {
                             duedate: cn.duedate,
                             percentage: cn.percentage,
@@ -763,15 +766,21 @@ $scope.ll = [];
                                         };
                                         var client = $objectstore.getClient("product12thdoor");
                                         client.onComplete(function(data) {
-                                            $mdDialog.show(
-                                                $mdDialog.alert()
-                                                .parent(angular.element(document.body))
-                                                .title('')
-                                                .content('product Successfully Saved')
-                                                .ariaLabel('Alert Dialog Demo')
-                                                .ok('OK')
-                                                .targetEvent(data)
+                                            $mdToast.show(
+                                              $mdToast.simple()
+                                                .textContent('Product Successfully Saved')
+                                                .position('bottom right')
+                                                .hideDelay(2000)
                                             );
+                                            // $mdDialog.show(
+                                            //     $mdDialog.alert()
+                                            //     .parent(angular.element(document.body))
+                                            //     .title('')
+                                            //     .content('product Successfully Saved')
+                                            //     .ariaLabel('Alert Dialog Demo')
+                                            //     .ok('OK')
+                                            //     .targetEvent(data)
+                                            // );
                                         });
                                         client.onError(function(data) {
                                             $mdDialog.show(
@@ -1033,14 +1042,20 @@ $scope.ll = [];
                             $mdToast.show(toast).then(function(response) {});
                         } else {
                             client.onComplete(function(data) {
-                                $mdDialog.show(
-                                    $mdDialog.alert()
-                                    .parent(angular.element(document.body))
-                                    .content('Customer Registed Successfully Saved.')
-                                    .ariaLabel('Alert Dialog Demo')
-                                    .ok('OK')
-                                    .targetEvent(data)
-                                );
+                                 $mdToast.show(
+                                      $mdToast.simple()
+                                        .textContent('Customer Registed Successfully')
+                                        .position('bottom right')
+                                        .hideDelay(2000)
+                                    );
+                                // $mdDialog.show(
+                                //     $mdDialog.alert()
+                                //     .parent(angular.element(document.body))
+                                //     .content('Customer Registed Successfully')
+                                //     .ariaLabel('Alert Dialog Demo')
+                                //     .ok('OK')
+                                //     .targetEvent(data)
+                                // );
                             });
                             $scope.contact.favoritestar = false;
                             $scope.contact.status = 'Active';
@@ -1219,15 +1234,21 @@ $scope.ll = [];
         }
     });
     client.onError(function(data) {
-        $mdDialog.show(
-            $mdDialog.alert()
-            .parent(angular.element(document.body))
-            .title('Sorry')
-            .content('There is no products available')
-            .ariaLabel('Alert Dialog Demo')
-            .ok('OK')
-            .targetEvent(data)
+         $mdToast.show(
+          $mdToast.simple()
+            .textContent('There is no products available')
+            .position('bottom right')
+            .hideDelay(2000)
         );
+        // $mdDialog.show(
+        //     $mdDialog.alert()
+        //     .parent(angular.element(document.body))
+        //     .title('Sorry')
+        //     .content('There is no products available')
+        //     .ariaLabel('Alert Dialog Demo')
+        //     .ok('OK')
+        //     .targetEvent(data)
+        // );
     });
     client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
 
@@ -1255,6 +1276,15 @@ $scope.ll = [];
     }
 
     $scope.TDleger = {};
+
+     var last = {
+      bottom: false,
+      top: true,
+      left: false,
+      right: true
+    };
+  $scope.toastPosition = angular.extend({},last);
+
     //save invoice details
     $scope.submit = function() {
         if ($scope.TDinvoice.termtype != "multipleDueDates") {
@@ -1334,16 +1364,23 @@ $scope.ll = [];
         if ($rootScope.testArray.val.length > 0) {
             $scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
             client.onComplete(function(data) {
-
-                $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.body))
-                    .title('Confirmation')
-                    .content('invoice Successfully Saved')
-                    .ariaLabel('Alert Dialog Demo')
-                    .ok('OK')
-                    .targetEvent(data)
-                );
+                // var pinTo = $scope.getToastPosition();
+                    $mdToast.show(
+                      $mdToast.simple()
+                        .textContent('Invoice Successfully Saved')
+                        .position('bottom right')
+                        .theme('success-toast')
+                        .hideDelay(2000)
+                    );
+                // $mdDialog.show(
+                //     $mdDialog.alert()
+                //     .parent(angular.element(document.body))
+                //     .title('Confirmation')
+                //     .content('invoice Successfully Saved')
+                //     .ariaLabel('Alert Dialog Demo')
+                //     .ok('OK')
+                //     .targetEvent(data)
+                // );
                 $rootScope.invoiceArray.splice(0, 1);
                 invoiceDetails.setArray($scope.TDinvoice);
                 $state.go('view', {
@@ -1371,8 +1408,8 @@ $scope.ll = [];
             $mdDialog.show(
                 $mdDialog.alert()
                 .parent(angular.element(document.body))
-                .title('Sorry')
-                .content('Error saving invoice')
+                .title('Warning')
+                .content('Error Saving Invoice')
                 .ariaLabel('Alert Dialog Demo')
                 .ok('OK')
                 .targetEvent(data)
@@ -1451,7 +1488,10 @@ $scope.ll = [];
     }
 
     $scope.clearAll = function(ev) {
-        var confirm = $mdDialog.confirm()
+        if($rootScope.selectedItem1 == null){
+            $state.go('settings.invoice_app');
+        }else{
+          var confirm = $mdDialog.confirm()
             .title('Would you like save this to draft?')
             .content('')
             .ariaLabel('Lucky day')
@@ -1579,21 +1619,23 @@ $scope.ll = [];
                 $rootScope.selectedItem1.shippingValue = "";
             }
 
-            $scope.dateArray.value = "";
-            $rootScope.searchText = null;
-            $scope.TDinvoice.poNum = "";
-            $scope.TDinvoice.comments = "";
-            $scope.TDinvoice.fdiscount = "";
-            $scope.TDinvoice.salesTax = "";
-            $scope.TDinvoice.anotherTax = "";
-            $scope.TDinvoice.shipping = "";
-            $scope.TDinvoice.notes = "";
-            $scope.TDinvoice.termtype = "";
-            $scope.TDinvoice.paymentMethod = "";
-            $scope.TDinvoice.roFruitNames = "";
-            $rootScope.taxArr = "";
-            // location.href = '#/invoice_app';
-            $state.go('settings.invoice_app');
-        });
+                $scope.dateArray.value = "";
+                $rootScope.searchText = null;
+                $scope.TDinvoice.poNum = "";
+                $scope.TDinvoice.comments = "";
+                $scope.TDinvoice.fdiscount = "";
+                $scope.TDinvoice.salesTax = "";
+                $scope.TDinvoice.anotherTax = "";
+                $scope.TDinvoice.shipping = "";
+                $scope.TDinvoice.notes = "";
+                $scope.TDinvoice.termtype = "";
+                $scope.TDinvoice.paymentMethod = "";
+                $scope.TDinvoice.roFruitNames = "";
+                $rootScope.taxArr = "";
+                // location.href = '#/invoice_app';
+                $state.go('settings.invoice_app');
+            });  
+        }
+        
     }
 })

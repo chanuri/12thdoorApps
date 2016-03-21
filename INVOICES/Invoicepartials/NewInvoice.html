@@ -11,6 +11,10 @@
     font-size: 11px;
     color: darkred;
     margin: 10px 0 0 25px; }
+
+    .md-toast.md-success-toast-theme {
+    background-color: green;
+}
 </style>
 <div class="card-container" style="padding:20px; overflow-x:hidden;">
     <!--WHITEFRAME START-->
@@ -94,7 +98,7 @@
                         <label>Invoice No.</label>
                         <input ng-model="TDinvoice.invoiceRefNo" ng-disabled="true">
                         </md-input-container>
-                        <md-datepicker ng-model="TDinvoice.Startdate" md-placeholder="Date" ng-required="true" flex style="margin-top:10px; width:230px;" ng-disabled="showdate" ></md-datepicker>
+                        <md-datepicker ng-model="TDinvoice.Startdate"  md-placeholder="Date" ng-required="true" flex style="margin-top:10px; width:230px;" ng-disabled="showdate" ></md-datepicker>
                     </div>
                     <div layout  layout-sm="column" layout-margin ng-cloak>
                         <section-title></section-title>
@@ -115,7 +119,7 @@
                             </md-optgroup>
                         </md-select>
                     </md-input-container>
-                    <md-datepicker ng-model="TDinvoice.duedate" md-placeholder="Due Date"  flex style="margin-top:10px; width:230px;" ng-disabled="showdate" ></md-datepicker>
+                    <md-datepicker ng-model="TDinvoice.duedate" md-placeholder="Due Date" md-min-date="minDate" flex style="margin-top:10px; width:230px;" ng-disabled="showdate"  ></md-datepicker>
                     <div style="height:30px; width:25px; margin-top:25px;">
                         <md-button ng-click="MultiDuDates()" style="height:30px;" aria-label="multi-dates" href>
                             <md-icon md-svg-src="img/ic_more_horiz_24px.svg" class="iconColor"  md-ink-ripple style="margin-left:-5px;" ></md-icon>
@@ -161,7 +165,7 @@
                                                                     </md-button>
                                                                 </md-menu-item>
                                                                 <md-menu-item>
-                                                                    <md-button href ng-click="deleteproduct(item, $index)">
+                                                                <md-button href ng-click="deleteproduct(item, $index)">
                                                                         <p>Delete</p>
                                                                         <md-icon md-menu-align-target ></md-icon>
                                                                     </md-button>
@@ -173,33 +177,24 @@
                                                     <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;">
                                                         <div flex >
                                                             <span style="color:#808080;">{{item.quantity}} 
-                               
-                                                                
                                                                 <md-tooltip>Quantity</md-tooltip>
                                                             </span>
-                                                            <span style="color:#808080;">{{item.ProductUnit}} 
-                               
-                                                                
+                                                            <span style="color:#808080;">{{item.ProductUnit}}  
                                                                 <md-tooltip>UOM</md-tooltip>
                                                             </span>
                                                         </div>
                                                         <div flex>
                                                             <span style="color:#808080;">{{item.price|currency:BaseCurrency}}
-                               
-                                                                
                                                                 <md-tooltip>Price</md-tooltip>
                                                             </span>
                                                         </div>
-                                                        <div flex >
+                                                        <div flex="10" style="margin-left: 20px;">
                                                             <span style="color:#808080;">{{item.discount}}%
-                               
-                                                                
                                                                 <md-tooltip>Discount</md-tooltip>
                                                             </span>
                                                         </div>
-                                                        <div flex="35" >
+                                                        <div flex="30" >
                                                             <span style="color:#808080;">{{item.tax.taxname}}
-                                                            
                                                                 <span style="color:#808080;" ng-if="item.tax.type == 'individualtaxes' " >({{item.tax.rate}}%)</span>
                                                                 <md-tooltip>Tax</md-tooltip>
                                                                 <span style="color:#808080;" ng-repeat="tt in item.tax.individualtaxes">({{tt.rate}}%)</span>
@@ -208,8 +203,7 @@
                                                         </div>
                                                         <div flex >
                                                             <span style="color:#808080;">{{item.amount|currency:BaseCurrency}}
-                               
-                                                                
+                                                             
                                                                 <md-tooltip>Amount</md-tooltip>
                                                             </span>
                                                         </div>
@@ -224,8 +218,8 @@
                                 </div>
                             </div>
                             <md-divider></md-divider>
-                            <div  >
-                                <!-- ng-if="testArray.val.length != 0" -->
+                            <div  ng-if="testArray.val.length != 0">
+                                <!--  -->
                                 <div layout layout-sm="column" layout-margin>
                                     <section-title title="Totals"></section-title>
                                 </div>
@@ -403,7 +397,7 @@
                 <!--CARD CONTAINER END-->
                 <div  class="lock-size" layout="row" >
                     <md-button href class="md-fab" aria-label="Profile" ng-click="view()" style="position:fixed;top:270px;right:50px;background:#db4437">
-                        <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+                        <md-icon md-svg-src="img/ic_visibility_24px.svg" ></md-icon>
                         <md-tooltip md-direction="left">All Invoices</md-tooltip>
                     </md-button>
                 </div>

@@ -47,6 +47,9 @@
                                 <md-divider></md-divider>
                             </span>
                         </md-item-template>
+                        <div ng-messages="$root.searchText.$error">
+                          <div ng-message="required">This is required.</div>
+                        </div>
                         <md-not-found>
                           No names matching "{{$root.searchText}}" were found.
                           
@@ -104,7 +107,7 @@
                         <section-title></section-title>
                         <md-input-container  flex="33" >
                             <label>Payment Terms</label>
-                            <md-select ng-model="TDinvoice.termtype" ng-required="true"/>
+                            <md-select ng-model="TDinvoice.termtype" required="" md-no-asterisk="" name="terms"/>
                             <md-optgroup label="Terms type">
                                 <md-option value="DueonReceipt" ng-show"dueDtaesShow">Due on Receipt</md-option>
                                 <md-option value="Custom" >Custom</md-option>
@@ -118,6 +121,9 @@
                                 <md-option value="multipleDueDates" ng-click="MultiDuDates()">Multiple Due Dates</md-option>
                             </md-optgroup>
                         </md-select>
+                        <div ng-messages="editForm.terms.$error">
+                          <div ng-message="required">This is required.</div>
+                        </div>
                     </md-input-container>
                     <md-datepicker ng-model="TDinvoice.duedate" md-placeholder="Due Date" md-min-date="minDate" flex style="margin-top:10px; width:230px;" ng-disabled="showdate"  ></md-datepicker>
                     <div style="height:30px; width:25px; margin-top:25px;">
@@ -131,6 +137,7 @@
                     <md-input-container flex >
                         <label>Po No.</label>
                         <input ng-model="TDinvoice.poNum">
+
                         </md-input-container>
                         <md-input-container  flex >
                             <label>Comment</label>
@@ -299,7 +306,7 @@
                                     <div flex="20" style="margin-top:35px;"></div>
                                     <div flex="10">
                                         <label>
-                                            <b>Total USD</b>
+                                            <b>Total {{BaseCurrency}}</b>
                                         </label>
                                     </div>
                                     <md-input-container flex="20" ></md-input-container>

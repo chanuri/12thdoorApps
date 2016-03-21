@@ -1,5 +1,5 @@
 //Angular Material Design - v0.11.0
-var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'uiMicrokernel', 'ui.router', 'ui.sortable']);
+var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdirective', 'uiMicrokernel', 'ui.router', 'ui.sortable','ngMessages']);
     
     app.config(function($mdThemingProvider) {
         $mdThemingProvider.theme('datePickerTheme').primaryPalette('teal');
@@ -24,7 +24,6 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
             .state('settings.invoice_app', {
                 url: '/invoice_app',
                 templateUrl: 'Invoicepartials/AllInvoicePartial.html'
-                // controller: 'viewCtrl'
             })
             .state('app', {
                 url: '/NewInvoice_app',
@@ -36,11 +35,6 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
                 templateUrl: 'Invoicepartials/viewInvoice.html',
                 controller: 'viewCtrl'
             })
-            // .state('contactView', {
-            //     url: '/contactView/INo=:invoiceno',
-            //     templateUrl: 'Invoicepartials/suplierInterface.html',
-            //     controller: 'viewCtrl'
-            // })
             .state('settings.AllRecurring_Invoices', {
                 url: '/AllRecurring_Invoices',
                 templateUrl: 'Invoicepartials/AllRecurringInvoices.html',
@@ -55,20 +49,19 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
                 url: '/editInvoiceDetails/INo=:invoiceno',
                 templateUrl: 'Invoicepartials/editInvoice.html',
                 controller: 'editCtrl'
-                    //params:['invoice']
             })
 
-        .state('copy', {
-            url: '/copyInvoiceDetails/INo=:invoiceno',
-            templateUrl: 'Invoicepartials/editInvoice.html',
-            controller: 'editCtrl'
-        })
-
-        .state('estimateInvoice', {
-                url: '/estimateInvoice/IName=:cusName',
+            .state('copy', {
+                url: '/copyInvoiceDetails/INo=:invoiceno',
                 templateUrl: 'Invoicepartials/editInvoice.html',
-                controller: 'estimateCtrl'
+                controller: 'editCtrl'
             })
+
+            .state('estimateInvoice', {
+                    url: '/estimateInvoice/IName=:cusName',
+                    templateUrl: 'Invoicepartials/editInvoice.html',
+                    controller: 'estimateCtrl'
+                })
             .state('ediTRec', {
                 url: '/EditRecurringDetails/RecNO=:profilename',
                 templateUrl: 'Invoicepartials/editRecurring.html',
@@ -83,7 +76,6 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
                 url: '/viewRecurringProfile/RecNO=:profileName',
                 templateUrl: 'Invoicepartials/viewRecurringProfile.html',
                 controller: 'ViewRecurring'
-                    //params:['invoice']
             })
     })
 
@@ -651,10 +643,10 @@ $scope.ll = [];
                 $scope.taxType = [];
                 $scope.AllUnitOfMeasures = [];
                 $scope.discount = 0;
-                $scope.displayDiscountLine = false;
-                $scope.showPercentage = false;
-                $scope.showPrice = false;
-                $scope.showQuantity = false;
+                // $scope.displayDiscountLine = false;
+                // $scope.showPercentage = false;
+                // $scope.showPrice = false;
+                // $scope.showQuantity = false;
                 $scope.showProduct = false;
                 //console.log($rootScope.Showdiscount)
                 if ($rootScope.discounts == "Individual Items" && $rootScope.Showdiscount == true) {
@@ -674,14 +666,14 @@ $scope.ll = [];
                         }
                         for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
                             if ($scope.promoItems[i].productName == null) {
-                                $scope.showProduct = true;
+                                 $scope.showProduct = false;
                             } else if ($scope.promoItems[i].qty == null) {
-                                $scope.showQuantity = true;
+                                $scope.showProduct = false;
                             } else if ($scope.promoItems[i].ProductUnit == null) {
-                                $scope.showPercentage = true;
+                                 $scope.showProduct = false;
 
                             } else if ($scope.promoItems[i].price == null) {
-                                $scope.showPrice = true;
+                                 $scope.showProduct = false;
                             } else {
                                 InvoiceService.setFullArr({
                                     Productname: $scope.promoItems[i].productName,
@@ -772,15 +764,6 @@ $scope.ll = [];
                                                 .position('bottom right')
                                                 .hideDelay(2000)
                                             );
-                                            // $mdDialog.show(
-                                            //     $mdDialog.alert()
-                                            //     .parent(angular.element(document.body))
-                                            //     .title('')
-                                            //     .content('product Successfully Saved')
-                                            //     .ariaLabel('Alert Dialog Demo')
-                                            //     .ok('OK')
-                                            //     .targetEvent(data)
-                                            // );
                                         });
                                         client.onError(function(data) {
                                             $mdDialog.show(

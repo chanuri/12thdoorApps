@@ -597,7 +597,7 @@ angular
 
 			taxes :
 			{
-				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes"}],
+				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes", taxLabelActivate:"Activate"}],
 				multipletaxgroup:[],
 
 			},
@@ -1995,7 +1995,8 @@ $scope.edittaskProjectrow = function(taskProjectedit, ev) {
 	$scope.inactivateindividual="Inactivate";
 
 	$scope.inactivateindividualtaxes = function(data){
-
+		console.log(data);
+		console.log(data.activate);
 		if(data.activate){
 			data.activate = false;
 			$scope.inactivateindividual="Activate";

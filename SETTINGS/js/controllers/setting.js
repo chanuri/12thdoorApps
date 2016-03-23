@@ -597,8 +597,8 @@ angular
 
 			taxes :
 			{
-				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes", taxLabelActivate:"Activate"}],
-				multipletaxgroup:[],
+				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes"}],
+				multipletaxgroup:[]
 
 			},
 

@@ -22,12 +22,19 @@
 				</div>
 				<md-card-content style="border-top:1px solid #E5E5E5;">
 			</md-card-content>
-			<div class="md-actions" layout="row" layout-align="center center">
-				<md-button class="md-primary" style="font-size:12px;" ng-click="activepayment1(onlinePay)">{{onlinePay.label}}</md-button>|
-				<md-button class="md-primary" style="font-size:12px;">Edit</md-button>
+			<div class="md-actions" layout="row">
+				<div flex layout="row" layout-align="end center">
+					<md-button class="md-primary" style="font-size:12px;" ng-click="activepayment1(onlinePay)">{{onlinePay.label}}</md-button>
+				</div>
+				<div flex="40" layout="row" layout-align="end center">
+					<md-button class="md-icon-button">
+					<md-icon md-svg-icon="img/ic_edit_24px.svg"></md-icon>
+				</md-button>
 			</div>
-		</md-card>
-	</div>
+
+		</div>
+	</md-card>
+</div>
 </div>
 
 </br>

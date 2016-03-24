@@ -983,6 +983,22 @@ $scope.ll = [];
                         left: false,
                         right: true
                     };
+                    
+                    $scope.emailExsist = false;
+                    $scope.validateEmail = function(obj){
+                        $scope.emailExsist = false;
+                        var emailClient = $objectstore.getClient("contact12thdoor");
+                        emailClient.onGetMany(function(data){
+                          if (data.length > 0) {
+                            console.log("exsist")
+                            $scope.emailExsist = true;
+                          }
+                        });
+                        emailClient.onError(function(data){
+
+                        });
+                        emailClient.getByFiltering("select Email from contact12thdoor where Email = '"+obj.Email+"'")
+                      }
                     $scope.toastPosition = angular.extend({}, last);
                     $scope.getToastPosition = function() {
                         sanitizePosition();

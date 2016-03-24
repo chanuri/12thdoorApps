@@ -665,33 +665,6 @@
         }, 100, 0, true);
 
         $scope.calBalance = 0;
-        
-        //retrieve Data from invoice class
-        var client = $objectstore.getClient("invoice12thdoorDraft");
-        client.onGetMany(function(data) {
-            if (data) {
-
-                for (var i = data.length - 1; i >= 0; i--) {
-                    // loading_spinner.remove();
-                    data[i].addView = "";
-                    data[i].invoiceNo = parseInt(data[i].invoiceNo);
-                    $scope.TDinvoice.push(data[i]);
-
-                };
-            }
-        });
-        client.onError(function(data) {
-            $mdDialog.show(
-                $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .content('There was an error retreving the data.')
-                .ariaLabel('Alert Dialog Demo')
-                .ok('OK')
-                .targetEvent(data)
-            );
-        });
-        client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
-
         var client = $objectstore.getClient("invoice12thdoor");
         client.onGetMany(function(data) {
             if (data) {
@@ -700,6 +673,15 @@
                     data[i].addView = "";
                     data[i].invoiceNo = parseInt(data[i].invoiceNo);
                     $scope.TDinvoice.push(data[i]);
+                    
+                    for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {                       
+                        if ($stateParams.invoiceno == data[i].invoiceNo) {
+                            if(data[i].DraftActive == false){
+                            invoiceDetails.removeArray(data[i], 1);
+                            invoiceDetails.setArray(data[i]);
+                        }
+                    }
+                    }
                 }
             }
         });
@@ -715,6 +697,40 @@
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
 
+        //retrieve Data from invoice class
+        var client = $objectstore.getClient("invoice12thdoorDraft");
+        client.onGetMany(function(data) {
+            if (data) {
+
+                for (var i = data.length - 1; i >= 0; i--) {
+                    // loading_spinner.remove();
+                    data[i].addView = "";
+                    data[i].invoiceNo = parseInt(data[i].invoiceNo);
+                    $scope.TDinvoice.push(data[i]);
+                     if(data[i].DraftActive == true){
+                    for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {                       
+                        if ($stateParams.invoiceno == data[i].invoiceNo) {
+                            if(data[i].DraftActive == true){
+                            invoiceDetails.removeArray(data[i], 1);
+                            invoiceDetails.setArray(data[i]);
+                        }
+                    }
+                    }
+                    }
+                };
+            }
+        });
+        client.onError(function(data) {
+            $mdDialog.show(
+                $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .content('There was an error retreving the data.')
+                .ariaLabel('Alert Dialog Demo')
+                .ok('OK')
+                .targetEvent(data)
+            );
+        });
+        client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
 
         $scope.openOtherView = function(InvoItem) {
             $rootScope.invoiceArray.splice(InvoItem, 1);
@@ -734,8 +750,8 @@
                            if ($stateParams.invoiceno == data[i].invoiceNo) {
                             console.log(data[i].MultiDueDAtesArr[x].paymentStatus)
                             if(data[i].MultiDueDAtesArr[x].paymentStatus != "Draft"){
-                            // invoiceDetails.removeArray(data[i], 1);
-                            // invoiceDetails.setArray(data[i]);
+                            invoiceDetails.removeArray(data[i], 1);
+                            invoiceDetails.setArray(data[i]);
                             $scope.Address = data[i].billingAddress.split(',');
                             $scope.street = $scope.Address[0];
                             $scope.city = $scope.Address[1] + $scope.Address[3];
@@ -778,8 +794,8 @@
                            if ($stateParams.invoiceno == data[i].invoiceNo) {
                             console.log(data[i].MultiDueDAtesArr[x].paymentStatus)
                             if(data[i].MultiDueDAtesArr[x].paymentStatus == "Draft") {
-                                // invoiceDetails.removeArray(data[i], 1);
-                                // invoiceDetails.setArray(data[i]);
+                                invoiceDetails.removeArray(data[i], 1);
+                                invoiceDetails.setArray(data[i]);
                                 $scope.Address = data[i].billingAddress.split(',');
                                 $scope.street = $scope.Address[0];
                                 $scope.city = $scope.Address[1] + $scope.Address[3];

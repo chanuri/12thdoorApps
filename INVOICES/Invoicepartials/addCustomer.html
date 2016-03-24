@@ -1,4 +1,5 @@
 <md-dialog style="max-width:960px;">
+<form name="cusForm">
     <md-toolbar class="modal-header">
         <div class="md-toolbar-tools">
             <h2>New Contact</h2>
@@ -17,7 +18,11 @@
             </md-input-container>
             <md-input-container id="accContainer" flex style="margin-top:20px;">
                 <label>Email</label>
-                <input type="email" ng-model="contact.Email" ng-required="true">
+                <input type="email" ng-model="contact.Email" ng-required="" name="email" ng-blur="validateEmail(contact)">
+                 <!--  <div ng-message="required" ng-show="emailExsist" style="font-size: 13px; color: red;">Email Aready Exist</div> -->
+                  <div ng-messages="cusForm.email.$error">
+              <div ng-message="required" ng-show="emailExsist">Email Aready Exist</div>
+            </div>
             </md-input-container>
         </div>
         <md-divider></md-divider>
@@ -153,4 +158,5 @@
     <div class="md-actions" layout="row">
         <md-button href ng-click="AddCus()" class="md-primary">Save</md-button>
     </div>
+    </form>
 </md-dialog>

@@ -166,7 +166,7 @@
 
         if ($scope.fullArr.length > 1) {
            for(i=1; i<=$scope.fullArr.length-1; i++){
-            $scope.fullArr[i].checkDisable = true;
+                $scope.fullArr[i].checkDisable = true;
            }
         }
 
@@ -280,6 +280,9 @@
                 $scope.payment.advancePayment =  data[0].uAmount;
                 $scope.advancedPayment = data[0];  
                 $scope.advancePaymentExsist = true; 
+                $scope.payment.namount =  data[0].uAmount
+            }else{
+                $scope.payment.advancePayment =  0
             }
         });
         paymentClient.onError(function(data) {

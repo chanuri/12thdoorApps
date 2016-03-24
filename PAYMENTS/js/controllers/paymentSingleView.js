@@ -1,8 +1,75 @@
-rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast) {
+rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast,$http) {
  
     $scope.viewPyamentArr = [];
     $scope.progressBar = false;
     $scope.maxNumber = 0;
+
+
+    $scope.email = function(item){
+
+         var jsondata = {
+            "type":"email",
+             "to":"sachila@duosoftware.com",
+             "subject":"Confirmation",
+             "from":"Duo World <12thdoor@duoworld.com>",
+             "Namespace": "com.SLT.space.cargills.com",
+             "TemplateID": "T_Email_GENERAL",
+             "DefaultParams": {
+              "@@CNAME@@": "Kalana",
+              "@@TITLE@@": "Account Creation Confirmation",
+              "@@MESSAGE@@": "The account you created has been verified.",
+              "@@CNAME@@": "Kalana",
+              "@@APPLICATION@@": "E-banks.lk",
+              "@@FOOTER@@": "Copyright 2015",
+              "@@LOGO@@": ""
+
+             },
+             "CustomParams": {
+              "@@CNAME@@": "Kalana",
+              "@@TITLE@@": "Account Creation Confirmation",
+              "@@MESSAGE@@": "The account you created has been verified.",
+              "@@CNAME@@": "Kalana",
+              "@@FOOTER@@": "Copyright 2015",
+              "@@APPLICATION@@": "E-banks.lk",
+              "@@FOOTER@@": "Copyright 2015", 
+              "@@LOGO@@": ""
+             }
+        }
+
+
+        // $http({
+        //     url : "http://duoworld.duoweb.info:3500/command/notification",
+        //     method : "POST",
+        //     headers :{
+        //         'securityToken' : '459e8ee57fc9feaff874e74fad1556b7',
+        //         'Content-Type': 'application/json; charset=utf-8'
+        //     },
+        //     data : jsondata
+
+        // }).then(function(result){
+        //     console.log(result)
+        // },function(result){
+        //     console.log(result)
+
+        // })
+       
+       
+        console.log(JSON.stringify(jsondata))
+
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState === 4) {
+                console.log(xmlhttp.responseText)
+            }
+        }
+        xmlhttp.onerror = function(){
+
+        }
+        xmlhttp.open("POST", "http://duoworld.duoweb.info:3500/command/notification", true);
+        xmlhttp.setRequestHeader('securityToken','459e8ee57fc9feaff874e74fad1556b7')
+        xmlhttp.setRequestHeader('Content-Type','application/json')
+        xmlhttp.send("type=email");
+    }
 
     function pdfFuntions(type, item){
         html2canvas($("#canvas"), {

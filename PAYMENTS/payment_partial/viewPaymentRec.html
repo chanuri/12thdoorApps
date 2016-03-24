@@ -33,7 +33,7 @@ md-input-container.md-input-focused label {
                   <label ng-if="item.paymentid != '-999'">{{item.paymentid}}</label>
                </div>
                <div flex="15">
-                  <label>USD: {{item.total}}</label>
+                  <label>USD: {{item.amountReceived}}</label>
                </div>
                <div flex="20">
                   <span style="background-color: #212121; width: 100px;"
@@ -50,7 +50,7 @@ md-input-container.md-input-focused label {
                   <md-button ng-click="downloadPdf(item)" style="height:30px;" aria-label="change address" href>
                      <md-icon md-svg-icon="img/ic_file_download_24px.svg" style="height:20px; width:20px;"></md-icon>
                   </md-button>
-                  <md-button ng-click="email()" style="height:30px;" aria-label="change address" href>
+                  <md-button ng-click="email(item)" style="height:30px;" aria-label="change address" href>
                      <md-icon md-svg-icon="img/ic_email_24px.svg" style="height:20px; width:20px;"></md-icon>
                   </md-button>
                   <md-menu ng-if="item.paymentStatus != 'Cancelled' && item.paymentid == latestPaymentId" md-position-mode="target-right target" >
@@ -82,30 +82,49 @@ md-input-container.md-input-focused label {
                <div flex="5" class="blankspace"></div>
                <h1 style="">PAYMENT RECEIPT</h1>
             </div>
-            <div layout layout-sm="column" layout-margin style="margin-top:20px;" flex>
-               <div flex="5" class="blankspace"></div>
-               <label>Payment No:</label>
-               <label ng-if="item.paymentid == '-999'">{{item.paymentref}}</label>
-               <label ng-if="item.paymentid != '-999'">{{item.paymentid}}</label>
-               <div flex="50" class="blankspace"></div>
-               <label>To: {{item.customer}}</label>	
+            <div layout layout-sm="column" layout-margin   flex>          
+             
+               <div flex="70" layout layout-sm="column" >
+               <div flex="5" hide-sm ></div>
+                  <table style="margin-top: 47px;" layout="row" layout-sm="column" layout-margin >
+                    <tbody>  
+                          <tr>
+                              <td><label layout layout-margin >Payment No:  </label></td>
+                              <td><label layout layout-margin ng-if="item.paymentid != '-999'"> {{item.paymentid}}</label>
+                                  <label layout layout-margin ng-if="item.paymentid == '-999'"> {{item.paymentref}}</label>
+                              </td>                               
+                          </tr>
+                          <tr>
+                              <td><label layout layout-margin >Payment Date:  </label></td>
+                              <td><label layout layout-margin> {{item.date|date}}</label></td>                               
+                          </tr>
+                          <tr>
+                              <td><label layout layout-margin >Payment Method:  </label></td>
+                              <td><label layout layout-margin> {{item.paymentMethod}}</label></td>                               
+                          </tr> 
+                          <tr>
+                              <td><label layout layout-margin >Amount Paid  </label></td>
+                              <td><label layout layout-margin style="margin-left: 0px;"><b>{{item.total | currency }}</b> </label></td>                               
+                          </tr>
+                          <tr>
+                              <td><label layout layout-margin >Comments </label></td>
+                              <td><label layout layout-margin ><b>{{item.paymentComments}}</b> </label></td>                               
+                          </tr>       
+                    </tbody> 
+                  </table>
+               </div> 
+                 <table layout="row" layout-sm="column" layout-margin >
+                    <tbody> 
+                          <tr><td><label layout layout-margin>To: </label></td></tr>
+                          <tr><td><label layout layout-margin style="margin-left: 0px;"><b>{{item.customer}}</b></label></td></tr>
+                          <tr><td><label layout layout-margin>{{item.cusAddress.street}}  {{item.cusAddress.city}}  </label></td></tr>
+                          <tr><td><label layout layout-margin>{{item.cusAddress.state}}  {{item.cusAddress.country}}</label></td></tr>
+                          <tr><td><label layout layout-margin>{{item.cusEmail}}   </label></td></tr>
+                                       
+                    </tbody> 
+                  </table>
             </div>
-            <div layout layout-sm="column" layout-margin flex>
-               <div flex="5" class="blankspace"></div>
-               <label>Payment Date: {{item.date|date}}</label>
-               <div flex="60" class="blankspace"></div>
-               <label></label>
-            </div>
-            <div layout layout-sm="column" layout-margin  flex>
-               <div flex="5" class="blankspace"></div>
-               <label>Payment Method: {{item.paymentMethod}}</label>
-               <div flex="60" class="blankspace"></div>
-            </div>
-            <div layout layout-sm="column" layout-margin  flex>
-               <div flex="5" class="blankspace"></div>
-               <label>Comments: {{item.paymentComments}}</label>
-               <div flex="60" class="blankspace"></div>
-            </div>
+             
             <div layout layout-sm="column" style="margin-top:30px;" layout-margin  flex>
                <div flex="5" hide-sm ></div>
                <table style="width: 800px;"  cellspacing="0" >

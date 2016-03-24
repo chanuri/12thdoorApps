@@ -202,7 +202,8 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                         value: data[i],
                         invo_No: data[i].invoiceNo,
                         Email : data[i].Email,
-                        customerid : data[i].customerid
+                        customerid : data[i].customerid,
+                        cusAddress : data[i].baddress
                     });
                 }
             }
@@ -528,6 +529,8 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             $scope.payment.paymentid = "-999";
             $scope.payment.paymentStatus = "active";
             $scope.payment.customerid = $rootScope.selectedItem1.customerid;
+            $scope.payment.cusAddress = $rootScope.selectedItem1.cusAddress;
+            $scope.payment.cusEmail = $rootScope.selectedItem1.Email;
             $scope.payment.customer = $rootScope.selectedItem1.display;        
             $scope.payment.UploadImages = {
                 val: []

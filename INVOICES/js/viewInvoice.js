@@ -147,7 +147,7 @@
             }
         }
     }]);
-    app.controller('viewCtrl', function($scope, $mdBottomSheet, $interval, $mdDialog, $state, uiInitilize, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
+    app.controller('viewCtrl', function($scope, $mdBottomSheet, $auth, $interval, $mdDialog, $state, uiInitilize, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
         $scope.TDinvoice = [];
         $scope.Payment = [];
         $scope.newItems = [];
@@ -157,6 +157,7 @@
         var vm = this;
         $scope.Makepayment = false;
         $scope.showEdit = true;
+        $scope.userName = $auth.getUserName();
         // ------------------------------------virtual repeat start-----------------
         $scope.toggles = {};
         $scope.toggleOne = function($index) {
@@ -338,7 +339,7 @@
                 var client = $objectstore.getClient("invoice12thdoor");
                 obj.invoiceNo = obj.invoiceNo.toString();
                 $scope.systemMessage.push({
-                    text: "The Invoice was Cancelled by mr.dddd",
+                    text: "The Invoice was Cancelled by"+$scope.userName,
                     done: false,
                     date: new Date()
                 });
@@ -389,21 +390,6 @@
             containment: '#sortable-container'
         };
 
-        $scope.openOtherView = function(InvoItem) {
-            $rootScope.invoiceArray.splice(InvoItem, 1);
-            invoiceDetails.setArray(InvoItem);
-            $scope.Address = InvoItem.billingAddress.split(',');
-            $scope.street = $scope.Address[0];
-            $scope.city = $scope.Address[1] + $scope.Address[3] + $scope.Address[2] + $scope.Address[4];
-
-            $scope.shippingAddress = InvoItem.shippingAddress.split(',');
-            $scope.ShippingStreet = $scope.shippingAddress[0];
-            $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
-            $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
-            $state.go('view', {
-                'invoiceno': InvoItem.invoiceNo
-            });
-        }
         $scope.viewSavedProducts = function(obj) {
             $mdDialog.show({
                 templateUrl: 'Invoicepartials/showproduct.html',
@@ -495,7 +481,7 @@
                         deleteform.DeleteStatus = true;
                         deleteform.invoiceNo = deleteform.invoiceNo.toString();
                         $scope.systemMessage.push({
-                            text: "The Invoice was Deleted by mr.dddd",
+                            text: "The Invoice was Deleted by"+$scope.userName,
                             done: false,
                             date: new Date()
                         });
@@ -690,25 +676,7 @@
                     data[i].addView = "";
                     data[i].invoiceNo = parseInt(data[i].invoiceNo);
                     $scope.TDinvoice.push(data[i]);
-                    
-                    for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {                       
-                        if ($stateParams.invoiceno == data[i].invoiceNo && data[i].MultiDueDAtesArr[x].paymentStatus == "Draft") {
-                            invoiceDetails.removeArray(data[i], 1);
-                            invoiceDetails.setArray(data[i]);
-                            $scope.Address = data[i].billingAddress.split(',');
-                            $scope.street = $scope.Address[0];
-                            $scope.city = $scope.Address[1] + $scope.Address[3];
-                            $scope.country = $scope.Address[2] + $scope.Address[4];
 
-                            $scope.shippingAddress = data[i].shippingAddress.split(',');
-                            $scope.ShippingStreet = $scope.shippingAddress[0];
-                            $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
-                            $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
-
-                            $scope.calBalance += data[i].MultiDueDAtesArr[x].balance;
-                            
-                        }
-                    }
                 };
             }
         });
@@ -722,7 +690,7 @@
                 .targetEvent(data)
             );
         });
-        client.getByFiltering("*");
+        client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
 
         var client = $objectstore.getClient("invoice12thdoor");
         client.onGetMany(function(data) {
@@ -732,25 +700,6 @@
                     data[i].addView = "";
                     data[i].invoiceNo = parseInt(data[i].invoiceNo);
                     $scope.TDinvoice.push(data[i]);
-
-                    for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
-
-                        if ($stateParams.invoiceno == data[i].invoiceNo && data[i].MultiDueDAtesArr[x].paymentStatus != "Draft") {
-                            invoiceDetails.removeArray(data[i], 1);
-                            invoiceDetails.setArray(data[i]);
-                            $scope.Address = data[i].billingAddress.split(',');
-                            $scope.street = $scope.Address[0];
-                            $scope.city = $scope.Address[1] + $scope.Address[3];
-                            $scope.country = $scope.Address[2] + $scope.Address[4];
-
-                            $scope.shippingAddress = data[i].shippingAddress.split(',');
-                            $scope.ShippingStreet = $scope.shippingAddress[0];
-                            $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
-                            $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
-                            
-                            $scope.calBalance += data[i].MultiDueDAtesArr[x].balance;
-                        }
-                    };
                 }
             }
         });
@@ -765,6 +714,104 @@
             );
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
+
+
+        $scope.openOtherView = function(InvoItem) {
+            $rootScope.invoiceArray.splice(InvoItem, 1);
+            invoiceDetails.setArray(InvoItem);
+            $state.go('view', {'invoiceno': InvoItem.invoiceNo});
+            
+        }
+
+        $scope.loadData = function(val){
+           if(val.DraftActive == false){
+            var client = $objectstore.getClient("invoice12thdoor");
+        client.onGetMany(function(data) {
+            if (data) {
+                for (var i = data.length - 1; i >= 0; i--) {
+                    for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
+                        
+                           if ($stateParams.invoiceno == data[i].invoiceNo) {
+                            console.log(data[i].MultiDueDAtesArr[x].paymentStatus)
+                            if(data[i].MultiDueDAtesArr[x].paymentStatus != "Draft"){
+                            // invoiceDetails.removeArray(data[i], 1);
+                            // invoiceDetails.setArray(data[i]);
+                            $scope.Address = data[i].billingAddress.split(',');
+                            $scope.street = $scope.Address[0];
+                            $scope.city = $scope.Address[1] + $scope.Address[3];
+                            $scope.country = $scope.Address[2] + $scope.Address[4];
+
+                            $scope.shippingAddress = data[i].shippingAddress.split(',');
+                            $scope.ShippingStreet = $scope.shippingAddress[0];
+                            $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
+                            $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
+                            
+                            $scope.calBalance += data[i].MultiDueDAtesArr[x].balance;
+                            
+                        } 
+                        }
+                        
+                    };
+                   
+                }
+            }
+        });
+        client.onError(function(data) {
+            $mdDialog.show(
+                $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .content('There was an error retreving the data.')
+                .ariaLabel('Alert Dialog Demo')
+                .ok('OK')
+                .targetEvent(data)
+            );
+        });
+        client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
+    }else{
+        var client = $objectstore.getClient("invoice12thdoorDraft");
+        client.onGetMany(function(data) {
+            if (data) {
+
+                for (var i = data.length - 1; i >= 0; i--) {
+                    for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {   
+                    
+                           if ($stateParams.invoiceno == data[i].invoiceNo) {
+                            console.log(data[i].MultiDueDAtesArr[x].paymentStatus)
+                            if(data[i].MultiDueDAtesArr[x].paymentStatus == "Draft") {
+                                // invoiceDetails.removeArray(data[i], 1);
+                                // invoiceDetails.setArray(data[i]);
+                                $scope.Address = data[i].billingAddress.split(',');
+                                $scope.street = $scope.Address[0];
+                                $scope.city = $scope.Address[1] + $scope.Address[3];
+                                $scope.country = $scope.Address[2] + $scope.Address[4];
+
+                                $scope.shippingAddress = data[i].shippingAddress.split(',');
+                                $scope.ShippingStreet = $scope.shippingAddress[0];
+                                $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
+                                $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
+
+                                $scope.calBalance += data[i].MultiDueDAtesArr[x].balance;
+                            } 
+                    }                   
+                    
+                    }
+
+                };
+            }
+        });
+        client.onError(function(data) {
+            $mdDialog.show(
+                $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .content('There was an error retreving the data.')
+                .ariaLabel('Alert Dialog Demo')
+                .ok('OK')
+                .targetEvent(data)
+            );
+        });
+        client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
+    }
+        }
 
         $scope.Totalbalance = function(data){
             $scope.viewBalance = 0;

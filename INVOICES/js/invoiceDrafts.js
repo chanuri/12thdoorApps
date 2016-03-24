@@ -94,7 +94,7 @@
     });
     //----------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
-    app.controller('paymentCtrl', function($scope, $mdDialog, $rootScope, pim, $objectstore) {
+    app.controller('paymentCtrl', function($scope, $mdDialog, $auth, $rootScope, pim, $objectstore) {
         $scope.pay = pim;
         $scope.payment = {};
         $scope.payment.paymentMethod = pim.paymentMethod
@@ -106,7 +106,7 @@
         $scope.submitVisible = true;
         $scope.advancePayVisible = false;
         $scope.AdvancefullArr = [];
-        $scope.maxDate = new Date();
+        $scope.maxDate = new Date(); 
 
         $scope.confirmOk = function(){
             if (parseFloat($scope.payment.namount) > 0) {                
@@ -271,22 +271,21 @@
             } 
         }
 
-        var paymentClient = $objectstore.getClient("advancedPayment12thdoor");
-        paymentClient.onGetMany(function(data) {  
-            if (data.length == 0) {
-               $scope.payment.advancePayment = 0
-            }else if (data.length > 0)  {
-
-                data[0].status = "Inactive"
-                $scope.AdvancefullArr.push(data[0]);
-                $scope.payment.advancePayment = parseFloat(data[0].uAmount)
-                $scope.payment.namount = parseFloat( $scope.payment.namount) + parseFloat($scope.payment.advancePayment)
+        $scope.advancePaymentExsist = false;
+        var paymentClient = $objectstore.getClient("advancedPayments12thdoor");
+        paymentClient.onGetMany(function(data) {
+            $scope.advancePaymentExsist = false;  
+            if (data.length > 0)  {
+                if (!data[0].uAmount)  data[0].uAmount = 0;
+                $scope.payment.advancePayment =  data[0].uAmount;
+                $scope.advancedPayment = data[0];  
+                $scope.advancePaymentExsist = true; 
             }
         });
         paymentClient.onError(function(data) {
             console.log("error loading payment details")
         });
-        paymentClient.getByFiltering("select * from advancedPayment12thdoor where status ='Active' and customer = '"+pim.Name+"'");
+        paymentClient.getByFiltering("select * from advancedPayments12thdoor where customerid = '"+pim.customerid+"'");
 
         $scope.getPaidAmount = function(obj, oldValue,e,index){
             if (obj.amount == "")   obj.amount = 0;      
@@ -332,22 +331,25 @@
             $scope.payment.UploadImages = {
                 val: []
             };
-            $scope.payment.custField = [];
+            $scope.payment.custField = []; 
 
+            // if ($scope.payment.total == 0) {
+            //     $scope.payment.uAmount = $scope.payment.namount;
+            //     $scope.advancedPayment.uAmount = $scope.payment.uAmount;
+            // } else if ($scope.payment.namount > 0) {
+            //     $scope.payment.uAmount = $scope.payment.namount;
+            //     $scope.advancedPayment.uAmount = $scope.payment.uAmount;
+            // }
 
-            $scope.advancedPayment.advancedPayment_code = "-999";
-            $scope.advancedPayment.name = $scope.payment.customer +' '+ pim.Email;
-            $scope.advancedPayment.customer = $scope.payment.customer;
-            $scope.advancedPayment.uAmount = $scope.payment.uAmount;  
-            $scope.advancedPayment.status = "Active"; 
+            $scope.advancedPayment.uAmount = $scope.payment.namount;
+            if (!$scope.advancePaymentExsist) {
 
-            if ($scope.payment.total == 0) {
-                $scope.payment.uAmount = $scope.payment.namount;
-                $scope.advancedPayment.uAmount = $scope.payment.uAmount;
-            } else if ($scope.payment.namount > 0) {
-                $scope.payment.uAmount = $scope.payment.namount;
-                $scope.advancedPayment.uAmount = $scope.payment.uAmount;
-            }
+                $scope.advancedPayment.name = $scope.payment.customer +' '+pim.Email;
+                $scope.advancedPayment.customer = $scope.payment.customer;            
+                $scope.advancedPayment.customerid = pim.customerid;
+                $scope.advancedPayment.advancedPayment_code = "-999";
+
+            }  
 
             $scope.submitVisible = true;
             $scope.advancePayVisible = false;
@@ -376,8 +378,8 @@
 
         function saveAdvancePaymentToObjectstore(callback){
 
-            $scope.AdvancefullArr.push($scope.advancedPayment)
-            var paymentSave = $objectstore.getClient("advancedPayment12thdoor");
+            // $scope.AdvancefullArr.push($scope.advancedPayment)
+            var paymentSave = $objectstore.getClient("advancedPayments12thdoor");
             paymentSave.onComplete(function(data){
                 callback();
             });
@@ -385,7 +387,7 @@
                 console.log("error saving Advanced payment");
                 callback();
             });
-            paymentSave.insertMultiple($scope.AdvancefullArr,"advancedPayment_code"); 
+            paymentSave.insert($scope.advancedPayment,{"KeyProperty":"advancedPayment_code"}); 
         }
         function updateInvoice(callback){
             for(kal=0; kal<=pim.MultiDueDAtesArr.length-1; kal++){
@@ -507,6 +509,7 @@
 
         $scope.AddImage = function() {
             $scope.uploadimages.val = UploaderService.loadBasicArray();
+            $mdDialog.cancel();
         }
         $scope.cancel = function() {
             $mdDialog.cancel();

@@ -80,7 +80,7 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
     })
 
 //------------APPCtrl starts--------------------------------------------------------------------------------------------------------
-app.controller('AppCtrl', function($scope, $objectstore, $focus, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
+app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
 
     $scope.list = [];
     $scope.TDinvoice = {};
@@ -643,15 +643,35 @@ $scope.ll = [];
                 $scope.taxType = [];
                 $scope.AllUnitOfMeasures = [];
                 $scope.discount = 0;
-                // $scope.displayDiscountLine = false;
-                // $scope.showPercentage = false;
-                // $scope.showPrice = false;
-                // $scope.showQuantity = false;
                 $scope.showProduct = false;
-                //console.log($rootScope.Showdiscount)
+                // $scope.promoItems[0].tax = 0;
+                
                 if ($rootScope.discounts == "Individual Items" && $rootScope.Showdiscount == true) {
                     $scope.displayDiscountLine = true;
                 }
+
+                 $scope.$watch("$root.selectedItemm", function() {
+                        if ($rootScope.selectedItemm != null) {
+                           $scope.showProduct = false; 
+                        }
+                    });
+                 $scope.$watch("qty", function() {
+                        if ($scope.qty != null) {
+                           $scope.showProduct = false; 
+                        }
+                    });
+                 // $scope.$watch("addProd.price", function() {
+                 //        if ($scope.addProd.price != null) {
+                 //           $scope.showProduct = false; 
+                 //        }
+                 //    });
+                 
+
+                  // $scope.$watch("addProd.price", function() {
+                  //       if ($scope.promoItems[0].price != null) {
+                  //          $scope.showProduct = false; 
+                  //       }
+                  //   });
 
                 $scope.addproductToarray = function(item) {
                         $scope.promoItems[0] = {
@@ -666,14 +686,20 @@ $scope.ll = [];
                         }
                         for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
                             if ($scope.promoItems[i].productName == null) {
-                                 $scope.showProduct = false;
+                                 $scope.showProduct = true;
                             } else if ($scope.promoItems[i].qty == null) {
-                                $scope.showProduct = false;
+                                $scope.showProduct = true;
                             } else if ($scope.promoItems[i].ProductUnit == null) {
-                                 $scope.showProduct = false;
+                                 $scope.showProduct = true;
 
-                            } else if ($scope.promoItems[i].price == null) {
-                                 $scope.showProduct = false;
+                            }else if ($scope.promoItems[i].ProductUnit == "") {
+                                 $scope.showProduct = true;
+
+                            // } else if ($scope.promoItems[i].tax == undefined) {
+                            //      $scope.promoItems[i].tax = 0;
+
+                            }else if ($scope.promoItems[i].price == null) {
+                                 $scope.showProduct = true;
                             } else {
                                 InvoiceService.setFullArr({
                                     Productname: $scope.promoItems[i].productName,
@@ -853,11 +879,13 @@ $scope.ll = [];
                 };
 
                 $scope.setprice = function(pd) {
+                    $scope.showProduct = false; 
                     $scope.Sprice = pd.price;
                     $scope.calAMount()
                 }
 
                 $scope.setUOM = function(val) {
+                    $scope.showProduct = false;
                     $scope.SProductUnit = val.ProductUnit;
                 }
 
@@ -879,7 +907,6 @@ $scope.ll = [];
 
                 $scope.Amount = 0;
                 $scope.calAMount = function() {
-
                     $scope.disc = 0;
                     $scope.totall = 0;
                     $scope.totall = $scope.Sprice * $scope.Sqty;
@@ -1031,14 +1058,7 @@ $scope.ll = [];
                                         .position('bottom right')
                                         .hideDelay(2000)
                                     );
-                                // $mdDialog.show(
-                                //     $mdDialog.alert()
-                                //     .parent(angular.element(document.body))
-                                //     .content('Customer Registed Successfully')
-                                //     .ariaLabel('Alert Dialog Demo')
-                                //     .ok('OK')
-                                //     .targetEvent(data)
-                                // );
+
                             });
                             $scope.contact.favoritestar = false;
                             $scope.contact.status = 'Active';
@@ -1223,15 +1243,6 @@ $scope.ll = [];
             .position('bottom right')
             .hideDelay(2000)
         );
-        // $mdDialog.show(
-        //     $mdDialog.alert()
-        //     .parent(angular.element(document.body))
-        //     .title('Sorry')
-        //     .content('There is no products available')
-        //     .ariaLabel('Alert Dialog Demo')
-        //     .ok('OK')
-        //     .targetEvent(data)
-        // );
     });
     client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
 
@@ -1268,6 +1279,7 @@ $scope.ll = [];
     };
   $scope.toastPosition = angular.extend({},last);
 
+var userName = $auth.getUserName();
     //save invoice details
     $scope.submit = function() {
         if ($scope.TDinvoice.termtype != "multipleDueDates") {
@@ -1311,7 +1323,7 @@ $scope.ll = [];
         $scope.TDinvoice.DeleteStatus = false;
         $scope.TDinvoice.commentsAndHistory.push({
             done: false,
-            text: "Invoice was created by Mr.dddd",
+            text: "Invoice was created by"+userName,
             date: new Date()
         });
         $scope.TDinvoice.total = $scope.total;
@@ -1321,6 +1333,7 @@ $scope.ll = [];
         $scope.TDinvoice.cardOpen = false;
         $scope.TDinvoice.favourite = false;
         $scope.TDinvoice.favouriteStarNo = 1;
+        $scope.TDinvoice.DraftActive = false;
         $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
         $scope.TDinvoice.Email = $rootScope.selectedItem1.value.Email;
         $scope.TDinvoice.customerid = $rootScope.selectedItem1.value.customerid;
@@ -1527,6 +1540,7 @@ $scope.ll = [];
             $scope.TDinvoice.invoiceProducts = $rootScope.testArray.val;
             $scope.TDinvoice.total = $scope.total;
             $scope.TDinvoice.finalamount = $scope.famount;
+
             // $scope.TDinvoice.status = "Draft";
 
 
@@ -1550,17 +1564,27 @@ $scope.ll = [];
                 $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
                 $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
                 $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
+                $scope.TDinvoice.DraftActive = true;
                 $scope.TDinvoice.DeleteStatus = false;
                 client.onComplete(function(data) {
-                    $mdDialog.show(
-                        $mdDialog.alert()
-                        .parent(angular.element(document.body))
-                        .title('')
-                        .content('invoice Saved to drafts')
-                        .ariaLabel('Alert Dialog Demo')
-                        .ok('OK')
-                        .targetEvent(data)
+
+                    $mdToast.show(
+                      $mdToast.simple()
+                        .textContent('invoice Saved to drafts')
+                        .position('bottom right')
+                        .theme('success-toast')
+                        .hideDelay(2000)
                     );
+
+                    // $mdDialog.show(
+                    //     $mdDialog.alert()
+                    //     .parent(angular.element(document.body))
+                    //     .title('')
+                    //     .content('invoice Saved to drafts')
+                    //     .ariaLabel('Alert Dialog Demo')
+                    //     .ok('OK')
+                    //     .targetEvent(data)
+                    // );
                     location.href = '#/invoice_app';
                 });
                 client.onError(function(data) {

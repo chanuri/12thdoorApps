@@ -1,4 +1,4 @@
-app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $rootScope, invoiceDetails, $stateParams, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
+app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $rootScope,$auth, invoiceDetails, $stateParams, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
        
         $scope.editInvoiceB = false;
         $scope.saveInvoiceB = false;
@@ -15,7 +15,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         $scope.roles = [];
         $scope.permission = [];
         $scope.AddProd = false;
-
+         $scope.userName = $auth.getUserName();
 
         for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
             $rootScope.selctedName = $rootScope.invoiceArray[i].Name;
@@ -168,7 +168,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 updatedForm.duedate = $scope.duedate;
                 updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
                 $scope.systemMessage.push({
-                    text: "The Invoice was Edited by mr.dddd",
+                    text: "The Invoice was Edited by"+ $scope.userName,
                     done: false,
                     date: new Date()
                 });
@@ -216,7 +216,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 updatedForm.Startdate = $scope.Startdate;
                 updatedForm.duedate = $scope.duedate;
                 $scope.systemMessage.push({
-                    text: "The Invoice was Edited by mr.dddd",
+                    text: "The Invoice was Edited by"+ $scope.userName,
                     done: false,
                     date: new Date()
                 });
@@ -354,7 +354,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                     obj.commentsAndHistory = [];
                     obj.commentsAndHistory.push({
                         done: false,
-                        text: "Invoice was created by Mr.dddd",
+                        text: "Invoice was created by"+ $scope.userName,
                         date: new Date()
                     });
                     obj.invoiceRefNo = $scope.refNo;
@@ -886,7 +886,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
              updatedForm.commentsAndHistory = [];
             updatedForm.commentsAndHistory.push({
                 done: false,
-                text: "Invoice was created by Mr.dddd",
+                text: "Invoice was created by"+ $scope.userName,
                 date: new Date()
             });
             updatedForm.discountAmount = $scope.finalDisc;
@@ -997,7 +997,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
             }
         }
     });
-    app.controller('estimateCtrl', function($scope, $mdDialog, $objectstore, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
+    app.controller('estimateCtrl', function($scope, $mdDialog, $objectstore,$auth, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService, MultipleDudtesService) {
 
         $scope.editInvoiceB = false;
         $scope.saveInvoiceB = true;

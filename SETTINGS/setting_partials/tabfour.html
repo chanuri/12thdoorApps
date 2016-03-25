@@ -50,7 +50,7 @@
 		</md-menu-item>
 		<md-menu-item>
 		<md-button ng-click="inactivateindividualtaxes(item)">
-		<p>{{inactivateindividual}}</p>
+		<p>{{item.labelIndividualTaxStatus}}</p>
 		<md-icon md-menu-align-target ></md-icon>
 	</md-button>
 </md-menu-item>
@@ -103,14 +103,14 @@
 			</md-button>
 		</md-menu-item>
 		<md-menu-item>
-		<md-button ng-click="deletmultipletaxgroup(item, $index)">
+		<md-button ng-click="deletmultipletaxgroup(item , $index)">
 		<p>Delete</p>
 		<md-icon md-menu-align-target ></md-icon>
 	</md-button>
 </md-menu-item>
 <md-menu-item>
 <md-button ng-click="inactivatemultipletax(item)">
-<p>{{inactivatemultiple}}</p>
+<p>{{item.labelMultipleTaxStatus}}</p>
 <md-icon md-menu-align-target ></md-icon>
 </md-button>
 </md-menu-item>

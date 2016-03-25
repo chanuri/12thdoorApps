@@ -473,7 +473,7 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
 
         $rootScope.fullArr = {val: []};
         $rootScope.taxArr2 = [];
-        $rootScope.taxArr1 = [];
+        $rootScope.taxArr3 = [];
         $rootScope.correctArr = [];
         $rootScope.compoundcal = [];
 
@@ -626,7 +626,6 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                         }
                     }
                 }
-
                 var sorted_arr = arr.sort();
                 var results = [];
                 for (var i = 0; i < arr.length - 1; i++) {
@@ -699,5 +698,195 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                     }
                 }
             },
-        }
+            setTempArr : function(obj){
+            this.setArray2(obj);
+           $rootScope.correctArr = [];
+                $rootScope.multiTax = [];
+                $rootScope.total = 0;
+                $rootScope.compoundcal = [];
+                $rootScope.calculateCompound = [];
+                $rootScope.falseComp = [];
+                $rootScope.trueComp = [];
+
+                if (obj.tax != null) {
+                    if (obj.tax.type == "individualtaxes") {
+                        if (obj.tax.rate == 0) {} else {
+                            $rootScope.taxArr3.push({
+                                taxName: obj.tax.taxname,
+                                rate: obj.tax.rate,
+                                salesTax: parseFloat(obj.amount * obj.tax.rate / 100),
+                                compoundCheck: obj.tax.compound
+                            })
+                        }
+                        console.log($rootScope.taxArr3)
+                    } else if (obj.tax.type == "multipletaxgroup") {
+                        for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
+
+                            if (obj.tax.individualtaxes[x].compound == false) {
+                                $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
+                            } else if (obj.tax.individualtaxes[x].compound == true) {
+                                $rootScope.trueComp.push(obj.tax.individualtaxes[x])
+                                $rootScope.compountTrue = $rootScope.trueComp.sort(function(a, b) {
+                                    return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
+                                });
+                            }
+
+
+                        }
+                        $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
+                        var tcopmAmount = 0;
+                        var fcompAmount = 0;
+                        var finalCal = 0;
+                        for (var y = 0; y <= $rootScope.calculateCompound.length - 1; y++) {
+
+                            if ($rootScope.calculateCompound[y].compound == false) {
+                                fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
+                                $rootScope.total = fcompAmount;
+                            } else if (obj.tax.individualtaxes[y].compound == true) {
+                                tcopmAmount = parseFloat(fcompAmount + obj.amount);
+                                finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
+                                $rootScope.total = finalCal;
+                            }
+
+                            if ($rootScope.calculateCompound[y].rate == 0) {
+
+                            } else {
+                                $rootScope.taxArr3.push({
+                                    taxName: $rootScope.calculateCompound[y].taxname,
+                                    rate: $rootScope.calculateCompound[y].rate,
+                                    salesTax: $rootScope.total,
+                                    compoundCheck: $rootScope.calculateCompound[y].compound
+                                })
+                            }
+                        }
+                        console.log($rootScope.taxArr3)
+                    }
+                    $rootScope.taxArr3 = $rootScope.taxArr3.sort(function(a, b) {
+                        return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                    });
+
+                    if ($rootScope.taxArr3.length > 1) {
+                        for (l = 0; l <= $rootScope.taxArr3.length - 1; l++) {
+                            if ($rootScope.taxArr3[l + 1]) {
+
+                                if ($rootScope.taxArr3[l].taxName == $rootScope.taxArr3[l + 1].taxName) {
+                                    var sumSalesTax = 0;
+                                    var txtName = $rootScope.taxArr3[l].taxName;
+                                    var rate = $rootScope.taxArr3[l].rate;
+                                    var compound = $rootScope.taxArr3[l].compoundCheck;
+                                    sumSalesTax = $rootScope.taxArr3[l].salesTax + $rootScope.taxArr3[l + 1].salesTax;
+
+                                    $rootScope.taxArr3.splice(l, 2);
+                                    $rootScope.taxArr3.push({
+                                        taxName: txtName,
+                                        rate: rate,
+                                        salesTax: sumSalesTax,
+                                        compoundCheck: compound
+                                    })
+                                    $rootScope.taxArr3.sort(function(a, b) {
+                                        return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                                    });
+                      
+                            };
+                        };                  
+                    }    
+                }
+             } 
+        },
+        ReverseTax: function(obj, index) {
+                var arr = [];
+                var results = [];
+                $rootScope.compoundcal = [];
+                $rootScope.calculateCompound = [];
+                $rootScope.falseComp = [];
+                $rootScope.trueComp = [];
+                var tcopmAmount = 0;
+                var fcompAmount = 0;
+                var finalCal = 0;
+                var tax = 0;
+                for (var i = $rootScope.showprodArray.val.length - 1; i >= 0; i--) {
+
+                    if ($rootScope.showprodArray.val[i].tax.type == "individualtaxes") {
+                        arr.push($rootScope.showprodArray.val[i].tax.taxname)
+
+                    } else if ($rootScope.showprodArray.val[i].tax.type == "multipletaxgroup") {
+                        for (var x = $rootScope.showprodArray.val[i].tax.individualtaxes.length - 1; x >= 0; x--) {
+                            arr.push($rootScope.showprodArray.val[i].tax.individualtaxes[x].taxname)
+                        }
+                    }
+                }
+
+                var sorted_arr = arr.sort();
+                var results = [];
+                for (var i = 0; i < arr.length - 1; i++) {
+                    if (sorted_arr[i + 1] == sorted_arr[i]) {
+                        results.push(sorted_arr[i]);
+                    }
+                }
+                if (obj.tax.type == "individualtaxes") {
+
+                    for (var x = $rootScope.taxArr3.length - 1; x >= 0; x--) {
+
+                        if ($rootScope.taxArr3[x].taxName == obj.tax.taxname) {
+
+                            if ($.inArray(obj.tax.taxname, results) == -1) {
+                                $rootScope.taxArr3.splice(x, 1);
+
+                            } else if ($.inArray(obj.tax.taxname, results) == 0) {
+                                $rootScope.taxArr3[x].salesTax = parseFloat($rootScope.taxArr3[x].salesTax) - parseFloat(obj.amount * obj.tax.rate / 100);
+                            }
+                        }
+                    }
+                } else if (obj.tax.type == "multipletaxgroup") {
+                    for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
+
+                        if (obj.tax.individualtaxes[x].compound == false) {
+                            $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
+
+                        } else if (obj.tax.individualtaxes[x].compound == true) {
+                            $rootScope.trueComp.push(obj.tax.individualtaxes[x])
+                            $rootScope.compountTrue = $rootScope.trueComp.sort(function(a, b) {
+                                return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
+                            });
+                        }
+                    }
+                    $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
+                        var fcompAmount = 0;
+                        var taxAmount = 0;
+                    for (var x = 0; x <= obj.tax.individualtaxes.length - 1; x++) {
+
+                        tax = obj.tax.individualtaxes[x].rate / 100;
+                        for (var y = $rootScope.taxArr3.length - 1; y >= 0; y--) {
+
+                            if ($rootScope.taxArr3[y].taxName == obj.tax.individualtaxes[x].taxname) {
+
+                                for(ps=0; ps <= results.length; ps++){
+                                    if (results[ps] == obj.tax.individualtaxes[x].taxname) {
+                                           for (var z = $rootScope.calculateCompound.length - 1; z >= 0; z--) {
+                                            if ($rootScope.calculateCompound[z].compound == false) {
+                                                 fcompAmount = parseFloat(obj.amount * obj.tax.individualtaxes[z].rate / 100)
+                                                    }
+                                                }
+                                                
+                                            if(obj.tax.individualtaxes[x].compound == false){
+                                                $rootScope.taxArr3[y].salesTax = parseFloat($rootScope.taxArr3[y].salesTax - (obj.amount * obj.tax.individualtaxes[x].rate / 100));
+                                                results.splice(ps, 1);
+                                            }else if (obj.tax.individualtaxes[x].compound == true){
+                                                tcopmAmount = parseFloat(fcompAmount + obj.amount);
+                                                finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[x].rate / 100);
+                                                    
+                                                $rootScope.taxArr3[y].salesTax = parseFloat($rootScope.taxArr3[y].salesTax - finalCal);
+                                            }
+
+                                    } else if ($.inArray(obj.tax.individualtaxes[x].taxname, results) == -1) {
+                                        $rootScope.taxArr3.splice(y, 1);
+                                    }                                        
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+    }
     })

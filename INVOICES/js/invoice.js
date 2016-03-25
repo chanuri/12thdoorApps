@@ -72,6 +72,11 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
                 templateUrl: 'Invoicepartials/editRecurring.html',
                 controller: 'editRecurring'
             })
+            .state('InvoiceCopyRec', {
+                url: '/copyToRecurringProfile',
+                templateUrl: 'Invoicepartials/copyRec.html',
+                controller: 'copyRecurring'
+            })
             .state('viewProfile', {
                 url: '/viewRecurringProfile/RecNO=:profileName',
                 templateUrl: 'Invoicepartials/viewRecurringProfile.html',
@@ -984,21 +989,7 @@ $scope.ll = [];
                         right: true
                     };
                     
-                    $scope.emailExsist = false;
-                    $scope.validateEmail = function(obj){
-                        $scope.emailExsist = false;
-                        var emailClient = $objectstore.getClient("contact12thdoor");
-                        emailClient.onGetMany(function(data){
-                          if (data.length > 0) {
-                            console.log("exsist")
-                            $scope.emailExsist = true;
-                          }
-                        });
-                        emailClient.onError(function(data){
-
-                        });
-                        emailClient.getByFiltering("select Email from contact12thdoor where Email = '"+obj.Email+"'")
-                      }
+                    
                     $scope.toastPosition = angular.extend({}, last);
                     $scope.getToastPosition = function() {
                         sanitizePosition();
@@ -1050,6 +1041,21 @@ $scope.ll = [];
                             $scope.contact.saddress["s_state"] = "";
                         }
                     }
+                    $scope.emailExsist = false;
+                    $scope.validateEmail = function(obj){
+                        $scope.emailExsist = false;
+                        var emailClient = $objectstore.getClient("contact12thdoor");
+                        emailClient.onGetMany(function(data){
+                          if (data.length > 0) {
+                            console.log("exsist")
+                            $scope.emailExsist = true;
+                          }
+                        });
+                        emailClient.onError(function(data){
+
+                        });
+                        emailClient.getByFiltering("select Email from contact12thdoor where Email = '"+obj.Email+"'")
+                      }
                     $scope.AddCus = function() {
                         var client = $objectstore.getClient("contact12thdoor");
                         if ($scope.contact.Name == null) {

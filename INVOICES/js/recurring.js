@@ -1,5 +1,5 @@
 // angular.module('mainApp')
-app.controller('newRecurringCtrl', function($scope, $state, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
+app.controller('newRecurringCtrl', function($scope, $state,  $auth, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
       $scope.list = [];
       $scope.TDinvoice = {};
       $scope.invoicDEtails = {};
@@ -822,7 +822,7 @@ var client = $objectstore.getClient("Settings12thdoor");
         }
       };
       }
-
+var userName = $auth.getUserName();
          //save invoice details
       $scope.submit = function() {
         $rootScope.invoiceArray.splice($scope.TDinvoice, 1);
@@ -864,7 +864,7 @@ var client = $objectstore.getClient("Settings12thdoor");
           $scope.TDinvoice.commentsAndHistory=[];
          $scope.TDinvoice.commentsAndHistory.push({
               done: false,
-              text: "Invoice was created by Mr.dddd",
+              text: "Invoice was created by"+userName,
               date:new Date()
          });
          $scope.TDinvoice.DeleteStatus = false;
@@ -908,7 +908,7 @@ var client = $objectstore.getClient("Settings12thdoor");
               
          $scope.invoicDEtails.commentsAndHistory.push({
               done: false,
-              text: "Invoice was created by Mr.dddd",
+              text: "Invoice was created by"+userName,
               date:new Date()
          });
 
@@ -974,6 +974,7 @@ var client = $objectstore.getClient("Settings12thdoor");
                         break;
                     case "Monthly":
                         var now = $scope.changeDate;
+                        console.log(now.getFullYear())
                           current = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
                         $scope.invoicDEtails.duedate = current;
                         break;

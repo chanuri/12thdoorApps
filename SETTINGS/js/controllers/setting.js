@@ -10,6 +10,7 @@ angular
         // HOME STATES AND NESTED VIEWS ========================================
 
         .state('main', {
+
         	url: '/main',
         	templateUrl: 'setting_partials/main.html',
         	controller: 'ViewCtrl'
@@ -104,6 +105,7 @@ angular
 					invoicePrefix:"",
 					allowPartialPayments:true,
 					enableDisscounts:true,
+					disscountItemsOption:"",
 					enableTaxes:true,
 					enableshipping:true,
 					displayshipaddress:false,
@@ -597,7 +599,7 @@ angular
 
 			taxes :
 			{
-				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes"}],
+				individualtaxes:[{activate:true, compound:false, id:0.001, positionId:"", rate:"0", taxname:"default", type:"individualtaxes", labelIndividualTaxStatus:"Inactivate"}],
 				multipletaxgroup:[]
 
 			},
@@ -1833,7 +1835,6 @@ $scope.edittaskProjectrow = function(taskProjectedit, ev) {
 
 	}
 
-
 	$scope.user = function(ev) {
 		$mdDialog.show({
 			controller: DialogusersController,
@@ -1992,17 +1993,20 @@ $scope.edittaskProjectrow = function(taskProjectedit, ev) {
 		});
 	};
 
+
+
 	$scope.inactivateindividual="Inactivate";
 
 	$scope.inactivateindividualtaxes = function(data){
 		console.log(data);
-		console.log(data.activate);
+
 		if(data.activate){
 			data.activate = false;
-			$scope.inactivateindividual="Activate";
+			//$scope.inactivateindividual="Activate";
+			data.labelIndividualTaxStatus="Activate";
 		}else{
 			data.activate = true;
-			$scope.inactivateindividual="Inactivate";
+			data.labelIndividualTaxStatus="Inactivate";
 		}
 	}
 //....................................................
@@ -2056,16 +2060,16 @@ $scope.editmultipletaxgrouprow = function(multipletaxgroupedit, ev) {
 	});
 };
 
-$scope.inactivatemultiple="Inactivate";
+
 
 $scope.inactivatemultipletax = function(data){
-
+	console.log(data);
 	if(data.activate){
 		data.activate = false;
-		$scope.inactivatemultiple="Activate";
+		data.labelMultipleTaxStatus="Activate";
 	}else{
 		data.activate = true;
-		$scope.inactivatemultiple="Inactivate";
+		data.labelMultipleTaxStatus="Inactivate";
 	}
 }
 
@@ -3416,6 +3420,28 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 			}
 
 			$mdDialog.hide();
+
+			//when update individual tax update individual tax inside multipleTaxGroup using taxname
+			function reloadIndividualTaxInMultipleTax(){
+				for(var i=0; i<$rootScope.Settings12thdoor.taxes.multipletaxgroup.length; i++){
+					console.log($rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes);
+					for(var j=0; j<$rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes.length; j++){
+						console.log($rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes[j].taxname);
+						if($rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes[j].taxname==obj.taxname){
+							$rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes[j].taxname=obj.taxname;
+							$rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes[j].rate=obj.rate;
+							$rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes[j].activate=obj.activate;
+							$rootScope.Settings12thdoor.taxes.multipletaxgroup[i].individualtaxes[j].compound=obj.compound;
+						}
+					}
+				}
+			}; 
+
+			reloadIndividualTaxInMultipleTax();
+
+			console.log($rootScope.Settings12thdoor.taxes.multipletaxgroup);
+
+
 		}
 
 		$scope.hide = function() {
@@ -3476,7 +3502,8 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 			taxname:$scope.taxname,
 			individualtaxes:$scope.individualtaxes,
 			activate:true,
-			type:"multipletaxgroup"
+			type:"multipletaxgroup",
+			labelMultipleTaxStatus:"Inactivate"
 		})
 
 		$mdDialog.hide();

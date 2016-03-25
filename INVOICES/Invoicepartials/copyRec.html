@@ -117,12 +117,6 @@
                               </md-button>
                               <md-menu-content width="4">
                                 <md-menu-item>
-                                  <md-button href ng-click="saveProduct()">
-                                    <p>Save Product</p>
-                                    <md-icon md-menu-align-target ></md-icon>
-                                  </md-button>
-                                </md-menu-item>
-                                <md-menu-item>
                                   <md-button href ng-click="viewProduct(item)">
                                     <p>Edit</p>
                                     <md-icon md-menu-align-target></md-icon>
@@ -177,12 +171,12 @@
               </md-card></li>
             </ul>
               <div layout="row" layout-sm="column"   flex style="margin-left:10px; margin-top:25px;">
-                               <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addprofProduct(TDinvoice.recurringProducts)">New Line</md-button>
+                               <md-button href class="md-raised md-primary" style="height:5px; " ng-click="addProductArray(TDinvoice.recurringProducts)">New Line</md-button>
                           </div>
                          </div>
                       </div>
            <md-divider></md-divider>
-                          <div style="overflow:hidden;">
+                          <!-- <div style="overflow:hidden;"> -->
                           <div layout layout-sm="column" layout-margin>
                           
                            <section-title title="Totals"> </section-title>
@@ -277,17 +271,17 @@
                         </div>
                     </div>
                                   <md-divider></md-divider>
-                                  <div layout layout-sm="column" layout-margin  >
+                                  <div layout layout-sm="column"  layout-margin  >
                                       
                                       <section-title title="Optional Details"> </section-title>
-                                      <md-input-container flex >
+                                      <md-input-container style="margin-top: 30px;" flex >
                                           <label>Notes</label>
                                           <input ng-model="TDinvoice.notes">
                                           </md-input-container>
                                       </div>
-                                      <div layout layout-sm="column" layout-margin>
+                                      <div layout layout-sm="column"  layout-margin>
                                  <section-title > </section-title>
-                                  <md-select placeholder="Payment Method" ng-model="TDinvoice.paymentMethod" flex>
+                                  <md-select placeholder="Payment Method" style="margin-top: -5px;" ng-model="TDinvoice.paymentMethod" flex>
                                       <md-optgroup >
                                             <md-option ng-repeat="pay in paymentMethod" value="{{pay.paymentmethod}}">{{pay.paymentmethod}}</md-option>
                                         </md-optgroup>
@@ -296,7 +290,7 @@
                                <div layout layout-sm="column" layout-margin>
                                  
                                   <section-title> </section-title>
-                                  <md-input-container flex required>
+                                  <md-input-container flex style="margin-top: 30px;" required>
                             <label>Invoice Settings</label>
                             <md-select  ng-model="TDinvoice.saveOption" flex>
                                       <md-optgroup label="Invoice Settings">
@@ -305,7 +299,7 @@
                                          <md-option value="saveandCharage">Save, Email and Charge Customer</md-option>
                                       </md-optgroup>
                                   </md-select>
-                      </md-input-container>
+                      </md-input-container></div>
                                       <div layout layout-sm="column" layout-margin>
                                          <section-title> </section-title>
                                           <div ng-init="DemoCtrl()" layout="column" class="chipsdemoBasicUsage" flex>
@@ -321,7 +315,7 @@
                                               </md-content>
                                           </div>
                                       </div>
-                                  </div>
+                               <!--    </div> -->
                                   <md-divider></md-divider>
                               <div class="md-actions" layout="row" layout-sm="column" layout-align="end start" >
                                  <div style="padding-left:20px; margin-top:20px;">

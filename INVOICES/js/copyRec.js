@@ -150,6 +150,7 @@ $scope.copyToProfile = function(updatedForm) {
          $scope.TDinvoice.favouriteStarNo = 1;
          $scope.TDinvoice.Name = updatedForm.Name;
          $scope.TDinvoice.Email = updatedForm.Email;
+         $scope.TDinvoice.Startdate = $scope.Startdate
          $scope.TDinvoice.billingAddress = updatedForm.billingAddress;
          $scope.TDinvoice.shippingAddress = updatedForm.shippingAddress;
          // $scope.TDinvoice.MultiDueDAtesArr = $scope.dateArray.value;
@@ -174,14 +175,14 @@ $scope.copyToProfile = function(updatedForm) {
          $scope.invoicDEtails.discountAmount = $scope.finalDisc;
          $scope.invoicDEtails.salesTaxAmount = $scope.salesTax;
           $scope.invoicDEtails.otherTaxAmount = $scope.otherTax;
-          $scope.invoicDEtails.RecurringProfileNo = updatedForm.Name.profileRefName;
+          $scope.invoicDEtails.RecurringProfileNo =  $scope.refNo;
           $scope.invoicDEtails.paymentMethod = updatedForm.Name.paymentMethod;
            $scope.invoicDEtails.comments = updatedForm.Name.comments;
-           $scope.invoicDEtails.Startdate =  updatedForm.Name.Startdate;
+           $scope.invoicDEtails.Startdate =  $scope.Startdate;
            $scope.invoicDEtails.commentsAndHistory=[];
            $scope.invoicDEtails.termtype = "Custom";
            $scope.invoicDEtails.roFruitNames = angular.copy(updatedForm.roFruitNames);
-             $scope.changeDate = angular.copy(updatedForm.Startdate);
+             $scope.changeDate = angular.copy($scope.Startdate);
 
               
          $scope.invoicDEtails.commentsAndHistory.push({
@@ -207,7 +208,7 @@ $scope.copyToProfile = function(updatedForm) {
          // if($rootScope.prodArray.val.length >0){
          //$scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
          client.onComplete(function(data) {
-            $state.go('viewProfile', {'profileName': updatedForm.profileRefName});
+            $state.go('viewProfile', {'profileName': $scope.refNo});
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
@@ -380,7 +381,7 @@ $scope.copyToProfile = function(updatedForm) {
                                 } else if ($scope.promoItems[i].price == null) {
 
                                 } else {
-                                    InvoiceService.setTempArr({
+                                   recurringInvoiceService.setTempArr({
                                         Productname: $scope.promoItems[i].productName,
                                         price: $scope.promoItems[i].price,
                                         quantity: $scope.promoItems[i].qty,

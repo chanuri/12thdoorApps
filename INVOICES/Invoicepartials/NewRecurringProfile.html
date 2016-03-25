@@ -224,7 +224,7 @@
                                     <label>Sub Total</label>
                                 </div>
                                 <md-input-container flex="20" >
-                                    <input type="text"  ng-model="tdi.fdiscount" aria-label="discount" style="display:none" />
+                                <input type="text" ng-model="tdi.fdiscount" aria-label="discount" style="display:none"/>
                                 </md-input-container>
                                 <div flex="5">
                                     <label></label>
@@ -240,7 +240,7 @@
                                     <label>Discount</label>
                                 </div>
                                 <md-input-container flex="20" >
-                                    <input type="text"  ng-model="TDinvoice.fdiscount" aria-label="discount" style="margin-top:-12px;" ng-disabled="checkDiscout"/>
+                                    <input type="text" ng-model="TDinvoice.fdiscount" aria-label="discount" style="margin-top:-12px;" ng-disabled="checkDiscout"/>
                                 </md-input-container>
                                 <div flex="5">
                                     <label></label>
@@ -250,7 +250,7 @@
                                     <label style="display:none">{{CalculateTax()}}</label>
                                 </div>
                             </div>
-                            <div layout layout-sm="column" ng-repeat="tt in taxArr2" layout-margin style="overflow:hidden;">
+                        <div layout layout-sm="column" ng-repeat="tt in taxArr2" layout-margin style="overflow:hidden;">
                                 <div flex="5"></div>
                              
                                 <div flex="20" style="margin-top:35px;"></div>
@@ -258,14 +258,13 @@
                                     <label>{{tt.taxName}}</label>
                                 </div>
                                 <md-input-container flex="20" >
-                                    <input type="text"  ng-model="tt.rate" aria-label="sales tax" style="margin-top:-12px;"/>
+                                <input type="text" ng-model="tt.rate" aria-label="sales tax" style="margin-top:-12px;"/>
                                 </md-input-container>
                                 <div flex="5">
                                     <label></label>
                                 </div>
                                 <div flex="30" >
                                     <label>{{tt.salesTax| currency}}</label>
-                                   <!--  <span style="display:none">{{CalculateTax()}}</span > -->
                                 </div>
                             </div>
                             <div layout layout-sm="column" layout-margin style="overflow:hidden; height:50px;" ng-show="ShippingCharges">
@@ -315,7 +314,7 @@
                           <div layout layout-sm="column" layout-margin  >
                               
                                <section-title title="Optional Details"> </section-title>
-                              <md-input-container flex >
+                              <md-input-container style="margin-top: 30px;" flex >
                                   <label>Notes</label>
                                   <input ng-model="TDinvoice.notes">
                                   </md-input-container>
@@ -323,17 +322,16 @@
                               <div layout layout-sm="column" layout-margin>
                                  
                                   <section-title> </section-title>
-                                   <md-select placeholder="Payment Method" ng-model="TDinvoice.paymentMethod" flex ng-change="getPayement(TDinvoice.paymentMethod)">
-                                        <md-optgroup >
+                                   <md-select placeholder="Payment Method" style="margin-top: -10px;" ng-model="TDinvoice.paymentMethod" flex ng-change="getPayement(TDinvoice.paymentMethod)">
+                                        <md-optgroup>
                                             <md-option ng-repeat="pay in paymentMethod" value="{{pay.paymentmethod}}">{{pay.paymentmethod}}</md-option>
                                             <!-- <md-option value="Stripe ">Stripe </md-option> -->
                                         </md-optgroup>
                                     </md-select>
                               </div>
                               <div layout layout-sm="column" layout-margin>
-                                 
-                                  <section-title> </section-title>
-                                  <md-input-container flex required>
+                                  <section-title></section-title>
+                                  <md-input-container flex style="margin-top: 30px;" required>
                             <label>Invoice Settings</label>
                             <md-select  ng-model="TDinvoice.saveOption" flex>
                                       <md-optgroup label="Invoice Settings">

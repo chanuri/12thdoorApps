@@ -68,55 +68,55 @@
                   <md-button ng-repeat="tt in item.MultiDueDAtesArr" ng-if="tt.paymentStatus == 'Pending'" class="md-raised md-primary"ng-click="Approve(item)" href style="background:green; margin-top:-5px;">Approve</md-button>
                   <md-menu md-position-mode="target-right target" >
                      <md-button href aria-label="Open demo menu" class="md-icon-button"  ng-click="$mdOpenMenu()">
-                        <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:2px;" ></md-icon>
+                     <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:2px;" ></md-icon>
                      </md-button>
                      <md-menu-content width="4">
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button href  ng-click="enterPayment(item)">
                               <p>Enter Payment</p>
-                              <md-icon href md-menu-align-target ></md-icon>
+                              <md-icon href md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button href ng-show="showEdit" ng-click="EditInvoice(item)">
                               <p>Edit</p>
-                              <md-icon href md-menu-align-target ></md-icon>
+                              <md-icon href md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button href ng-click="copyInvoice(item)">
                               <p>Copy</p>
-                              <md-icon md-menu-align-target ></md-icon>
+                              <md-icon md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button href ng-click="cancelStatus(item)">
                               <p>Cancel</p>
-                              <md-icon md-menu-align-target ></md-icon>
+                              <md-icon md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button aria-label="delete" href ng-click="deleteInvoice(item)">
                               <p>Delete</p>
-                              <md-icon md-menu-align-target ></md-icon>
+                              <md-icon md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button href ng-click="CopyAsRecurringProfile(item)">
                               <p>Copy as Recurring</p>
-                              <md-icon md-menu-align-target ></md-icon>
+                              <md-icon md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button href ng-click="">
                               <p>Credit Note</p>
-                              <md-icon md-menu-align-target ></md-icon>
+                              <md-icon md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
-                        <md-menu-item >
+                        <md-menu-item>
                            <md-button href ng-click="showListBottomSheet($event,item)">
                               <p>Send Reminder</p>
-                              <md-icon md-menu-align-target ></md-icon>
+                              <md-icon md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
                      </md-menu-content>

@@ -647,5 +647,164 @@ $scope.copyToProfile = function(updatedForm) {
         $scope.groupTax = [];
         $scope.calTotal = 0;
 
+        $scope.deleteEditproduct = function(name, index) {
+          $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
+            recurringInvoiceService.ReverseTax(name, index);
+            console.log($rootScope.getTax)
+            $scope.CalculateTax();
+        }
 
-})
+        $scope.viewSavedProducts = function(obj) {
+            $mdDialog.show({
+                templateUrl: 'Invoicepartials/showproduct.html',
+                controller: 'RecshowproductCtrl',
+                locals: {
+                    item: obj
+                }
+            });
+        }
+
+});
+app.controller('RecshowproductCtrl', function($scope, $mdDialog, $rootScope, recurringInvoiceService, item, $objectstore, $uploader, $state) {
+    $scope.test = item;
+    $scope.settings = {};
+        $scope.UnitOfMeasure = [];
+        $scope.taxType = []
+        $scope.AllTaxes = [];
+        $scope.individualTax = [];
+         $scope.test = item;
+        $scope.prevTrax = angular.copy($scope.test)
+
+        var client = $objectstore.getClient("Settings12thdoor");
+        client.onGetMany(function(data) {
+            if (data) {
+                $scope.settings = data;
+                for (var i = $scope.settings.length - 1; i >= 0; i--) {
+                    for (var z = $scope.settings[i].preference.productpref.units.length - 1; z >= 0; z--) {
+                        if ($scope.settings[i].preference.productpref.units[z].activate == true) {
+                            $scope.UnitOfMeasure.push($scope.settings[i].preference.productpref.units[z])
+                        }
+                        $scope.ShowDiscount = $scope.settings[i].preference.invoicepref.enableDisscounts;
+                        $scope.dis = $scope.settings[i].preference.invoicepref.disscountItemsOption;
+                    };
+                    if ($scope.settings[i].taxes) {
+                        for (var x = $scope.settings[i].taxes.individualtaxes.length - 1; x >= 0; x--) {
+                            $scope.individualTax.push($scope.settings[i].taxes.individualtaxes[x]);
+                        };
+                        for (var y = $scope.settings[i].taxes.multipletaxgroup.length - 1; y >= 0; y--) {
+                            $scope.individualTax.push($scope.settings[i].taxes.multipletaxgroup[y]);
+                        };
+                    }
+                }
+            }
+            $scope.AllTaxes = $scope.individualTax;
+            $scope.Displaydiscount = $scope.ShowDiscount;
+        });
+        client.onError(function(data) {});
+        client.getByFiltering("*");
+
+    $scope.cancel = function() {
+        $mdDialog.cancel();
+    };
+
+    $scope.setTax = function(pDis) {
+            for (var i = $scope.AllTaxes.length - 1; i >= 0; i--) {
+                if ($scope.AllTaxes[i].taxname == pDis.tax.taxname) {
+                    $scope.Ptax = ({
+                        taxname: $scope.AllTaxes[i].taxname,
+                        activate: $scope.AllTaxes[i].activate,
+                        compound: $scope.AllTaxes[i].compound,
+                        rate: $scope.AllTaxes[i].rate,
+                        type: $scope.AllTaxes[i].type,
+                        individualtaxes: $scope.AllTaxes[i].individualtaxes
+                    });
+                }
+            };
+            item.tax = $scope.Ptax;
+        }
+
+    $scope.edit = function(tst, index) {
+        // $rootScope.editProdArray.val.splice(tst, 1);
+        for (var i = $rootScope.invoiceArray[0].MultiDueDAtesArr.length - 1; i >= 0; i--) {
+            $scope.ttt = $rootScope.invoiceArray[0].MultiDueDAtesArr[i].paymentStatus;
+            }
+            if($state.current.name == 'edit'){
+               if( $scope.ttt == "Paid"){
+
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .title('Warning')
+                    .content('Since you have done a payment to this invoice you cannot edit this nvoice')
+                    .ariaLabel('Alert Dialog Demo')
+                    .ok('OK')
+                );
+
+            }else{
+                // $rootScope.editProdArray.val.splice($rootScope.editProdArray.val.indexOf(tst), 1);
+                 $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(tst), 1);
+                recurringInvoiceService.ReverseTax($scope.prevTrax, index);
+
+                recurringInvoiceService.setTempArr({
+                    Productname: item.Productname,
+                    price: item.price,
+                    quantity: item.quantity,
+                    ProductUnit: item.ProductUnit,
+                    discount: item.discount,
+                    tax: item.tax,
+                    olp: item.olp,
+                    amount: $scope.Amount,
+                    status: item.status
+                })
+                for (var i = $rootScope.editProdArray.val.length - 1; i >= 0; i--) {
+                $rootScope.invoiceArray[0].invoiceProducts.push($rootScope.editProdArray.val[i]);
+                for (var i = $rootScope.calTax.length - 1; i >= 0; i--) {
+                    $rootScope.getTax.push($rootScope.calTax[i])
+                };
+            };
+                $mdDialog.cancel();
+                    }     
+
+            }else{
+                //$rootScope.editProdArray.val.splice($rootScope.editProdArray.val.indexOf(tst), 1);
+                $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(tst), 1);
+                recurringInvoiceService.ReverseTax($scope.prevTrax, index);
+
+                recurringInvoiceService.setTempArr({
+                    Productname: item.Productname,
+                    price: item.price,
+                    quantity: item.quantity,
+                    ProductUnit: item.ProductUnit,
+                    discount: item.discount,
+                    tax: item.tax,
+                    olp: item.olp,
+                    amount: $scope.Amount,
+                    status: item.status
+                })
+                for (var i = $rootScope.editProdArray.val.length - 1; i >= 0; i--) {
+                $rootScope.invoiceArray[0].invoiceProducts.push($rootScope.editProdArray.val[i]);
+                for (var i = $rootScope.calTax.length - 1; i >= 0; i--) {
+                    $rootScope.getTax.push($rootScope.calTax[i])
+                };
+            };
+                $mdDialog.cancel();
+            }
+    };
+    $scope.calAMount = function() {
+         $scope.Amount = 0;
+            $scope.total = 0;
+            $scope.disc = 0;
+
+            $scope.total = (item.price * item.quantity);
+
+            if ($scope.dis == "Individual Items") {
+                $scope.disc = parseFloat($scope.total * item.discount / 100);
+                $scope.Amount = $scope.total - $scope.disc;
+            } else {
+                $scope.Amount = $scope.total;
+            }
+
+            return $scope.Amount;
+        }
+    
+});

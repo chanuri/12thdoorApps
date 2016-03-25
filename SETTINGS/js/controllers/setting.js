@@ -3471,47 +3471,42 @@ function DialogEditTaxindividualtaxesController($scope, $mdDialog,$rootScope,ind
 
 		$scope.selcetedtax=function(tax){
 			console.log(tax);
-		// var obj=eval ("(" + tax + ")");
-		// $scope.individualtaxes.push(obj);
-		// console.log(typeof($scope.individualtax));
 
-		$scope.individualtaxes.push(JSON.parse(tax));
+			$scope.individualtaxes.push(JSON.parse(tax));
 
-		for(var i=0; i < $scope.individualtaxes.length; i++ ){
-			console.log(i);
-			$scope.individualtaxes[i].positionId=i;
+			for(var i=0; i < $scope.individualtaxes.length; i++ ){
+				console.log(i);
+				$scope.individualtaxes[i].positionId=i;
+			}
+
+			console.log($scope.individualtaxes);
+			loadselctedindivitax();
 		}
 
-		console.log($scope.individualtaxes);
-		
-		// $scope.individualtaxes.push(tax);
-		loadselctedindivitax();
-	}
+		$scope.deleteselecttax = function(loadselctedtax, index){  
+			$scope.individualtaxes.splice(index, 1);
+		}
 
-	$scope.deleteselecttax = function(loadselctedtax, index){  
-		$scope.individualtaxes.splice(index, 1);
-	}
+		$scope.submit = function() {
 
-	$scope.submit = function() {
+			var number = Math.random();
+			console.log(Math.random());
 
-		var number = Math.random();
-		console.log(Math.random());
+			$rootScope.Settings12thdoor.taxes.multipletaxgroup.push({
+				id:number,
+				taxname:$scope.taxname,
+				individualtaxes:$scope.individualtaxes,
+				activate:true,
+				type:"multipletaxgroup",
+				labelMultipleTaxStatus:"Inactivate"
+			})
 
-		$rootScope.Settings12thdoor.taxes.multipletaxgroup.push({
-			id:number,
-			taxname:$scope.taxname,
-			individualtaxes:$scope.individualtaxes,
-			activate:true,
-			type:"multipletaxgroup",
-			labelMultipleTaxStatus:"Inactivate"
-		})
+			$mdDialog.hide();
+			console.log($rootScope.Settings12thdoor.taxes.multipletaxgroup);
 
-		$mdDialog.hide();
-		console.log($rootScope.Settings12thdoor.taxes.multipletaxgroup);
+		};
 
-	};
-
-	$scope.sortableOptions = {
+		$scope.sortableOptions = {
 
  orderChanged: function(event) {//Do what you want
  	console.log(event);
@@ -3554,42 +3549,60 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 	$scope.Settings12thdoor=angular.copy(multipletaxgroupedit);
 	console.log($scope.Settings12thdoor);
 
-	$scope.individualtaxes= $rootScope.Settings12thdoor.taxes.individualtaxes;
-	console.log($scope.individualtaxes);
-	$scope.selectedtaxes = [];
+	console.log($scope.Settings12thdoor.individualtaxes);
 
-	$scope.individualtaxes = new Array();
+	$scope.selectedtaxes=[];	
 
 	function loadselctedindivitax(){
-		//$scope.Settings12thdoor.individualtaxes=$scope.loadtax;
-		// $scope.loadtax=$rootScope.Settings12thdoor.taxes.individualtaxes;
-		// console.log($scope.loadtax);
-		// console.log($rootScope.Settings12thdoor.taxes.individualtaxes);
-		$scope.loadselctedtax=$scope.individualtaxes;
-		console.log($scope.individualtaxes);
+		$scope.loadselctedtax=$scope.Settings12thdoor.individualtaxes;
+		console.log($scope.Settings12thdoor.individualtaxes);
 	} 
-	
-	$scope.selcetedtax=function(tax){
-		// $rootScope.Settings12thdoor.taxes.individualtaxes.splice($scope.Settings12thdoor,1);
-		// $rootScope.Settings12thdoor.taxes.individualtaxes.push(tax);
-		console.log(tax);
-		console.log($scope.individualtaxes);
-		$scope.selectedtaxes.splice($scope.Settings12thdoor,1);
-		$scope.selectedtaxes.push(JSON.parse(tax));
-		console.log($scope.selectedtaxes);
 
+	$scope.selectedtaxe=function(tax){
+
+		//console.log($scope.Settings12thdoor.individualtaxes);
+		$scope.taxes = JSON.parse(tax);
+		//console.log($scope.taxes);
+		
+		for(var i=0; i<$scope.Settings12thdoor.individualtaxes.length; i++){
+			//console.log($scope.Settings12thdoor.individualtaxes[i].taxname);
+
+			if( $scope.taxes.taxname != $scope.Settings12thdoor.individualtaxes[i].taxname ){
+				console.log($scope.Settings12thdoor.individualtaxes[i].taxname);
+				console.log($scope.taxes.taxname);
+				$scope.selectedtaxes.splice($scope.Settings12thdoor,1);
+				$scope.selectedtaxes.push(JSON.parse(tax));
+				console.log($scope.selectedtaxes);
+
+			}
+			else{
+
+				alert(hi);
+
+			}
+
+		}
+		
+		$scope.Settings12thdoor.individualtaxes.push($scope.selectedtaxes[0]);
+		
+		for(var i=0; i < $scope.Settings12thdoor.individualtaxes.length; i++ ){
+			console.log(i);
+			$scope.Settings12thdoor.individualtaxes[i].positionId=i;
+		}
+		
+		console.log($scope.Settings12thdoor.individualtaxes);
+		
 		loadselctedindivitax();
 	}
 
 	$scope.deleteselecttax = function(loadselctedtax, index){ 
-		$scope.selectedtaxes.splice(index, 1);
+		console.log(loadselctedtax);
+		$scope.Settings12thdoor.individualtaxes.splice(index, 1);
 	}
 
 
 	$scope.submit = function(obj) {
-		// $rootScope.Settings12thdoor.taxes.multipletaxgroup.splice($scope.Settings12thdoor,1);
-		// $rootScope.Settings12thdoor.taxes.multipletaxgroup.push(obj);
-		// console.log($scope.Settings12thdoor)
+		console.log(obj);
 
 		for (var i = 0; i < $rootScope.Settings12thdoor.taxes.multipletaxgroup.length; i++)
 			if ($rootScope.Settings12thdoor.taxes.multipletaxgroup[i].id && $rootScope.Settings12thdoor.taxes.multipletaxgroup[i].id === obj.id) { 
@@ -3602,17 +3615,28 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 		};
 
 		$scope.sortableOptions = {
-			orderChanged: function(event) {//Do what you want
 
-				if(event.source.itemScope.item.id == event.dest.sortableScope.modelValue[event.dest.index].id){
-					$scope.individualtaxes[event.dest.index].positionId=event.dest.index;
-					console.log($scope.individualtaxes[event.dest.index].positionId);
-					$scope.individualtaxes[event.source.index].positionId=event.source.index;
+		 	orderChanged: function(event) {//Do what you want
+		 		console.log(event);
+		 		console.log(event.dest.index);
+		 		console.log(event.source.itemScope.item.id);
 
-				}
-			}
+		 		console.log(event.dest.sortableScope.modelValue[event.dest.index].id);
 
-		};
+		 	//$scope.individualtaxes.push({positionId:event.dest.index});
+		 	if(event.source.itemScope.item.id == event.dest.sortableScope.modelValue[event.dest.index].id){
+		 		$scope.Settings12thdoor.individualtaxes[event.dest.index].positionId=event.dest.index;
+		 		console.log($scope.Settings12thdoor.individualtaxes[event.dest.index].positionId);
+		 		$scope.Settings12thdoor.individualtaxes[event.source.index].positionId=event.source.index;
+		 		for (var i=0; i< $scope.Settings12thdoor.individualtaxes.length; i++){
+		 			$scope.Settings12thdoor.individualtaxes[i].positionId=i;
+		 		}
+
+		 	}
+
+		 }
+		}
+
 
 		$scope.hide = function() {
 			$mdDialog.hide();
@@ -3621,7 +3645,8 @@ function DialogEditTaxmultipletaxgroupController($scope, $mdDialog , $rootScope,
 		$scope.cancel = function() {
 			$mdDialog.cancel();
 		};
-	};
+
+	}
 
 	function DialogProfileUploadImageController($scope, $mdDialog, $objectstore, $mdToast,$rootScope, UploaderService) {
 

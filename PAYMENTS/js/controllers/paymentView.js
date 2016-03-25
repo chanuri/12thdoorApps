@@ -1,5 +1,5 @@
  /*________________________________________________AppCtrlGet_________________________________________*/
- rasm.controller('AppCtrlGet', function($scope, $state, $rootScope, $objectstore, $location, $mdDialog, uiInitilize, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast, $log) {
+ rasm.controller('AppCtrlGet', function($scope, $state, $rootScope, $objectstore, $location, $mdDialog, $DownloadPdf, uiInitilize, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast, $log) {
     $scope.payments = [];
     $scope.checkAbilityBtn = true;
     $scope.checkAbilityEditing = true;
@@ -104,6 +104,22 @@
       $scope.prodSearch = '-date';
       $scope.indexno = 1;
       $scope.latest = '-date';
+    }
+
+    $scope.paymentDownload = function(item){
+        var sampleObj =[];
+        if (item.paidInvoice)   sampleObj = angular.copy(item.paidInvoice);
+        else    sampleObj = [];
+
+        $DownloadPdf.GetPdf(item,"download",sampleObj)
+    }
+
+    $scope.paymentPrint = function(item){
+        var sampleObj =[];
+        if (item.paidInvoice)   sampleObj = angular.copy(item.paidInvoice);
+        else    sampleObj = [];
+        
+        $DownloadPdf.GetPdf(item,"print",sampleObj)
     }
 
     $scope.CheckFullArrayStatus = function(type,id){  

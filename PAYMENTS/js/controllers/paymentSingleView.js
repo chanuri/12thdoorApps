@@ -1,4 +1,4 @@
-rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast,$http) {
+rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast,$http,$DownloadPdf) {
  
     $scope.viewPyamentArr = [];
     $scope.progressBar = false;
@@ -134,11 +134,21 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
     }
 
     $scope.downloadPdf = function(item){
-        pdfFuntions('download', item)
+        // pdfFuntions('download', item)
+        var sampleObj =[];
+        if (item.paidInvoice)   sampleObj = angular.copy(item.paidInvoice);
+        else    sampleObj = [];
+
+        $DownloadPdf.GetPdf(item,"download",sampleObj)
     }
 
     $scope.printPdf = function(item){        
-        pdfFuntions('print', item)
+        // pdfFuntions('print', item)
+        var sampleObj =[];
+        if (item.paidInvoice)   sampleObj = angular.copy(item.paidInvoice);
+        else    sampleObj = [];
+        
+        $DownloadPdf.GetPdf(item,"print",sampleObj)
     } 
 
     function getLatestPaymentId(custID){

@@ -820,13 +820,10 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         if (obj.amount == "")   obj.amount = 0;      
         else if (oldValue == "")    oldValue = 0;       
         
-        if (parseFloat(obj.amount) > parseFloat(obj.instalment)) {
+        if (parseFloat(obj.amount) > parseFloat(obj.instalment)) 
             obj.amount = oldValue
-
-        }
-
         else{
-
+            
             $scope.payment.total = ( parseFloat($scope.payment.total) - parseFloat(oldValue) ) + parseFloat(obj.amount); 
             var difference = parseFloat(oldValue) - parseFloat(obj.amount);
 

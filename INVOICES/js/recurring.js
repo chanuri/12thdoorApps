@@ -882,6 +882,7 @@ var userName = $auth.getUserName();
          $scope.invoicDEtails.DeleteStatus = false;
          $scope.invoicDEtails.favourite = false;
          $scope.invoicDEtails.favouriteStarNo = 1;
+         $scope.invoicDEtails.DraftActive = false;
          $scope.invoicDEtails.Name = $rootScope.selectedItem2.display;
          $scope.invoicDEtails.Email = $rootScope.selectedItem2.value.Email;
          $scope.invoicDEtails.billingAddress = $rootScope.selectedItem2.BillingValue;

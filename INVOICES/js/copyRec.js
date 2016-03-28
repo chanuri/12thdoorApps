@@ -171,6 +171,7 @@ $scope.copyToProfile = function(updatedForm) {
          };
           $scope.invoicDEtails.invoiceProducts = $rootScope.prodArray.val;
          $scope.invoicDEtails.total = $scope.total;
+         $scope.invoicDEtails.DraftActive = false;
           $scope.invoicDEtails.finalamount = $rootScope.famount;
          $scope.invoicDEtails.discountAmount = $scope.finalDisc;
          $scope.invoicDEtails.salesTaxAmount = $scope.salesTax;

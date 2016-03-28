@@ -3372,7 +3372,8 @@ function DialogPrefInvoicenewinvoiceemailController($scope , $mdDialog, $rootSco
  				activate:true,
  				compound:$scope.compound,
  				type:"individualtaxes",
- 				positionId:number
+ 				positionId:number,
+ 				labelIndividualTaxStatus:"Inactivate"
  			})
 
  			$mdDialog.hide();

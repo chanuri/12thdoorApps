@@ -66,6 +66,7 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
               .ok('OK')
               .targetEvent(data)
             );
+            location.href = '#/home'
           });
           client.onError(function(data) {
             $mdDialog.show(
@@ -117,12 +118,12 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
       $scope.showBilling = !$scope.showBilling;
   }
 
-  $scope.save = function() {
-      $timeout(function() {
-        $('#mySignup')
-          .click();
-      })
-  }
+  // $scope.save = function() {
+  //     $timeout(function() {
+  //       $('#mySignup')
+  //         .click();
+  //     })
+  // }
   $scope.addCustomer = function() {
       $('#add').animate({
         width: "100%",

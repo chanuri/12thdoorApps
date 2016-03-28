@@ -90,8 +90,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
         });
         client.getByFiltering("*");
     }; 
-    $scope.updateCustomer = function(updatedform, cid) {} 
-    $scope.deleteCustomer = function(deleteform, ev) {}  
+   
     $scope.addressChange = function() {
         $scope.showShipping = !$scope.showShipping;
         $scope.showBilling = !$scope.showBilling;

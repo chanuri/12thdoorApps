@@ -48,46 +48,41 @@
                   <md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
                </md-button>
                <md-menu-content width="4">
-                  <md-menu-item>
-                     <md-button ng-click="updateCustomer(contact,contact.customerid)">
-                        <div layout="row">
-                           <p flex>Update Timesheet</p>
-                           <md-icon md-svg-icon="img/ic_save_24px.svg"></md-icon>
-                        </div>
-                     </md-button>
-                  </md-menu-item>
-                  <md-menu-item>
-                     <md-button ng-click="deleteCustomer(contact,contact.customerid)">
-                        <div layout="row">
-                           <p flex>Delete</p>
-                           <md-icon md-svg-icon="img/ic_delete_24px.svg"></md-icon>
-                        </div>
-                     </md-button>
-                  </md-menu-item>
                    <md-menu-item>
-                     <md-button ng-click="customerNotes(contact)">
-                        <div layout="row">
-                           <p flex>Customer Notes</p>
-                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
-                        </div>
-                     </md-button>
-                  </md-menu-item>
-                  <md-menu-item ng-if="contact.status == 'Active' ">
+                       <md-button ng-click="360view(contact)">
+                           <!-- <md-icon></md-icon> -->
+                           <p>360 view</p>
+                       </md-button>
+                   </md-menu-item>
+                      <md-menu-item>
+                       <md-button ng-click="New(contact)">
+                          <!--  <md-icon></md-icon> -->
+                           <p>New</p>
+                       </md-button>
+                   </md-menu-item>
+                    <md-menu-item>
+                       <md-button ng-click="AccountStatement(contact)">
+                          <!--  <md-icon></md-icon> -->
+                           <p>Account Satement</p>
+                       </md-button>
+                   </md-menu-item>
+                  
+                 <!--  <md-menu-item ng-if="contact.status == 'Active' ">
                      <md-button ng-click="changeStatus(contact)">
                         <div layout="row">
                            <p flex>Inactive</p>
                            <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                         </div>
                      </md-button>
-                  </md-menu-item>
-                  <md-menu-item ng-if="contact.status == 'Inactive' ">
+                  </md-menu-item> -->
+                 <!--  <md-menu-item ng-if="contact.status == 'Inactive' ">
                      <md-button ng-click="changeStatus(contact)">
                         <div layout="row">
                            <p flex>Active</p>
                            <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
                         </div>
                      </md-button>
-                  </md-menu-item>
+                  </md-menu-item> -->
                </md-menu-content>
             </md-menu>
          </div>

@@ -10,11 +10,11 @@
             <div layout layout-sm="column" layout-margin>
             <section-title title="Customer Name" > </section-title>
                
-               <md-input-container id="accContainer" flex >
+               <md-input-container id="accContainer" flex style="margin-top: 30px;">
                   <label>Company or Individual Name</label>
                   <input  ng-model="contact.Name" ng-required="true">
                </md-input-container>
-               <md-input-container id="accContainer" flex >
+               <md-input-container id="accContainer" style="margin-top: 30px;" flex >
                   <label>Email</label>
                   <input type="email" ng-model="contact.Email" ng-required="true" ng-blur="validateEmail(contact)">
                   <div ng-message="required" ng-show="emailExsist" style="font-size: 13px; color: red;">Email Aready Exist</div>
@@ -26,11 +26,11 @@
             <div layout layout-sm="column" layout-margin>
             <section-title title="Contact Person" > </section-title>
                
-               <md-input-container id="accContainer" flex >
+               <md-input-container id="accContainer" style="margin-top: 30px;"flex >
                   <label>First Name</label>
                   <input id="accNo" ng-model="contact.CustomerFname" >
                </md-input-container>
-               <md-input-container flex >
+               <md-input-container flex style="margin-top: 30px;">
                   <label>Last Name</label>
                   <input ng-model="contact.CustomerLname" > 
                </md-input-container>
@@ -40,9 +40,9 @@
                <div layout layout-sm="column" layout-margin >
                <section-title title="Billing Address" >
                  </section-title>
-                    <div><md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></div>
+                    <div><md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()" style="margin-left:-90px;margin-top:30px;"></div>
                   
-                  <md-input-container id="accContainer" flex >
+                  <md-input-container id="accContainer" flex style="margin-top: 30px; margin-left: -15px;">
                      <label>Street</label>
                      <input id="accNo" ng-model="contact.baddress.street">
                   </md-input-container>
@@ -91,9 +91,9 @@
                <div layout layout-sm="column" layout-margin >
                <section-title title="Shipping Address" >
                  </section-title>
-                    <div><md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()"></div>
+                    <div><md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()" style="margin-left:-70px;margin-top:30px;"></div>
                   
-                  <md-input-container id="accContainer" flex >
+                  <md-input-container id="accContainer" flex style="margin-top: 30px; margin-left: -15px;">
                      <label>Street</label>
                      <input id="accNo" ng-model="contact.saddress.s_street">
                   </md-input-container>
@@ -136,11 +136,11 @@
                 <section-title title="Contact Numbers" ></section-title>
                
               
-               <md-input-container id="accContainer" flex >
+               <md-input-container id="accContainer" style="margin-top: 30px;" flex >
                   <label>Phone</label>
                   <input type="phone" ng-model="contact.Phone" >
                </md-input-container>
-               <md-input-container id="accContainer" flex >
+               <md-input-container id="accContainer" style="margin-top: 30px;" flex >
                   <label>Mobile</label>
                   <input type="phone" ng-model="contact.Mobile" >
                </md-input-container>
@@ -159,10 +159,10 @@
                   <input id="accNo" ng-model="contact.Website" > 
                </md-input-container>
             </div>
-
+            <md-divider></md-divider>
             <div layout layout-sm="column" layout-margin>
                <section-title title = "Optional Details"> </section-title>
-               <md-input-container flex>
+               <md-input-container flex style="margin-top: 30px;" >
                   <label>Notes</label>
                   <textarea id="noteTxt" maxlength="200" type="text" ng-model="contact.cnotes"></textarea>  
                </md-input-container>
@@ -173,16 +173,18 @@
                
               
                <div style="margin-left:55%;">
-                  <md-button href class="md-raised md-primary" style="height:5px; " ng-click="save()">Save</md-button>
+                  <!-- <md-button href class="md-raised md-primary" style="height:5px; " ng-click="save()">Save</md-button> -->
+                  <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
+               </md-button>
                </div>
                <div style="margin-left:2%;">
                   <md-button href class="md-raised md-primary" style="height:5px; "ng-click="Customerview()">Cancel</md-button>
                </div>
             </div>
-            <div class="md-actions" layout="row" layout-align="center center" style="display:none">
+           <!--  <div class="md-actions" layout="row" layout-align="center center" style="display:none">
                <md-button id="mySignup" class="md-raised md-primary" style="width:93%" type="submit"><span class="loginBtnLabel">SAVE</span>
                </md-button>
-            </div>
+            </div> -->
          </md-content>
       </form>
    </md-whiteframe>

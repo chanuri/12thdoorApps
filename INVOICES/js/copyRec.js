@@ -2,8 +2,9 @@ app.controller('copyRecurring', function($scope, $auth, $mdDialog, $objectstore,
 
 $scope.TDinvoice = {};
 $scope.invoicDEtails = {};
- $scope.refNo = 'N/A';
+ $scope.RecurringRefNo = 'N/A';
 $scope.Startdate = new Date();
+$rootScope.taxArr3 = [];
 var userName = $auth.getUserName();
  $scope.TDinvoice.billingFrequency = "Monthly";
       $scope.TDinvoice.occurences = 0;
@@ -26,10 +27,42 @@ var client = $objectstore.getClient("domainClassAttributes");
             };
             $scope.maxID = parseInt($scope.ID)+1;
            
-            $scope.refNo = $scope.maxID.toString();
+            $scope.RecurringRefNo = $scope.maxID.toString();
              
                  }
               });
+
+      $scope.calculatetotal = function(data) {
+      $scope.total = 0;
+      angular.forEach(data.invoiceProducts, function(tdIinvoice) {
+          $scope.total += (tdIinvoice.price * tdIinvoice.quantity);
+      })
+      return $scope.total;
+        };
+        $scope.finaldiscount = function(data) {
+            $scope.finalDisc = 0;
+            $scope.Discount = 0;
+        // if ($scope.dis == "SubTotal Items") {
+            $scope.finalDisc = parseFloat(($scope.salesTax + $scope.total) * data.fdiscount / 100)
+        // } else if ($scope.dis == "Individual Items") {
+        //     $scope.finalDisc = 0;
+        // }
+        return $scope.finalDisc;
+        }
+        $scope.CalculateTax = function() {
+           $scope.salesTax = 0;
+        for (var i = $rootScope.taxArr3.length - 1; i >= 0; i--) {
+            $scope.salesTax += parseFloat($rootScope.taxArr3[i].salesTax);
+            // $scope.salesTax = tt;
+        }
+        return $scope.salesTax;
+
+        }
+        $scope.finalamount = function(data) {
+            $rootScope.famount = 0;
+            $rootScope.famount = parseFloat($scope.total - $scope.finalDisc) + parseFloat($scope.salesTax) + parseFloat(data.shipping);
+            return $rootScope.famount;
+        };
               client.getByFiltering("select maxCount from domainClassAttributes where class='RecurringProfile'");
                for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
             //$rootScope.selctedName = $rootScope.invoiceArray[i].Name;
@@ -176,7 +209,7 @@ $scope.copyToProfile = function(updatedForm) {
          $scope.invoicDEtails.discountAmount = $scope.finalDisc;
          $scope.invoicDEtails.salesTaxAmount = $scope.salesTax;
           $scope.invoicDEtails.otherTaxAmount = $scope.otherTax;
-          $scope.invoicDEtails.RecurringProfileNo =  $scope.refNo;
+          $scope.invoicDEtails.RecurringProfileNo =  $scope.RecurringRefNo;
           $scope.invoicDEtails.paymentMethod = updatedForm.Name.paymentMethod;
            $scope.invoicDEtails.comments = updatedForm.Name.comments;
            $scope.invoicDEtails.Startdate =  $scope.Startdate;
@@ -209,7 +242,7 @@ $scope.copyToProfile = function(updatedForm) {
          // if($rootScope.prodArray.val.length >0){
          //$scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
          client.onComplete(function(data) {
-            $state.go('viewProfile', {'profileName': $scope.refNo});
+            $state.go('viewProfile', {'profileName': $scope.RecurringRefNo});
             $mdDialog.show(
                $mdDialog.alert()
                .parent(angular.element(document.body))
@@ -649,8 +682,9 @@ $scope.copyToProfile = function(updatedForm) {
         $scope.calTotal = 0;
 
         $scope.deleteEditproduct = function(name, index) {
+          recurringInvoiceService.ReverseTax(name, index);
           $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
-            recurringInvoiceService.ReverseTax(name, index);
+            
             console.log($rootScope.getTax)
             $scope.CalculateTax();
         }
@@ -743,8 +777,9 @@ app.controller('RecshowproductCtrl', function($scope, $mdDialog, $rootScope, rec
 
             }else{
                 // $rootScope.editProdArray.val.splice($rootScope.editProdArray.val.indexOf(tst), 1);
-                 $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(tst), 1);
                 recurringInvoiceService.ReverseTax($scope.prevTrax, index);
+                 $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(tst), 1);
+                
 
                 recurringInvoiceService.setTempArr({
                     Productname: item.Productname,
@@ -768,8 +803,9 @@ app.controller('RecshowproductCtrl', function($scope, $mdDialog, $rootScope, rec
 
             }else{
                 //$rootScope.editProdArray.val.splice($rootScope.editProdArray.val.indexOf(tst), 1);
-                $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(tst), 1);
                 recurringInvoiceService.ReverseTax($scope.prevTrax, index);
+                $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(tst), 1);
+                
 
                 recurringInvoiceService.setTempArr({
                     Productname: item.Productname,
@@ -807,5 +843,7 @@ app.controller('RecshowproductCtrl', function($scope, $mdDialog, $rootScope, rec
 
             return $scope.Amount;
         }
+
+
     
 });

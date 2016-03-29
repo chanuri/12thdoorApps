@@ -208,6 +208,7 @@
                       </div>
                       <div flex="30">
                           <span>{{calculatetotal(tdi)|currency}}</span>
+                          <span style="display:none">{{CalculateTax()| currency}}</span>
                       </div>
                   </div>
                   <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">
@@ -226,7 +227,7 @@
                       </div>
                       <div flex="30" >
                           <label> - {{finaldiscount(tdi) | currency}}</label>
-                          <span style="display:none">{{CalculateTax()| currency}}</span>
+                          
                       </div>
                   </div>
                    <div layout layout-sm="column" ng-repeat="tt in taxArr1" layout-margin 
@@ -347,17 +348,17 @@
                              </div>
                               
                                <div >
-                                <md-button  class="md-raised md-primary" ng-show="editInvoiceB" ng-click="edit(tdi)" flex>
+                                <md-button class="md-raised md-primary" ng-show="editInvoiceB" ng-click="edit(tdi)" flex>
                                   <span class="loginBtnLabel">Update</span>
                               </md-button>
                               </div>
                                <div >
-                                <md-button flex  class="md-raised md-primary" ng-show="saveInvoiceB" ng-click="saveInvoice(tdi)">
+                                <md-button flex class="md-raised md-primary" ng-show="saveInvoiceB" ng-click="saveInvoice(tdi)">
                                   <span class="loginBtnLabel">Save</span>
                               </md-button>
                               </div>
                                <div >
-                                <md-button flex  class="md-raised md-primary" ng-show="showSave" ng-click="savetoInvoices(tdi)">
+                                <md-button flex class="md-raised md-primary" ng-show="showSave" ng-click="savetoInvoices(tdi)">
                                   <span class="loginBtnLabel">Save</span>
                               </md-button>
                               </div>

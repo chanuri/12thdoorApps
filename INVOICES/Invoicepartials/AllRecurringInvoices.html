@@ -5,7 +5,7 @@
 <div  class="card_container" ng-repeat="tdi in TDinvoice  | filter:$root.searchText1||undefined | orderBy:InvoiceSearch "
  ng-class="{'first_card_top_margin_two': $index == '0'}" style="max-width:960px;">
     <!--START OF COLLAPSE CARD HEADING-->
-    <div class="collapse-card" ng-class="{'active': toggles[$index]}" style="margin-left:33px">
+    <div class="collapse-card" ng-class="{ active: $active }" style="margin-left:33px">
     <div class="collapse-card__heading" layout="row" layout-align="start start" ng-click="getSelected(tdi);toggleOne($index)">
         <div style="width:56px;">
                     <div  ng-hide="tdi.favourite" class="collapse-card_header_content_controls" ng-click="favouriteFunction(tdi)" layout="row">

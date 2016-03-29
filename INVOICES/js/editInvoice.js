@@ -304,7 +304,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         }
         $scope.finalamount = function(data) {
             $rootScope.famount = 0;
-            $rootScope.famount = parseInt($scope.total - $scope.finalDisc) + parseInt($scope.salesTax) + parseInt(data.shipping);
+            $rootScope.famount = parseFloat($scope.total - $scope.finalDisc) + parseFloat($scope.salesTax) + parseFloat(data.shipping);
             return $rootScope.famount;
         };
 
@@ -431,14 +431,16 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                     .ok('OK')
                 );
                }else{
-                $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
                 InvoiceService.ReverseEditTax(name, index);
+                $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
+                
                 console.log($rootScope.getTax)
                 $scope.CalculateTax();
                }
            }else{
-            $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
             InvoiceService.ReverseEditTax(name, index);
+            $rootScope.invoiceArray[0].invoiceProducts.splice($rootScope.invoiceArray[0].invoiceProducts.indexOf(name), 1);
+            
             console.log($rootScope.getTax)
             $scope.CalculateTax();
            }
@@ -610,7 +612,9 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                                         for (var i = $rootScope.calTax.length - 1; i >= 0; i--) {
                                             $rootScope.getTax.push($rootScope.calTax[i])
                                         };
+
                                     };
+                                    console.log($rootScope.invoiceArray)
                                     $mdDialog.hide();
                                 }
                             }

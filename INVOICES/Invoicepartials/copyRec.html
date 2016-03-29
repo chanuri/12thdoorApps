@@ -50,7 +50,7 @@
                    
                     <md-input-container flex>
                         <label>Profile No</label>
-                        <input ng-model="refNo" ng-disabled="true">
+                        <input ng-model="RecurringRefNo" ng-disabled="true">
                         </md-input-container>
 
                     <md-datepicker ng-model="Startdate" md-placeholder="Start Date" required flex style="margin-top:15px; width:230px;"></md-datepicker>
@@ -195,6 +195,7 @@
                         </div>
                         <div flex="30">
                             <span>{{calculatetotal(TDinvoice)|currency}}</span>
+                            <label style="display:none">{{CalculateTax()}}</label>
                         </div>
                     </div>
                     <div layout layout-sm="column" layout-margin style="overflow:hidden;margin-top:20px;">

@@ -392,6 +392,7 @@
             });
             paymentSave.insert($scope.advancedPayment,{"KeyProperty":"advancedPayment_code"}); 
         }
+        var userName = $auth.getUserName();
         function updateInvoice(callback){
             for(kal=0; kal<=pim.MultiDueDAtesArr.length-1; kal++){
                 for(pay=0; pay<=$scope.payment.paidInvoice.length-1; pay++){
@@ -405,7 +406,7 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount + " Partially Paid"
+                                        "text": $scope.payment.paidInvoice[pay].amount + "of partial payment done by"+userName
                                     }) 
                                     
                                 }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
@@ -414,7 +415,7 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount + " Paid"
+                                        "text": $scope.payment.paidInvoice[pay].amount + " of payment done by"+userName
                                     })                              
                                 }
 
@@ -427,7 +428,7 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount + " Partially Paid"
+                                    "text": $scope.payment.paidInvoice[pay].amount + "of partial payment done by"+userName
                                 }) 
 
                             }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
@@ -437,7 +438,7 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount + " Paid"
+                                    "text": $scope.payment.paidInvoice[pay].amount + "of payment done by"+userName
                                 })                   
                             }
                         }
@@ -578,6 +579,7 @@
                 $rootScope.correctArr = [];
                 $rootScope.multiTax = [];
                 $rootScope.total = 0;
+                $rootScope.getFamount = 0;
                 $rootScope.compoundcal = [];
                 $rootScope.calculateCompound = [];
                 $rootScope.falseComp = [];
@@ -614,9 +616,10 @@
                             if ($rootScope.calculateCompound[y].compound == false) {
                                 fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
                                 $rootScope.total = fcompAmount;
-                            } else if (obj.tax.individualtaxes[y].compound == true) {
-                                tcopmAmount = parseFloat(fcompAmount + obj.amount);
-                                finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
+                                $rootScope.getFamount += fcompAmount;
+                            } else if ($rootScope.calculateCompound[y].compound == true) {
+                                tcopmAmount = parseFloat($rootScope.getFamount + obj.amount);
+                                finalCal = (parseFloat(finalCal + tcopmAmount) * $rootScope.calculateCompound[y].rate / 100);
                                 $rootScope.total = finalCal;
                             }
                             if ($rootScope.calculateCompound[y].rate == 0) {
@@ -767,6 +770,7 @@
                 $rootScope.calculateCompound = [];
                 $rootScope.falseComp = [];
                 $rootScope.trueComp = [];
+                $rootScope.getFamount = 0;
 
                 if (obj.tax != null) {
                     if (obj.tax.type == "individualtaxes") {
@@ -789,24 +793,22 @@
                                     return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
                                 });
                             }
-
-
                         }
                         $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
                         var tcopmAmount = 0;
                         var fcompAmount = 0;
                         var finalCal = 0;
                         for (var y = 0; y <= $rootScope.calculateCompound.length - 1; y++) {
-
+                            
                             if ($rootScope.calculateCompound[y].compound == false) {
                                 fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
                                 $rootScope.total = fcompAmount;
-                            } else if (obj.tax.individualtaxes[y].compound == true) {
-                                tcopmAmount = parseFloat(fcompAmount + obj.amount);
-                                finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
+                           $rootScope.getFamount += fcompAmount;
+                            } else if ($rootScope.calculateCompound[y].compound == true) {
+                                tcopmAmount = parseFloat($rootScope.getFamount + obj.amount);
+                                finalCal = (parseFloat(finalCal + tcopmAmount) * $rootScope.calculateCompound[y].rate / 100);
                                 $rootScope.total = finalCal;
                             }
-
                             if ($rootScope.calculateCompound[y].rate == 0) {
 
                             } else {
@@ -816,6 +818,7 @@
                                     salesTax: $rootScope.total,
                                     compoundCheck: $rootScope.calculateCompound[y].compound
                                 })
+                                console.log($rootScope.taxArr1)
                             }
                         }
                     }
@@ -862,17 +865,20 @@
                 var fcompAmount = 0;
                 var finalCal = 0;
                 var tax = 0;
-                for (var i = $rootScope.showprodArray.val.length - 1; i >= 0; i--) {
+               
+                    for (var x = $rootScope.invoiceArray[0].invoiceProducts.length - 1; x >= 0; x--) {
 
-                    if ($rootScope.showprodArray.val[i].tax.type == "individualtaxes") {
-                        arr.push($rootScope.showprodArray.val[i].tax.taxname)
+                        if ($rootScope.invoiceArray[0].invoiceProducts[x].tax.type == "individualtaxes") {
+                        arr.push($rootScope.invoiceArray[0].invoiceProducts[x].tax.taxname)
 
-                    } else if ($rootScope.showprodArray.val[i].tax.type == "multipletaxgroup") {
-                        for (var x = $rootScope.showprodArray.val[i].tax.individualtaxes.length - 1; x >= 0; x--) {
-                            arr.push($rootScope.showprodArray.val[i].tax.individualtaxes[x].taxname)
+                    } else if ($rootScope.invoiceArray[0].invoiceProducts[x].tax.type == "multipletaxgroup") {
+                        for (var y = $rootScope.invoiceArray[0].invoiceProducts[x].tax.individualtaxes.length - 1; y >= 0; y--) {
+                            arr.push($rootScope.invoiceArray[0].invoiceProducts[x].tax.individualtaxes[y].taxname)
                         }
                     }
-                }
+                    }
+                    
+                // }
 
                 var sorted_arr = arr.sort();
                 var results = [];
@@ -882,7 +888,6 @@
                     }
                 }
                 if (obj.tax.type == "individualtaxes") {
-
                     for (var x = $rootScope.taxArr1.length - 1; x >= 0; x--) {
 
                         if ($rootScope.taxArr1[x].taxName == obj.tax.taxname) {

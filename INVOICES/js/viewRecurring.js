@@ -556,9 +556,10 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                             if ($rootScope.calculateCompound[y].compound == false) {
                                 fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
                                 $rootScope.total = fcompAmount;
-                            } else if (obj.tax.individualtaxes[y].compound == true) {
-                                tcopmAmount = parseFloat(fcompAmount + obj.amount);
-                                finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
+                             $rootScope.getFamount += fcompAmount;
+                            } else if ($rootScope.calculateCompound[y].compound == true) {
+                                tcopmAmount = parseFloat($rootScope.getFamount + obj.amount);
+                                finalCal = (parseFloat(finalCal + tcopmAmount) * $rootScope.calculateCompound[y].rate / 100);
                                 $rootScope.total = finalCal;
                             }
                             if ($rootScope.calculateCompound[y].rate == 0) {
@@ -730,8 +731,6 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                                     return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
                                 });
                             }
-
-
                         }
                         $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
                         var tcopmAmount = 0;
@@ -742,9 +741,10 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                             if ($rootScope.calculateCompound[y].compound == false) {
                                 fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
                                 $rootScope.total = fcompAmount;
-                            } else if (obj.tax.individualtaxes[y].compound == true) {
-                                tcopmAmount = parseFloat(fcompAmount + obj.amount);
-                                finalCal = (parseFloat(finalCal + tcopmAmount) * obj.tax.individualtaxes[y].rate / 100);
+                             $rootScope.getFamount += fcompAmount;
+                            } else if ($rootScope.calculateCompound[y].compound == true) {
+                                tcopmAmount = parseFloat($rootScope.getFamount + obj.amount);
+                                finalCal = (parseFloat(finalCal + tcopmAmount) * $rootScope.calculateCompound[y].rate / 100);
                                 $rootScope.total = finalCal;
                             }
 

@@ -436,7 +436,7 @@ $scope.ll = [];
                         $rootScope.checkArr = [];
                         $rootScope.checkArr = angular.copy($scope.testarr);
                         for (var i = $scope.testarr.length - 1; i >= 0; i--) {
-                            $scope.calc += parseInt($scope.testarr[i].percentage);
+                            $scope.calc += parseFloat($scope.testarr[i].percentage);
                             // if($scope.calc <= 100){
                             MultipleDudtesService.calDateArray({
                                 DueDate: $scope.testarr[i].duedate,
@@ -541,7 +541,7 @@ $scope.ll = [];
                         $scope.cal = 0;
                         for (var i = $scope.testarr.length - 1; i >= 0; i--) {
                             $scope.showPercentage = false;
-                            $scope.cal += parseInt($scope.testarr[i].percentage);
+                            $scope.cal += parseFloat($scope.testarr[i].percentage);
 
                             if ($scope.cal > 100) {
                                 $scope.showPercentage = true;
@@ -568,17 +568,17 @@ $scope.ll = [];
                         $scope.oldPercentage = 0;
 
                         for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
-                            $scope.oldPercentage += parseInt($rootScope.dateArray.val[i].Percentage);
+                            $scope.oldPercentage += parseFloat($rootScope.dateArray.val[i].Percentage);
                         }
                         for (var i = $scope.editMultipleDuedates.length - 1; i >= 0; i--) {
                             $scope.showPercentage = false;
-                            $scope.cal += parseInt($scope.editMultipleDuedates[i].percentage);
+                            $scope.cal += parseFloat($scope.editMultipleDuedates[i].percentage);
                         }
 
                         if ($scope.cal + $scope.oldPercentage > 100) {
                             $scope.showPercentage = true;
                         }
-                        $scope.ccc = (parseInt($scope.newfamount * cc.percentage) / 100);
+                        $scope.ccc = (parseFloat($scope.newfamount * cc.percentage) / 100);
                         $scope.editMultipleDuedates[index] = {
                             duedate: cc.duedate,
                             percentage: cc.percentage,
@@ -597,11 +597,11 @@ $scope.ll = [];
                         $scope.oldPercentage = 0;
 
                         for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
-                            $scope.oldPercentage += parseInt($rootScope.dateArray.val[i].Percentage);
+                            $scope.oldPercentage += parseFloat($rootScope.dateArray.val[i].Percentage);
                         }
 
                         for (var i = $scope.editMultipleDuedates.length - 1; i >= 0; i--) {
-                            $scope.calc += parseInt($scope.editMultipleDuedates[i].percentage);
+                            $scope.calc += parseFloat($scope.editMultipleDuedates[i].percentage);
 
                             MultipleDudtesService.editDateArray({
                                 DueDate: $scope.editMultipleDuedates[i].duedate,
@@ -916,7 +916,7 @@ $scope.ll = [];
                     $scope.totall = 0;
                     $scope.totall = $scope.Sprice * $scope.Sqty;
                     if ($rootScope.discounts == "Individual Items") {
-                        $scope.disc = parseInt($scope.totall * $scope.discount / 100);
+                        $scope.disc = parseFloat($scope.totall * $scope.discount / 100);
                         $scope.Amount = $scope.totall - $scope.disc;
                     } else {
                         $scope.Amount = $scope.totall;
@@ -1458,7 +1458,7 @@ var userName = $auth.getUserName();
     $rootScope.calculatetotal = function() {
         $scope.total = 0;
         angular.forEach($rootScope.testArray.val, function(tdIinvoice) {
-            $scope.total += parseInt(tdIinvoice.amount);
+            $scope.total += parseFloat(tdIinvoice.amount);
         })
         return $scope.total;
     };

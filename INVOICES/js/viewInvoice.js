@@ -147,7 +147,7 @@
             }
         }
     }]);
-    app.controller('viewCtrl', function($scope, $mdBottomSheet, $auth, $interval, $mdDialog, $state, uiInitilize, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
+    app.controller('viewCtrl', function($scope, $mdBottomSheet, $auth, $interval, $mdDialog, $mdToast, $state, uiInitilize, $objectstore, recurringInvoiceService, $window, $stateParams, $rootScope, invoiceDetails, InvoiceService, $filter, $state, $location, UploaderService) {
         $scope.TDinvoice = [];
         $scope.Payment = [];
         $scope.newItems = [];
@@ -307,9 +307,16 @@
                 obj.MultiDueDAtesArr[x].paymentStatus = "Unpaid";
             }
             client.onComplete(function(data) {
-                $mdDialog.show(
+                // $mdDialog.show(
 
-                );
+                // );
+                $mdToast.show(
+                      $mdToast.simple()
+                        .textContent('Invoice Successfully Approved')
+                        .position('bottom right')
+                        .theme('success-toast')
+                        .hideDelay(2000)
+                    );
             });
             client.onError(function(data) {
                 $mdDialog.show(
@@ -667,7 +674,9 @@
         $scope.calBalance = 0;
         
         //retrieve Data from invoice class
-        var client = $objectstore.getClient("invoice12thdoorDraft");
+
+        $scope.LoadAll = function() {
+            var client = $objectstore.getClient("invoice12thdoorDraft");
         client.onGetMany(function(data) {
             if (data) {
 
@@ -725,6 +734,8 @@
             );
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
+        }
+        
 
 
         $scope.openOtherView = function(InvoItem) {
@@ -743,7 +754,6 @@
                     for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
                         
                            if ($stateParams.invoiceno == data[i].invoiceNo) {
-                            console.log(data[i].MultiDueDAtesArr[x].paymentStatus)
                             if(data[i].MultiDueDAtesArr[x].paymentStatus != "Draft"){
                             // invoiceDetails.removeArray(data[i], 1);
                             // invoiceDetails.setArray(data[i]);
@@ -842,10 +852,12 @@
                             if ($stateParams.invoiceno == data[i].paidInvoice[x].invono) {
 
                                 $scope.Payment.push(data[i]);
+                                console.log(data[i])
                             }
                         };
                     }
                 };
+
             }
         });
         client.onError(function(data) {

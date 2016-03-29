@@ -307,17 +307,17 @@
                <section-title title="Payment History"> </section-title>
                <table >
                   <tr>
-                     <th flex style="padding: 5px;">Date</th>
-                     <th style="padding: 20px;" flex>Doc Ref No</th>
-                     <th style="padding: 20px;" flex>Payment Method</th>
-                     <th style="padding: 20px;" flex>Paid Amount</th>
+                     <th flex style="padding: 5px;text-align: left;">Date</th>
+                     <th style="padding: 20px;text-align: left;" flex>Doc Ref No</th>
+                     <th style="padding: 20px;text-align: left;" flex>Payment Method</th>
+                     <th style="padding: 20px;text-align: left;" flex>Paid Amount</th>
                      <!-- <md-divider></md-divider> -->
                   </tr>
                   <tr ng-repeat="cc in Payment">
-                     <td style="padding: 5px;" flex>{{cc.date|date}}</td>
-                     <td style="padding: 20px;"flex>{{cc.paymentid}}</td>
-                     <td style="padding: 20px;"flex>{{cc.paymentMethod}}</td>
-                     <td style="padding: 20px;"flex>{{cc.total|currency:item.BaseCurrency}}</td>
+                     <td style="padding: 5px;text-align: left;" flex>{{cc.date|date}}</td>
+                     <td style="padding: 20px;text-align: left;"flex>{{cc.paymentid}}</td>
+                     <td style="padding: 20px;text-align: left;"flex>{{cc.paymentMethod}}</td>
+                     <td style="padding: 20px;text-align: left;"flex>{{cc.total|currency:item.BaseCurrency}}</td>
                      <!-- <md-divider></md-divider> -->
                   </tr>
                   <!-- <md-divider></md-divider> -->

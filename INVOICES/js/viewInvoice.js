@@ -632,7 +632,7 @@
 
         $scope.add = function() {
             $rootScope.testArray.val = "";
-            $rootScope.dateArray.value = "";
+            $rootScope.dateArray.val = "";
             invoiceDetails.removeArray(0, 1);
             location.href = '#/NewInvoice_app';
         }
@@ -1178,8 +1178,6 @@
                     done: false,
                     date: new Date()
                 });
-
-                console.log(todoText.addView)
 
                 var client = $objectstore.getClient("invoice12thdoor");
                 todoText.invoiceNo = todoText.invoiceNo.toString();

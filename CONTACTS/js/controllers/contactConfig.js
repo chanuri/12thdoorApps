@@ -1,3 +1,4 @@
+var rasm = angular.module('mainApp', ['ngMaterial', 'directivelibrary', 'uiMicrokernel', 'ngAnimate', 'ui.router']);
 rasm.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/settings/contact');
   $stateProvider

@@ -87,6 +87,8 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
 //------------APPCtrl starts--------------------------------------------------------------------------------------------------------
 app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
 
+    $auth.checkSession();
+        // console.log($auth.checkSession());
     $scope.list = [];
     $scope.TDinvoice = {};
     $scope.Settings = {};
@@ -110,6 +112,8 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
     $scope.roles = [];
     $scope.permission = [];
     $scope.TDinvoice.paymentOptions = [];
+    $rootScope.testArray.val = "";
+    $rootScope.dateArray.val = "";
 
     var client = $objectstore.getClient("Settings12thdoor");
     client.onGetMany(function(data) {

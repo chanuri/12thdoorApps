@@ -38,17 +38,15 @@ rasm.controller('AppCtrlAddSuppliers', function($scope, $state, $objectstore, $l
     $scope.submit = function() {
         var client = $objectstore.getClient("supplier12thdoor");
         client.onComplete(function(data) {
-          $mdDialog.show($mdDialog.alert()
-            .parent(angular
-              .element(document.body))
-            .content(
-              'Timesheet Added Successfully.')
-            .ariaLabel(
-              'Alert Dialog Demo')
-            .ok('OK')
-            .targetEvent(
-              data));
-        });
+         $mdToast.show(
+            $mdToast.simple()
+              .textContent('Supplier Successfully Registerd')
+              .position('bottom right')
+              .theme('success-toast')
+              .hideDelay(2000)
+          );
+         $state.go('settings.supplier')
+       });
         client.onError(function(data) {
           $mdDialog.show($mdDialog.alert()
             .parent(angular
@@ -66,7 +64,7 @@ rasm.controller('AppCtrlAddSuppliers', function($scope, $state, $objectstore, $l
         $scope.supplier.notes = [];
         var name  ="name" + ( $scope.supplier.notes.length + 1 ).toString();
         $scope.supplier.notes.push({
-          note : $scope.notes,
+          note : $scope.cnotes,
           height : height[0] + 'px;',
           editable : false,
           idName : name
@@ -87,16 +85,36 @@ rasm.controller('AppCtrlAddSuppliers', function($scope, $state, $objectstore, $l
           }
           return true;
       } 
+
     $scope.addressChange = function() {
       $scope.showShipping = !$scope.showShipping;
       $scope.showBilling = !$scope.showBilling;
     } 
+
     $scope.save = function() {
       $timeout(function(){
         $('#mySignup').click();
       })
     }
+
     $scope.supplierView = function(){
       $state.go('settings.supplier')
     }
+
+     $scope.emailExsist = false;
+
+    $scope.validateSupplierEmail = function(obj){
+    $scope.emailExsist = false;
+    var emailClient = $objectstore.getClient("supplier12thdoor");
+    emailClient.onGetMany(function(data){
+      if (data.length > 0) {
+        console.log("exsist")
+        $scope.emailExsist = true;
+      }
+    });
+    emailClient.onError(function(data){
+
+    });
+    emailClient.getByFiltering("select Email from contact12thdoor where Email = '"+obj.Email+"'")
+  }
   }) /*______________________________END OF AppCtrlAddSuppliers______________________________________*/

@@ -26,20 +26,20 @@
       <div class="collapse-card_header_content_info" layout="row" layout-align="center start" flex="80" ng-click="$active = !$active; closeAll();" style="margin-top: 1.4%;">
          <div layout-sm="row" flex>
             <div layout-sm="column" flex>
-               <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>{{supplier.Name}}</b></span>
+               <span style="padding-right: 15px; border-right-style: solid; border-width:1px;" class="collapse-card__title"><b>   {{supplier.Name}}</b></span>
                <span style="  padding-right: 15px;margin-left:-20px;border-right-style: solid; border-width:1px;" class="collapse-card__title"><b> {{supplier.Email}}</b></span>
                <span  class="collapse-card__title"style="  padding-right: 15px;margin-left:-20px;border-width:1px;"><b>{{supplier.CustomerFname}} {{supplier.CustomerLname}} </b></span>
-               <span style="padding-left: 16px; background-color: #339C38; margin-left: 16px; width:15%" ng-if="supplier.status == 'Active'">
-                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+               <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid green;background-color: #4CAF50;" ng-if="supplier.status == 'Active'">
+                  <b style=" width:70px; font-color:#FFFFFF;">
                       <font color="white">{{supplier.status}}</font>
                   </b>
                </span>
-               <span style="padding-left: 16px; background-color: #212121; margin-left: 16px; width: 18%" ng-if="supplier.status == 'Inactive'">
-                  <b style="font-color:#FFFFFF;padding-right: 15px;">
+               <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000; background-color: #000000;" ng-if="supplier.status == 'Inactive'">
+                 <b style="width:70px; font-color:#FFFFFF;"> 
                       <font color="white">{{supplier.status}}</font>
                   </b>
                </span>
-            </div>
+            </div> 
          </div>
       </div>
       <div style="width:5%;padding-left:10%;">
@@ -49,15 +49,13 @@
                   <md-icon md-svg-icon="img/ic_more_vert_24px.svg"></md-icon>
                </md-button>
                <md-menu-content width="4">
-                  <md-menu-item>
-                     <md-button ng-click="updateTimesheet(supplier,supplier.supplierid)">
-                        <div layout="row">
-                           <p flex>Update Timesheet</p>
-                           <md-icon md-svg-icon="img/ic_save_24px.svg"></md-icon>
-                        </div>
-                     </md-button>
-                  </md-menu-item>
-                  <md-menu-item>
+                   <md-menu-item>
+                       <md-button ng-click="360(contact)">
+                           <!-- <md-icon></md-icon> -->
+                           <p>360 view</p>
+                       </md-button>
+                   </md-menu-item>
+                     <md-menu-item>
                    <md-menu>
                      <md-button style="width:100%"  ng-click="$mdOpenMenu()">
                         <div layout="row">
@@ -67,28 +65,26 @@
                         </div>
                      </md-button>
                      <md-menu-content width="4">
-                       <md-menu-item><md-button  >Document</md-button></md-menu-item>
-                       <md-menu-item><md-button  >Spreadsheet</md-button></md-menu-item>
-                       <md-menu-item><md-button  >Presentation</md-button></md-menu-item>
-                       <md-menu-item><md-button  >Form</md-button></md-menu-item>
-                       <md-menu-item><md-button  >Drawing</md-button></md-menu-item>
+                       <md-menu-item><md-button>Invoice</md-button></md-menu-item>
+                       <md-menu-item><md-button>Recurring Profile</md-button></md-menu-item>
+                       <md-menu-item><md-button>Estimate</md-button></md-menu-item>
+                       <md-menu-item><md-button>Credit Note </md-button></md-menu-item>
+                       <md-menu-item><md-button>Payment</md-button></md-menu-item>
+                       <md-menu-item><md-button>Received Note</md-button></md-menu-item>
+                       <md-menu-item><md-button>Issued Note</md-button></md-menu-item>
                      </md-menu-content>
                    </md-menu>
                  </md-menu-item>
-                  </md-menu-item>
                   <md-menu-item>
-                     <md-button ng-click="customerNotes(supplier)">
-                        <div layout="row">
-                           <p flex>Customer Notes</p>
-                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
-                        </div>
-                     </md-button>
-                  </md-menu-item>
+                       <md-button ng-click="customerNotes(contact)">
+                           <p>Customer Notes</p>
+                       </md-button>
+                   </md-menu-item>
                   <md-menu-item ng-if="supplier.status == 'Active' ">
                      <md-button ng-click="changeStatus(supplier)">
                         <div layout="row">
                            <p flex>Inactive</p>
-                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                          
                         </div>
                      </md-button>
                   </md-menu-item>
@@ -96,10 +92,15 @@
                      <md-button ng-click="changeStatus(supplier)">
                         <div layout="row">
                            <p flex>Active</p>
-                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                        
                         </div>
                      </md-button>
-                  </md-menu-item>
+                     </md-menu-item>
+                  <md-menu-item>
+                       <md-button ng-click="Delete(contact)">
+                           <p>Delete</p>
+                       </md-button>
+                   </md-menu-item>
                </md-menu-content>
             </md-menu>
          </div>
@@ -225,6 +226,14 @@
                <md-input-container id="accContainer" flex >
                   <label>Website</label>
                   <input id="accNo" ng-model="supplier.Website" ng-disabled="true"> 
+               </md-input-container>
+            </div>
+            <md-divider></md-divider>
+             <div layout layout-sm="column" layout-margin>
+               <section-title title = "Optional Details"> </section-title>
+               <md-input-container flex>
+                  <label>Notes</label>
+                  <textarea id="noteTxt" maxlength="200" type="text" ng-repeat="nt in supplier.notes" ng-model="nt.note" ng-disabled="true"></textarea>  
                </md-input-container>
             </div>
          </md-content>

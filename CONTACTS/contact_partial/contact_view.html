@@ -54,12 +54,26 @@
                            <p>360 view</p>
                        </md-button>
                    </md-menu-item>
-                      <md-menu-item>
-                       <md-button ng-click="New(contact)">
-                          <!--  <md-icon></md-icon> -->
-                           <p>New</p>
-                       </md-button>
-                   </md-menu-item>
+                     <md-menu-item>
+                   <md-menu>
+                     <md-button style="width:100%"  ng-click="$mdOpenMenu()">
+                        <div layout="row">
+                           <p flex>new</p>
+                           <div flex="45"></div>
+                           <md-icon flex="33" layout="row" layout-align="start start" md-svg-icon="img/ic_keyboard_arrow_right_24px.svg"></md-icon>
+                        </div>
+                     </md-button>
+                     <md-menu-content width="4">
+                       <md-menu-item><md-button  >Invoice</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Recurring Profile</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Estimate</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Credit Note </md-button></md-menu-item>
+                       <md-menu-item><md-button  >Payment</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Received Note</md-button></md-menu-item>
+                       <md-menu-item><md-button  >Issued Note</md-button></md-menu-item>
+                     </md-menu-content>
+                   </md-menu>
+                 </md-menu-item>
                     <md-menu-item>
                        <md-button ng-click="AccountStatement(contact)">
                           <!--  <md-icon></md-icon> -->
@@ -76,8 +90,6 @@
                      <md-button ng-click="changeStatus(contact)">
                         
                            <p flex>Inactive</p>
-                          <!--  <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
-                        </div> -->
                      </md-button>
                   </md-menu-item>
                   <md-menu-item ng-if="contact.status == 'Inactive' ">
@@ -239,7 +251,7 @@
                <section-title title = "Optional Details"> </section-title>
                <md-input-container flex>
                   <label>Notes</label>
-                  <textarea id="noteTxt" maxlength="200" type="text" ng-model="contact.cnotes" ng-disabled="true"></textarea>  
+                  <textarea id="noteTxt" maxlength="200" type="text" ng-repeat="nt in contact.notes" ng-model="nt.note" ng-disabled="true"></textarea>  
                </md-input-container>
             </div>
          </md-content>

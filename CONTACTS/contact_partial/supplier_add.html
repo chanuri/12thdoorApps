@@ -16,9 +16,8 @@
                </md-input-container>
                <md-input-container id="accContainer" style="margin-top: 30px;" flex >
                   <label>Email</label>
-                  <input type="email" ng-model="supplier.Email" ng-required="true" ng-blur="validateEmail(supplier)">
-                  <div ng-message="required" ng-show="emailExsist" style="font-size: 13px; color: red;">Email Aready Exist</div>
-                 <!--  <span  style="font-size: 13px; color: red; position: absolute; margin-top: 18%;"></span> -->              
+                  <input type="email" ng-model="supplier.Email" ng-required="true" ng-blur="validateSupplierEmail(supplier)">
+                  <div ng-message="required" ng-show="emailExsist" style="font-size: 13px; color: red;">Email Aready Exist</div>              
                </md-input-container>
               
             </div>
@@ -164,7 +163,7 @@
                <section-title title = "Optional Details"> </section-title>
                <md-input-container flex style="margin-top: 30px;" >
                   <label>Notes</label>
-                  <textarea id="noteTxt" maxlength="200" type="text" ng-model="supplier.cnotes"></textarea>  
+                  <textarea id="noteTxt" maxlength="200" type="text" ng-model="cnotes"></textarea>  
                </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin>

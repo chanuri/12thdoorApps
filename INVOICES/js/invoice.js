@@ -1390,15 +1390,7 @@ var userName = $auth.getUserName();
                         .theme('success-toast')
                         .hideDelay(2000)
                     );
-                // $mdDialog.show(
-                //     $mdDialog.alert()
-                //     .parent(angular.element(document.body))
-                //     .title('Confirmation')
-                //     .content('invoice Successfully Saved')
-                //     .ariaLabel('Alert Dialog Demo')
-                //     .ok('OK')
-                //     .targetEvent(data)
-                // );
+                
                 $rootScope.invoiceArray.splice(0, 1);
                 invoiceDetails.setArray($scope.TDinvoice);
                 $state.go('view', {

@@ -27,6 +27,11 @@ rasm.config(function($stateProvider, $urlRouterProvider) {
       templateUrl: 'contact_partial/supplier_add.html',
       controller: 'AppCtrlAddSuppliers'
     })
+    .state('view', {
+      url: '/statement',
+      templateUrl: 'contact_partial/accountStatement.html',
+      controller: 'AppCtrlGet'
+    })
 });
 
 rasm.config(function($mdThemingProvider) {

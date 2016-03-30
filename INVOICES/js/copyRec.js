@@ -844,6 +844,13 @@ app.controller('RecshowproductCtrl', function($scope, $mdDialog, $rootScope, rec
             return $scope.Amount;
         }
 
+        $scope.cancelrec = function(){
+          $state.go('settings.AllRecurring_Invoices');
+        }
 
+        $scope.viewProfile = function() {
+            $state.go('settings.AllRecurring_Invoices');
+
+        }
     
 });

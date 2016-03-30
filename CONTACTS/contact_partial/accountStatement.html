@@ -1,0 +1,167 @@
+<div class="card-container" style="padding:20px;">
+   <!--WHITEFRAME START--> <!--  -->
+   <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" style="border:1px solid #ccc;max-width:960px;margin:0 auto" ng-repeat="cus in customerArr"  >
+      <form name="editForm"  style="width:960px;"  ng-init="loadData(cus)">
+         <md-content id="canvas" flex>
+            <div layout layout-sm="column" style="height:25px;" layout-margin flex>
+               <div>
+                  <label>{{cus.CustomerFname}} {{cus.CustomerLname}}</label>
+               </div>
+               <div >
+                  <label>|</label>
+               </div>
+                <div flex="20">
+                  <label>{{cus.Email}}</label>
+               </div>
+               <div   flex>
+                  <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid green;background-color: #4CAF50;" ng-if="cus.status == 'Active'">
+                  <b style=" width:70px; font-color:#FFFFFF;">
+                  <font color="white">Active</font>
+                  </b>
+                  </span>
+                  <span style="padding-right: 15px; padding-left: 15px; font-size:13px; width:70px; height:40px; border: 1px solid #000000;background-color: #000000;" ng-if="cus.status == 'Inactive'">
+                  <b style=" width:70px; font-color:#FFFFFF;">
+                  <font color="white">Inactive</font>
+                  </b>
+                  </span>
+               </div>
+               <div ng-if="item.termtype == 'multipleDueDates'" flex="60">
+                  <span style="padding-right: 15px; padding-left: 15px;" > </span> 
+               </div>
+               <div  style="margin-top:-5px;">
+                  <md-button ng-click="printDetails()" style="height:30px;" aria-label="change address" href>
+                     <md-icon md-svg-icon="img/ic_print_24px.svg" style="height:20px; width:20px;"></md-icon>
+                  </md-button>
+                  <md-button ng-click="convertpdf(item)" style="height:30px;" aria-label="change address" href>
+                     <md-icon md-svg-icon="img/ic_file_download_24px.svg" style="height:20px; width:20px;"></md-icon>
+                  </md-button>
+                  <md-button ng-click="email(item)" style="height:30px;" aria-label="change address" href>
+                     <md-icon md-svg-icon="img/ic_email_24px.svg" style="height:20px; width:20px;"></md-icon>
+                  </md-button>
+                  <md-button ng-repeat="tt in item.MultiDueDAtesArr" ng-if="tt.paymentStatus == 'Pending'" class="md-raised md-primary"ng-click="Approve(item)" href style="background:green; margin-top:-5px;">Approve</md-button>
+                  <md-menu md-position-mode="target-right target" >
+                     <md-button href aria-label="Open demo menu" class="md-icon-button"  ng-click="$mdOpenMenu()">
+                     <md-icon md-menu-origin md-svg-src="img/ic_more_horiz_24px.svg"style="margin-top:2px;" ></md-icon>
+                     </md-button>
+                     <md-menu-content width="4">
+                        <md-menu-item>
+                           <md-button href  ng-click="enterPayment(item)">
+                              <p>Enter Payment</p>
+                              <md-icon href md-menu-align-target></md-icon>
+                           </md-button>
+                        </md-menu-item>
+                        
+                     </md-menu-content>
+                  </md-menu>
+               </div>
+            </div flex>
+            <md-divider></md-divider>
+            <div layout layout-sm="column" style="margin-top:-5px;" layout-margin flex>
+               <img src="img/image1.jpg" style="width:150px; height: 150px; margin-left:50px;">
+            </div>
+            <div layout layout-sm="column" layout-margin flex style="margin-top:10px;">
+               <div flex="10" class="blankspace"></div>
+               <h1 style="">ACCOUNT STATEMENT</h1>
+            </div>
+            <div layout layout-sm="column" layout-margin flex style="margin-top:-20px;">
+               <div flex="10" class="blankspace"></div>
+               <label>Period 01/20/2016 to 2/20/2016</label>
+            </div>
+
+            <div>
+            <div>
+            <div layout layout-sm="column" layout-margin style="margin-top:10px;" flex>
+                <div flex="10" class="blankspace"></div>
+               <label>To:</label>
+            </div>
+            <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="10" class="blankspace"></div>
+               <label><b>{{cus.Name}}</b></label>
+            </div>
+             <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="10" class="blankspace"></div>
+               <label>{{cus.baddress.street}}</label>
+            </div>
+            <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="10" class="blankspace"></div>
+                <label>{{cus.baddress.city}}</label><label>{{cus.baddress.state}}</label><label>{{cus.baddress.zip}}</label><label>{{cus.baddress.country}}</label>
+            </div>
+             <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="10" class="blankspace"></div>
+               <label>{{cus.Email}}</label>
+            </div>
+             
+            </div >
+            
+<!--  -->
+            <div flex style="background-color: #A9A9A9; width: 280px; margin-left: 570px; margin-top:-130px; " flex>
+            <div layout layout-sm="column" layout-margin style="margin-top:10px;" flex>
+               <!--  <div flex="10" class="blankspace"></div> -->
+               <label><b>Summary</b></label>
+            </div>
+            <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="40" class="blankspace"><span>balance B/F</span></div>
+                <div flex="10" class="blankspace"><span>{{bbb|currency:cus.BaseCurrency}}</span></div>
+            </div>
+
+            <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="40" class="blankspace"> <span>Invoices</span></div>
+                <div flex="10" class="blankspace"><span>{{Intotal|currency:cus.BaseCurrency}}</span></div>
+            </div>
+
+             <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="40" class="blankspace"><span>Credits</span></div>
+                <div flex="10" class="blankspace"><span>{{CredTotal|currency:cus.BaseCurrency}}</span></div>
+            </div>
+
+            <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
+                <div flex="40" class="blankspace"><span>Payments</span></div>
+                 <div flex="10" class="blankspace"><span>{{PayTotal|currency:cus.BaseCurrency}}</span></div>
+            </div>
+
+            <div layout layout-sm="column" layout-margin style="margin-top:-10px;" flex>
+                <div flex="40" class="blankspace"><span><b>Balance Due</b></span></div>
+                 <div flex="10" class="blankspace"><span><b>{{totalBalance|currency:cus.BaseCurrency}}</b></span></div>
+            </div>
+
+            </div>
+            </div>
+            <div layout layout-sm="column" layout-margin style="margin-top:-40px;" flex>
+                <div flex="10" class="blankspace"></div>
+               <label>Statement Date</label> <span>{{StatementDate|date}}</span>
+            </div>
+            <div layout layout-sm="column" style="margin-top:30px; " layout-margin  flex>
+               <div flex="10" class="blankspace"></div>
+               <table >
+                  <tr>
+                     <th style="width:100px; border-bottom: 1px solid;text-align: left;" flex>Date</th>
+                     <th style="width:320px; border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Description</th>
+                     <th style="width:150px;border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Amount</th>
+                     <th style="width:150px;border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Balance</th>
+                  </tr>
+                  <tr ng-repeat="val in leger">
+                     <td style="width:100px; border-bottom: 1px solid;text-align: left;" flex>{{val.Date|date}}
+                     </td>
+                     <td style="width:320px; padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{val.Type}} No.{{val.RefID}}</td>
+                     <td style="width:150px; padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{val.Amount|currency:cus.BaseCurrency}}</td>
+                     <td ng-if="val.Type =='Invoice'" style="width:150px; padding: 20px;border-bottom: 1px solid;text-align: left; "flex>{{val.Amount|currency:cus.BaseCurrency}}</td>
+                    <td ng-if="val.Type =='Receipt'" style="width:150px; padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{receiptBalance|currency:cus.BaseCurrency}}</td>
+                     <td ng-if="val.Type =='Credit Note'" style="width:150px; padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{CreditNoteBalance|currency:cus.BaseCurrency}}</td> 
+                  </tr>
+               </table>
+            </div>
+            <div layout layout-sm="column" style="margin-top:30px; " layout-margin  flex>
+              <div flex="55" class="blankspace"></div>
+              <span><b>Balance Due</b></span>
+              <div flex="5" class="blankspace"></div>
+              <span><b>{{totalBalance|currency:cus.BaseCurrency}}</b></span>
+            </div>
+         </md-content>
+      </form>
+   </md-whiteframe>
+</div>
+<div  class="lock-size" layout="row" >
+<md-button href class="md-fab" aria-label="Profile" ng-click="Customerview()" style=" position:fixed;top:270px;right:50px;background:#db4437">
+   <md-icon md-svg-src="img/ic_add_24px.svg" ></md-icon>
+   <md-tooltip md-direction="left">All Contacts</md-tooltip>
+</md-button>

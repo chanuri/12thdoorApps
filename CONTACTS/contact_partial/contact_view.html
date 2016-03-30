@@ -49,7 +49,7 @@
                </md-button>
                <md-menu-content width="4">
                    <md-menu-item>
-                       <md-button ng-click="360view(contact)">
+                       <md-button ng-click="360(contact)">
                            <!-- <md-icon></md-icon> -->
                            <p>360 view</p>
                        </md-button>
@@ -66,23 +66,34 @@
                            <p>Account Satement</p>
                        </md-button>
                    </md-menu-item>
-                  
-                 <!--  <md-menu-item ng-if="contact.status == 'Active' ">
+                  <md-menu-item>
+                       <md-button ng-click="customerNotes(contact)">
+                          <!--  <md-icon></md-icon> -->
+                           <p>Customer Notes</p>
+                       </md-button>
+                   </md-menu-item>
+                  <md-menu-item ng-if="contact.status == 'Active' ">
                      <md-button ng-click="changeStatus(contact)">
-                        <div layout="row">
+                        
                            <p flex>Inactive</p>
-                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
-                        </div>
+                          <!--  <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
+                        </div> -->
                      </md-button>
-                  </md-menu-item> -->
-                 <!--  <md-menu-item ng-if="contact.status == 'Inactive' ">
+                  </md-menu-item>
+                  <md-menu-item ng-if="contact.status == 'Inactive' ">
                      <md-button ng-click="changeStatus(contact)">
-                        <div layout="row">
+                        
                            <p flex>Active</p>
-                           <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon>
-                        </div>
+                          <!--  <md-icon md-svg-icon="img/ic_print_24px.svg"></md-icon> -->
+                        
                      </md-button>
-                  </md-menu-item> -->
+                  </md-menu-item>
+                  <md-menu-item>
+                       <md-button ng-click="Delete(contact)">
+                          <!--  <md-icon></md-icon> -->
+                           <p>Delete</p>
+                       </md-button>
+                   </md-menu-item>
                </md-menu-content>
             </md-menu>
          </div>
@@ -114,34 +125,40 @@
                </md-input-container>
             </div>
             <md-divider></md-divider>
+           <!--  ng-show="showBilling" -->
             <div ng-show="showBilling" flex>
                <div layout layout-sm="column" layout-margin >
-                  <section-title title = "Billing Address"></section-title>
-                  <md-input-container id="accContainer" flex >
+               <section-title title="Billing Address" >
+                 </section-title>
+                    <div><md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()" style="margin-left:-90px;margin-top:30px;"></div>
+                  
+                  <md-input-container id="accContainer" flex style="margin-top: 30px; margin-left: -15px;">
                      <label>Street</label>
-                     <input id="accNo" ng-model="contact.baddress.street" required ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.baddress.street">
                   </md-input-container>
                </div>
                <div layout layout-sm="column" layout-margin>
-                  <section-title></section-title>
+                   <section-title title="" ></section-title>
                   <md-input-container id="accContainer" flex >
                      <label>City</label>
-                     <input id="accNo" ng-model="contact.baddress.city" ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.baddress.city">
                   </md-input-container>
                   <md-input-container id="accContainer" flex >
                      <label>State</label>
-                     <input id="accNo" ng-model="contact.baddress.state" ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.baddress.state">
                   </md-input-container>
                </div>
                <div layout layout-sm="column" layout-margin>
-                  <section-title></section-title>
+                 
+                   <section-title title="" ></section-title>
+                 
                   <md-input-container id="accContainer" flex >
                      <label>Zip code</label>
-                     <input id="accNo" ng-model="contact.baddress.zip" ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.baddress.zip">
                   </md-input-container>
                   <md-input-container  flex >
                      <label>Country</label>
-                     <md-select ng-model="contact.baddress.country" flex ng-disabled="true">
+                     <md-select ng-model="contact.baddress.country" flex>
                         <md-optgroup label="Country">
                         <md-option value="Maldives">Maldives</md-option>
                         <md-option value="Sri lanka">Sri lanka</md-option>
@@ -149,35 +166,43 @@
                      </md-select>
                   </md-input-container>
                </div>
+              
             </div>
             <div ng-show="showShipping" flex>
                <div layout layout-sm="column" layout-margin >
-                  <section-title title="Shipping Address"></section-title>
-                  <md-input-container id="accContainer" flex >
+               <section-title title="Shipping Address" >
+                 </section-title>
+                    <div><md-icon md-svg-src="img/ic_arrow_drop_down_24px.svg" ng-click="addressChange()" style="margin-left:-70px;margin-top:30px;"></div>
+                  
+                  <md-input-container id="accContainer" flex style="margin-top: 30px; margin-left: -15px;">
                      <label>Street</label>
-                     <input id="accNo" ng-model="contact.saddress.s_street" ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.saddress.s_street">
                   </md-input-container>
                </div>
                <div layout layout-sm="column" layout-margin>
-                  <section-title></section-title>
+                 
+                   <section-title title="" ></section-title>
+                 
                   <md-input-container id="accContainer" flex >
                      <label>City</label>
-                     <input id="accNo" ng-model="contact.saddress.s_city" ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.saddress.s_city">
                   </md-input-container>
                   <md-input-container id="accContainer" flex >
                      <label>State</label>
-                     <input id="accNo" ng-model="contact.saddress.s_state" ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.saddress.s_state">
                   </md-input-container>
                </div>
                <div layout layout-sm="column" layout-margin>
-                  <section-title></section-title>
+                 
+                   <section-title title="" ></section-title>
+                 
                   <md-input-container id="accContainer" flex >
                      <label>Zip code</label>
-                     <input id="accNo" ng-model="contact.saddress.s_zip" ng-disabled="true"> 
+                     <input id="accNo" ng-model="contact.saddress.s_zip">
                   </md-input-container>
                   <md-input-container  flex >
                      <label>Country</label>
-                     <md-select ng-model="contact.saddress.s_country" flex ng-disabled="true">
+                     <md-select ng-model="contact.saddress.s_country" flex>
                         <md-optgroup label="Country">
                         <md-option value="Maldives">Maldives</md-option>
                         <md-option value="Sri lanka">Sri lanka</md-option>

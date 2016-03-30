@@ -17,6 +17,23 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
     s_zip: ""
   };
 
+ $scope.Settings = {};
+
+ var client = $objectstore.getClient("Settings12thdoor");
+    client.onGetMany(function(data) {
+        if (data) {
+            $scope.Settings = data;
+            for (var i = $scope.Settings.length - 1; i >= 0; i--) {
+                if ($scope.Settings[i].profile) {
+                   $scope.contact.adminmail = $scope.Settings[i].profile.adminEmail;
+                    $scope.contact.BaseCurrency = $scope.Settings[i].profile.baseCurrency;
+                }
+              }
+            }
+        });
+    client.onError(function(data) {});
+    client.getByFiltering("*");
+
   $scope.emailExsist = false;
 
   $scope.validateEmail = function(obj){
@@ -58,14 +75,13 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
       if (!$scope.emailExsist) {
           var client = $objectstore.getClient("contact12thdoor");
           client.onComplete(function(data) {
-            $mdDialog.show(
-              $mdDialog.alert()
-              .parent(angular.element(document.body))
-              .content('Customer Registed Successfully Saved.')
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-              .targetEvent(data)
-            );
+           $mdToast.show(
+            $mdToast.simple()
+              .textContent('Customer Successfully Registerd')
+              .position('bottom right')
+              .theme('success-toast')
+              .hideDelay(2000)
+          );
             location.href = '#/home'
           });
           client.onError(function(data) {
@@ -137,7 +153,9 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
       });
   }
 
-  $scope.Customerview = function() {      location.href = '#/home'  }
+  $scope.Customerview = function() {
+    location.href = '#/home'  
+  }
 
   $scope.savebtn = function() {
     $('#save').animate({

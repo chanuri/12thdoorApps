@@ -33,7 +33,7 @@ rasm.service("$commentLog",function(){
 })
 
 rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
-
+	$auth.checkSession();
 	var userName = $auth.getUserName()
 	this.newActivity = function(ActivityTxt,pCode,pNum,callback){
 		var txt = ActivityTxt + userName;
@@ -162,10 +162,9 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 		function bindNewFile(){
 
 			if (scope.btnVisibility) {
-			 	var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Type</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
-
-			  	for (var i = 0; i < filesArray.length; i++) {
-					var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table'>" +
+			 	var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th></tr>";
+				for (var i = 0; i < filesArray.length; i++) {
+					var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td></tr>";
 					filesArray[i].type+ "</td><td class='upload-table'>" +
 					filesArray[i].size +" bytes"+ "</td></tr>";
 					newHtml += tableRow;

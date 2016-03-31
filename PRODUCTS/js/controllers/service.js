@@ -34,7 +34,7 @@ rasm.service("$commentLog",function(){
 
 rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
 
-	var userName = $auth.getSession()
+	var userName = $auth.getUserName()
 	this.newActivity = function(ActivityTxt,pCode,pNum,callback){
 		var txt = ActivityTxt + userName;
 		

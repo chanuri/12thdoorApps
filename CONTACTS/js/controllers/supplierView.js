@@ -1,4 +1,4 @@
-rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state, $objectstore, $location, $mdDialog, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast) {
+rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state,$SupliertNotes, $objectstore, $location, $mdDialog, $window, $objectstore, $auth, $q, $http, $compile, $timeout, $mdToast) {
 
     $scope.suppliers = [];
     $scope.baddress = {};
@@ -7,9 +7,9 @@ rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state, $obj
   $scope.showBilling = true;
   $scope.cb = false;
 
-    // $scope.customerNotes = function(obj){
-    //     $contactNotes.viewNotes(obj,"supplier12thdoor","supplierid")
-    // }
+    $scope.customerNotes = function(obj){
+        $SupliertNotes.viewSuplierNotes(obj,"supplier12thdoor","supplierid")
+    }
 
 
     $scope.changeStatus = function(obj){

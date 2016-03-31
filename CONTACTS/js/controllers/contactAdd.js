@@ -101,7 +101,7 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
           $scope.contact.notes = [];
           var name  ="name" + ( $scope.contact.notes.length + 1 ).toString();
           $scope.contact.notes.push({
-            note : $scope.notes,
+            note : $scope.cnotes,
             height : height[0] + 'px;',
             editable : false,
             idName : name

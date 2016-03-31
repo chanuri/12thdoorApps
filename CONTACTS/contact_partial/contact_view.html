@@ -249,10 +249,16 @@
             <md-divider></md-divider>
              <div layout layout-sm="column" layout-margin>
                <section-title title = "Optional Details"> </section-title>
-               <md-input-container flex>
+               <ul class="divbutton" id="todo-list" style="margin-top:30px;">
+                  <li ng-repeat="nt in contact.notes | orderBy:todo.date" style="padding:10px; margin-left:-48px;" flex>
+                    <!--  <img src="../../img/material alperbert/avatar_tile_h_28.png" /> -->
+                     <font  color="#A9A9A9" >{{nt.note}}</font>
+                  </li>
+               </ul>
+               <!-- <md-input-container flex>
                   <label>Notes</label>
-                  <textarea id="noteTxt" maxlength="200" type="text" ng-repeat="nt in contact.notes" ng-model="nt.note" ng-disabled="true"></textarea>  
-               </md-input-container>
+                  <textarea id="noteTxt" maxlength="200" type="text"  ng-model="nt.note" ng-disabled="true"></textarea>  
+               </md-input-container> -->
             </div>
          </md-content>
       </form>

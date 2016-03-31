@@ -10,7 +10,7 @@
                <div >
                   <label>|</label>
                </div>
-                <div flex="20">
+                <div>
                   <label>{{cus.Email}}</label>
                </div>
                <div   flex>
@@ -94,34 +94,34 @@
             </div >
             
 <!--  -->
-            <div flex style="background-color: #A9A9A9; width: 280px; margin-left: 570px; margin-top:-130px; " flex>
+            <div flex style="background-color: #D0D0D0; width: 280px; margin-left: 570px; margin-top:-130px; " flex>
             <div layout layout-sm="column" layout-margin style="margin-top:10px;" flex>
                <!--  <div flex="10" class="blankspace"></div> -->
                <label><b>Summary</b></label>
             </div>
             <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
                 <div flex="40" class="blankspace"><span>balance B/F</span></div>
-                <div flex="10" class="blankspace"><span>{{bbb|currency:cus.BaseCurrency}}</span></div>
+                <div flex="40" class="blankspace"><span>{{bbb|currency:cus.BaseCurrency}}</span></div>
             </div>
 
             <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
                 <div flex="40" class="blankspace"> <span>Invoices</span></div>
-                <div flex="10" class="blankspace"><span>{{Intotal|currency:cus.BaseCurrency}}</span></div>
+                <div flex="40" class="blankspace"><span>{{Intotal|currency:cus.BaseCurrency}}</span></div>
             </div>
 
              <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
                 <div flex="40" class="blankspace"><span>Credits</span></div>
-                <div flex="10" class="blankspace"><span>{{CredTotal|currency:cus.BaseCurrency}}</span></div>
+                <div flex="40" class="blankspace"><span>{{CredTotal|currency:cus.BaseCurrency}}</span></div>
             </div>
 
             <div layout layout-sm="column" layout-margin style="margin-top:-20px;" flex>
                 <div flex="40" class="blankspace"><span>Payments</span></div>
-                 <div flex="10" class="blankspace"><span>{{PayTotal|currency:cus.BaseCurrency}}</span></div>
+                 <div flex="40" class="blankspace"><span>{{PayTotal|currency:cus.BaseCurrency}}</span></div>
             </div>
 
             <div layout layout-sm="column" layout-margin style="margin-top:-10px;" flex>
                 <div flex="40" class="blankspace"><span><b>Balance Due</b></span></div>
-                 <div flex="10" class="blankspace"><span><b>{{totalBalance|currency:cus.BaseCurrency}}</b></span></div>
+                 <div flex="40" class="blankspace"><span><b>{{totalBalance|currency:cus.BaseCurrency}}</b></span></div>
             </div>
 
             </div>
@@ -151,10 +151,10 @@
                </table>
             </div>
             <div layout layout-sm="column" style="margin-top:30px; " layout-margin  flex>
-              <div flex="55" class="blankspace"></div>
-              <span><b>Balance Due</b></span>
+              <div flex="55" class="blankspace" ></div>
+              <span style="margin-left: 25px;"><b>Balance Due</b></span>
               <div flex="5" class="blankspace"></div>
-              <span><b>{{totalBalance|currency:cus.BaseCurrency}}</b></span>
+              <span style="margin-left: -15px;"><b>{{totalBalance|currency:cus.BaseCurrency}}</b></span>
             </div>
          </md-content>
       </form>

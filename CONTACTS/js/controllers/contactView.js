@@ -48,8 +48,7 @@ $scope.leger = [];
     client.onGetMany(function(data) {
         if (data) {
             $scope.Leger = data;
-            for (var i = data.length - 1; i >= 0; i--) {
-                if(val.customerid == data[i].AccountNo){
+            for (var i = data.length - 1; i >= 0; i--) { 
                     $scope.leger.push(data[i]);
 
                     if(data[i].Type == "Invoice"){
@@ -65,13 +64,12 @@ $scope.leger = [];
                     }
 
                     $scope.totalBalance = parseFloat($scope.Intotal - $scope.PayTotal- $scope.CredTotal);
-
-                }
+ 
             }
         }
     });
     client.onError(function(data) {});
-    client.getByFiltering("*");
+    client.getByFiltering("select * from leger12thdoor where AccountNo = '"+val.customerid+"'");
     }
 
     $scope.changeTab = function(ind) {

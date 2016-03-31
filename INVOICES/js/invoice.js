@@ -87,7 +87,7 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
 //------------APPCtrl starts--------------------------------------------------------------------------------------------------------
 app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
 
-    $auth.checkSession();
+    // $auth.checkSession();
         // console.log($auth.checkSession());
     $scope.list = [];
     $scope.TDinvoice = {};

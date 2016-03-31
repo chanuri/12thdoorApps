@@ -50,7 +50,7 @@
                </md-button>
                <md-menu-content width="4">
                    <md-menu-item>
-                       <md-button ng-click="360(contact)">
+                       <md-button ng-click="360(supplier)">
                            <!-- <md-icon></md-icon> -->
                            <p>360 view</p>
                        </md-button>
@@ -76,7 +76,7 @@
                    </md-menu>
                  </md-menu-item>
                   <md-menu-item>
-                       <md-button ng-click="customerNotes(contact)">
+                       <md-button ng-click="customerNotes(supplier)">
                            <p>Customer Notes</p>
                        </md-button>
                    </md-menu-item>
@@ -97,7 +97,7 @@
                      </md-button>
                      </md-menu-item>
                   <md-menu-item>
-                       <md-button ng-click="Delete(contact)">
+                       <md-button ng-click="Delete(supplier)">
                            <p>Delete</p>
                        </md-button>
                    </md-menu-item>
@@ -231,10 +231,13 @@
             <md-divider></md-divider>
              <div layout layout-sm="column" layout-margin>
                <section-title title = "Optional Details"> </section-title>
-               <md-input-container flex>
-                  <label>Notes</label>
-                  <textarea id="noteTxt" maxlength="200" type="text" ng-repeat="nt in supplier.notes" ng-model="nt.note" ng-disabled="true"></textarea>  
-               </md-input-container>
+               
+               <ul class="divbutton" id="todo-list" style="margin-top:30px;">
+                  <li ng-repeat="nt in supplier.notes | orderBy:todo.date" style="padding:10px; margin-left:-48px;" flex>
+                    <!--  <img src="../../img/material alperbert/avatar_tile_h_28.png" /> -->
+                     <font  color="#A9A9A9" >{{nt.note}}</font>
+                  </li>
+               </ul>
             </div>
          </md-content>
       </form>

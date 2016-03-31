@@ -462,7 +462,7 @@
         function addTOLegger(invoiceID){
             var leggerObj = {            
                 "AccountNo": pim.customerid,
-                "Amount": $scope.payment.total,
+                "Amount": $scope.payment.amountReceived,
                 "Date": new Date(),
                 "Description": "Payment added",
                 "ID": "-999",

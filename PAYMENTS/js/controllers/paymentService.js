@@ -208,7 +208,7 @@ rasm.service('$DownloadPdf',function($filter, $objectstore){
 
                     doc.setFontSize(12);
                     doc.setFontType("normal");
-                    doc.text(155, startHeight,(parseInt(sampleObj[o].amount) - parseInt(sampleObj[o].balance)).toString()); 
+                    doc.text(155, startHeight,(parseFloat(sampleObj[o].amount) - parseFloat(sampleObj[o].balance)).toString()); 
 
                     doc.setFontSize(12);
                     doc.setFontType("normal");

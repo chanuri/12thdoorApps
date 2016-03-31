@@ -161,7 +161,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
                 $scope.latestPaymentId = data[0].paymentid;
                 console.log(data) 
             }else{
-                $scope.latestPaymentId = "0"
+                $scope.latestPaymentId = $scope.viewPyamentArr[0].paymentid
             }        
         });
         // domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' order by auotIncrement desc").skip(0).take(1);

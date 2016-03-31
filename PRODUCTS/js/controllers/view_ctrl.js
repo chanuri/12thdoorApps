@@ -3,77 +3,79 @@ rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$s
 	$scope.UserName = $auth.getSession()
 
 	$scope.ConvertToPdf = function(obj){
+		$DownloadPdf.GetPdf(obj,'download')
 		
-		if (obj.UploadBrochure.val.length == 0) {
-			$mdDialog.show(
-              $mdDialog.alert()
-              .title("Error Loading Brochures")
-              .content("Brochures Are Not Available")
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-            );
-		}else{
-			for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
-				var brochureClient = $objectstore.getClient("productbrochureNew");
-				brochureClient.onGetOne(function(data){
-					if (!isEmpty(data)) {
-						var fileExt = data.FileName.split('.').pop();
-			 			var link = document.createElement("a"); // set up <a> tag
-						var url;
+		// if (obj.UploadBrochure.val.length == 0) {
+		// 	$mdDialog.show(
+  //             $mdDialog.alert()
+  //             .title("Error Loading Brochures")
+  //             .content("Brochures Are Not Available")
+  //             .ariaLabel('Alert Dialog Demo')
+  //             .ok('OK')
+  //           );
+		// }else{
+		// 	for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
+		// 		var brochureClient = $objectstore.getClient("productbrochureNew");
+		// 		brochureClient.onGetOne(function(data){
+		// 			if (!isEmpty(data)) {
+		// 				var fileExt = data.FileName.split('.').pop();
+		// 	 			var link = document.createElement("a"); // set up <a> tag
+		// 				var url;
 
-						if (fileExt  == "pdf" ) {
-							url = 'data:application/pdf;base64,' + data.Body;
-				        }
-						if (fileExt == "docx") {
-							url = 'data:application/msword;base64,' + data.Body;
-						}
+		// 				if (fileExt  == "pdf" ) {
+		// 					url = 'data:application/pdf;base64,' + data.Body;
+		// 		        }
+		// 				if (fileExt == "docx") {
+		// 					url = 'data:application/msword;base64,' + data.Body;
+		// 				}
 
-						link.download = data.FileName;					
-			            link.href = url;
-						document.body.appendChild(link);
-						link.click();
-						document.body.removeChild(link);
-						delete link;			
-					}
-				})
-				brochureClient.onError(function(data){
-					console.log("error loading brochure Data")
-				})
-				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
-			}
-		} 
+		// 				link.download = data.FileName;					
+		// 	            link.href = url;
+		// 				document.body.appendChild(link);
+		// 				link.click();
+		// 				document.body.removeChild(link);
+		// 				delete link;			
+		// 			}
+		// 		})
+		// 		brochureClient.onError(function(data){
+		// 			console.log("error loading brochure Data")
+		// 		})
+		// 		brochureClient.getByKey(obj.UploadBrochure.val[i].name)
+		// 	}
+		// } 
 	}
 	$scope.print = function(obj){
+		$DownloadPdf.GetPdf(obj,'print')
 
-		if (obj.UploadBrochure.val.length == 0) {
-			$mdDialog.show(
-              $mdDialog.alert()
-              .title("Error Loading Brochures")
-              .content("Brochures Are Not Available")
-              .ariaLabel('Alert Dialog Demo')
-              .ok('OK')
-            );
-		}else{
+		// if (obj.UploadBrochure.val.length == 0) {
+		// 	$mdDialog.show(
+  //             $mdDialog.alert()
+  //             .title("Error Loading Brochures")
+  //             .content("Brochures Are Not Available")
+  //             .ariaLabel('Alert Dialog Demo')
+  //             .ok('OK')
+  //           );
+		// }else{
 
-			for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
-				var brochureClient = $objectstore.getClient("productbrochureNew");
-				brochureClient.onGetOne(function(data){
-					if (!isEmpty(data)) {
-						var fileExt = data.FileName.split('.').pop()
-						if (fileExt  == "pdf" ) {
-							var myWindow = window.open("data:application/pdf;base64," + data.Body)
-							myWindow.print(); 
-							myWindow.focus();
-						};
-						if (fileExt == "docx") {window.open("data:application/msword;base64," + data.Body)};					
-					}
-				})
-				brochureClient.onError(function(data){
-					console.log("error loading brochure Data")
-				})
-				brochureClient.getByKey(obj.UploadBrochure.val[i].name)
-			}			
-		}
+		// 	for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
+		// 		var brochureClient = $objectstore.getClient("productbrochureNew");
+		// 		brochureClient.onGetOne(function(data){
+		// 			if (!isEmpty(data)) {
+		// 				var fileExt = data.FileName.split('.').pop()
+		// 				if (fileExt  == "pdf" ) {
+		// 					var myWindow = window.open("data:application/pdf;base64," + data.Body)
+		// 					myWindow.print(); 
+		// 					myWindow.focus();
+		// 				};
+		// 				if (fileExt == "docx") {window.open("data:application/msword;base64," + data.Body)};					
+		// 			}
+		// 		})
+		// 		brochureClient.onError(function(data){
+		// 			console.log("error loading brochure Data")
+		// 		})
+		// 		brochureClient.getByKey(obj.UploadBrochure.val[i].name)
+		// 	}			
+		// }
 	}
 	function isEmpty(obj) {
 	    for(var prop in obj) {

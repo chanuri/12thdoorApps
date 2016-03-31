@@ -216,7 +216,7 @@ rasm.directive('fileUpLoadersNew',['$uploader',"$rootScope", "$mdToast",'Product
 	} //end of link
   };
 }]);
-rasm.factory('ProductService',["$rootScope", function($rootScope){
+rasm.factory('ProductService',["$rootScope","$objectstore", function($rootScope,$objectstore){
     
     $rootScope.testArray = [];
     $rootScope.basicinfo = [];
@@ -299,78 +299,113 @@ rasm.factory('ProductService',["$rootScope", function($rootScope){
   
 }]);
 
-rasm.service('$DownloadPdf',function(){
+rasm.service('$DownloadPdf',function($objectstore){
 	this.GetPdf = function(obj,type){
 
-		obj = hasNull(obj); // remove all the null values inside array 
-
-		var FullTags = "";
-		if(obj.tags.length > 0){
-			for (i = 0; i < obj.tags.length; i++) {
-				FullTags = FullTags + ' ' + obj.tags[i];
-			}			
-		}
+		obj = hasNull(obj); // remove all the null values inside array 		
+		
 
 		var doc = new jsPDF();
 		doc.setFillColor(182, 182, 182);
-		doc.rect(20, 13, 80, 10, 'F');
+		doc.rect(120, 13, 80, 10, 'F');
 		doc.setFontSize(18);
-		doc.text(40, 20, obj.Productname);
-		doc.setFontSize(14);
-		doc.text(20, 30, obj.description);
-		doc.setFontSize(14);
-		doc.text(20, 40, 'Product Code');
-		doc.setFontSize(14);
-		doc.text(60, 40, obj.ProductCode);
-		doc.setFontSize(14);
-		doc.text(20, 50, 'Default UOM');
-		doc.setFontSize(14);
-		doc.text(60, 50,'month');
-		doc.setFontSize(14);
-		doc.text(20, 60, 'Description');
-		doc.setFontSize(14);
-		doc.text(60, 60, obj.description);
-		doc.setFontSize(14);
-		doc.text(20, 70, 'Price (with tax)');
-		doc.setFontSize(14);
-		doc.text(60, 70, obj.productprice);
-		doc.setFontSize(14);
-		doc.text(20, 80, 'Tax');
-		doc.setFontSize(14);
-		doc.text(60, 80, obj.producttax);
-		doc.setFontSize(14);
-		doc.text(20, 90, 'Cost');
-		doc.setFontSize(14);
-		doc.text(60, 90, obj.costprice);
-		doc.setFontSize(14);
-		doc.text(20, 100, 'Brand');
-		doc.setFontSize(14);
-		doc.text(60, 100, obj.brand);
-		doc.setFontSize(14);
-		doc.text(20, 110, 'Category');
-		doc.setFontSize(14);
-		doc.text(60, 110, obj.ProductCategory);
-		doc.setFontSize(14);
-		doc.text(20, 120, 'Track');
-		doc.setFontSize(14);
-		doc.text(60, 120, obj.inventory);
-		doc.setFontSize(14);
-		doc.text(20, 130, 'Stock');
-		doc.setFontSize(14);
-		doc.text(60, 130, obj.stocklevel);
-		doc.setFontSize(14);
-		doc.text(20, 150, 'Tags');
-		doc.setFontSize(14);
-		doc.text(60, 150, FullTags);
+		doc.text(160, 20, obj.Productname);
 
-	    if (type == 'print') {
-	      doc.output('dataurlnewwindow'); 
-	    }else if (type == 'download') {
-	      doc.save('' + obj.product_code + '.pdf');
-	    }; 		 
-		
+		doc.setFontSize(14);
+		doc.text(120, 30, obj.description);
+
+		doc.setFontSize(14);
+		doc.text(120, 50, 'Product Code');
+		doc.setFontSize(14);
+		doc.text(160, 50, obj.ProductCode);
+		doc.setFontSize(14);
+
+		doc.text(120, 60, 'Default UOM');
+		doc.setFontSize(14);
+		doc.text(160, 60,obj.ProductUnit);
+		doc.setFontSize(14);
+		doc.text(120, 70, 'Price (with tax)');
+		doc.setFontSize(14);
+		doc.text(160, 70, obj.productprice.toString());
+		doc.setFontSize(14);
+
+		doc.text(120, 80, 'Tax');
+		if (obj.producttax != 0) {
+			doc.setFontSize(14);
+			doc.text(160, 80, obj.producttax.taxname);			
+		}
+		doc.setFontSize(14);
+		doc.text(120, 90, 'Cost');
+		doc.setFontSize(14);
+		doc.text(160, 90, obj.costprice.toString());
+		doc.setFontSize(14);
+		doc.text(120, 100, 'Brand');
+		doc.setFontSize(14);
+		doc.text(160, 100, obj.brand);
+		doc.setFontSize(14);
+		doc.text(120, 110, 'Category');
+		doc.setFontSize(14);
+		doc.text(160, 110, obj.ProductCategory);
+		doc.setFontSize(14);
+		doc.text(120, 120, 'Track');
+		doc.setFontSize(14);
+		doc.text(160, 120, obj.inventory);
+		doc.setFontSize(14);
+		doc.text(120, 130, 'Stock');
+		doc.setFontSize(14);
+		doc.text(160, 130, obj.stocklevel.toString());
+		doc.setFontSize(14);
+		doc.text(120, 150, 'Tags');
+		doc.setFontSize(14);
+
+		var tagLength = 150;
+
+		if(obj.tags.length > 0){
+			for (i = 0; i < obj.tags.length; i++) {
+				doc.text(160, tagLength, obj.tags[i]);
+				tagLength += 10
+			}			
+		}
+
+		if (obj.UploadImages.val.length > 0) {
+			var imageClient = $objectstore.getClient("productimagesNew");
+				imageClient.onGetOne(function(data){
+					if (!isEmpty(data)) {
+
+							var fileExt = data.FileName.split('.').pop();
+							var imagebody ="data:image/"+fileExt+";base64," +data.Body
+							console.log(imagebody)		
+            				doc.addImage(imagebody, fileExt.toUpperCase(), 20, 15, 80, 60);    
+					}
+					if (type == 'print') {
+                    	doc.autoPrint();
+				      	doc.output('dataurlnewwindow'); 
+				    }else if (type == 'download') {
+				      	doc.save('' + obj.product_code + '.pdf');
+				    };
+				})
+				imageClient.onError(function(data){
+					console.log("error loading brochure Data")
+				})
+				imageClient.getByKey(obj.UploadImages.val[0].name)
+		}else{
+			if (type == 'print') {
+            	doc.autoPrint();
+		      	doc.output('dataurlnewwindow'); 
+		    }else if (type == 'download') {
+		      	doc.save('' + obj.product_code + '.pdf');
+		    };
+		}
 	}
 });
+
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+    return true;
+}
 rasm.service('$objectstoreAccess', ['$objectstore', '$auth', '$mdDialog'
 	, function ($objectstore, $auth, $mdDialog) {
 		this.LoadAllDetails = function (namespace, callback) {
@@ -480,9 +515,7 @@ rasm.filter('datetime',["$filter", function($filter)
 // pass the array as a parameter and return not null element array 
 function hasNull(target) {
     for (var member in target) {
-    	if (target[member] != null)
-       	   target[member] = target[member].toString();
-        if (target[member] == null)
+        if (target[member] == null || angular.isUndefined(target[member]))
            target[member] = "";
     }
   return target;

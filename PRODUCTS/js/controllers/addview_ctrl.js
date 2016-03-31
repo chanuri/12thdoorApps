@@ -1,4 +1,4 @@
-rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploader", "$mdDialog", "$state","$activityLog", "$mdToast", "$objectstore", "$window", "$rootScope", "$interval", "$location", function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location) {
+rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploader", "$mdDialog", "$state","$activityLog", "$mdToast", "$objectstore", "$window", "$rootScope", "$interval", "$location", "$DownloadPdf", function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location,$DownloadPdf) {
   
 
     $scope.currentPage = 1;
@@ -75,6 +75,13 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
         $scope.ProCustArr.push(CustArr[i]);
       } 
       callback();
+    }
+
+    $scope.downloadPdf = function(obj){
+      $DownloadPdf.GetPdf(obj,'download')
+    }
+    $scope.printPdf = function(obj){
+      $DownloadPdf.GetPdf(obj,'print')
     }
 
     function GetProductBrand(arr,callback){
@@ -366,6 +373,7 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
     $scope.checkAbility = true;
     $scope.checkAbilityproduct = true;
     $scope.products = [];
+
     // $scope.packages=[];
     $scope.loadallarray = [];
     
@@ -605,6 +613,9 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
     }
     $scope.newItems = [];
     $scope.product = {};
+    $scope.product.ProductUnit =""
+    $scope.product.ProductCategory = ""
+    $scope.product.brand = ""
     $scope.SubmitProgress = false;
 
     $scope.submit = function () {

@@ -615,7 +615,9 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
       $scope.product.producttax = {};
       if ($scope.producttax) {
         $scope.product.producttax = JSON.parse($scope.producttax);
-      };
+      }else{
+         $scope.product.producttax = 0
+      }
       //console.log($scope.product.producttax);
 
       if ($scope.product.ProductCode.indexOf('-') === -1) {

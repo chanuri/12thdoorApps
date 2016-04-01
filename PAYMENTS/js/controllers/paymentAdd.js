@@ -687,7 +687,6 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                     $scope.allInvoiceArr[k].commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[y].amount + " Paid"
                                     })                                       
                                 };
                             }

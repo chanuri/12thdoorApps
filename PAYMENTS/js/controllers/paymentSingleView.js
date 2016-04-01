@@ -1,74 +1,89 @@
-rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast,$http,$DownloadPdf) {
+rasm.controller('emailCtrl',function($scope,obj,$objectstore){
+    console.log(obj)
+    $scope.emailTo = [];
+    $scope.emailBcc = [];
+    $scope.emailTo.push({
+        email : obj.cusEmail,
+        value : obj.customer
+    })
+    $scope.ContactDetails = []
+
+    var contactClient = $objectstore.getClient("contact12thdoor");
+    contactClient.onGetMany(function(data){
+        for(i=0; i<=data.length-1; i++){
+            $scope.ContactDetails.push({
+                email : data[i].Email,
+                display : data[i].CustomerFname +" "+ data[i].CustomerLname,
+                value : (data[i].CustomerFname +" "+ data[i].CustomerLname).toLowerCase()
+            })
+        }
+    });
+    contactClient.onError(function(data){
+        console.log("error loading contact details")
+    });
+    contactClient.getByFiltering("select * from contact12thdoor where status = 'Active'")
+
+    $scope.selectedItem = null;
+    $scope.searchText = null;
+    $scope.selectedItemTo = null;
+    $scope.searchTextTo = null;
+
+    $scope.querySearch = querySearch;
+
+    function querySearch(query) {
+        var results = [];
+        for (i = 0, len = $scope.ContactDetails.length; i < len; ++i) {
+            if ($scope.ContactDetails[i].value.indexOf(query.toLowerCase()) != -1) {
+                results.push($scope.ContactDetails[i]);
+            }
+        }
+        return results;
+    }
+
+});
+
+rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast,$http,$DownloadPdf,$mdBottomSheet) {
  
     $scope.viewPyamentArr = [];
     $scope.progressBar = false;
     $scope.maxNumber = 0;
 
+    var jsondata = {
+        "type":"email",
+         "to":"sachila@duosoftware.com",
+         "subject":"Confirmation",
+         "from":"Duo World <12thdoor@duoworld.com>",
+         "Namespace": "com.SLT.space.cargills.com",
+         "TemplateID": "T_Email_GENERAL",
+         "DefaultParams": {
+          "@@CNAME@@": "Kalana",
+          "@@TITLE@@": "Account Creation Confirmation",
+          "@@MESSAGE@@": "The account you created has been verified.",
+          "@@CNAME@@": "Kalana",
+          "@@APPLICATION@@": "E-banks.lk",
+          "@@FOOTER@@": "Copyright 2015",
+          "@@LOGO@@": ""
 
-    $scope.email = function(item){
-
-         var jsondata = {
-            "type":"email",
-             "to":"sachila@duosoftware.com",
-             "subject":"Confirmation",
-             "from":"Duo World <12thdoor@duoworld.com>",
-             "Namespace": "com.SLT.space.cargills.com",
-             "TemplateID": "T_Email_GENERAL",
-             "DefaultParams": {
-              "@@CNAME@@": "Kalana",
-              "@@TITLE@@": "Account Creation Confirmation",
-              "@@MESSAGE@@": "The account you created has been verified.",
-              "@@CNAME@@": "Kalana",
-              "@@APPLICATION@@": "E-banks.lk",
-              "@@FOOTER@@": "Copyright 2015",
-              "@@LOGO@@": ""
-
-             },
-             "CustomParams": {
-              "@@CNAME@@": "Kalana",
-              "@@TITLE@@": "Account Creation Confirmation",
-              "@@MESSAGE@@": "The account you created has been verified.",
-              "@@CNAME@@": "Kalana",
-              "@@FOOTER@@": "Copyright 2015",
-              "@@APPLICATION@@": "E-banks.lk",
-              "@@FOOTER@@": "Copyright 2015", 
-              "@@LOGO@@": ""
-             }
-        }
-
-
-        // $http({
-        //     url : "http://duoworld.duoweb.info:3500/command/notification",
-        //     method : "POST",
-        //     headers :{
-        //         'securityToken' : '459e8ee57fc9feaff874e74fad1556b7',
-        //         'Content-Type': 'application/json; charset=utf-8'
-        //     },
-        //     data : jsondata
-
-        // }).then(function(result){
-        //     console.log(result)
-        // },function(result){
-        //     console.log(result)
-
-        // })
-       
-       
-        console.log(JSON.stringify(jsondata))
-
-        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState === 4) {
-                console.log(xmlhttp.responseText)
+         },
+         "CustomParams": {
+          "@@CNAME@@": "Kalana",
+          "@@TITLE@@": "Account Creation Confirmation",
+          "@@MESSAGE@@": "The account you created has been verified.",
+          "@@CNAME@@": "Kalana",
+          "@@FOOTER@@": "Copyright 2015",
+          "@@APPLICATION@@": "E-banks.lk",
+          "@@FOOTER@@": "Copyright 2015", 
+          "@@LOGO@@": ""
+         }
+    }
+    $scope.emailFunction = function(item){
+        $mdBottomSheet.show({
+            templateUrl: 'payment_partial/paymentEmail.html',
+            controller: "emailCtrl",
+            locals: {
+                obj: item,
             }
-        }
-        xmlhttp.onerror = function(){
-
-        }
-        xmlhttp.open("POST", "http://duoworld.duoweb.info:3500/command/notification", true);
-        xmlhttp.setRequestHeader('securityToken','459e8ee57fc9feaff874e74fad1556b7')
-        xmlhttp.setRequestHeader('Content-Type','application/json')
-        xmlhttp.send("type=email");
+        })
     }
 
     function pdfFuntions(type, item){
@@ -315,6 +330,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
     function removePayment(item,callback){
         var oldStatus = item.paymentStatus;
         item.paymentStatus = "delete";
+        delete item["Comments"];
 
         var deletePayment = $objectstore.getClient("payment");
         deletePayment.onComplete(function(data){
@@ -422,10 +438,13 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
         var amountReceived = parseFloat(item.amountReceived)
         var payDiff;
 
-        item.paymentStatus = "Cancelled";
+        item.paymentStatus = "Cancelled";        
+        delete item["Comments"];
+        
         $scope.progressBar = true;
         if (amountReceived <= advancePayment) {
             $scope.advancePaymentData.uAmount =  advancePayment -  amountReceived; // amount need to reduce from the advence payment  
+            console.log($scope.advancePaymentData)
             savePayment(item,function(status){
                 updateAdvancePayment(item,"cancel");
                 saveToLegger()

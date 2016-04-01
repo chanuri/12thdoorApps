@@ -10,24 +10,29 @@
                </div>
            </md-toolbar> 
            <md-whiteframe class="md-whiteframe-z1" style="background-color:#FFFFFF;" style="overflow-y:auto;">
-           <div layout layout-sm="column" layout-margin >
-                <md-chips ng-model="emailTo" md-autocomplete-snap md-require-match="true" flex>
-                <md-autocomplete
-                  md-selected-item="selectedItem"
-                  md-search-text="searchText"
-                  md-items="item in querySearch(searchText)"
-                  md-item-text="item.display"
-                  placeholder="To">
-                  <span md-highlight-text="searchText">{{item.display}}</span>
-                </md-autocomplete>
-                <md-chip-template>
-                  <span>
-                    <strong>{{$chip.value}}</strong>
-                     <em>({{$chip.email}})</em>
-                  </span>
-                </md-chip-template>
-              </md-chips>
-               </div>
+           
+
+            <div layout layout-sm="column" layout-margin style="margin-top:-30px;">       
+                <md-content class="md-padding" layout="column"  flex>
+                  <md-chips ng-model="emailTo" md-autocomplete-snap md-require-match="true" flex>
+                    <md-autocomplete
+                      md-selected-item="selectedItemTo"
+                      md-search-text="searchTextTo"
+                      md-items="item in querySearch(searchTextTo)"
+                      md-item-text="item.display"
+                      placeholder="To">
+                      <span md-highlight-text="searchTextTo">{{item.display}}</span>
+                    </md-autocomplete>
+                    <md-chip-template>
+                      <span>
+                        <strong>{{$chip.value}}</strong>
+                         <em>({{$chip.email}})</em>
+                      </span>
+                    </md-chip-template>
+                  </md-chips>                           
+                </md-content>
+                </div>
+
 
                <div layout layout-sm="column" layout-margin style="margin-top:-30px;">       
                 <md-content class="md-padding" layout="column"  flex>

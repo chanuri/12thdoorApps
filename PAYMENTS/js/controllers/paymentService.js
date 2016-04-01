@@ -1,6 +1,6 @@
 
 rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
-    $auth.checkSession();
+    // $auth.checkSession();
     var userName = $auth.getUserName()
     this.newActivity = function(ActivityTxt,pCode,callback){
         var txt = ActivityTxt + userName;

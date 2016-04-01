@@ -12,6 +12,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     $scope.checked = true;
     $scope.payment.uAmount = 0;
     $scope.payment.total = 0;
+    $scope.payment.paymentComments = ""
     $scope.nAmount = 0; //initially total amount is 0 (Total Available=nAmount)
     $scope.checkbox = [];
     $scope.payment.paidInvoice = []; //this is where paid invoice details save when u click the checkbox if u uncheck check box it will splice from this array implementation is under checkItem Method.
@@ -22,6 +23,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     $scope.allInvoiceArr = [];
     $scope.maxDate = new Date();
     $scope.submitProgress = false;
+    $scope.receiveRequired = true;
 
 
      $scope.tests = [{
@@ -84,6 +86,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         paymentMethod(data, function() {
             paymentCustArr(data);
         });
+        paymentCurrency(data)
     });
     settingsClient.onError(function(data) {
         console.log("Error retreving the settings data");
@@ -100,6 +103,11 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         }
         callback();
         //console.log($scope.PayArr);
+    }
+
+    function paymentCurrency(arr){
+        $scope.payment.baseCurrency = arr[0].profile.baseCurrency
+        console.log($scope.payment.baseCurrency )
     }
 
     function paymentCustArr(arr) {
@@ -236,8 +244,12 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                 else
                     $scope.nAmount = copyUamount;
                 
-                $scope.advancePaymentExsist = true;           
-            }
+                $scope.advancePaymentExsist = true;
+
+                if ($scope.advancedPayment.uAmount == 0) $scope.receiveRequired = true
+                else $scope.receiveRequired = false;
+            }else $scope.receiveRequired = true
+            
             callback("success")
         });
         paymentClient.onError(function(data) {
@@ -652,7 +664,9 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                     $scope.allInvoiceArr[k].commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[y].amount + " Partially Paid"
+                                        "text": $scope.payment.paidInvoice[y].amount + " of Partial payment done by "+$auth.getUserName(),
+                                        "type" : "Auto",
+                                        "RefID" : $scope.savePaymentId
                                     })
                                     
                                 }else if (parseFloat($scope.payment.paidInvoice[y].balance) == 0) {
@@ -663,7 +677,9 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                     $scope.allInvoiceArr[k].commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[y].amount + " Paid"
+                                        "text": $scope.payment.paidInvoice[y].amount + " of payment done by "+$auth.getUserName(),
+                                        "type" : "Auto",
+                                        "RefID" : $scope.savePaymentId
                                     })                                     
                                 }
                             }else{
@@ -676,8 +692,10 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                     $scope.allInvoiceArr[k].commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[y].amount + " Partially Paid"
-                                    })    
+                                        "text": $scope.payment.paidInvoice[y].amount + " of Partial payment done by "+$auth.getUserName(),
+                                        "type" : "Auto",
+                                        "RefID" : $scope.savePaymentId
+                                    })   
                                     
                                 }else if (parseFloat($scope.payment.paidInvoice[y].balance) == 0) {
                                     console.log($scope.allInvoiceArr[k].invoiceNo + ' Paid' );
@@ -687,7 +705,10 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
                                     $scope.allInvoiceArr[k].commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                    })                                       
+                                        "text": $scope.payment.paidInvoice[y].amount + " of payment done by "+$auth.getUserName(),
+                                        "type" : "Auto",
+                                        "RefID" : $scope.savePaymentId
+                                    })                                     
                                 };
                             }
                         }

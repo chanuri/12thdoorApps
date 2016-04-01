@@ -129,7 +129,7 @@ rasm.service('$DownloadPdf',function($filter, $objectstore){
 
             doc.setFontSize(12);
             doc.setFontType("normal");
-            doc.text(70, 140,obj.comments); 
+            doc.text(70, 140,obj.paymentComments); 
 
             //Address
 
@@ -238,7 +238,7 @@ rasm.service('$DownloadPdf',function($filter, $objectstore){
             doc.text(160, startHeight+ 10, '$'+obj.total.toString()); 
 
 
-            var outStandingPayment = '0.00';
+            var outStandingPayment = 0.00;
 
             var advanceClient = $objectstore.getClient("advancedPayments12thdoor");
             advanceClient.onGetMany(function(data){           
@@ -259,7 +259,7 @@ rasm.service('$DownloadPdf',function($filter, $objectstore){
 
                 doc.setFontSize(12);
                 doc.setFontType("normal");
-                doc.text(160, startHeight + 20,'$'+outStandingPayment.toString()); 
+                doc.text(160, startHeight + 20,'$'+outStandingPayment.toFixed(2).toString()); 
 
                 if (type == 'print'){
                     doc.autoPrint();

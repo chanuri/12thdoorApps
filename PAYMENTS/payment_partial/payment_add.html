@@ -60,7 +60,7 @@
                </md-input-container>
                <md-input-container class="md-block" flex-gt-sm >
                   <label>Amount Received</label>
-                  <input ng-model="payment.amountReceived" required ng-change="netAmount()">
+                  <input ng-model="payment.amountReceived" ng-required="receiveRequired" ng-change="netAmount()">
                </md-input-container>
             </div>
             <div layout-gt-sm="row"> 

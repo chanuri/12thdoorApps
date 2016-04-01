@@ -348,7 +348,9 @@
                 $scope.systemMessage.push({
                     text: "The Invoice was Cancelled by"+$scope.userName,
                     done: false,
-                    date: new Date()
+                    date: new Date(),
+                    type:"Auto",
+                    RefID:obj.invoiceRefNo
                 });
                 for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
                     obj.commentsAndHistory.push($scope.systemMessage[i]);
@@ -490,7 +492,9 @@
                         $scope.systemMessage.push({
                             text: "The Invoice was Deleted by"+$scope.userName,
                             done: false,
-                            date: new Date()
+                            date: new Date(),
+                            type:"Auto",
+                            RefID:deleteform.invoiceRefNo
                         });
 
                         for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
@@ -631,13 +635,23 @@
         }
 
         $scope.add = function() {
-            $rootScope.testArray.val = "";
-            $rootScope.dateArray.val = "";
+            // $rootScope.testArray.val = [];
+            // $rootScope.dateArray.val = [];
             invoiceDetails.removeArray(0, 1);
             location.href = '#/NewInvoice_app';
         }
         $scope.addProfile = function() {
             location.href = '#/NewRecurring_profile';
+        }
+
+        $scope.viewImage = function(obj) {
+            $mdDialog.show({
+                templateUrl: 'Invoicepartials/UploadedFiles.html',
+                controller: 'UploadCtrl',
+                locals: {
+                    item: obj
+                }
+            });
         }
 
         $scope.DemoCtrl2 = function($timeout, $q) {
@@ -832,16 +846,6 @@
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
     }
-        }
-
-        $scope.Totalbalance = function(data){
-            $scope.viewBalance = 0;
-                for (var x = data.MultiDueDAtesArr.length - 1; x >= 0; x--) {
-                     $scope.viewBalance += data.MultiDueDAtesArr[x].balance;
-                 
-                }
-           return $scope.viewBalance;
-        }
 
         var client = $objectstore.getClient("payment");
         client.onGetMany(function(data) {
@@ -871,6 +875,18 @@
             );
         });
         client.getByFiltering("*");
+        }
+
+        $scope.Totalbalance = function(data){
+            $scope.viewBalance = 0;
+                for (var x = data.MultiDueDAtesArr.length - 1; x >= 0; x--) {
+                     $scope.viewBalance += data.MultiDueDAtesArr[x].balance;
+                 
+                }
+           return $scope.viewBalance;
+        }
+
+        
 
         $scope.paydate = [];
 
@@ -1176,7 +1192,9 @@
                 $scope.todos.push({
                     text: todoText.addView,
                     done: false,
-                    date: new Date()
+                    date: new Date(),
+                    type:"Manual",
+                    todoText:todoText.invoiceRefNo
                 });
 
                 var client = $objectstore.getClient("invoice12thdoor");
@@ -1187,14 +1205,6 @@
                 };
                 todoText.addView = "";
                 client.onComplete(function(data) {
-                    $mdDialog.show(
-                        $mdDialog.alert()
-                        .parent(angular.element(document.body))
-                        .content('successfull')
-                        .ariaLabel('')
-                        .ok('OK')
-                        .targetEvent(data)
-                    );
                 });
                 client.onError(function(data) {
                     $mdDialog.show(
@@ -1213,9 +1223,22 @@
         };
 
 
-        // $scope.deleteComments = function(index){
-        //   $scope.testarr.splice( $scope.testarr.indexOf(index), 1 );
-        // }
+        $scope.deleteNote = function(val,index){
+          val.commentsAndHistory.splice( val.commentsAndHistory.indexOf(index), 1 );
+
+          var noteClient = $objectstore.getClient("invoice12thdoor");
+
+          val.invoiceNo = val.invoiceNo.toString();
+           
+            noteClient.onComplete(function(data){
+                console.log("successfully Delete one"); 
+            });
+            noteClient.onError(function(data){
+                console.log("error adding new note")
+                val.notes.splice(index, 0, item);
+            });
+            noteClient.insert(val,{ KeyProperty: "invoiceNo"})
+        }
 
 
     }); //END OF viewCtrl

@@ -82,7 +82,59 @@ var app = angular.module('mainApp', ['ngMaterial', 'directivelibrary', '12thdire
                 templateUrl: 'Invoicepartials/viewRecurringProfile.html',
                 controller: 'ViewRecurring'
             })
-    })
+    });
+app.config(function($mdThemingProvider){
+
+    $mdThemingProvider.definePalette('12thDoorPrimary', {
+        '50': '235B91',
+        '100': '235B91',
+        '200': '235B91',
+        '300': '235B91',
+        '400': '235B91',
+        '500': '235B91',
+        '600': '235B91',
+        '700': '235B91',
+        '800': '235B91',
+        '900': '235B91',
+        'A100': '235B91',
+        'A200': '235B91',
+        'A400': '235B91',
+        'A700': '235B91',
+        'contrastDefaultColor': 'light',          
+        'contrastDarkColors': ['50', '100',
+         '200', '300', '400', 'A100'],
+        'contrastLightColors': undefined  
+
+    });
+
+    $mdThemingProvider.definePalette('12thDoorAccent', {
+        '50': 'ffffff',
+        '100': 'ffffff',
+        '200': 'ffffff',
+        '300': 'ffffff',
+        '400': 'ffffff',
+        '500': 'ffffff',
+        '600': 'ffffff',
+        '700': 'ffffff',
+        '800': 'ffffff',
+        '900': 'ffffff',
+        'A100': 'ffffff',
+        'A200': 'ffffff',
+        'A400': 'ffffff',
+        'A700': 'ffffff',
+        'contrastDefaultColor': 'dark',
+        'contrastDarkColors': ['50', '100',
+         '200', '300', '400', 'A100'],
+        'contrastLightColors': '7c7c7c'
+    });
+
+    $mdThemingProvider.theme('default')
+        .primaryPalette('12thDoorPrimary')
+        .accentPalette('12thDoorAccent')
+        .warnPalette('red');
+
+    $mdThemingProvider.alwaysWatchTheme(true);
+});
 
 //------------APPCtrl starts--------------------------------------------------------------------------------------------------------
 app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
@@ -112,16 +164,24 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
     $scope.roles = [];
     $scope.permission = [];
     $scope.TDinvoice.paymentOptions = [];
-    $rootScope.testArray.val = "";
-    $rootScope.dateArray.val = "";
+    $rootScope.testArray.val = [];
+    $rootScope.dateArray.val = [];
 
     var client = $objectstore.getClient("Settings12thdoor");
     client.onGetMany(function(data) {
         if (data) {
             $scope.Settings = data;
             for (var i = $scope.Settings.length - 1; i >= 0; i--) {
+
+                
                 if($scope.Settings[i].payments){
+                    for (var x = $scope.Settings[i].payments.length - 1; x >= 0; x--) {
+                   if($scope.Settings[i].payments[x].activate == true){
                     $scope.TDinvoice.paymentOptions = $scope.Settings[i].payments;
+                    console.log($scope.Settings[i].payments)
+                   }
+                }
+                    
                 }
                 if ($scope.Settings[i].preference.invoicepref) {
                     $scope.com = $scope.Settings[i].preference.invoicepref.defaultComm;
@@ -1323,7 +1383,7 @@ var userName = $auth.getUserName();
         $scope.imagearray = UploaderService.loadArray();
         if ($scope.imagearray.length > 0) {
             for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-                $uploader.upload("45.55.83.253", "invoiceUploades", $scope.imagearray[indexx]);
+                $uploader.upload("test.12thdoor.com", "invoiceUploades", $scope.imagearray[indexx]);
                 $uploader.onSuccess(function(e, data) {
                     var toast = $mdToast.simple()
                         .content('Successfully uploaded!')
@@ -1349,8 +1409,10 @@ var userName = $auth.getUserName();
         $scope.TDinvoice.DeleteStatus = false;
         $scope.TDinvoice.commentsAndHistory.push({
             done: false,
-            text: "Invoice was created by"+userName,
-            date: new Date()
+            text: "Invoice created by"+" "+userName,
+            date: new Date(),
+            type:"Auto",
+            RefID:$scope.TDinvoice.invoiceRefNo
         });
         $scope.TDinvoice.total = $scope.total;
         $scope.TDinvoice.finalamount = $scope.famount;
@@ -1386,7 +1448,6 @@ var userName = $auth.getUserName();
         if ($rootScope.testArray.val.length > 0) {
             $scope.TDinvoice.UploadImages.val = UploaderService.loadBasicArray();
             client.onComplete(function(data) {
-                // var pinTo = $scope.getToastPosition();
                     $mdToast.show(
                       $mdToast.simple()
                         .textContent('Invoice Successfully Saved')
@@ -1402,10 +1463,10 @@ var userName = $auth.getUserName();
                 });
             });
 
-            client.insert([$scope.TDinvoice], {
+            client.insert($scope.TDinvoice, {
                 KeyProperty: "invoiceNo"
             });
-            leger.insert([$scope.TDleger], {
+            leger.insert($scope.TDleger, {
                 KeyProperty: "ID"
             });
         } else {
@@ -1593,16 +1654,6 @@ var userName = $auth.getUserName();
                         .theme('success-toast')
                         .hideDelay(2000)
                     );
-
-                    // $mdDialog.show(
-                    //     $mdDialog.alert()
-                    //     .parent(angular.element(document.body))
-                    //     .title('')
-                    //     .content('invoice Saved to drafts')
-                    //     .ariaLabel('Alert Dialog Demo')
-                    //     .ok('OK')
-                    //     .targetEvent(data)
-                    // );
                     location.href = '#/invoice_app';
                 });
                 client.onError(function(data) {
@@ -1634,8 +1685,8 @@ var userName = $auth.getUserName();
             });
 
         }, function() {
-            $rootScope.testArray.val = "";
-            $rootScope.dateArray.val = "";
+            $rootScope.testArray.val = [];
+            $rootScope.dateArray.val = [];
             $scope.total = "";
             $scope.famount = "";
             if ($rootScope.selectedItem1 != null) {

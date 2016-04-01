@@ -70,6 +70,7 @@ rasm.controller('AppCtrlAddSuppliers', function($scope, $state, $objectstore, $l
           idName : name
         });
         $scope.supplier.favoritestar = false;
+        $scope.supplier.DeleteStatus = false;
         $scope.supplier.supplierid = "-999";
         $scope.supplier.status = "Active";
         client.insert($scope.supplier, {

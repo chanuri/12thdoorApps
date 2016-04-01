@@ -15,7 +15,10 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         $scope.roles = [];
         $scope.permission = [];
         $scope.AddProd = false;
+
+       
          $scope.userName = $auth.getUserName();
+        
 
         for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
             $rootScope.selctedName = $rootScope.invoiceArray[i].Name;
@@ -134,6 +137,11 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                     $scope.AddProd = true;
                      $scope.payterm = false;
                 }
+                 if ($state.current.name == 'edit'){
+                     if ($rootScope.invoiceArray[i].MultiDueDAtesArr[x].paymentStatus == "Unpaid") {
+                        $scope.AddProd = true;
+                     }
+                    }
             }
         };
 
@@ -168,9 +176,12 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 updatedForm.duedate = $scope.duedate;
                 updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
                 $scope.systemMessage.push({
-                    text: "The Invoice was Edited by"+ $scope.userName,
+                    text: "Invoice Edited by"+ $scope.userName,
                     done: false,
-                    date: new Date()
+                    date: new Date(),
+                    type:"Auto",
+                    RefID:updatedForm.invoiceRefNo
+
                 });
                 for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
                     updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
@@ -216,9 +227,11 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 updatedForm.Startdate = $scope.Startdate;
                 updatedForm.duedate = $scope.duedate;
                 $scope.systemMessage.push({
-                    text: "The Invoice was Edited by"+ $scope.userName,
+                    text: "Invoice Edited by"+ $scope.userName,
                     done: false,
-                    date: new Date()
+                    date: new Date(),
+                    type:"Auto",
+                    RefID:updatedForm.invoiceRefNo
                 });
                 for (var i = $scope.systemMessage.length - 1; i >= 0; i--) {
                     updatedForm.commentsAndHistory.push($scope.systemMessage[i]);
@@ -354,8 +367,10 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                     obj.commentsAndHistory = [];
                     obj.commentsAndHistory.push({
                         done: false,
-                        text: "Invoice was created by"+ $scope.userName,
-                        date: new Date()
+                        text: "Invoice created by"+ $scope.userName,
+                        date: new Date(),
+                        type:"Auto",
+                        RefID:$scope.refNo
                     });
                     obj.invoiceRefNo = $scope.refNo;
                     for (var x = obj.MultiDueDAtesArr.length - 1; x >= 0; x--) {
@@ -890,8 +905,10 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
              updatedForm.commentsAndHistory = [];
             updatedForm.commentsAndHistory.push({
                 done: false,
-                text: "Invoice was created by"+ $scope.userName,
-                date: new Date()
+                text: "Invoice created by"+ $scope.userName,
+                date: new Date(),
+                type:"Auto",
+                RefID:$scope.refNo
             });
             updatedForm.discountAmount = $scope.finalDisc;
             updatedForm.salesTaxAmount = $scope.salesTax;

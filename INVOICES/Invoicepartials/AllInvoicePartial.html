@@ -441,8 +441,17 @@
 
                             <section-title title="Uploaded File Details"> </section-title>
                             <div layout="row" layout-align="center center" flex>
+                            
                                 <div flex="98">
-                                    <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="tdi.UploadImages.val"></md-table>
+                                <ul  style=" width:600px">
+                                <li ng-repeat="item in tdi.UploadImages.val" style=" width:600px">
+                                <span style="height:30px;" color="#A9A9A9" >{{item.name|date}} </span> 
+                                <md-button  type="button"   ng-click="viewImage(item)" style="height:30px;" aria-label="change address" >
+                                  <md-icon md-svg-icon="img/ic_visibility_24px.svg" style="height:20px; width:20px;"></md-icon>
+                                </md-button>
+                                </li>
+                                </ul>
+                                    <!-- <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="tdi.UploadImages.val"></md-table> -->
                                 </div>
                             </div>
                         </div>

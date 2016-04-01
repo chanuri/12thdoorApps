@@ -406,7 +406,9 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount + "of partial payment done by"+userName
+                                        "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+userName,
+                                        "type":"Auto",
+                                        "RefID":$scope.payment.paymentid
                                     }) 
                                     
                                 }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
@@ -415,7 +417,9 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount + " of payment done by"+userName
+                                        "text": $scope.payment.paidInvoice[pay].amount +" " +" of payment done by"+userName,
+                                        "type":"Auto",
+                                        "RefID":$scope.payment.paymentid
                                     })                              
                                 }
 
@@ -428,7 +432,9 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount + "of partial payment done by"+userName
+                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+userName,
+                                    "type":"Auto",
+                                    "RefID":$scope.payment.paymentid
                                 }) 
 
                             }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
@@ -438,7 +444,9 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount + "of payment done by"+userName
+                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of payment done by"+userName,
+                                    "type":"Auto",
+                                    "RefID":$scope.payment.paymentid
                                 })                   
                             }
                         }
@@ -453,10 +461,13 @@
             client.onError(function(data) {
                 console.log("error updating invoice");
             })
-            pim.invoiceNo = pim.invoiceNo.toString();
-            client.insert(pim, {
-                KeyProperty: "invoiceNo"
-            })
+            if(pim.invoiceNo == "-999"){
+                pim.invoiceNo = pim.invoiceRefNo.toString(); 
+            }else{
+               pim.invoiceNo = pim.invoiceNo.toString(); 
+            }
+            
+            client.insert(pim, {KeyProperty: "invoiceNo"})
         }
 
         function addTOLegger(invoiceID){
@@ -486,7 +497,8 @@
     });
     //-------------------------------------------------------------------------------------------------------  
     //------------------------------------------------------------------------------------------------------
-    app.controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService) {
+    app.controller('UploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService,item,$objectstore) {
+        console.log(item)
         $scope.uploadimages = {
             val: []
         };
@@ -495,21 +507,6 @@
         $scope.$on('viewRecord', function(event, args) {
             $scope.uploadimages.val.splice(args, 1);
         });
-        $scope.toggleSearch = false;
-        $scope.headers = [{
-            name: 'Name',
-            field: 'name'
-        }, {
-            name: 'Size',
-            field: 'size'
-        }];
-        $scope.custom = {
-            name: 'bold',
-            size: 'grey'
-        };
-        $scope.sortable = ['name', 'size'];
-        $scope.thumbs = 'thumb';
-        $scope.count = 3;
 
         $scope.AddImage = function() {
             $scope.uploadimages.val = UploaderService.loadBasicArray();
@@ -518,6 +515,22 @@
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
+
+        $scope.FullImage = {};
+        $scope.fileExt = 'png'
+        var client = $objectstore.getClient("invoiceUploades");
+        client.onGetOne(function(data){
+            console.log(data)
+            if (data) {
+                $scope.FullImage = data
+                $scope.fileExt = data.FileName.split('.').pop()
+            }
+
+        });
+        client.onError(function(data){
+            console.log("error loading the image")
+        });
+        client.getByKey(item.name);
     });
     //---------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------

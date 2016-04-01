@@ -23,15 +23,15 @@ rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state,$Supl
 
       var statusClient = $objectstore.getClient("supplier12thdoor");
       statusClient.onComplete(function(data){
-        $mdDialog.show(
-            $mdDialog.alert()
-            .parent(angular.element(document.body))
-            .title('Success')
-            .content('status changed successfully')
-            .ariaLabel('Alert Dialog Demo')
-            .ok('OK')
-            .targetEvent(data)
-        );
+        // $mdDialog.show(
+        //     $mdDialog.alert()
+        //     .parent(angular.element(document.body))
+        //     .title('Success')
+        //     .content('status changed successfully')
+        //     .ariaLabel('Alert Dialog Demo')
+        //     .ok('OK')
+        //     .targetEvent(data)
+        // );
       });
       statusClient.onError(function(data){
           $mdDialog.show(
@@ -81,7 +81,7 @@ rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state,$Supl
           .targetEvent(data)
         );
       });
-      client.getByFiltering("*");
+      client.getByFiltering("select * from supplier12thdoor Where deleteStatus = 'false'");
     };
 
     $scope.updateSupplier = function(updatedform, sid) {} 
@@ -91,5 +91,77 @@ rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state,$Supl
       $scope.showShipping = !$scope.showShipping;
       $scope.showBilling = !$scope.showBilling;
     }
+
+    $scope.exist = false;
+    $scope.SupplierDelete = function(deleteform, ev){
+
+        var client = $objectstore.getClient("leger12thdoor");
+    client.onGetMany(function(data) {
+        if (data) {
+            $scope.Leger = data;
+            for (var i = data.length - 1; i >= 0; i--) {  
+                    if(deleteform.supplierid){
+                        $scope.exist = true;
+                    }
+            }
+        }
+    });
+    client.onError(function(data) {});
+    client.getByFiltering("select * from leger12thdoor where AccountNo = '"+deleteform.supplierid+"'");
+
+        var confirm = $mdDialog.confirm()
+            .parent(angular.element(document.body))
+            .title('')
+            .content('Are You Sure You Want To Delete This Record? This process is not reversible')
+            .ok('Delete')
+            .cancel('Cancel')
+            .targetEvent(ev);
+        $mdDialog.show(confirm).then(function() {
+
+            var client = $objectstore.getClient("supplier12thdoor");
+            deleteform.DeleteStatus = true;
+            deleteform.supplierid =  deleteform.supplierid.toString();
+            if(deleteform.status == "Inactive" && $scope.exist == false){
+               client.onComplete(function(data) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .content('Record Successfully Deleted')
+                    .ariaLabel('')
+                    .ok('OK')
+                    .targetEvent(data)
+                );
+                $state.go($state.current, {}, {
+                    reload: true
+                });
+            }); 
+               client.insert(deleteform, {KeyProperty: "supplierid"});
+           }else{
+            $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .title('')
+                    .content('Unable to delete supplierid due to transactions. Please inactivate to disable for future transactions')
+                    .ariaLabel('Alert Dialog Demo')
+                    .ok('OK')
+                );
+           }
+            
+            client.onError(function(data) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .content('Error Occure while Adding Invoice')
+                    .ariaLabel('')
+                    .ok('OK')
+                    .targetEvent(data)
+                );
+            });
+            
+        }, function() {
+            $mdDialog.hide();
+        });
+    }
+
 
   }) 

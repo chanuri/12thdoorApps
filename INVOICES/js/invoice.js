@@ -177,8 +177,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                 if($scope.Settings[i].payments){
                     for (var x = $scope.Settings[i].payments.length - 1; x >= 0; x--) {
                    if($scope.Settings[i].payments[x].activate == true){
-                    $scope.TDinvoice.paymentOptions = $scope.Settings[i].payments;
-                    console.log($scope.Settings[i].payments)
+                    $scope.TDinvoice.paymentOptions.push($scope.Settings[i].payments[x]);
                    }
                 }
                     
@@ -198,7 +197,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                     $scope.cusF = $scope.Settings[i].preference.invoicepref.CusFiel
 
                     $scope.ShowDiscount = $scope.Settings[i].preference.invoicepref.enableDisscounts;
-                    $rootScope.email = $scope.Settings[i].preference.invoicepref.emailcontent.emailBody;
+                    // $rootScope.email = $scope.Settings[i].preference.invoicepref.emailcontent.emailBody;
 
                     if ($scope.Settings[i].preference.invoicepref.enableDisscounts == true) {
                         $scope.dis = $scope.Settings[i].preference.invoicepref.disscountItemsOption;
@@ -272,6 +271,19 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
     });
     client.onError(function(data) {});
     client.getByFiltering("*");
+
+    var client = $objectstore.getClient("t12thdoorSettingEmailBody");
+        client.onGetMany(function(data) {
+            if (data) {
+               
+               for (var i = data.length - 1; i >= 0; i--) {
+                  $scope.TDinvoice.emailBody = data[i].emailBody;
+               }
+            }
+        });
+        client.onError(function(data) {});
+        client.getByFiltering("*");
+    
 
 
     if ($scope.dis == "SubTotal Items" && $scope.dis == true) {
@@ -414,7 +426,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                 targetEvent: ev,
                 controller: 'UploadCtrl',
                 locals: {
-                    dating: ev
+                    item: ev
                 }
             })
         }
@@ -1428,6 +1440,8 @@ var userName = $auth.getUserName();
         $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
         $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
         $scope.TDinvoice.invoiceNo = "-999";
+        $scope.TDinvoice.taxAmounts = [];
+        $scope.TDinvoice.taxAmounts = $rootScope.taxArr;
         $scope.TDinvoice.UploadImages = {
             val: []
         };

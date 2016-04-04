@@ -6,7 +6,7 @@
                   <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
                 </md-button>
        </div>
-        <md-dialog-content style="width:650px; margin-top:-10px; " >
+        <md-dialog-content style="width:650px;" >
             <div layout layout-sm="column" layout-margin ng-init="recipientCtrl()" >
                         <md-content class="md-padding" layout="column"  flex>
                          <md-chips flex
@@ -24,7 +24,7 @@
                       Please check the email address format {{show}}.
                     </p> 
                     </div> -->
-                        <div layout layout-sm="column"  layout-margin ng-init="bccCtrl()" >
+                        <div layout layout-sm="column"  style="margin-top: -30px;" layout-margin ng-init="bccCtrl()" >
                         <md-content class="md-padding" layout="column"  flex>
                          <md-chips flex
                             ng-model="emailBCCrec"
@@ -49,15 +49,7 @@
                        <md-card style="width:100%">
                        <md-content class="md-padding" layout="column">
                        <md-card-content>
-                       <p>
-                        Dear Customer,<br><br>
-                        Attached Invoice No. {{test.invoiceRefNo}}. <br><br>
-                        To pay or download click on the below link: <br><br>
-                        <a href="http://localhost/12thdoor/12thdoorApps/CUSTOMER%20PORTAL/CustomerPortal.html#/customer_Portal/INo={{test.invoiceRefNo}}">
-                        //http:localhost/12thdoor/invoice.html#/contactView/INo={{test.invoiceRefNo}}</a><br>
-                        <br>Thank you for your business!<br><br>
-                        ABC Company 
-                        </p>
+                       <p>{{test.emailBody}}</p>
                        </md-card-content>
                        </md-content>
                        </md-card>

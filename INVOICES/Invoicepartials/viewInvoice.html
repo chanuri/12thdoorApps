@@ -56,10 +56,10 @@
                   <span style="padding-right: 15px; padding-left: 15px;" > </span> 
                </div>
                <div  style="margin-top:-5px;">
-                  <md-button ng-click="printDetails()" onclick="return printDetails();" style="height:30px;" aria-label="change address" href>
+                  <md-button ng-click="PrintPDF(item)" onclick="return printDetails();" style="height:30px;" aria-label="change address" href>
                      <md-icon md-svg-icon="img/ic_print_24px.svg" style="height:20px; width:20px;"></md-icon>
                   </md-button>
-                  <md-button ng-click="convertpdf(item)" style="height:30px;" aria-label="change address" href>
+                  <md-button ng-click="convertTopdf(item)" style="height:30px;" aria-label="change address" href>
                      <md-icon md-svg-icon="img/ic_file_download_24px.svg" style="height:20px; width:20px;"></md-icon>
                   </md-button>
                   <md-button ng-click="email(item)" style="height:30px;" aria-label="change address" href>
@@ -125,7 +125,7 @@
             </div>
             <md-divider></md-divider>
             <div layout layout-sm="column" style="margin-top:-5px;" layout-margin flex>
-               <img src="img/image1.jpg" style="width:150px; height: 150px; margin-left:50px;">
+               <img src="img/image1.jpg" style="width:250px; height: 200px; margin-left:30px;">
             </div>
             <div layout layout-sm="column" layout-margin flex style="margin-top:-30px;">
                <div flex="10" class="blankspace"></div>
@@ -160,33 +160,38 @@
                <label flex="10">PO</label>
                <label flex="15"> {{item.poNum}}</label>
                <div flex="15" class="blankspace"></div>
-               <label>{{city}}</label>
+               <label>{{city}},{{country}}</label>
             </div>
             <div layout layout-sm="column" layout-margin style="margin-top:-15px;"  flex>
                <div flex="10" class="blankspace"></div>
                <label flex="10">Currency</label>
                <label flex="15">{{item.BaseCurrency}}</label>
                <div flex="15" class="blankspace"></div>
-               <label>{{country}}</label>
+               <label>{{item.Email}}</label>
             </div>
-            <div layout layout-sm="column" layout-margin  flex>
+            <!-- <div layout layout-sm="column" layout-margin style="margin-top:-15px;"  flex>
+               <div flex="55" class="blankspace"></div>
+               <label>{{item.Email}}</label>
+            </div> -->
+            <div layout layout-sm="column" layout-margin style="margin-top:-5px;" flex>
                <div flex="10" class="blankspace"></div>
                <label flex="10">Comments</label>
                <label flex>{{item.comments}}</label>
-               <!-- <div flex="50" class="blankspace"></div> -->
+               <!-- <div flex="15" class="blankspace"></div>
+               <label>{{item.Email}}</label> -->
             </div>
             <div layout layout-sm="column" style="margin-top:30px; " layout-margin  flex>
                <div flex="10" class="blankspace"></div>
                <table >
                   <tr>
-                     <th style="width:350px; border-bottom: 1px solid;text-align: left;" flex>Description</th>
+                     <th style="width:340px; border-bottom: 1px solid;text-align: left;" flex>Description</th>
                      <th style="border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Qty</th>
                      <th style="border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Unit</th>
                      <th style="border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Price</th>
                      <th style="border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Amount</th>
                   </tr>
                   <tr ng-repeat="prod in item.invoiceProducts">
-                     <td style="width:350px;border-bottom: 1px solid;text-align: left;" flex><b>{{prod.Productname}}</b><br>
+                     <td style="width:340px;border-bottom: 1px solid;text-align: left;" flex><b>{{prod.Productname}}</b><br>
                         Optional product line comment- {{prod.olp}}
                      </td>
                      <td style="padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{prod.quantity}}</td>
@@ -202,53 +207,53 @@
                <table>
                   <tr >
                      <td style="padding-top:15px;" flex>Sub Total</td>
-                     <td style="padding-left: 200px; padding-top:15px;" flex>
+                     <td style="padding-left: 170px; padding-top:15px;" flex>
                         {{item.total|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr >
                      <td  style="padding-top:15px;" flex>Discount</td>
-                     <td style="padding-left: 200px; padding-top:15px;" flex>
+                     <td style="padding-left: 170px; padding-top:15px;" flex>
                         {{item.discountAmount|currency:item.BaseCurrency}}
                      </td>
                   </tr>
-                  <tr >
-                     <td style="padding-top:15px;" flex>Tax</td>
-                     <td style="padding-left: 200px; padding-top:15px;" flex>
-                        {{item.salesTaxAmount|currency:item.BaseCurrency}}
+                  <tr ng-repeat="tt in item.taxAmounts">
+                     <td style="padding-top:15px;" flex>{{tt.taxName}}{{tt.rate}}</td>
+                     <td style="padding-left: 170px; padding-top:15px;" flex>
+                        {{tt.salesTax|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr >
                      <td style="padding-top:15px;" flex> Shipping</td>
-                     <td style="padding-left: 200px; padding-top:15px;" flex>
+                     <td style="padding-left: 170px; padding-top:15px;" flex>
                         {{item.shipping|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr >
                      <td style="padding-top:15px;" flex> Total {{item.BaseCurrency}}</td>
-                     <td style="padding-left: 200px; padding-top:15px;" flex>
+                     <td style="padding-left: 170px; padding-top:15px;" flex>
                         {{item.finalamount|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr ng-if="item.termtype != 'multipleDueDates'">
                      <td style="padding-top:15px;" flex> Paid</td>
-                     <td style="padding-left: 200px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr" flex>
+                     <td style="padding-left: 170px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr" flex>
                         {{item.finalamount - ts.balance |currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr style="background-color:#C0C0C0;"  ng-if="item.termtype != 'multipleDueDates'">
                      <td style="padding-top:15px; " flex> <label><b>Balance Due {{item.BaseCurrency}}</b></label></td>
-                     <td style="padding-left: 200px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr"flex><b>{{ts.balance|currency:item.BaseCurrency}}</b></td>
+                     <td style="padding-left: 170px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr"flex><b>{{ts.balance|currency:item.BaseCurrency}}</b></td>
                   </tr>
                   <tr ng-if="item.termtype == 'multipleDueDates'">
                      <td style="padding-top:15px;" flex> Paid</td>
-                     <td style="padding-left: 200px; padding-top:15px;" flex>
+                     <td style="padding-left: 170px; padding-top:15px;" flex>
                         {{item.finalamount - calBalance |currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr style="background-color:#C0C0C0;"  ng-if="item.termtype == 'multipleDueDates'">
                      <td style="padding-top:15px; " flex> <label><b>Balance Due {{item.BaseCurrency}}</b></label></td>
-                     <td style="padding-left: 200px; padding-top:15px;" flex><b>{{calBalance|currency:item.BaseCurrency}}</b></td>
+                     <td style="padding-left: 170px; padding-top:15px;" flex><b>{{calBalance|currency:item.BaseCurrency}}</b></td>
                   </tr>
                </table>
             </div>
@@ -257,7 +262,7 @@
                <label>Payment Options</label>
                <!--  -->
               
-               <img ng-repeat="tt in item.paymentOptions" ng-if="tt.activate == true" src="{{tt.url}}" width="60px" height="60px" style="margin-top:-20px; padding:2px;">
+               <img ng-repeat="tt in item.paymentOptions" src="{{tt.url}}" width="60px" height="60px" style="margin-top:-20px; padding:2px;">
             </div>
             <div layout layout-sm="column" layout-margin  flex>
                <div flex="10" class="blankspace"></div>

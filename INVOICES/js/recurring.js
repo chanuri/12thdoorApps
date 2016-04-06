@@ -1,5 +1,5 @@
 // angular.module('mainApp')
-app.controller('newRecurringCtrl', function($scope, $state,  $auth, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
+app.controller('newRecurringCtrl', function($scope, $state, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
       $scope.list = [];
       $scope.TDinvoice = {};
       $scope.invoicDEtails = {};
@@ -50,11 +50,16 @@ var client = $objectstore.getClient("Settings12thdoor");
          if (data) {
             $scope.Settings = data;
             for (var i = $scope.Settings.length - 1; i >= 0; i--) {
-                if($scope.Settings[i].payments){
-                    // $scope.TDinvoice.paymentOptions = $scope.Settings[i].payments;
-                    $scope.invoicDEtails.paymentOptions = $scope.Settings[i].payments;
 
+                if($scope.Settings[i].payments){
+                    for (var x = $scope.Settings[i].payments.length - 1; x >= 0; x--) {
+                   if($scope.Settings[i].payments[x].activate == true){
+                    $scope.TDinvoice.paymentOptions.push($scope.Settings[i].payments[x]);
+                    $scope.invoicDEtails.paymentOptions.push($scope.Settings[i].payments[x]);
+                   }
                 }
+              }
+
                 if ($scope.Settings[i].preference.invoicepref) {
                     $scope.com = $scope.Settings[i].preference.invoicepref.defaultComm;
                     $scope.note = $scope.Settings[i].preference.invoicepref.defaultNote;
@@ -822,7 +827,8 @@ var client = $objectstore.getClient("Settings12thdoor");
         }
       };
       }
-var userName = $auth.getUserName();
+       $auth.checkSession();
+var userName = $auth.getSession().Name;
          //save invoice details
       $scope.submit = function() {
         $rootScope.invoiceArray.splice($scope.TDinvoice, 1);
@@ -863,9 +869,11 @@ var userName = $auth.getUserName();
           $scope.TDinvoice.status = "Active";
           $scope.TDinvoice.commentsAndHistory=[];
          $scope.TDinvoice.commentsAndHistory.push({
-              done: false,
-              text: "Invoice was created by"+userName,
-              date:new Date()
+            done: false,
+            text: "Profile created by"+" "+userName,
+            date: new Date(),
+            type:"Auto",
+            RefID:$scope.TDinvoice.profileRefName
          });
          $scope.TDinvoice.DeleteStatus = false;
          $scope.TDinvoice.favourite = false;
@@ -908,9 +916,11 @@ var userName = $auth.getUserName();
 
               
          $scope.invoicDEtails.commentsAndHistory.push({
-              done: false,
-              text: "Invoice was created by"+userName,
-              date:new Date()
+            done: false,
+            text: "Invoice created by"+" "+userName,
+            date: new Date(),
+            type:"Auto",
+            RefID:$scope.invoicDEtails.invoiceRefNo
          });
 
           if($scope.TDinvoice.saveOption == "saveAsPending"){

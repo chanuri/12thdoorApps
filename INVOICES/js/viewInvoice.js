@@ -157,7 +157,7 @@
         var vm = this;
         $scope.Makepayment = false;
         $scope.showEdit = true;
-        $scope.userName = $auth.getUserName();
+        $scope.userName = $auth.getSession().Name;
         // ------------------------------------virtual repeat start-----------------
         $scope.toggles = {};
         $scope.toggleOne = function($index) {
@@ -538,10 +538,7 @@
             location.href = '#/invoice_app';
         }
 
-        $scope.printDetails = function() {
-            window.print();
-        }
-
+       
         $scope.EditInvoice = function(InvoItem) {
             invoiceDetails.removeArray(InvoItem, 1);
             invoiceDetails.setArray(InvoItem);
@@ -709,14 +706,14 @@
             }
         });
         client.onError(function(data) {
-            $mdDialog.show(
-                $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .content('There was an error retreving the data.')
-                .ariaLabel('Alert Dialog Demo')
-                .ok('OK')
-                .targetEvent(data)
-            );
+            // $mdDialog.show(
+            //     $mdDialog.alert()
+            //     .parent(angular.element(document.body))
+            //     .content('There was an error retreving the data.')
+            //     .ariaLabel('Alert Dialog Demo')
+            //     .ok('OK')
+            //     .targetEvent(data)
+            // );
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
 
@@ -786,14 +783,14 @@
             }
         });
         client.onError(function(data) {
-            $mdDialog.show(
-                $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .content('There was an error retreving the data.')
-                .ariaLabel('Alert Dialog Demo')
-                .ok('OK')
-                .targetEvent(data)
-            );
+            // $mdDialog.show(
+            //     $mdDialog.alert()
+            //     .parent(angular.element(document.body))
+            //     .content('There was an error retreving the data.')
+            //     .ariaLabel('Alert Dialog Demo')
+            //     .ok('OK')
+            //     .targetEvent(data)
+            // );
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
     }else{
@@ -859,14 +856,6 @@
             }
         });
         client.onError(function(data) {
-            $mdDialog.show(
-                $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .content('There was an error retreving the data.')
-                .ariaLabel('Alert Dialog Demo')
-                .ok('OK')
-                .targetEvent(data)
-            );
         });
         client.getByFiltering("*");
         }
@@ -929,62 +918,7 @@
 
             }
         });
-        // $scope.convertpdf = function(content) {
-        //     html2canvas($("#canvas"), {
-        //     onrendered: function(canvas) {                      
-        //         var imgData = canvas.toDataURL('image/jpeg');              
-        //     options = {
-        //         orientation: "0",
-        //         unit: "mm",
-        //         format: "a4"
-        //     };
-
-        //     var doc = new jsPDF(options, '', '', '');
-        //     doc.addImage(imgData, 'jpeg', 0, 0, 200, 0);
-        //     var corte = 1395; // configura tamanho do corte
-        //     var image = new Image();
-        //     image = Canvas2Image.convertToJPEG(canvas);
-
-        //     var croppingYPosition = corte;
-        //     var count = (image.height)/corte;
-        //     var i =1;
-        //     console.log(image.height)
-        //     while ( i < count) {
-        //             doc.addPage();
-
-        //             var sourceX = 0;
-        //             var sourceY = croppingYPosition;
-        //             var sourceWidth = image.width;
-        //             var sourceHeight = corte;
-        //             var destWidth = sourceWidth;
-        //             var destHeight = sourceHeight;
-        //             var destX = 0;
-        //             var destY = 0;
-        //             var canvas1 = canvas;
-        //             canvas1.setAttribute('height', (image.height)-(corte*i));
-        //             canvas1.setAttribute('width', destWidth);                         
-        //             var ctx = canvas1.getContext("2d");
-        //             ctx.drawImage(image, sourceX, 
-        //                                  sourceY,
-        //                                  sourceWidth,
-        //                                  sourceHeight, 
-        //                                  destX, 
-        //                                  destY, 
-        //                                  destWidth, 
-        //                                  destHeight);
-        //             var image2 = new Image();
-        //             image2 = Canvas2Image.convertToJPEG(canvas1);
-        //             image2Data = image2.src;
-        //             doc.addImage(image2Data, 'JPEG', 0, 0, 200, 0);
-        //             croppingYPosition += destHeight; 
-        //             console.log(croppingYPosition)
-        //             count =  (image.height)/croppingYPosition;
-                             
-        //         } 
-        //         doc.save(content.invoiceNo+'.pdf')                
-        //     }
-        // });
-        // }
+        
         function toDataUrl(url, callback){
             var xhr = new XMLHttpRequest();
             xhr.responseType = 'blob';
@@ -998,236 +932,23 @@
             xhr.open('GET', url);
             xhr.send();
         }
-        $scope.convertTopdf = function(content) {
 
-            toDataUrl('img/image1.jpg', function(base64Img){
-
-                var doc = new jsPDF();
-                doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
-                var proHeight = 132;
-                
-                var newDate = $filter('date')(content.Startdate);
-                console.log(doc.getFontList())
-                doc.setFontSize(20);
-                doc.setFontType("bold");
-                doc.text(30,55,"INVOICE");
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(30,60,"#INV -" + content.invoiceNo.toString());
-
-                doc.setFontSize(12);
-                doc.text(30,77,"Invoice Date");
-                doc.setFontSize(12);
-                doc.text(65,77,newDate);
-              
-                doc.setFontSize(12);
-                doc.text(30,84,"Due Date");
-                doc.setFontSize(12);
-                doc.text(65,84,content.termtype);
-
-                doc.setFontSize(12);
-                doc.text(30,91,"PO");                
-                doc.setFontSize(12);
-                doc.text(65,91,content.poNum);
-
-                doc.setFontSize(12);
-                doc.text(30,98,"Currency"); 
-                // doc.setFontSize(12);
-                // doc.text(65,98,content.BaseCurrency);
-
-                doc.setFontSize(12);
-                doc.text(30,110,"Comments");
-                doc.setFontSize(12);
-                doc.text(65,110,content.comments);
-
-                //Address Details
-
-                var Address = content.billingAddress.split(',');
-                var street = Address[0];
-                var city = Address[1] + Address[3];
-                var country = Address[2] + Address[4];
-
-                doc.setFontSize(12);
-                doc.text(127, 70,"To:");
-
-                doc.setFontSize(12);
-                doc.text(127, 77, content.Name);
-
-                doc.setFontSize(12);
-                doc.text(127, 84, street);
-
-                doc.setFontSize(12);
-                doc.text(127, 91, city + "," +country);
-
-                // doc.setFontSize(12);
-                // doc.text(125, 120, country);
-
-                doc.setFontSize(12);
-                doc.text(127, 98, content.Email);
-
-                //Product Table headers
-
-                doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(30,125,"Description");
-
-                doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(110,125,"Qty");
-
-                 doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(130,125,"Unit");
-
-                doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(150,125,"Price");
-
-                doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(170,125,"Amount");
-
-                doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(30, 125,"___________________________________________________________________"); 
-
-                for(pp=0; pp<= content.invoiceProducts.length-1; pp++){
-
-                    doc.setFontSize(12);
-                    doc.setFontType("normal");
-                    doc.text(30,proHeight,content.invoiceProducts[pp].Productname);
-
-                    doc.setFontSize(12);
-                    doc.setFontType("normal");
-                    doc.text(30,proHeight+5,"Optional product line comment-");
-
-                    doc.setFontSize(12);
-                    doc.setFontType("normal");
-                    doc.text(110,proHeight, content.invoiceProducts[pp].quantity.toString());
-
-                    doc.setFontSize(12);
-                    doc.setFontType("normal");
-                    doc.text(130,proHeight,content.invoiceProducts[pp].ProductUnit);
-
-                    doc.setFontSize(12);
-                    doc.setFontType("normal");
-                    doc.text(150,proHeight,content.invoiceProducts[pp].price.toString());
-
-                    doc.setFontSize(12);
-                    doc.setFontType("normal");
-                    doc.text(170,proHeight,content.invoiceProducts[pp].amount.toString());
-
-                    doc.setFontSize(12);
-                    doc.setFontType("normal");
-                    doc.text(30, proHeight +  10 ,"___________________________________________________________________"); 
-                    proHeight += 20;
-                }
-
-                 var balance = 0;
-                    var paid = 0;
-               
-               for (var i = content.MultiDueDAtesArr.length - 1; i >= 0; i--) {
-                   balance += content.MultiDueDAtesArr[i].balance;
-               }
-               paid = balance - content.finalamount;
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(93, proHeight + 10,"Sub Total"); 
-                doc.setFontSize(12);
-                doc.text(170, proHeight + 10, content.total.toString()); 
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(93, proHeight + 20,"Discount");
-                doc.setFontSize(12);
-                doc.text(170, proHeight + 20, content.fdiscount.toString()); 
-
-                var taxHeight = proHeight + 30;
-
-                for(x=0; x<= content.taxAmounts.length-1; x++){
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(93,taxHeight , content.taxAmounts[x].taxName + content.taxAmounts[x].rate +"%" );
-                 doc.setFontSize(12);
-                doc.text(170, taxHeight, content.taxAmounts[x].salesTax.toString()); 
-
-                taxHeight += 10;
-                }
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(93, taxHeight + 5,"Shipping");
-                doc.setFontSize(12);
-                doc.text(170, taxHeight + 5, content.shipping.toString()); 
-
-                doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(93, taxHeight + 15,"Total" + content.BaseCurrency);
-                doc.setFontSize(12);
-                doc.text(170, taxHeight + 15, content.finalamount.toString()); 
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(93, taxHeight + 25,"Paid");
-                doc.setFontSize(12);
-                doc.text(170, taxHeight + 25, paid.toString());
-
-                doc.setFillColor(182, 182, 182);
-                doc.rect(90, taxHeight + 30, 100, 10, 'F');
-
-                doc.setFontSize(12);
-                doc.setFontType("bold");
-                doc.text(93, taxHeight + 35,"Balance Due");
-                doc.setFontSize(12);
-                doc.text(170, taxHeight + 35, balance.toString());
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(30, taxHeight + 45, "Payment Options");
-
-                var payHeight = taxHeight + 45;
-                for (var i = 0; i<= content.paymentOptions.length - 1; i++) {
-                doc.setFontSize(12);
-                doc.text(50, payHeight, content.paymentOptions[i].url);
-                    payHeight += 10;
-                }
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(30, payHeight + 5, content.notes);
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(30, payHeight + 15, "Any damages must be noticed upon reciept of goods");
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(30, payHeight + 22, "GST Registration No:1231564878");
-
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(30, payHeight + 29, "PST Registration No:1231564878");
-
-
-                doc.save('' + 'aaaaa' + '.pdf');
-                // doc.autoPrint();
-                // doc.output('dataurlnewwindow');
-            })
-
+        function hasNull(target) {
+            for (var member in target) {
+                if (target[member] == null)
+                   target[member] = "";
+            }
+          return target;
         }
 
-        $scope.PrintPDF = function(content){
+        $scope.convertTopdf = function(content) {
+            content = hasNull(content);
             toDataUrl('img/image1.jpg', function(base64Img){
-
-                var doc = new jsPDF();
+            var doc = new jsPDF();
                 doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
                 var proHeight = 132;
 
                 var newDate = $filter('date')(content.Startdate);
-                console.log(doc.getFontList())
                 doc.setFontSize(20);
                 doc.setFontType("bold");
                 doc.text(30,55,"INVOICE");
@@ -1247,14 +968,18 @@
                 doc.text(65,84,content.termtype);
 
                 doc.setFontSize(12);
-                doc.text(30,91,"PO");                
+                   doc.text(30,91,"PO");
+                if(content.poNum){                
+                   doc.setFontSize(12);
+                   doc.text(65,91,content.poNum);  
+                }
+                
                 doc.setFontSize(12);
-                doc.text(65,91,content.poNum);
-
-                doc.setFontSize(12);
-                doc.text(30,98,"Currency"); 
-                // doc.setFontSize(12);
-                // doc.text(65,98,content.BaseCurrency);
+                doc.text(30,98,"Currency");
+                if (content.BaseCurrency) {                    
+                    doc.setFontSize(12);
+                    doc.text(65,98,content.BaseCurrency);
+                }
 
                 doc.setFontSize(12);
                 doc.text(30,110,"Comments");
@@ -1342,6 +1067,11 @@
                     doc.setFontType("normal");
                     doc.text(30, proHeight +  10 ,"___________________________________________________________________"); 
                     proHeight += 20;
+
+                    if (proHeight > 272) {
+                        doc.addPage()
+                        proHeight = 10
+                    }
                 }
 
                     var balance = 0;
@@ -1372,7 +1102,8 @@
                 doc.setFontType("normal");
                 doc.text(93,taxHeight , content.taxAmounts[x].taxName + content.taxAmounts[x].rate +"%" );
                  doc.setFontSize(12);
-                doc.text(170, taxHeight, content.taxAmounts[x].salesTax.toString()); 
+                 var salesTax = content.taxAmounts[x].salesTax.toFixed(2) 
+                doc.text(170, taxHeight,salesTax.toString()); 
 
                 taxHeight += 10;
                 }
@@ -1396,7 +1127,246 @@
                 doc.text(170, taxHeight + 25, paid.toString());
 
                 doc.setFillColor(192, 192, 192);
-                doc.rect(90, taxHeight + 30, 120, 10, 'F');
+                doc.rect(90, taxHeight + 30, 100, 10, 'F');
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(93, taxHeight + 35,"Balance Due");
+                doc.setFontSize(12);
+                doc.text(170, taxHeight + 35, balance.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, taxHeight + 50, "Payment Options");
+
+                var payHeight = taxHeight + 50;
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, payHeight + 10, content.notes);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, payHeight + 15, "Any damages must be noticed upon reciept of goods");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, payHeight + 22, "GST Registration No:1231564878");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, payHeight + 29, "PST Registration No:1231564878");
+
+                if (content.paymentOptions) {
+                    var arrLength = content.paymentOptions.length - 1;
+                    var count = 0;
+                    var imageXaxsis = 65
+                    for (var i = 0; i<= content.paymentOptions.length - 1; i++) {
+                    doc.setFontSize(12);
+                        toDataUrl(content.paymentOptions[i].url, function(pImage){
+                        // doc.text(50, payHeight, content.paymentOptions[i].url);
+                            doc.addImage(pImage, 'PNG', imageXaxsis, payHeight-10, 20, 20);
+                            if (count == arrLength) {
+                                doc.save(content.invoiceNo.toString()+'.pdf');
+                                console.log(count+' == '+ arrLength)
+                            }                           
+                            count += 1;
+                            imageXaxsis += 20;
+                        })
+
+                    }
+                }else{
+                    doc.save(content.invoiceNo.toString()+'.pdf');
+                }                
+            })
+
+        }
+
+        $scope.PrintPDF = function(content){
+            content = hasNull(content);
+            toDataUrl('img/image1.jpg', function(base64Img){
+
+                var doc = new jsPDF();
+                doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
+                var proHeight = 132;
+
+                var newDate = $filter('date')(content.Startdate);
+                doc.setFontSize(20);
+                doc.setFontType("bold");
+                doc.text(30,55,"INVOICE");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,60,"#INV -" + content.invoiceNo.toString());
+
+                doc.setFontSize(12);
+                doc.text(30,77,"Invoice Date");
+                doc.setFontSize(12);
+                doc.text(65,77,newDate);
+              
+                doc.setFontSize(12);
+                doc.text(30,84,"Due Date");
+                doc.setFontSize(12);
+                doc.text(65,84,content.termtype);
+
+                doc.setFontSize(12);
+                doc.text(30,91,"PO");
+                if(content.poNum){                  
+                   doc.setFontSize(12);
+                   doc.text(65,91,content.poNum);  
+                }
+                
+                doc.setFontSize(12);
+                doc.text(30,98,"Currency"); 
+                if (content.BaseCurrency) {
+                    doc.setFontSize(12);
+                    doc.text(65,98,content.BaseCurrency);
+                }
+
+                doc.setFontSize(12);
+                doc.text(30,110,"Comments");
+                doc.setFontSize(12);
+                doc.text(65,110,content.comments);
+
+                //Address Details
+
+                var Address = content.billingAddress.split(',');
+                var street = Address[0];
+                var city = Address[1] + Address[3];
+                var country = Address[2] + Address[4];
+
+                doc.setFontSize(12);
+                doc.text(127, 70,"To:");
+
+                doc.setFontSize(12);
+                doc.text(127, 77, content.Name);
+
+                doc.setFontSize(12);
+                doc.text(127, 84, street);
+
+                doc.setFontSize(12);
+                doc.text(127, 91, city + "," +country);
+
+                doc.setFontSize(12);
+                doc.text(127, 98, content.Email);
+
+                //Product Table headers
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(30,125,"Description");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(110,125,"Qty");
+
+                 doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(130,125,"Unit");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(150,125,"Price");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(170,125,"Amount");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(30, 125,"___________________________________________________________________"); 
+
+                for(pp=0; pp<= content.invoiceProducts.length-1; pp++){
+
+                    doc.setFontSize(12);
+                    doc.setFontType("normal");
+                    doc.text(30,proHeight,content.invoiceProducts[pp].Productname);
+
+                    doc.setFontSize(12);
+                    doc.setFontType("normal");
+                    doc.text(30,proHeight+5,"Optional product line comment-");
+
+                    doc.setFontSize(12);
+                    doc.setFontType("normal");
+                    doc.text(110,proHeight, content.invoiceProducts[pp].quantity.toString());
+
+                    doc.setFontSize(12);
+                    doc.setFontType("normal");
+                    doc.text(130,proHeight,content.invoiceProducts[pp].ProductUnit);
+
+                    doc.setFontSize(12);
+                    doc.setFontType("normal");
+                    doc.text(150,proHeight,content.invoiceProducts[pp].price.toString());
+
+                    doc.setFontSize(12);
+                    doc.setFontType("normal");
+                    doc.text(170,proHeight,content.invoiceProducts[pp].amount.toString());
+
+                    doc.setFontSize(12);
+                    doc.setFontType("normal");
+                    doc.text(30, proHeight +  10 ,"___________________________________________________________________"); 
+                    proHeight += 20;
+
+                    if (proHeight > 272) {
+                        doc.addPage()
+                        proHeight = 10
+                    }
+                }
+
+                    var balance = 0;
+                    var paid = 0;
+               
+               for (var i = content.MultiDueDAtesArr.length - 1; i >= 0; i--) {
+                   balance += content.MultiDueDAtesArr[i].balance;
+               }
+               paid = balance - content.finalamount;
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(93, proHeight + 10,"Sub Total"); 
+                doc.setFontSize(12);
+                doc.text(170, proHeight + 10, content.total.toString()); 
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(93, proHeight + 20,"Discount");
+                doc.setFontSize(12);
+                doc.text(170, proHeight + 20, content.fdiscount.toString()); 
+
+                var taxHeight = proHeight + 30;
+
+                for(x=0; x<= content.taxAmounts.length-1; x++){
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(93,taxHeight , content.taxAmounts[x].taxName + content.taxAmounts[x].rate +"%" );
+                 doc.setFontSize(12);
+                 var salesTax = content.taxAmounts[x].salesTax.toFixed(2) 
+                doc.text(170, taxHeight,salesTax.toString()); 
+
+                taxHeight += 10;
+                }
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(93, taxHeight + 5,"Shipping");
+                doc.setFontSize(12);
+                doc.text(170, taxHeight + 5, content.shipping.toString()); 
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(93, taxHeight + 15,"Total" + content.BaseCurrency);
+                doc.setFontSize(12);
+                doc.text(170, taxHeight + 15, content.finalamount.toString()); 
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(93, taxHeight + 25,"Paid");
+                doc.setFontSize(12);
+                doc.text(170, taxHeight + 25, paid.toString());
+
+                doc.setFillColor(192, 192, 192);
+                doc.rect(90, taxHeight + 30, 100, 10, 'F');
 
                 doc.setFontSize(12);
                 doc.setFontType("bold");
@@ -1409,11 +1379,11 @@
                 doc.text(30, taxHeight + 45, "Payment Options");
 
                 var payHeight = taxHeight + 45;
-                for (var i = 0; i<= content.paymentOptions.length - 1; i++) {
-                doc.setFontSize(12);
-                doc.text(50, payHeight, content.paymentOptions[i].url);
-                    payHeight += 10;
-                }
+                // for (var i = 0; i<= content.paymentOptions.length - 1; i++) {
+                // doc.setFontSize(12);
+                // doc.text(50, payHeight, content.paymentOptions[i].url);
+                //     payHeight += 10;
+                // }
 
                 doc.setFontSize(12);
                 doc.setFontType("normal");
@@ -1431,10 +1401,31 @@
                 doc.setFontType("normal");
                 doc.text(30, payHeight + 29, "PST Registration No:1231564878");
                 
+               if (content.paymentOptions) {
+                    var arrLength = content.paymentOptions.length - 1;
+                    var count = 0;
+                    var imageXaxsis = 65
+                    for (var i = 0; i<= content.paymentOptions.length - 1; i++) {
+                    doc.setFontSize(12);
+                        toDataUrl(content.paymentOptions[i].url, function(pImage){
+                        // doc.text(50, payHeight, content.paymentOptions[i].url);
+                            doc.addImage(pImage, 'PNG', imageXaxsis, payHeight-10, 20, 20);
+                            if (count == arrLength) {
+                                //doc.save(content.invoiceNo.toString()+'.pdf');
 
-                // doc.save('' + 'aaaaa' + '.pdf');
-                doc.autoPrint();
-                doc.output('dataurlnewwindow');
+                                 doc.autoPrint();
+                                doc.output('dataurlnewwindow');
+                                console.log(count+' == '+ arrLength)
+                            }                           
+                            count += 1;
+                            imageXaxsis += 20;
+                        })
+
+                    }
+                }else{
+                    doc.save(content.invoiceNo.toString()+'.pdf');
+                }    
+               
             })
         }
 

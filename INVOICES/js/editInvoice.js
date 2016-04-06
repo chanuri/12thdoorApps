@@ -17,7 +17,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         $scope.AddProd = false;
 
        
-         $scope.userName = $auth.getUserName();
+         $scope.userName =$auth.getSession().Name;
         
 
         for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
@@ -160,7 +160,12 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
 
 //--------------------------------EDIT----------------------------------------------------------------------------
         $scope.edit = function(updatedForm) {
-            updatedForm.invoiceNo = updatedForm.invoiceNo.toString();
+            if(updatedForm.invoiceNo == "-999"){
+                updatedForm.invoiceNo = updatedForm.invoiceRefNo.toString();  
+            }else{
+              updatedForm.invoiceNo = updatedForm.invoiceNo.toString();  
+            }
+            
             for (var x = updatedForm.MultiDueDAtesArr.length - 1; x >= 0; x--) {
                 console.log(updatedForm.MultiDueDAtesArr[x])
                 $scope.status = updatedForm.MultiDueDAtesArr[x].paymentStatus;
@@ -415,7 +420,8 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                         .targetEvent(data)
                     );
                 });
-                draftdelete.deleteSingle(obj.invoiceNo.toString(), "invoiceNo");
+                // draftdelete.deleteSingle(obj.invoiceNo.toString(), "invoiceNo");
+                draftdelete.deleteSingle({ "invoiceNo":obj.invoiceNo.toString() }, "invoiceNo");
             }, function() {
                 $mdDialog.hide();
             });

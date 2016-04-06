@@ -524,6 +524,7 @@ app.controller('ViewRecurring', function($scope, $mdDialog, $objectstore, $state
                 $rootScope.calculateCompound = [];
                 $rootScope.falseComp = [];
                 $rootScope.trueComp = [];
+                $rootScope.getFamount = 0;
 
                 if (obj.tax != null) {
                     if (obj.tax.type == "individualtaxes") {

@@ -140,7 +140,7 @@ app.config(function($mdThemingProvider){
 app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
 
     $auth.checkSession();
-        // console.log($auth.checkSession());
+    //     console.log($auth.getSession().Name);
     $scope.list = [];
     $scope.TDinvoice = {};
     $scope.Settings = {};
@@ -155,6 +155,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
     $scope.ShippingSwitch = false;
     $scope.TDinvoice.fdiscount = 0;
     $scope.TDinvoice.salesTaxAmount = 0;
+    $rootScope.famount = 0;
     $scope.TDinvoice.anotherTax = 0;
     $scope.TDinvoice.shipping = 0;
     $scope.AllTaxes = [];
@@ -467,7 +468,7 @@ $scope.ll = [];
     })
 //------------------pops a dialog box which enble the user to add Multiple du dates--------------------------------
     $scope.MultiDuDates = function(data) {
-        if ($rootScope.famount == 0) {
+        if ($rootScope.testArray.val.length == 0) {
             $mdDialog.show(
                 $mdDialog.alert()
                 .parent(angular.element(document.body))
@@ -1377,7 +1378,7 @@ $scope.ll = [];
     };
   $scope.toastPosition = angular.extend({},last);
 
-var userName = $auth.getUserName();
+var userName = $auth.getSession().Name;
     //save invoice details
     $scope.submit = function() {
         if ($scope.TDinvoice.termtype != "multipleDueDates") {

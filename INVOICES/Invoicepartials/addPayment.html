@@ -7,7 +7,7 @@
 <md-dialog style="max-width:960px;" arial-label="add produst">
         <md-toolbar  class="modal-header">
             <div class="md-toolbar-tools">
-                <h2>Enter Payment for Invoice {{pay.invoiceNo}}</h2>
+                <h2>Enter Payment for Invoice {{pay.invoiceRefNo}}</h2>
                 <span flex></span>
                 <md-button href class="md-icon-button" ng-click="cancel()">
                     <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
@@ -78,9 +78,9 @@
                            <div flex >
                               <label style="font-size: 12px;"><b>Date</b></label>
                            </div>
-                           <div flex>
+                           <!-- <div flex>
                               <label style="font-size: 12px;"><b>Invoice no</b></label>
-                           </div>
+                           </div> -->
                            <div flex >
                               <label style="font-size: 12px;"><b>Due date</b></label> 
                            </div>
@@ -114,14 +114,14 @@
                                 <label style="font-size: 12px;">{{invo.duedate|date}}</label>
                               </div>
                            </div>
-                           <div layout-sm="row" flex>
+                          <!--  <div layout-sm="row" flex>
                               <div flex-sm="25" hide-gt-sm>
                                 <label style="font-size: 12px;"><b>Invoice no</b></label>
                               </div>
                               <div flex>
                                  <label  style="font-size: 12px;">{{invo.invono}}</label>
                               </div>
-                           </div>
+                           </div> -->
                            <div layout-sm="row" flex>
                               <div flex-sm="25" hide-gt-sm>
                                 <label style="font-size: 12px;"><b>Due date</b></label>

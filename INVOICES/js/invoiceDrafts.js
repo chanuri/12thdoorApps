@@ -94,7 +94,28 @@
     });
     //----------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------
-    app.controller('paymentCtrl', function($scope, $mdDialog, $auth, $rootScope, pim, $objectstore) {
+    app.controller('paymentCtrl', function($scope, $mdDialog, $auth, $rootScope, pim, $objectstore, $mdToast) {
+
+        $scope.InvoiceDetails = [];
+    var client = $objectstore.getClient("domainClassAttributes");
+    client.onGetMany(function(data) {
+        if (data) {
+            $scope.InvoiceDetails = data;
+
+            for (var i = $scope.InvoiceDetails.length - 1; i >= 0; i--) {
+                $scope.ID = $scope.InvoiceDetails[i].maxCount;
+            };
+
+            if ($scope.InvoiceDetails.length == 0) {
+                $scope.maxID = 1;
+            } else {
+                $scope.maxID = parseInt($scope.ID) + 1;
+            }
+            $scope.RefID = $scope.maxID.toString();
+        }
+    });
+    client.getByFiltering("select maxCount from domainClassAttributes where class='payment'");
+
         $scope.pay = pim;
         $scope.payment = {};
         $scope.payment.paymentMethod = pim.paymentMethod
@@ -102,6 +123,25 @@
         $scope.fullArr = [];
         $scope.payment.paidInvoice = [];
         $scope.payment.total = 0
+        $scope.payment.customerid = pim.customerid;
+
+        var Address = pim.billingAddress.split(',');
+        var city1 = Address[1] 
+        var street1 = Address[0];
+        var state1 =   Address[3];
+        var country1 = Address[4]; 
+        var zip1 =  Address[2];
+
+        $scope.payment.cusAddress = {
+            city: city1,
+            country: country1 ,
+            state: state1,
+            street: street1,
+            zip: zip1
+        };
+        $scope.payment.cusEmail = pim.Email;
+        $scope.payment.paymentref = $scope.RefID;
+
         $scope.advancedPayment = {};
         $scope.submitVisible = true;
         $scope.advancePayVisible = false;
@@ -189,7 +229,7 @@
 
                 $scope.payment.paidInvoice.push({ //array for insert paid invoices             
                     amount: invo.amount,
-                    invono: invo.invono,
+                    invono: pim.invoiceRefNo,
                     sdate: invo.sdate,
                     duedate: invo.mduedate,
                     balance : "0",
@@ -371,6 +411,13 @@
             payment.onComplete(function(data){
                 $scope.savePaymentId = data.Data[0].ID;
                 callback();
+                $mdToast.show(
+                      $mdToast.simple()
+                        .textContent('Payment Successfully Done')
+                        .position('bottom right')
+                        .theme('success-toast')
+                        .hideDelay(2000)
+                    );
             });
             payment.onError(function(data){
                 console.log("error saving payment");
@@ -408,7 +455,7 @@
                                         "done": false,
                                         "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+userName,
                                         "type":"Auto",
-                                        "RefID":$scope.payment.paymentid
+                                        "RefID":$scope.RefID
                                     }) 
                                     
                                 }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
@@ -419,7 +466,7 @@
                                         "done": false,
                                         "text": $scope.payment.paidInvoice[pay].amount +" " +" of payment done by"+userName,
                                         "type":"Auto",
-                                        "RefID":$scope.payment.paymentid
+                                        "RefID":$scope.RefID
                                     })                              
                                 }
 
@@ -434,7 +481,7 @@
                                     "done": false,
                                     "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+userName,
                                     "type":"Auto",
-                                    "RefID":$scope.payment.paymentid
+                                    "RefID":$scope.RefID
                                 }) 
 
                             }else if (parseFloat($scope.payment.paidInvoice[pay].balance) == 0) {
@@ -446,7 +493,7 @@
                                     "done": false,
                                     "text": $scope.payment.paidInvoice[pay].amount +" " + "of payment done by"+userName,
                                     "type":"Auto",
-                                    "RefID":$scope.payment.paymentid
+                                    "RefID":$scope.RefID
                                 })                   
                             }
                         }
@@ -479,7 +526,7 @@
                 "ID": "-999",
                 "InvoiceRefID": pim.invoiceNo,
                 "Name": pim.Name,
-                "RefID": $scope.savePaymentId,
+                "RefID": $scope.RefID,
                 "Type": "Receipt"
             }
 

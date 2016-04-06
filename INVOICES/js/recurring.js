@@ -1033,7 +1033,9 @@ var userName = $auth.getSession().Name;
         invo.onError(function(data){
             console.log("error saving invoice")
         });
-        invo.insertMultiple($scope.invoDetails,"invoiceNo");
+        invo.insertMultiple($scope.invoDetails,{
+                KeyProperty: "invoiceNo"
+            });
       }else{  
         $mdDialog.show(
                $mdDialog.alert()

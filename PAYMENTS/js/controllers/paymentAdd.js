@@ -529,6 +529,8 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
  
     $scope.submit = function() {
 
+        if (!$scope.payment.amountReceived) $scope.payment.amountReceived = 0
+
         if (!$scope.payment.paymentMethod) {
             $scope.payment.paymentMethod = "none"
             $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('Select Payment Method').content('Please Select a Payment Method Type').ariaLabel('').ok('OK').targetEvent());
@@ -618,7 +620,8 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
         $scope.imagearray = UploaderService.loadArray();
         if ($scope.imagearray.length > 0) {
             for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-                $uploader.upload("45.55.83.253", "paymentImage", $scope.imagearray[indexx]);
+                console.log($scope.imagearray[indexx])
+                $uploader.uploadMedia("paymentImage", $scope.imagearray[indexx],$scope.imagearray[indexx].name);
                 $uploader.onSuccess(function (e, data) {
                     var toast = $mdToast.simple()
                       .content('Image Successfully uploaded!')

@@ -1,7 +1,9 @@
-rasm.controller('emailCtrl',function($scope,obj,$objectstore){
+rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader,$mdToast,$DownloadPdf,UploaderService,$helpers){
     console.log(obj)
     $scope.emailTo = [];
     $scope.emailBcc = [];
+    $scope.emailSubject ="";
+
     $scope.emailTo.push({
         email : obj.cusEmail,
         value : obj.customer
@@ -13,8 +15,8 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore){
         for(i=0; i<=data.length-1; i++){
             $scope.ContactDetails.push({
                 email : data[i].Email,
-                display : data[i].CustomerFname +" "+ data[i].CustomerLname,
-                value : (data[i].CustomerFname +" "+ data[i].CustomerLname).toLowerCase()
+                display : data[i].Name,
+                value : (data[i].Name).toLowerCase()
             })
         }
     });
@@ -40,10 +42,141 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore){
         return results;
     }
 
+    var emailBodyClient = $objectstore.getClient("t12thdoorSettingEmailBody")
+    emailBodyClient.onGetMany(function(data){ 
+        $scope.emailBody = data[0].emailBody;
+        console.log(data[0].emailBody) 
+        var newOne = [];
+        // newOne.push(data[0].emailBody.substring(data[0].emailBody.indexOf("{{")+2,data[0].emailBody.indexOf("}}")));
+        $scope.emailBody = $scope.emailBody.replace("{{invoiceNo}}", obj.paymentid);
+        $scope.emailBody = $scope.emailBody.replace("{{Name}}", obj.customer);
+        
+ 
+    });
+    emailBodyClient.onError(function(data){
+        console.log("error loading email body")
+    });
+    emailBodyClient.getByFiltering("*")
+
+
+    $scope.closeEmail = function(){ 
+        $mdDialog.hide()
+    }
+
+    $scope.sendEmail = function(){
+        var sampleObj =[];
+        if (obj.paidInvoice)   sampleObj = angular.copy(obj.paidInvoice);
+        else    sampleObj = [];
+        
+        $DownloadPdf.GetPdf(obj,"email",sampleObj) 
+        
+        setTimeout(function(){
+            var decodeUrl =UploaderService.loadPdfUrl()
+            var blobFile = dataURItoBlob(decodeUrl) 
+            blobFile.name = obj.paymentid+'.pdf'
+            // console.log(decodeUrl)
+            $uploader.uploadMedia("paymentImage",blobFile,blobFile.name);
+            $uploader.onSuccess(function (e, data) {
+                 sendEmailBody() 
+            });
+            $uploader.onError(function (e, data) {
+                var toast = $mdToast.simple()
+                    .content('There was an error, please upload!')
+                    .action('OK')
+                    .highlightAction(false)
+                    .position("bottom right");
+                $mdToast.show(toast).then(function () {
+                    //whatever
+                }); 
+            });
+        },1000)
+
+        function dataURItoBlob(dataURI, callback) {
+            // convert base64 to raw binary data held in a string
+            // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+            var byteString = atob(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+            // write the bytes of the string to an ArrayBuffer
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            // write the ArrayBuffer to a blob, and you're done
+            var bb = new Blob([ab]);
+            return bb;
+        }
+    }
+    
+    function sendEmailBody(){
+
+        var xhttp = []
+        var emailSend = false;
+        for(em=0; em<=$scope.emailTo.length-1; em++ ){
+           
+            (function (em){
+                xhttp[em] = new XMLHttpRequest();
+                var jsondata =  {
+                     "type": "email",
+                     "to": $scope.emailTo[em].email,
+                     "subject": $scope.emailSubject,
+                     "from": "Payment <noreply-12thdoor@duoworld.com>",
+                     "attachments": [{
+                      "filename": obj.paymentid+'.pdf',
+                      "path": "http://"+$helpers.getHost()+"/apis/media/tenant/paymentImage/"+obj.paymentid+'.pdf'
+                    }],
+                     "Namespace": "com.duosoftware.com",
+                     "TemplateID": "T_Invoice_1",
+                     "DefaultParams": {
+                      "@@no@@": obj.paymentid,
+                      "@@accounturl@@": "http://12thdoor.com",
+                      "@@companyName@@": obj.customer
+                    },
+                     "CustomParams": {
+                      "@@no@@": "0001",
+                      "@@accounturl@@": "http://12thdoor.com",
+                      "@@companyName@@": "12thdoor"
+                    }
+                }
+
+                xhttp[em].onreadystatechange = function() {
+                    if (xhttp[em].readyState  == 4) {
+                        console.log(em+xhttp[em].responseText) 
+                        if (!emailSend) {
+                            emailSend = true;
+                            $mdDialog.hide();
+                            var toast = $mdToast.simple()
+                              .content('Email Successfully send')
+                              .action('OK')
+                              .highlightAction(false)
+                              .position("bottom right");
+                            $mdToast.show(toast).then(function () {
+
+                            });                                 
+                        }
+                    }
+                }
+
+                xhttp[em].onerror = function() {}
+                xhttp[em].ontimeout = function() {}
+
+                xhttp[em].open("POST", "http://test.12thdoor.com:3500/command/notification", true);        
+                xhttp[em].setRequestHeader('securitytoken', '123');
+                xhttp[em].setRequestHeader('Content-type', 'application/json');
+                xhttp[em].send(JSON.stringify(jsondata));
+
+            })(em);
+        } 
+    }
 });
 
 rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast,$http,$DownloadPdf,$mdBottomSheet) {
  
+
     $scope.viewPyamentArr = [];
     $scope.progressBar = false;
     $scope.maxNumber = 0;
@@ -77,7 +210,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
          }
     }
     $scope.emailFunction = function(item){
-        $mdBottomSheet.show({
+        $mdDialog.show({
             templateUrl: 'payment_partial/paymentEmail.html',
             controller: "emailCtrl",
             locals: {
@@ -440,7 +573,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
 
         item.paymentStatus = "Cancelled";        
         delete item["Comments"];
-        
+
         $scope.progressBar = true;
         if (amountReceived <= advancePayment) {
             $scope.advancePaymentData.uAmount =  advancePayment -  amountReceived; // amount need to reduce from the advence payment  
@@ -585,7 +718,6 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
 
         };
     }
-
     //function to submit comment to objectstore
     function CommentToObjectstore(obj){
          var client = $objectstore.getClient("paymentComment");

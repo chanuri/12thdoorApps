@@ -1,6 +1,6 @@
 
 rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
-    // $auth.checkSession();
+    $auth.checkSession();
     var userName = $auth.getUserName()
     this.newActivity = function(ActivityTxt,pCode,callback){
         var txt = ActivityTxt + userName;
@@ -44,6 +44,7 @@ rasm.factory('invoiceDetails', function($rootScope) {
  rasm.factory('UploaderService', function($rootScope) {
     $rootScope.uploadArray = [];
     $rootScope.basicinfo = [];
+    var pdfUrl; 
     return {
         setFile: function(val) {
             $rootScope.uploadArray.push(val);
@@ -74,10 +75,17 @@ rasm.factory('invoiceDetails', function($rootScope) {
         loadBasicArray: function() {
             return $rootScope.basicinfo;
         },
+        saveToPdf : function(url){
+            if (url) pdfUrl = url
+            pdfUrl = url 
+        },
+        loadPdfUrl : function(){
+            return pdfUrl;
+        }
     }
  }); // END OF UploaderService
 
-rasm.service('$DownloadPdf',function($filter, $objectstore){
+rasm.service('$DownloadPdf',function($filter, $objectstore,UploaderService){
     this.GetPdf = function(obj,type,sampleObj){
      
         var doc = new jsPDF(); 
@@ -135,33 +143,33 @@ rasm.service('$DownloadPdf',function($filter, $objectstore){
 
             doc.setFontSize(12);
             doc.setFontType("normal");
-            doc.text(145, 90,"To:"); 
+            doc.text(135, 90,"To:"); 
 
             doc.setFontSize(12);
             doc.setFontType("normal");
-            doc.text(145, 100,obj.customer); 
+            doc.text(135, 100,obj.customer); 
 
             if (obj.cusAddress != "") {
 
                 doc.setFontSize(12);
                 doc.setFontType("normal");
-                doc.text(145, 110,obj.cusAddress.street +" "+ obj.cusAddress.city); 
+                doc.text(135, 110,obj.cusAddress.street +" "+ obj.cusAddress.city); 
 
                 doc.setFontSize(12);
                 doc.setFontType("normal");
-                doc.text(145, 120,obj.cusAddress.state +" "+ obj.cusAddress.country);
+                doc.text(135, 120,obj.cusAddress.state +" "+ obj.cusAddress.country);
 
             }
 
             doc.setFontSize(12);
             doc.setFontType("normal");
-            doc.text(145, 130,obj.cusEmail); 
+            doc.text(135, 130,obj.cusEmail); 
 
             //table headers 
 
             doc.setFontSize(12);
             doc.setFontType("bold");
-            doc.text(35, 160,"Date"); 
+            doc.text(35, 160,"Date");  
 
             doc.setFontSize(12);
             doc.setFontType("bold");
@@ -233,9 +241,11 @@ rasm.service('$DownloadPdf',function($filter, $objectstore){
             doc.setFontType("bold");
             doc.text(95, startHeight + 20,"Excess Payment USD"); 
 
+            var total = parseFloat(obj.total).toFixed(2)
+
             doc.setFontSize(12);
             doc.setFontType("normal");
-            doc.text(160, startHeight+ 10, '$'+obj.total.toString()); 
+            doc.text(160, startHeight+ 10, '$'+total.toString()); 
 
 
             var outStandingPayment = 0.00;
@@ -266,6 +276,12 @@ rasm.service('$DownloadPdf',function($filter, $objectstore){
                     doc.output('dataurlnewwindow'); 
                 }
                 else if (type == 'download') doc.save('' + obj.paymentid + '.pdf');
+                else if (type == 'email'){
+                    // doc.output('datauri')
+                    var output = doc.output('datauristring') 
+                    // var url = 'data:application/pdf;base64,' + Base64.encode(output);
+                    UploaderService.saveToPdf(output)
+                }
             }
         });
     }

@@ -48,15 +48,16 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
         console.log(data[0].emailBody) 
         var newOne = [];
         // newOne.push(data[0].emailBody.substring(data[0].emailBody.indexOf("{{")+2,data[0].emailBody.indexOf("}}")));
-        $scope.emailBody = $scope.emailBody.replace("{{invoiceNo}}", obj.paymentid);
-        $scope.emailBody = $scope.emailBody.replace("{{Name}}", obj.customer);
+        $scope.emailBody = $scope.emailBody.replace("@@paymentNo@@", obj.paymentid);
+        $scope.emailBody = $scope.emailBody.replace("@@accounturl@@", "http://12thdoor.com") 
+        $scope.emailBody = $scope.emailBody.replace("@@companyName@@", obj.customer);
         
  
     });
     emailBodyClient.onError(function(data){
         console.log("error loading email body")
     });
-    emailBodyClient.getByFiltering("*")
+    emailBodyClient.getByFiltering("select * from t12thdoorSettingEmailBody where uniqueRecord ='2' ")
 
 
     $scope.closeEmail = function(){ 
@@ -116,6 +117,14 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
 
         var xhttp = []
         var emailSend = false;
+        var bccArr = [];
+
+        if ($scope.emailBcc.length > 0) {
+            for(t=0; t<=$scope.emailBcc.length-1; t++){
+                bccArr.push($scope.emailBcc[t].email)
+            }
+        }
+
         for(em=0; em<=$scope.emailTo.length-1; em++ ){
            
             (function (em){
@@ -124,6 +133,7 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
                      "type": "email",
                      "to": $scope.emailTo[em].email,
                      "subject": $scope.emailSubject,
+                     "bcc": bccArr,
                      "from": "Payment <noreply-12thdoor@duoworld.com>",
                      "attachments": [{
                       "filename": obj.paymentid+'.pdf',
@@ -142,6 +152,8 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
                       "@@companyName@@": "12thdoor"
                     }
                 }
+
+                console.log(jsondata)
 
                 xhttp[em].onreadystatechange = function() {
                     if (xhttp[em].readyState  == 4) {

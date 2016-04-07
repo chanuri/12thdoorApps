@@ -1,4 +1,4 @@
-rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploader", "$mdDialog", "$state","$activityLog", "$mdToast", "$objectstore", "$window", "$rootScope", "$interval", "$location", "$DownloadPdf", function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location,$DownloadPdf) {
+rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploader", "$mdDialog", "$state","$activityLog", "$mdToast", "$objectstore", "$window", "$rootScope", "$interval", "$location", "$DownloadPdf", "$helpers", function ($scope, $auth, $http,ProductService, $uploader, $mdDialog, $state,$activityLog, $mdToast, $objectstore, $window, $rootScope, $interval, $location,$DownloadPdf,$helpers) {
   
 
     $scope.currentPage = 1;
@@ -518,10 +518,13 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
       alert("what");
     }
     var len;
+
     $scope.loadAllProducts = function () {
       $scope.loadallarray = [];
       $scope.products = [];
       $scope.packages = [];
+      $scope.hostUrl = $helpers.getHost()
+      
       var client = $objectstore.getClient("product12thdoor");
       client.onGetMany(function (data) {
         if (data) {
@@ -704,8 +707,8 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
           $scope.brochurearray = ProductService.loadArraybrochure();
           if ($scope.imagearray.length > 0) {
             for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-              //console.log($scope.imagearray[indexx]);
-              $uploader.upload("ignoreNamespace","productimagesNew", $scope.imagearray[indexx]);
+              //console.log($scope.imagearray[indexx]); 
+              $uploader.uploadMedia("productimagesNew",$scope.imagearray[indexx],$scope.imagearray[indexx].name); 
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
                   .content('Image Successfully uploaded!')
@@ -730,8 +733,8 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
           };
           if ($scope.brochurearray.length > 0) {
             for (indexx = 0; indexx < $scope.brochurearray.length; indexx++) {
-              //console.log($scope.brochurearray[indexx].name);
-              $uploader.upload("ignoreNamespace","productbrochureNew", $scope.brochurearray[indexx]);
+              //console.log($scope.brochurearray[indexx].name); 
+              $uploader.uploadMedia("productbrochureNew",$scope.brochurearray[indexx],$scope.brochurearray[indexx].name);
               $uploader.onSuccess(function (e, data) {
                 var toast = $mdToast.simple()
                   .content('Brochure Successfully uploaded !')

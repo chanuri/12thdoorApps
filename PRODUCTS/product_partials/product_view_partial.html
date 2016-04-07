@@ -65,7 +65,8 @@
          <!--START OF  COLLAPSE CARDS-->
          <div  class="collapse-card" ng-repeat="product in products | filter:ctrl.searchText||undefined 
          | orderBy: [prodSearch,latest] " ng-class="{ active: $active }" ng-if="!product.deleteStatus">
-            <!--START OF COLLAPSE CARD HEADING-->
+            <!--START OF COLLAPSE CARD HEADING--> 
+
             <div class="collapse-card__heading" layout="row" layout-align="start start"
                ng-click="getuploaddata(product.ProductCode,product.inventory,product.stocklevel)">
                <!--START OF CARD OPEN SECTION-->
@@ -79,9 +80,9 @@
                </div>
           
                 <div style="margin-top: 10px"> 
-                  <img style="border-radius: 50%; width:40px ;height:40px;" ng-src="data:image/png;base64,{{product.FullImage.Body}}">
+                  <img style="border-radius: 50%; width:40px ;height:40px;" ng-src="http://{{hostUrl}}/apis/media/tenant/productimagesNew/{{product.UploadImages.val[0].name}}" >
                 </div>
-
+                <!-- ng-src="data:image/png;base64,{{product.FullImage.Body}}" -->
 
                <div class="collapse-card_header_content_info" layout="row" layout-align="center start" style="width:90%;"
                 ng-click="$active = !$active;" layout-sm="row">

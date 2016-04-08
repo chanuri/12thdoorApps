@@ -218,7 +218,7 @@
                      </td>
                   </tr>
                   <tr ng-repeat="tt in item.taxAmounts">
-                     <td style="padding-top:15px;" flex>{{tt.taxName}}{{tt.rate}}</td>
+                     <td style="padding-top:15px;" >{{tt.taxName}} <span>{{tt.rate}}%</span> </td>
                      <td style="padding-left: 170px; padding-top:15px;" flex>
                         {{tt.salesTax|currency:item.BaseCurrency}}
                      </td>

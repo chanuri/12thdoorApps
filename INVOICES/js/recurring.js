@@ -1056,8 +1056,7 @@ var userName = $auth.getSession().Name;
                .ok('OK')
                .targetEvent(data)
             );
-         });
-         
+         });   
       }
 
       $scope.cancelrec = function(ev){
@@ -1138,32 +1137,31 @@ var userName = $auth.getSession().Name;
          });
 
             }, function() {
-               $rootScope.prodArray.val = "";
+                $rootScope.prodArray.val = "";
                 $rootScope.dateArray.value = "";
-                 $scope.total = "";
-                 $scope.famount="";
-                 $scope.dateArray.value="";
-                 $scope.TDinvoice.poNum = "";
-                 $scope.TDinvoice.comments = "";
-                 $scope.TDinvoice.fdiscount = "";
-                 $scope.TDinvoice.salesTax = "";
-                 $scope.TDinvoice.shipping = "";
-                 $scope.TDinvoice.notes = "";
-                 $scope.TDinvoice.paymentMethod = "";
-                 $scope.TDinvoice.roFruitNames = "";
-                 $scope.TDinvoice.saveOption = "";
-                 $scope.TDinvoice.billingFrequency = "";
-                 $scope.TDinvoice.Startdate = "";
-                 $scope.TDinvoice.occurences = "";
-                 $scope.TDinvoice.inNote = "";
-                  $scope.TDinvoice.inNote = "";
-                  $rootScope.selectedItem2.display ="";
-                 $rootScope.selectedItem2.BillingValue="";
-                 $rootScope.selectedItem2.shippingValue="";
-                 $rootScope.searchText = null;
+                $scope.total = "";
+                $scope.famount="";
+                $scope.dateArray.value="";
+                $scope.TDinvoice.poNum = "";
+                $scope.TDinvoice.comments = "";
+                $scope.TDinvoice.fdiscount = "";
+                $scope.TDinvoice.salesTax = "";
+                $scope.TDinvoice.shipping = "";
+                $scope.TDinvoice.notes = "";
+                $scope.TDinvoice.paymentMethod = "";
+                $scope.TDinvoice.roFruitNames = "";
+                $scope.TDinvoice.saveOption = "";
+                $scope.TDinvoice.billingFrequency = "";
+                $scope.TDinvoice.Startdate = "";
+                $scope.TDinvoice.occurences = "";
+                $scope.TDinvoice.inNote = "";
+                $scope.TDinvoice.inNote = "";
+                $rootScope.selectedItem2.display ="";
+                $rootScope.selectedItem2.BillingValue="";
+                $rootScope.selectedItem2.shippingValue="";
+                $rootScope.searchText = null;
                  
-                 //location.href = '#/AllRecurring_Invoices';
-                  $state.go('settings.AllRecurring_Invoices');
+                $state.go('settings.AllRecurring_Invoices');
          
             });
       }

@@ -28,6 +28,53 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
     $scope.Leger  = {};
     $scope.leger = [];
 
+     if ($state.current.name == 'settings.contact') {
+            $rootScope.showsort = true;
+            $rootScope.showaddProject = true;
+            $scope.selectedIndex = 0;
+        } else if ($state.current.name == 'settings.supplier') {
+           $rootScope.showsort = false;
+            $rootScope.showaddProject = false;
+            $scope.selectedIndex = 1;
+        };
+
+         $scope.changeTab = function(ind) {
+            switch (ind) {
+                case 0:
+                    $rootScope.showsort = true;
+                     $rootScope.showaddProject = true;
+                    break;
+                case 1:
+                     $rootScope.showsort = false;
+                     $rootScope.showaddProject = false;
+                    break;
+            }
+        };
+
+// $scope.changeTab = function(ind) {
+//         switch (ind) {
+
+//         case 0:
+//             $state.go('settings.contact')
+//             $rootScope.showsort = true;
+//             break;
+//         case 1:
+//             $state.go('settings.supplier');
+//             $rootScope.showsort = false;
+//             $rootScope.showaddProject = false;
+//             break;
+//         }
+//     }
+ $scope.$watch('selectedIndex', function(current, old) {
+            switch (current) {
+                case 0:
+                    $location.url("/settings/contact");
+                    break;
+                case 1:
+                    $location.url("/settings/supplier");
+                    break;
+            }
+        });
 
     $scope.AccountStatement = function(data){
         $state.go('view');
@@ -50,6 +97,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
         if (data) {
             $scope.Leger = data;
             for (var i = data.length - 1; i >= 0; i--) { 
+                data[i].ID = parseInt(data[i].ID);
                     $scope.leger.push(data[i]);
 
                     if(data[i].Type == "Invoice"){
@@ -72,20 +120,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
     client.getByFiltering("select * from leger12thdoor where AccountNo = '"+val.customerid+"'");
     }
 
-    $scope.changeTab = function(ind) {
-        switch (ind) {
-
-        case 0:
-            $state.go('settings.contact')
-            $rootScope.showsort = true;
-            break;
-        case 1:
-            $state.go('settings.supplier');
-            $rootScope.showsort = false;
-            $rootScope.showaddProject = false;
-            break;
-        }
-    }
+    
 
     $scope.changeStatus = function(obj){
       

@@ -45,8 +45,8 @@
                      </md-button>
                      <md-menu-content width="4">
                         <md-menu-item>
-                           <md-button href  ng-click="enterPayment(item)">
-                              <p>Enter Payment</p>
+                           <md-button href  ng-click="Example(item)">
+                              <p>Example</p>
                               <md-icon href md-menu-align-target></md-icon>
                            </md-button>
                         </md-menu-item>
@@ -93,7 +93,6 @@
              
             </div >
             
-<!--  -->
             <div flex style="background-color: #D0D0D0; width: 280px; margin-left: 570px; margin-top:-130px; " flex>
             <div layout layout-sm="column" layout-margin style="margin-top:10px;" flex>
                <!--  <div flex="10" class="blankspace"></div> -->
@@ -139,7 +138,7 @@
                      <th style="width:150px;border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Amount</th>
                      <th style="width:150px;border-bottom: 1px solid;text-align: left;padding-left: 20px;" flex>Balance</th>
                   </tr>
-                  <tr ng-repeat="val in leger">
+                  <tr ng-repeat="val in leger|orderBy : val.ID : reverse">
                      <td style="width:100px; border-bottom: 1px solid;text-align: left;" flex>{{val.Date|date}}
                      </td>
                      <td style="width:320px; padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{val.Type}} No.{{val.RefID}}</td>

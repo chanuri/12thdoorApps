@@ -99,7 +99,7 @@ rasm.controller('AppCtrlAddSuppliers', function($scope, $state, $objectstore, $l
     }
 
     $scope.supplierView = function(){
-      $state.go('settings.supplier')
+      $state.go('settings.supplier');
     }
 
      $scope.emailExsist = false;

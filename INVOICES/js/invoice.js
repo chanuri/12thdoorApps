@@ -273,24 +273,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
     client.onError(function(data) {});
     client.getByFiltering("*");
 
-    var client = $objectstore.getClient("t12thdoorSettingEmailBody");
-        client.onGetMany(function(data) {
-            if (data) {
-               
-               for (var i = data.length - 1; i >= 0; i--) {
-                  $scope.TDinvoice.emailBody = data[i].emailBody;
-               }
-            }
-        });
-        client.onError(function(data) {});
-        client.getByFiltering("*");
-    
-
-
-    if ($scope.dis == "SubTotal Items" && $scope.dis == true) {
-        $scope.checkDiscout = false;
-    }
-
     $scope.ss = [];
     $scope.getPayement = function(pay) {
         for (var i = $scope.paymentMethod.length - 1; i >= 0; i--) {

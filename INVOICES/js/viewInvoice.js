@@ -842,7 +842,7 @@
         client.onGetMany(function(data) {
             if (data) {
                 for (var i = data.length - 1; i >= 0; i--) {
-                    if (data[i].paymentStatus != "Cancelled") {
+                    // if (data[i].paymentStatus != "Cancelled") {
                         for (var x = data[i].paidInvoice.length - 1; x >= 0; x--) {
                             if ($stateParams.invoiceno == data[i].paidInvoice[x].invono) {
 
@@ -850,14 +850,14 @@
                                 console.log(data[i])
                             }
                         };
-                    }
+                    // }
                 };
 
             }
         });
         client.onError(function(data) {
         });
-        client.getByFiltering("*");
+        client.getByFiltering("select * from payment where paymentStatus != 'Cancelled'");
         }
 
         $scope.Totalbalance = function(data){
@@ -949,6 +949,7 @@
                 var proHeight = 132;
 
                 var newDate = $filter('date')(content.Startdate);
+
                 doc.setFontSize(20);
                 doc.setFontType("bold");
                 doc.text(30,55,"INVOICE");
@@ -1415,7 +1416,7 @@
 
                                  doc.autoPrint();
                                 doc.output('dataurlnewwindow');
-                                console.log(count+' == '+ arrLength)
+                                // console.log(count+' == '+ arrLength)
                             }                           
                             count += 1;
                             imageXaxsis += 20;
@@ -1559,7 +1560,7 @@
     }); //END OF viewCtrl
     //--------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------
-    app.controller('emailCtrl', function($scope, $mdDialog, $rootScope, invo, $mdToast, $document) {
+    app.controller('emailCtrl', function($scope, $mdDialog, $rootScope, invo, $mdToast, $document,$objectstore,$sce) {
         $scope.test = invo;
         //console.log($scope.test)
         $scope.subject = "invoice No." + $scope.test.invoiceRefNo + " " + $scope.test.Name;
@@ -1567,6 +1568,22 @@
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
+
+         var client = $objectstore.getClient("t12thdoorSettingEmailBodyy");
+        client.onGetMany(function(data) {
+            if (data) {
+             $scope.emailBody = data[0].emailBody;
+        console.log(data[0].emailBody) 
+        var newOne = [];
+        // newOne.push(data[0].emailBody.substring(data[0].emailBody.indexOf("{{")+2,data[0].emailBody.indexOf("}}")));
+        $scope.emailBody = $scope.emailBody.replace("@@invoiceNo@@", $scope.test.paymentid);
+        $scope.emailBody = $scope.emailBody.replace("@@accounturl@@","<a href= 'http://12thdoor.com' >http://12thdoor.com </a>") 
+        $scope.emailBody = $scope.emailBody.replace("@@companyName@@", $scope.test.customer);
+        $scope.emailBody = $sce.trustAsHtml($scope.emailBody);
+            }
+        });
+        client.onError(function(data) {});
+        client.getByFiltering("select * from t12thdoorSettingEmailBodyy where uniqueRecord ='1' ");
 
         $scope.recipientCtrl = function($timeout, $q) {
             var self = this;

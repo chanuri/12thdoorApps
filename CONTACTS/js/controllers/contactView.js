@@ -1,4 +1,4 @@
-rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state, $objectstore, $location, customerFac, $mdDialog, $objectstore, $timeout, $mdToast) {
+rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state, $objectstore, $location,$filter, customerFac, $mdDialog, $objectstore, $timeout, $mdToast) {
     $scope.contacts = [];
     $scope.baddress = {};
     $scope.saddress = {};
@@ -51,20 +51,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
             }
         };
 
-// $scope.changeTab = function(ind) {
-//         switch (ind) {
 
-//         case 0:
-//             $state.go('settings.contact')
-//             $rootScope.showsort = true;
-//             break;
-//         case 1:
-//             $state.go('settings.supplier');
-//             $rootScope.showsort = false;
-//             $rootScope.showaddProject = false;
-//             break;
-//         }
-//     }
  $scope.$watch('selectedIndex', function(current, old) {
             switch (current) {
                 case 0:
@@ -259,64 +246,148 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
         });
     }
 
-            $scope.convertpdf = function(content) {
-            html2canvas($("#canvas"), {
-            onrendered: function(canvas) {                      
-                var imgData = canvas.toDataURL('image/jpeg');              
-            options = {
-                orientation: "0",
-                unit: "mm",
-                format: "a4"
+
+         function toDataUrl(url, callback){
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function() {
+              var reader  = new FileReader();
+              reader.onloadend = function () {
+                  callback(reader.result);
+              }
+              reader.readAsDataURL(xhr.response);
             };
-
-            var doc = new jsPDF(options, '', '', '');
-            doc.addImage(imgData, 'jpeg', 0, 0, 200, 0);
-            var corte = 1395; // configura tamanho do corte
-            var image = new Image();
-            image = Canvas2Image.convertToJPEG(canvas);
-
-            var croppingYPosition = corte;
-            var count = (image.height)/corte;
-            var i =1;
-            console.log(image.height)
-            while ( i < count) {
-                    doc.addPage();
-
-                    var sourceX = 0;
-                    var sourceY = croppingYPosition;
-                    var sourceWidth = image.width;
-                    var sourceHeight = corte;
-                    var destWidth = sourceWidth;
-                    var destHeight = sourceHeight;
-                    var destX = 0;
-                    var destY = 0;
-                    var canvas1 = canvas;
-                    canvas1.setAttribute('height', (image.height)-(corte*i));
-                    canvas1.setAttribute('width', destWidth);                         
-                    var ctx = canvas1.getContext("2d");
-                    ctx.drawImage(image, sourceX, 
-                                         sourceY,
-                                         sourceWidth,
-                                         sourceHeight, 
-                                         destX, 
-                                         destY, 
-                                         destWidth, 
-                                         destHeight);
-                    var image2 = new Image();
-                    image2 = Canvas2Image.convertToJPEG(canvas1);
-                    image2Data = image2.src;
-                    doc.addImage(image2Data, 'JPEG', 0, 0, 200, 0);
-                    croppingYPosition += destHeight; 
-                    console.log(croppingYPosition)
-                    count =  (image.height)/croppingYPosition;
-                             
-                } 
-                doc.save(content.invoiceNo+'.pdf')                
-            }
-        });
+            xhr.open('GET', url);
+            xhr.send();
         }
 
-}); /*___________________________________End of ApCtrlGet____________________________________________*/
+        function hasNull(target) {
+            for (var member in target) {
+                if (target[member] == null)
+                   target[member] = "";
+            }
+          return target;
+        }
+
+        $scope.convertpdf = function(content){
+
+    var totalBalance = 0;
+    var Balance = 0;
+    var Intotal = 0;
+    var CredTotal = 0;
+    var PayTotal = 0;
+    var receiptBalance = 0;
+    var CreditNoteBalance = 0;
+    var bbb = 0;
+
+            var client = $objectstore.getClient("leger12thdoor");
+    client.onGetMany(function(data) {
+        if (data) {
+            $scope.Leger = data;
+            for (var i = data.length - 1; i >= 0; i--) { 
+                data[i].ID = parseInt(data[i].ID);
+                    $scope.leger.push(data[i]);
+
+                    if(data[i].Type == "Invoice"){
+                       Intotal += data[i].Amount; 
+                       console.log(Intotal)
+                    }
+                    else if(data[i].Type == "Credit Note"){
+                        CredTotal += data[i].Amount;
+                        CreditNoteBalance = Intotal - data[i].Amount;
+                    }else if(data[i].Type == "Receipt"){
+                        PayTotal += data[i].Amount;
+                        receiptBalance = Intotal - data[i].Amount;
+                    }
+
+                    $scope.totalBalance = parseFloat($scope.Intotal - PayTotal- CredTotal);
+            }
+        }
+    });
+    client.onError(function(data) {});
+    client.getByFiltering("select * from leger12thdoor where AccountNo = '"+content.customerid+"'");
+    
+
+
+             content = hasNull(content);
+            toDataUrl('img/image1.jpg', function(base64Img){
+            var doc = new jsPDF();
+                doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
+                var proHeight = 132;
+
+                
+                var newDate = $filter('date')(new Date());
+
+                doc.setFontSize(20);
+                doc.setFontType("bold");
+                doc.text(30,55,"ACCOUNT STATEMENT");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,60,"Period 01/20/2016 to 2/20/2016" );
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,80,"To" );
+
+                doc.setFontSize(12);
+                doc.text(30,87, content.Name);
+
+                doc.setFontSize(12);
+                doc.text(30,94, content.baddress.street);
+
+                doc.setFontSize(12);
+                doc.text(30,101, content.baddress.city + content.baddress.state + content.baddress.zip + content.baddress.country);
+
+                doc.setFontSize(12);
+                doc.text(30,108, content.Email);
+
+                doc.setFontSize(12);
+                doc.text(30,120, "Statement Date");
+                doc.setFontSize(12);
+                doc.text(60,120, newDate);
+
+                doc.setFillColor(192, 192, 192);
+                doc.rect(130, 75, 63, 50, 'F');
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(130,83,"Summary");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(130,90,"Balance B/F");
+                doc.setFontSize(12);
+                doc.text(170,90,content.BaseCurrency + "0.00");
+
+                doc.setFontSize(12);
+                doc.text(130,97,"Invoices");
+                doc.setFontSize(12);
+                doc.text(170,97,content.BaseCurrency + Intotal.toString());
+
+                doc.setFontSize(12);
+                doc.text(130,104,"Credits");
+                doc.setFontSize(12);
+                doc.text(170,104,content.BaseCurrency + CredTotal.toString());
+
+                 doc.setFontSize(12);
+                doc.text(130,111,"Payments");
+                doc.setFontSize(12);
+                doc.text(170,111,content.BaseCurrency + PayTotal.toString());
+
+                 doc.setFontSize(12);
+                 doc.setFontType("bold");
+                doc.text(130,120,"Balance Due");
+                doc.setFontSize(12);
+                doc.text(170,120,content.BaseCurrency + totalBalance.toString());
+
+
+
+                doc.save(content.customerid.toString()+'.pdf');
+            })
+        }
+
+}); /*___________________________________End of view contact controller____________________________________________*/
 
  rasm.factory('customerFac', function($rootScope) {
         $rootScope.customerArr = [];

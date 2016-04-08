@@ -1,4 +1,23 @@
-
+ <style type="text/css">
+  .md-chips, md-chips .md-chips {
+    box-shadow: none !important;
+  }
+  .md-chips .md-chip {
+    border-radius: 0px !important;
+  }
+  #pdfChip .md-chip-input-container input { 
+    display: none;
+  }
+  #pdfChip .md-chip {  
+    width: 50%;
+  }
+  input:focus{
+    outline: none;
+  }
+  /*.md-input-container .md-input {
+    border-width: 0px 0px 0px 0px;
+  }*/
+</style>
             <md-dialog style="max-width:960px;" arial-label="email">
             <div layout layout-sm="column" layout-margin >
             <div flex="90"></div>
@@ -16,30 +35,44 @@
                             delete-button-label="Remove Tag"
                             md-on-append="myFn($chip)"
                             delete-hint="Press delete to remove tag"
-                            secondary-placeholder="To">
+                            >
                             </md-chips>
                         </div>
 
                         <div layout layout-sm="column"  style="margin-top: 5px;" layout-margin ng-init="bccCtrl()" >
                         <label>Bcc</label>
                          <md-chips flex
-                            style="margin-top: -10px;margin-left:40px;"
+                            style="margin-top: -10px;margin-left:35px;"
                             ng-model="emailBCCrec"
                             readonly="readonly"
                             delete-button-label="Remove Tag"
                             delete-hint="Press delete to remove tag"
-                            secondary-placeholder="BCC">
+                            >
                             </md-chips>
                         </div>
             
                <div layout layout-sm="column" layout-margin style="margin-top:10px; "> 
                     <label style="margin-top:10px;">Subject</label>
                     <md-input-container flex style="margin-top: 5px;">
-                        <input ng-model="subject">
+                        <input style="border: 0px solid;margin-top:-5px;" ng-model="subject">
                         </md-input-container>
                     </div>
               <div layout layout-sm="column" layout-margin >
-             <textarea style="width:100%;"> {{test.emailBody}}</textarea>
+             <!--  {{test.emailBody}} -->
+              <md-card style="width:100%">
+            <md-content class="md-padding" layout="column" >
+               <md-card-content  flex style=" width: 575px;">
+                  <div   ng-bind-html="emailBody" style="white-space: pre;"></div>
+                  <br>
+                  <!--  <textarea type="text" ng-model="emailBody" style="height:250px;width: 575px;background: #FFF;resize: none; border-style: none;border-color: Transparent;overflow: auto;  " ng-disabled="true"></textarea>     -->                                   
+                 <!--  <md-chips  id="pdfChip" ng-model="pdfChipArr" style="margin-left:-5px;"  readonly="false"  ng-disabed="true" >
+                     <md-chip-template>
+                        <strong>{{$chip}}</strong> 
+                     </md-chip-template>
+                  </md-chips> -->
+               </md-card-content>
+            </md-content>
+         </md-card>
              </div>  
              </md-dialog-content>    
                    

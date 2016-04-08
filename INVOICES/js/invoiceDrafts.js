@@ -106,11 +106,11 @@
                 $scope.ID = $scope.InvoiceDetails[i].maxCount;
             };
 
-            if ($scope.InvoiceDetails.length == 0) {
+            if ($scope.InvoiceDetails.length == 0) 
                 $scope.maxID = 1;
-            } else {
+            else 
                 $scope.maxID = parseInt($scope.ID) + 1;
-            }
+            
             $scope.RefID = $scope.maxID.toString();
         }
     });
@@ -124,6 +124,19 @@
         $scope.payment.paidInvoice = [];
         $scope.payment.total = 0
         $scope.payment.customerid = pim.customerid;
+        $scope.payment.amountReceived = 0;
+        
+        var userName = $auth.getSession().Name;
+
+        var activityObj = {
+            UserName : userName,
+            TodayDate : new Date(),
+            Comment : 'Payment added by'+userName,
+            payment_code :$scope.RefID,
+            textareaHeight : '30px;',
+            activity_code : "-999",
+            type : "activity"
+        };
 
         var Address = pim.billingAddress.split(',');
         var city1 = Address[1] 
@@ -408,6 +421,7 @@
         function savePaymentToObjectstore(callback){
 
             var payment = $objectstore.getClient("payment");
+            var activityClient = $objectstore.getClient("paymentActivity");
             payment.onComplete(function(data){
                 $scope.savePaymentId = data.Data[0].ID;
                 callback();
@@ -418,16 +432,26 @@
                         .theme('success-toast')
                         .hideDelay(2000)
                     );
+
+                activityClient.onComplete(function(data){
+                console.log("activity Successfully added")
+            });
+            activityClient.onError(function(data){
+                console.log("error Adding new activity")
+                });
             });
             payment.onError(function(data){
                 console.log("error saving payment");
                 callback();
             });
             payment.insert($scope.payment, {KeyProperty: "paymentid"})
+
+            
+            
+            activityClient.insert(activityObj, {KeyProperty:'activity_code'})
         }
 
         function saveAdvancePaymentToObjectstore(callback){
-
             // $scope.AdvancefullArr.push($scope.advancedPayment)
             var paymentSave = $objectstore.getClient("advancedPayments12thdoor");
             paymentSave.onComplete(function(data){
@@ -439,7 +463,7 @@
             });
             paymentSave.insert($scope.advancedPayment,{"KeyProperty":"advancedPayment_code"}); 
         }
-        var userName = $auth.getUserName();
+       
         function updateInvoice(callback){
             for(kal=0; kal<=pim.MultiDueDAtesArr.length-1; kal++){
                 for(pay=0; pay<=$scope.payment.paidInvoice.length-1; pay++){
@@ -453,7 +477,7 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+userName,
+                                        "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+" "+userName,
                                         "type":"Auto",
                                         "RefID":$scope.RefID
                                     }) 
@@ -464,7 +488,7 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount +" " +" of payment done by"+userName,
+                                        "text": $scope.payment.paidInvoice[pay].amount +" " +" of payment done by"+" "+userName,
                                         "type":"Auto",
                                         "RefID":$scope.RefID
                                     })                              
@@ -479,7 +503,7 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+userName,
+                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+" "+userName,
                                     "type":"Auto",
                                     "RefID":$scope.RefID
                                 }) 
@@ -491,7 +515,7 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of payment done by"+userName,
+                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of payment done by"+" "+userName,
                                     "type":"Auto",
                                     "RefID":$scope.RefID
                                 })                   

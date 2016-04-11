@@ -103,7 +103,7 @@ md-input-container.md-input-focused label {
                               <td><label layout layout-margin> {{item.paymentMethod}}</label></td>                               
                           </tr> 
                           <tr>
-                              <td><label layout layout-margin >Amount Paid  </label></td>
+                              <td><label layout layout-margin >Amount Received  </label></td>
                               <td><label layout layout-margin style="margin-left: 0px;"><b>{{item.amountReceived | currency }}</b> </label></td>                               
                           </tr>
                           <tr>
@@ -138,9 +138,9 @@ md-input-container.md-input-focused label {
                   <tr ng-repeat="item in item.paidInvoice track by $index"  class="border_bottom" >
                      <td style="padding: 20px;"flex>{{item.sdate|date}}</td>
                      <td style="padding: 20px;"flex>{{item.invono}}</td>
-                     <td style="padding: 20px;"flex>{{item.amount}}</td>
-                     <td style="padding: 20px;"flex>{{item.balance}}</td>
-                     <td style="padding: 20px;"flex>{{item.amount - item.balance}}</td> 
+                     <td style="padding: 20px;"flex>{{item.amount | currency}}</td>
+                     <td style="padding: 20px;"flex>{{item.balance | currency}}</td>
+                     <td style="padding: 20px;"flex>{{item.amount - item.balance | currency}}</td> 
                   </tr>
                </table>
             </div>
@@ -150,11 +150,11 @@ md-input-container.md-input-focused label {
                <table>
                   <tr>
                      <td style="padding-top:30px;" flex><b>Total payments Applied USD</b></td>
-                     <td style="padding-left: 70px; padding-top:30px;" flex>{{item.total|currency}}</td>
+                     <td style="padding-left: 70px; padding-top:30px;    text-align: right;" flex>{{item.total|currency}}</td>
                   </tr>
                   <tr >
                      <td  style="padding-top:30px;    padding-left: 3px;" flex><b>Excess Payment USD</b></td>
-                     <td style="padding-left: 70px; padding-top:30px;" flex>{{item.outStandingPayment|currency}}</td>
+                     <td style="padding-left: 70px; padding-top:30px;    text-align: right;" flex>{{item.outStandingPayment|currency}}</td>
                   </tr>
                </table>
             </div>

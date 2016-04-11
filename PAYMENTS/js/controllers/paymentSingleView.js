@@ -2,7 +2,7 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
  
     $scope.emailTo = [];
     $scope.emailBcc = [];
-    $scope.emailSubject ="";
+    $scope.emailSubject = "Payment No " + obj.paymentid + " " +obj.customer;
     $scope.paymentid = obj.paymentid
     $scope.pdfChipArr = [];
     $scope.pdfChipArr.push(obj.paymentid+".pdf")

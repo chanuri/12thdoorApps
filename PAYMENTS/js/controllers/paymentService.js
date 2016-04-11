@@ -126,7 +126,7 @@ rasm.service('$DownloadPdf',function($filter, $objectstore,UploaderService){
             doc.text(70, 120,obj.paymentMethod.toString());
             
             doc.setFontSize(12);
-            doc.text(27, 130,"Amount Paid:");            
+            doc.text(27, 130,"Amount Received:");            
             doc.setFontType("bold");
             doc.setFontSize(12);
             doc.text(70, 130,'$'+obj.amountReceived.toString());
@@ -151,13 +151,22 @@ rasm.service('$DownloadPdf',function($filter, $objectstore,UploaderService){
 
             if (obj.cusAddress != "") {
 
-                doc.setFontSize(12);
-                doc.setFontType("normal");
-                doc.text(135, 110,obj.cusAddress.street +" "+ obj.cusAddress.city); 
 
                 doc.setFontSize(12);
                 doc.setFontType("normal");
-                doc.text(135, 120,obj.cusAddress.state +" "+ obj.cusAddress.country);
+
+                if (obj.cusAddress.street == " ")  
+                    doc.text(134, 110,obj.cusAddress.city);
+                else
+                    doc.text(135, 110,obj.cusAddress.street +" "+ obj.cusAddress.city); 
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+
+                if(obj.cusAddress.state == " "  || obj.cusAddress.state == "" )
+                    doc.text(134, 120,obj.cusAddress.country);
+                else
+                    doc.text(135, 120,obj.cusAddress.state +" "+ obj.cusAddress.country);
 
             }
 
@@ -208,15 +217,15 @@ rasm.service('$DownloadPdf',function($filter, $objectstore,UploaderService){
 
                     doc.setFontSize(12);
                     doc.setFontType("normal");
-                    doc.text(95, startHeight,sampleObj[o].amount.toString()); 
+                    doc.text(95, startHeight,'$'+parseFloat(sampleObj[o].amount).toFixed(2).toString()); 
 
                     doc.setFontSize(12);
                     doc.setFontType("normal");
-                    doc.text(125, startHeight,sampleObj[o].balance.toString()); 
+                    doc.text(125, startHeight,'$'+parseFloat(sampleObj[o].balance).toFixed(2).toString()); 
 
                     doc.setFontSize(12);
                     doc.setFontType("normal");
-                    doc.text(155, startHeight,(parseFloat(sampleObj[o].amount) - parseFloat(sampleObj[o].balance)).toString()); 
+                    doc.text(155, startHeight,'$'+(parseFloat(sampleObj[o].amount) - parseFloat(sampleObj[o].balance)).toFixed(2).toString()); 
 
                     doc.setFontSize(12);
                     doc.setFontType("normal");
@@ -231,7 +240,7 @@ rasm.service('$DownloadPdf',function($filter, $objectstore,UploaderService){
 
 
             doc.setFillColor(182, 182, 182);
-            doc.rect(90, startHeight, 95, 25, 'F');
+            doc.rect(90, startHeight, 100, 25, 'F');
 
             doc.setFontSize(12);
             doc.setFontType("bold");
@@ -245,7 +254,10 @@ rasm.service('$DownloadPdf',function($filter, $objectstore,UploaderService){
 
             doc.setFontSize(12);
             doc.setFontType("normal");
-            doc.text(160, startHeight+ 10, '$'+total.toString()); 
+            doc.textEx('$'+total.toString(), 185, startHeight+ 8, 'right','middle'); 
+
+            // doc.textEx(' Example text', 160, startHeight+ 40, 'right', 'middle');
+            // doc.textEx(' scdcdExample text', 160, startHeight+ 30, 'right', 'middle');
 
 
             var outStandingPayment = 0.00;
@@ -269,7 +281,7 @@ rasm.service('$DownloadPdf',function($filter, $objectstore,UploaderService){
 
                 doc.setFontSize(12);
                 doc.setFontType("normal");
-                doc.text(160, startHeight + 20,'$'+outStandingPayment.toFixed(2).toString()); 
+                doc.textEx('$'+outStandingPayment.toFixed(2).toString(), 185, startHeight + 18, 'right','middle'); 
 
                 if (type == 'print'){
                     doc.autoPrint();
@@ -475,3 +487,45 @@ rasm.filter('unique', function () {
     return items;
   };
 });
+
+var splitRegex = /\r\n|\r|\n/g;
+jsPDF.API.textEx = function (text, x, y, hAlign, vAlign) {
+    var fontSize = this.internal.getFontSize() / this.internal.scaleFactor;
+
+    // As defined in jsPDF source code
+    var lineHeightProportion = 1.15;
+
+    var splittedText = null;
+    var lineCount = 1;
+    if (vAlign === 'middle' || vAlign === 'bottom' || hAlign === 'center' || hAlign === 'right') {
+        splittedText = typeof text === 'string' ? text.split(splitRegex) : text;
+
+        lineCount = splittedText.length || 1;
+    }
+
+    // Align the top
+    y += fontSize * (2 - lineHeightProportion);
+
+    if (vAlign === 'middle')
+        y -= (lineCount / 2) * fontSize;
+    else if (vAlign === 'bottom')
+        y -= lineCount * fontSize;
+
+    if (hAlign === 'center' || hAlign === 'right') {
+        var alignSize = fontSize;
+        if (hAlign === 'center')
+            alignSize *= 0.5;
+
+        if (lineCount > 1) {
+            for (var iLine = 0; iLine < splittedText.length; iLine++) {
+                this.text(splittedText[iLine], x - this.getStringUnitWidth(splittedText[iLine]) * alignSize, y);
+                y += fontSize;
+            }
+            return this;
+        }
+        x -= this.getStringUnitWidth(text) * alignSize;
+    }
+
+    this.text(text, x, y);
+    return this;
+};

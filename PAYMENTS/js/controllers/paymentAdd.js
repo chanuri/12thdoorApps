@@ -24,6 +24,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
     $scope.maxDate = new Date();
     $scope.submitProgress = false;
     $scope.receiveRequired = true;
+    $scope.payment.amountReceived = 0
 
 
      $scope.tests = [{
@@ -590,7 +591,7 @@ rasm.controller('AppCtrlAdd', function($scope, $state, $objectstore, $location, 
             }else if(parseFloat($scope.payment.namount) > 0){
                 var confirm = $mdDialog.confirm()
                   .title('Unapplied advances')
-                  .content('Unapplied advances USD ' + $scope.payment.namount + ' This amount can be applied on future invoices.')
+                  .content('Unapplied advances USD ' + $scope.payment.namount.toFixed(2) + ' This amount can be applied on future invoices.')
                   .ariaLabel('Lucky day')
                   .targetEvent()
                   .ok('OK')

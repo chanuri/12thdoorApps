@@ -1,81 +1,81 @@
 
-rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$state", "$activityLog","$commentLog","$mdToast","$DownloadPdf","$objectstore", "$auth","$mdDialog", function($scope, $stateParams,$rootScope,$auth, $state, $activityLog,$commentLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
+rasm.controller("EmailController", ["$scope","$objectstore","object","$sce","$mdDialog", function($scope,$objectstore,object,$sce,$mdDialog){
+
+	$scope.emailTo = [];
+    $scope.emailBcc = [];
+    $scope.emailSubject ="";
+    $scope.productid = object.product_code
+    $scope.pdfChipArr = [];
+    $scope.pdfChipArr.push(object.product_code+".pdf")
+
+	$scope.ContactDetails = []
+
+    var contactClient = $objectstore.getClient("contact12thdoor");
+    contactClient.onGetMany(function(data){
+        for(i=0; i<=data.length-1; i++){
+            $scope.ContactDetails.push({
+                email : data[i].Email,
+                display : data[i].Name,
+                value : (data[i].Name).toLowerCase()
+            })
+        }
+    });
+    contactClient.onError(function(data){
+        console.log("error loading contact details")
+    });
+    contactClient.getByFiltering("select * from contact12thdoor where status = 'Active'")
+
+    $scope.selectedItem = null;
+    $scope.searchText = null;
+    $scope.selectedItemTo = null;
+    $scope.searchTextTo = null;
+
+    $scope.querySearch = querySearch;
+
+    function querySearch(query) {
+        var results = [];
+        for (i = 0, len = $scope.ContactDetails.length; i < len; ++i) {
+            if ($scope.ContactDetails[i].value.indexOf(query.toLowerCase()) != -1) {
+                results.push($scope.ContactDetails[i]);
+            }
+        }
+        return results;
+    }
+
+	var emailBodyClient = $objectstore.getClient("t12thdoorSettingEmailBody")
+    emailBodyClient.onGetMany(function(data){ 
+        $scope.emailBody = data[0].emailBody; 
+        var newOne = [];
+        // newOne.push(data[0].emailBody.substring(data[0].emailBody.indexOf("{{")+2,data[0].emailBody.indexOf("}}")));
+        $scope.emailBody = $scope.emailBody.replace("@@paymentNo@@", object.product_code);
+        $scope.emailBody = $scope.emailBody.replace("@@accounturl@@", "<a style='color: blue;' href='http://12thdoor.com'>http://12thdoor.com</a>") 
+        $scope.emailBody = $scope.emailBody.replace("@@companyName@@", object.product_code);
+        $scope.emailBody = '<p style="font-size:15px;">' + $scope.emailBody + '</p>'
+        $scope.emailBody = $sce.trustAsHtml($scope.emailBody);
+        
+ 
+    });
+    emailBodyClient.onError(function(data){
+        console.log("error loading email body")
+    });
+    emailBodyClient.getByFiltering("select * from t12thdoorSettingEmailBody where uniqueRecord ='2' ")
+
+    $scope.closeEmail = function(){ 
+        $mdDialog.hide()
+    }
+
+}])
+
+
+rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$state","$helpers", "$activityLog","$commentLog","$mdToast","$DownloadPdf","$objectstore", "$auth","$mdDialog", function($scope, $stateParams,$rootScope,$auth, $state,$helpers, $activityLog,$commentLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
 	$scope.UserName = $auth.getSession()
+	$scope.hostUrl = $helpers.getHost()
 
 	$scope.ConvertToPdf = function(obj){
 		$DownloadPdf.GetPdf(obj,'download')
-		
-		// if (obj.UploadBrochure.val.length == 0) {
-		// 	$mdDialog.show(
-  //             $mdDialog.alert()
-  //             .title("Error Loading Brochures")
-  //             .content("Brochures Are Not Available")
-  //             .ariaLabel('Alert Dialog Demo')
-  //             .ok('OK')
-  //           );
-		// }else{
-		// 	for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
-		// 		var brochureClient = $objectstore.getClient("productbrochureNew");
-		// 		brochureClient.onGetOne(function(data){
-		// 			if (!isEmpty(data)) {
-		// 				var fileExt = data.FileName.split('.').pop();
-		// 	 			var link = document.createElement("a"); // set up <a> tag
-		// 				var url;
-
-		// 				if (fileExt  == "pdf" ) {
-		// 					url = 'data:application/pdf;base64,' + data.Body;
-		// 		        }
-		// 				if (fileExt == "docx") {
-		// 					url = 'data:application/msword;base64,' + data.Body;
-		// 				}
-
-		// 				link.download = data.FileName;					
-		// 	            link.href = url;
-		// 				document.body.appendChild(link);
-		// 				link.click();
-		// 				document.body.removeChild(link);
-		// 				delete link;			
-		// 			}
-		// 		})
-		// 		brochureClient.onError(function(data){
-		// 			console.log("error loading brochure Data")
-		// 		})
-		// 		brochureClient.getByKey(obj.UploadBrochure.val[i].name)
-		// 	}
-		// } 
 	}
 	$scope.print = function(obj){
 		$DownloadPdf.GetPdf(obj,'print')
-
-		// if (obj.UploadBrochure.val.length == 0) {
-		// 	$mdDialog.show(
-  //             $mdDialog.alert()
-  //             .title("Error Loading Brochures")
-  //             .content("Brochures Are Not Available")
-  //             .ariaLabel('Alert Dialog Demo')
-  //             .ok('OK')
-  //           );
-		// }else{
-
-		// 	for(i=0; i<=obj.UploadBrochure.val.length -1; i++){
-		// 		var brochureClient = $objectstore.getClient("productbrochureNew");
-		// 		brochureClient.onGetOne(function(data){
-		// 			if (!isEmpty(data)) {
-		// 				var fileExt = data.FileName.split('.').pop()
-		// 				if (fileExt  == "pdf" ) {
-		// 					var myWindow = window.open("data:application/pdf;base64," + data.Body)
-		// 					myWindow.print(); 
-		// 					myWindow.focus();
-		// 				};
-		// 				if (fileExt == "docx") {window.open("data:application/msword;base64," + data.Body)};					
-		// 			}
-		// 		})
-		// 		brochureClient.onError(function(data){
-		// 			console.log("error loading brochure Data")
-		// 		})
-		// 		brochureClient.getByKey(obj.UploadBrochure.val[i].name)
-		// 	}			
-		// }
 	}
 	function isEmpty(obj) {
 	    for(var prop in obj) {
@@ -244,131 +244,14 @@ rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$s
 
 	$scope.SendEmail = function(ev,obj){ // send email 
 		$mdDialog.show({
-	      controller: EmailController,
-	      templateUrl: 'product_partials/product_email.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
+	      controller: 'EmailController',
+	      templateUrl: 'product_partials/product_email.html', 
 	      clickOutsideToClose:true,
 	      locals :{ object : obj}
 	    });
 	}
 
-	function EmailController($scope,$mdDialog,$http,object,$objectstore,$auth){
-		$scope.email = {};
-		$scope.email.Brochure = [];
-		$scope.To = [];
-		$scope.BCC = [];
-
-		//load all contact details 
-		var client = $objectstore.getClient("contact");
-		client.onGetMany(function(data){
-
-			for (var i = data.length - 1; i >= 0; i--) { // add new field call full name 
-				data[i].FullName = data[i].CustomerFname + ' ' + data[i].CustomerLname;
-			};
-			$scope.ContactDetails = [];
-			for (var i = data.length - 1; i >= 0; i--) {
-				$scope.ContactDetails.push({
-					display: data[i].FullName
-					, value: data[i].FullName.toLowerCase()
-					, email: data[i].Email
-				});
-			};			 
-			//console.log($scope.ContactDetails);
-
-		});
-		client.onError(function(data){
-			console.log("error Loading Contact Details")
-		});
-		client.getByFiltering("*");
-		
-		// auto complete chips 
-		$scope.selectedItem = null;
-		$scope.searchText = null;
-		$scope.querySearch = querySearch;
-
-		function querySearch(query) {
-			$scope.enter = function (keyEvent) {
-				if (keyEvent.which === 13) {
-					if ($scope.selectedItem === null) {
-						$scope.selectedItem = query;
-						//console.log(results);
-					} else {
-						//console.log($scope.selectedItem);
-					}
-				}
-			}
-			var results = [];
-			for (i = 0, len = $scope.ContactDetails.length; i < len; ++i) {
-				if ($scope.ContactDetails[i].value.indexOf(query.toLowerCase()) != -1) {
-					results.push($scope.ContactDetails[i]);
-				}
-			}
-			return results;
-		}
-
-		//get brochure name
-		if (object.UploadBrochure.val.length > 0) {
-			$scope.email.Brochure.push(object.UploadBrochure.val[0].name);
-		};
-
-		// if brochure exsisit get all brochure details 
-		if ($scope.email.Brochure.length > 0) {
-			var client = $objectstore.getClient("productbrochureNew");
-			client.onGetOne(function(data){
-				$scope.BrochureDetails = data;
-				//console.log($scope.email.Brochure)
-			});
-			client.onError(function(data){
-			});
-			client.getByKey($scope.email.Brochure)
-		};
-
-		$scope.SendMail = function(obj){
-			obj.To = [];
-			obj.BCC = [];
-			
-			//console.log($scope.To)
-			if ($scope.To.length > 0) {
-				for (var i = $scope.To.length - 1; i >= 0; i--) {
-					obj.To.push($scope.To[i].email);
-				};
-			};
-
-			if ($scope.BCC.length > 0) {
-				for (var i = $scope.BCC.length - 1; i >= 0; i--) {
-					obj.BCC.push($scope.BCC[i].email);
-				};
-			};
-
-			if ($scope.BrochureDetails) {
-				obj.Brochure = $scope.BrochureDetails
-			};
-			//console.log(obj)
-			$http({
-				url : "service/email.php",
-				method : "POST",
-				data : obj,
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-
-			}).then(function(response){
-				//console.log(response)
-				$mdDialog.show(
-	              $mdDialog.alert()
-	              .parent(angular.element(document.body))
-	              .content(response.data.toString())
-	              .ariaLabel('Alert Dialog Demo')
-	              .ok('OK')
-	              .targetEvent(response)
-	            );
-			},function(response){
-				//console.log(response)
-			});
-		}
-		$scope.closeDialog = function(){
-			$mdDialog.hide();
-		}
-	}
+ 
 	//load all products 
 	var client = $objectstore.getClient("product12thdoor");
 	client.onGetMany(function(data){

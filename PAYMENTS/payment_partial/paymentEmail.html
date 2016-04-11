@@ -1,169 +1,105 @@
-<!--    <md-bottom-sheet class="md-list md-has-header" style="width:50%; height:400px;  overflow-x:hidden; position:absolute; left: 620px;" layout-align="start end" ng-cloak>
-    
-     <md-toolbar  class="modal-header" style="width:105%; margin-left:-15px;">
-              <div class="md-toolbar-tools">
-                   <h2>Email</h2>
-                   <span flex></span>
-                   <md-button href class="md-icon-button" ng-click="CloseDialog()">
-                       <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-                   </md-button>
-               </div>
-           </md-toolbar> 
-           <md-whiteframe class="md-whiteframe-z1" style="background-color:#FFFFFF;" style="overflow-y:auto;">
-           
+<style type="text/css">
+  .md-chips, md-chips .md-chips {
+    box-shadow: none !important;
+  }
+  .md-chips .md-chip {
+    border-radius: 0px !important;
+  }
+  #pdfChip .md-chip-input-container input { 
+    display: none;
+  }
+  #pdfChip .md-chip {  
+    width: 50%;
+  }
+  input:focus{
+    outline: none;
+  }
+  /*.md-input-container .md-input {
+    border-width: 0px 0px 0px 0px;
+  }*/
+</style>
+<md-dialog style="max-width:960px;" arial-label="email">    
+   <md-toolbar class="modal-header">
+      <div class="md-toolbar-tools">
+         <h2>Email to customer</h2>
+         <span flex></span>
+         <md-button href class="md-icon-button" ng-click="closeEmail()">
+            <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+         </md-button>
+      </div>
+   </md-toolbar>
 
-            <div layout layout-sm="column" layout-margin style="margin-top:-30px;">       
-                <md-content class="md-padding" layout="column"  flex>
-                  <md-chips ng-model="emailTo" md-autocomplete-snap md-require-match="true" flex>
-                    <md-autocomplete
-                      md-selected-item="selectedItemTo"
-                      md-search-text="searchTextTo"
-                      md-items="item in querySearch(searchTextTo)"
-                      md-item-text="item.display"
-                      placeholder="To">
-                      <span md-highlight-text="searchTextTo">{{item.display}}</span>
-                    </md-autocomplete>
-                    <md-chip-template>
-                      <span>
-                        <strong>{{$chip.value}}</strong>
-                         <em>({{$chip.email}})</em>
-                      </span>
-                    </md-chip-template>
-                  </md-chips>                           
-                </md-content>
-                </div>
-
-
-               <div layout layout-sm="column" layout-margin style="margin-top:-30px;">       
-                <md-content class="md-padding" layout="column"  flex>
-                  <md-chips ng-model="emailBcc" md-autocomplete-snap md-require-match="true" flex>
-                    <md-autocomplete
-                      md-selected-item="selectedItem"
-                      md-search-text="searchText"
-                      md-items="item in querySearch(searchText)"
-                      md-item-text="item.display"
-                      placeholder="BCC">
-                      <span md-highlight-text="searchText">{{item.display}}</span>
-                    </md-autocomplete>
-                    <md-chip-template>
-                      <span>
-                        <strong>{{$chip.value}}</strong>
-                         <em>({{$chip.email}})</em>
-                      </span>
-                    </md-chip-template>
-                  </md-chips>                           
-                </md-content>
-                </div>
-          <div layout layout-sm="column" layout-margin style="margin-top:-30px; "> 
-                    <md-content class="md-padding" layout="column"  flex>
-                    <md-input-container flex >
-                        <label>Subject</label>
-                        <label>Invoice No.{{test.invoiceRefNo}}</label> 
-                        <input ng-model="email.Subject">
-                        </md-input-container>
-                        </md-content>
-                    </div>
-               <div layout layout-sm="column" layout-margin >
-              
-                   <md-card style="width:100%">
-                    <md-content class="md-padding" layout="column" >
-                   <md-card-content  flex>
-                  
-                      <textarea type="text" ng-model="emailBody" style="height:250px;width: 575px;"></textarea>                                            
-                     
-                    </md-card-content> 
-                    </md-content>
-                   </md-card>
-                    
-                    </div>
-                    <div class="md-actions" layout="row">
-                <span flex></span>
-                <md-button href class="md-primary" ng-click="SendMail(email)">Send</md-button>
-            </div>  
-            </md-whiteframe>    
-     </md-bottom-sheet>
- -->
-
-
-
-
-            <md-dialog style="max-width:960px;" arial-label="email">
-            <div layout layout-sm="column" layout-margin >
-            <div flex="90"></div>
-            <md-button href class="md-icon-button"  ng-click="closeEmail()">
-                  <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-                </md-button>
-       </div>
-        <md-dialog-content style="width:650px;" >
-             <div layout layout-sm="column" layout-margin style="margin-top:-30px;">       
-                <md-content class="md-padding" layout="column"  flex>
-                  <md-chips ng-model="emailTo" md-autocomplete-snap md-require-match="true" flex>
-                    <md-autocomplete
-                      md-selected-item="selectedItemTo"
-                      md-search-text="searchTextTo"
-                      md-items="item in querySearch(searchTextTo)"
-                      md-item-text="item.display"
-                      placeholder="To">
-                      <span md-highlight-text="searchTextTo">{{item.display}}</span>
-                    </md-autocomplete>
-                    <md-chip-template>
-                      <span>
-                        <strong>{{$chip.value}}</strong>
-                         <em>({{$chip.email}})</em>
-                      </span>
-                    </md-chip-template>
-                  </md-chips>                           
-                </md-content>
-                </div>
-
-
-               <div layout layout-sm="column" layout-margin style="margin-top:-30px;">       
-                <md-content class="md-padding" layout="column"  flex>
-                  <md-chips ng-model="emailBcc" md-autocomplete-snap md-require-match="true" flex>
-                    <md-autocomplete
-                      md-selected-item="selectedItem"
-                      md-search-text="searchText"
-                      md-items="item in querySearch(searchText)"
-                      md-item-text="item.display"
-                      placeholder="BCC">
-                      <span md-highlight-text="searchText">{{item.display}}</span>
-                    </md-autocomplete>
-                    <md-chip-template>
-                      <span>
-                        <strong>{{$chip.value}}</strong>
-                         <em>({{$chip.email}})</em>
-                      </span>
-                    </md-chip-template>
-                  </md-chips>                           
-                </md-content>
-                </div>
-            
-               <div layout layout-sm="column" layout-margin style="margin-top:10px; ">  
-                    <md-input-container flex style="margin-left: 21px;  margin-right: 21px;" >
-                        <label >Subject</label>
-                        <input ng-model="emailSubject">
-                    </md-input-container>  
-                </div>
-                        <div layout layout-sm="column" layout-margin >
-              
-                   <md-card style="width:100%">
-                    <md-content class="md-padding" layout="column" >
-                   <md-card-content  flex>
-                  
-                      <textarea type="text" ng-model="emailBody" style="height:250px;width: 575px;background: #FFF;resize: none; border-style: none;border-color: Transparent;overflow: auto;  " ng-disabled="true"></textarea>                                       
-                     
-                    </md-card-content> 
-                    </md-content>
-                   </md-card>
-                    
-                    </div>  
-
-                    </md-dialog-content>    
-                   
-
-            <div class="md-actions" layout="row">
-                <span flex></span>
-                 <md-button href ng-click="sendEmail()" class="md-raised md-primary">Send</md-button>
-            </div>
-    </md-dialog>
-
+   <md-dialog-content style="width:650px;" >
+      <div layout="row" layout-sm="column"  >
+      <div layout="column"  flex="10" layout-align="start center">        
+        <label style="margin-top: 30px;color: rgba(128, 128, 128, 0.67);" >To</label>
+      </div>
+         <md-content layout="column" class="md-padding" layout="column"  flex>
+            <md-chips ng-model="emailTo" md-autocomplete-snap md-require-match="true" flex>
+               <md-autocomplete
+                  md-selected-item="selectedItemTo"
+                  md-search-text="searchTextTo"
+                  md-items="item in querySearch(searchTextTo)"
+                  md-item-text="item.display" >
+                  <span md-highlight-text="searchTextTo">{{item.display}}</span>
+               </md-autocomplete>
+               <md-chip-template>
+                  <span>
+                  <strong>{{$chip.value}}</strong>
+                  <em>({{$chip.email}})</em>
+                  </span>
+               </md-chip-template>
+            </md-chips>
+         </md-content>
+      </div>
+      <div layout="row" layout-sm="column" style="margin-top:-25px;" >
+      <div layout="column"  flex="10" layout-align="start center">        
+        <label style="margin-top: 30px;margin-left: 14px;color: rgba(128, 128, 128, 0.67);" >Bcc</label>
+      </div>
+         <md-content class="md-padding" layout="column"  flex>
+            <md-chips ng-model="emailBcc" md-autocomplete-snap md-require-match="true" flex>
+               <md-autocomplete
+                  md-selected-item="selectedItem"
+                  md-search-text="searchText"
+                  md-items="item in querySearch(searchText)"
+                  md-item-text="item.display" >
+                  <span md-highlight-text="searchText">{{item.display}}</span>
+               </md-autocomplete>
+               <md-chip-template>
+                  <span>
+                  <strong>{{$chip.value}}</strong>
+                  <em>({{$chip.email}})</em>
+                  </span>
+               </md-chip-template>
+            </md-chips>
+         </md-content>
+      </div>
+      <div layout="row" layout-sm="column"  style="margin-top: -25px;" >
+        <div layout="column"  flex="10" layout-align="start center">        
+          <label style="margin-top: 30px;margin-left: 37px;color: rgba(128, 128, 128, 0.67);" >Subject</label>
+        </div> 
+          <input flex   style=" border: 0px solid;margin-left: 20px;margin-top: 30px;" ng-model="emailSubject">
+          
+      </div>
+      <div layout layout-sm="column" layout-margin >
+         <md-card style="width:100%">
+            <md-content class="md-padding" layout="column" >
+               <md-card-content  flex style=" width: 575px;">
+                  <div   ng-bind-html="emailBody" style="white-space: pre;"></div>
+                  <br>
+                  <!--  <textarea type="text" ng-model="emailBody" style="height:250px;width: 575px;background: #FFF;resize: none; border-style: none;border-color: Transparent;overflow: auto;  " ng-disabled="true"></textarea>     -->                                   
+                  <md-chips  id="pdfChip" ng-model="pdfChipArr" style="margin-left:-5px;"  readonly="false"  ng-disabed="true" >
+                     <md-chip-template>
+                        <strong>{{$chip}}</strong> 
+                     </md-chip-template>
+                  </md-chips>
+               </md-card-content>
+            </md-content>
+         </md-card>
+      </div>
+   </md-dialog-content>
+   <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button href ng-click="sendEmail()" class="md-raised md-primary">Send</md-button>
+   </div>
+</md-dialog>

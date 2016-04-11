@@ -1,8 +1,11 @@
-rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader,$mdToast,$DownloadPdf,UploaderService,$helpers){
-    console.log(obj)
+rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader,$mdToast,$DownloadPdf,UploaderService,$helpers,$sce){
+ 
     $scope.emailTo = [];
     $scope.emailBcc = [];
     $scope.emailSubject ="";
+    $scope.paymentid = obj.paymentid
+    $scope.pdfChipArr = [];
+    $scope.pdfChipArr.push(obj.paymentid+".pdf")
 
     $scope.emailTo.push({
         email : obj.cusEmail,
@@ -44,13 +47,14 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
 
     var emailBodyClient = $objectstore.getClient("t12thdoorSettingEmailBody")
     emailBodyClient.onGetMany(function(data){ 
-        $scope.emailBody = data[0].emailBody;
-        console.log(data[0].emailBody) 
+        $scope.emailBody = data[0].emailBody; 
         var newOne = [];
         // newOne.push(data[0].emailBody.substring(data[0].emailBody.indexOf("{{")+2,data[0].emailBody.indexOf("}}")));
         $scope.emailBody = $scope.emailBody.replace("@@paymentNo@@", obj.paymentid);
-        $scope.emailBody = $scope.emailBody.replace("@@accounturl@@", "http://12thdoor.com") 
+        $scope.emailBody = $scope.emailBody.replace("@@accounturl@@", "<a style='color: blue;' href='http://12thdoor.com'>http://12thdoor.com</a>") 
         $scope.emailBody = $scope.emailBody.replace("@@companyName@@", obj.customer);
+        $scope.emailBody = '<p style="font-size:15px;">' + $scope.emailBody + '</p>'
+        $scope.emailBody = $sce.trustAsHtml($scope.emailBody);
         
  
     });
@@ -64,33 +68,65 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
         $mdDialog.hide()
     }
 
+    var jsondata = {}
     $scope.sendEmail = function(){
-        var sampleObj =[];
-        if (obj.paidInvoice)   sampleObj = angular.copy(obj.paidInvoice);
-        else    sampleObj = [];
-        
-        $DownloadPdf.GetPdf(obj,"email",sampleObj) 
-        
-        setTimeout(function(){
-            var decodeUrl =UploaderService.loadPdfUrl()
-            var blobFile = dataURItoBlob(decodeUrl) 
-            blobFile.name = obj.paymentid+'.pdf'
-            // console.log(decodeUrl)
-            $uploader.uploadMedia("paymentImage",blobFile,blobFile.name);
-            $uploader.onSuccess(function (e, data) {
-                 sendEmailBody() 
-            });
-            $uploader.onError(function (e, data) {
-                var toast = $mdToast.simple()
-                    .content('There was an error, please upload!')
-                    .action('OK')
-                    .highlightAction(false)
-                    .position("bottom right");
-                $mdToast.show(toast).then(function () {
-                    //whatever
-                }); 
-            });
-        },1000)
+        var bccArr = [];
+
+        if ($scope.emailBcc.length > 0) {
+            for(t=0; t<=$scope.emailBcc.length-1; t++){
+                bccArr.push($scope.emailBcc[t].email)
+            }
+        }
+
+        jsondata =  {
+             "type": "email", 
+             "subject": $scope.emailSubject,
+             "bcc": bccArr,
+             "from": "Payment <noreply-12thdoor@duoworld.com>",
+             "Namespace": "com.duosoftware.com",
+             "TemplateID": "T_Invoice_1",
+             "DefaultParams": {
+              "@@no@@": obj.paymentid,
+              "@@accounturl@@": "http://12thdoor.com",
+              "@@companyName@@": obj.customer
+            },
+             "CustomParams": {
+              "@@no@@": "0001",
+              "@@accounturl@@": "http://12thdoor.com",
+              "@@companyName@@": "12thdoor"
+            }
+        }
+ 
+        if ($scope.pdfChipArr.length == 0) {
+            sendEmailBody()
+        }else{            
+            var sampleObj =[];
+            if (obj.paidInvoice)   sampleObj = angular.copy(obj.paidInvoice);
+            else    sampleObj = [];
+            
+            $DownloadPdf.GetPdf(obj,"email",sampleObj) 
+            
+            setTimeout(function(){
+                var decodeUrl =UploaderService.loadPdfUrl()
+                var blobFile = dataURItoBlob(decodeUrl) 
+                blobFile.name = obj.paymentid+'.pdf'
+                // console.log(decodeUrl)
+                $uploader.uploadMedia("paymentImage",blobFile,blobFile.name);
+                $uploader.onSuccess(function (e, data) {
+                     emailWithPdf() 
+                });
+                $uploader.onError(function (e, data) {
+                    var toast = $mdToast.simple()
+                        .content('There was an error, please upload!')
+                        .action('OK')
+                        .highlightAction(false)
+                        .position("bottom right");
+                    $mdToast.show(toast).then(function () {
+                        //whatever
+                    }); 
+                });
+            },1000)
+        }
 
         function dataURItoBlob(dataURI, callback) {
             // convert base64 to raw binary data held in a string
@@ -112,52 +148,30 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
             return bb;
         }
     }
+
+    function emailWithPdf(){
+      jsondata.attachments = [{
+        "filename": obj.paymentid+'.pdf',
+        "path": "http://"+$helpers.getHost()+"/apis/media/tenant/paymentImage/"+obj.paymentid+'.pdf'
+      }]
+      sendEmailBody()
+    }
     
     function sendEmailBody(){
 
         var xhttp = []
         var emailSend = false;
-        var bccArr = [];
-
-        if ($scope.emailBcc.length > 0) {
-            for(t=0; t<=$scope.emailBcc.length-1; t++){
-                bccArr.push($scope.emailBcc[t].email)
-            }
-        }
+        
 
         for(em=0; em<=$scope.emailTo.length-1; em++ ){
            
             (function (em){
                 xhttp[em] = new XMLHttpRequest();
-                var jsondata =  {
-                     "type": "email",
-                     "to": $scope.emailTo[em].email,
-                     "subject": $scope.emailSubject,
-                     "bcc": bccArr,
-                     "from": "Payment <noreply-12thdoor@duoworld.com>",
-                     "attachments": [{
-                      "filename": obj.paymentid+'.pdf',
-                      "path": "http://"+$helpers.getHost()+"/apis/media/tenant/paymentImage/"+obj.paymentid+'.pdf'
-                    }],
-                     "Namespace": "com.duosoftware.com",
-                     "TemplateID": "T_Invoice_1",
-                     "DefaultParams": {
-                      "@@no@@": obj.paymentid,
-                      "@@accounturl@@": "http://12thdoor.com",
-                      "@@companyName@@": obj.customer
-                    },
-                     "CustomParams": {
-                      "@@no@@": "0001",
-                      "@@accounturl@@": "http://12thdoor.com",
-                      "@@companyName@@": "12thdoor"
-                    }
-                }
 
-                console.log(jsondata)
+                jsondata.to = $scope.emailTo[em].email; 
 
                 xhttp[em].onreadystatechange = function() {
-                    if (xhttp[em].readyState  == 4) {
-                        console.log(em+xhttp[em].responseText) 
+                    if (xhttp[em].readyState  == 4) { 
                         if (!emailSend) {
                             emailSend = true;
                             $mdDialog.hide();
@@ -177,7 +191,7 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
                 xhttp[em].ontimeout = function() {}
 
                 xhttp[em].open("POST", "http://test.12thdoor.com:3500/command/notification", true);        
-                xhttp[em].setRequestHeader('securitytoken', '123');
+                xhttp[em].setRequestHeader('securitytoken', 'eb93cca7a7f19ff5ecb48d24c9767024');
                 xhttp[em].setRequestHeader('Content-type', 'application/json');
                 xhttp[em].send(JSON.stringify(jsondata));
 
@@ -186,41 +200,14 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
     }
 });
 
-rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $mdDialog, $stateParams,$state,$mdToast,$http,$DownloadPdf,$mdBottomSheet) {
+rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$auth, $mdDialog, $stateParams,$state,$mdToast,$http,$DownloadPdf,$mdBottomSheet) {
  
 
     $scope.viewPyamentArr = [];
     $scope.progressBar = false;
     $scope.maxNumber = 0;
 
-    var jsondata = {
-        "type":"email",
-         "to":"sachila@duosoftware.com",
-         "subject":"Confirmation",
-         "from":"Duo World <12thdoor@duoworld.com>",
-         "Namespace": "com.SLT.space.cargills.com",
-         "TemplateID": "T_Email_GENERAL",
-         "DefaultParams": {
-          "@@CNAME@@": "Kalana",
-          "@@TITLE@@": "Account Creation Confirmation",
-          "@@MESSAGE@@": "The account you created has been verified.",
-          "@@CNAME@@": "Kalana",
-          "@@APPLICATION@@": "E-banks.lk",
-          "@@FOOTER@@": "Copyright 2015",
-          "@@LOGO@@": ""
-
-         },
-         "CustomParams": {
-          "@@CNAME@@": "Kalana",
-          "@@TITLE@@": "Account Creation Confirmation",
-          "@@MESSAGE@@": "The account you created has been verified.",
-          "@@CNAME@@": "Kalana",
-          "@@FOOTER@@": "Copyright 2015",
-          "@@APPLICATION@@": "E-banks.lk",
-          "@@FOOTER@@": "Copyright 2015", 
-          "@@LOGO@@": ""
-         }
-    }
+    console.log( $auth.getSession())
     $scope.emailFunction = function(item){
         $mdDialog.show({
             templateUrl: 'payment_partial/paymentEmail.html',
@@ -318,8 +305,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
                 data = data.sort(function(a,b){
                     return b.auotIncrement - a.auotIncrement
                 })
-                $scope.latestPaymentId = data[0].paymentid;
-                console.log(data) 
+                $scope.latestPaymentId = data[0].paymentid; 
             }else{
                 $scope.latestPaymentId = $scope.viewPyamentArr[0].paymentid
             }        
@@ -712,7 +698,8 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore, $md
              event.preventDefault(); //prevent actions
              if (obj.Commentstxt) { // if comment is not null
                  var TodayDate = new Date();
-                 $scope.UserName = "test ranawaka"
+                 $scope.UserName =  $auth.getSession().Name;
+
                  $scope.CommentObj = {
                     UserName : $scope.UserName,
                     TodayDate : TodayDate,

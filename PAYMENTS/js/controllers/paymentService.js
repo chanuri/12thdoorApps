@@ -1,6 +1,6 @@
 
 rasm.service("$activityLog",["$objectstore","$auth", function($objectstore,$auth){
-    $auth.checkSession();
+    // $auth.checkSession();
     var userName = $auth.getUserName()
     this.newActivity = function(ActivityTxt,pCode,callback){
         var txt = ActivityTxt + userName;
@@ -310,7 +310,7 @@ function hasNull(target) {
  rasm.directive('fileUpLoaderInvoice', ['$uploader', "$rootScope", "$mdToast", 'UploaderService', function($uploader, $rootScope, $mdToast, UploaderService) {
     return {
         restrict: 'E',
-        template: "<div class='content' ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' flex ><div id='dropped-files' ng-show='showUploadTable'><table id='Tabulate' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><label for='file-upload' style='font-size:12px;margin-left:10px' class='ng-binding'>{{label}}</label><input  id='file-upload' type='file' style='display: none;' multiple></div></div></div></div>",
+        template: "<div class='content' ng-init='showUploadButton=false;showDeleteButton=false;showUploadTable=false;'><div id='drop-files' ondragover='return false' layout='column' layout-align='space-around center'><div id='uploaded-holder' style=' width: 100%;' flex ><div id='dropped-files' style=' width: 100%;' ng-show='showUploadTable'><table id='Tabulate' style=' width: 100%;' ></table></div></div><div flex ><md-button class='md-raised' id='deletebtn' ng-show='showDeleteButton' class='md-raised' style='color:rgb(244,67,54);margin-left:30px;'><md-icon md-svg-src='img/directive_library/ic_delete_24px.svg'></md-icon></md-button></div><div flex><md-icon md-svg-src='img/directive_library/ic_cloud_upload_24px.svg'></md-icon><label for='file-upload' style='font-size:12px;margin-left:10px' class='ng-binding'>{{label}}</label><input  id='file-upload' type='file' style='display: none;' multiple></div></div></div></div>",
         scope: {
             label: '@',
             uploadType: '@'
@@ -375,11 +375,19 @@ function hasNull(target) {
                 function bindNewFile(){
 
                     if (scope.btnVisibility) {
-                        var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th></tr>";
+                        var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
+
                         for (var i = 0; i < filesArray.length; i++) {
-                            var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td></tr>";
+                            var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table' style=' text-align: left;'>" +
+                           
+                            filesArray[i].size +" bytes"+ "</td></tr>";
                             newHtml += tableRow;
                         }
+                        // var newHtml = "<tr class='md-table-headers-row'><th class='md-table-header' style='Padding:0px 16px 10px 0'>Name</th><th class='md-table-header' style='Padding:0px 16px 10px 0'>Size</th></tr>";
+                        // for (var i = 0; i < filesArray.length; i++) {
+                        //     var tableRow = "<tr><td class='upload-table' style='float:left'>" + filesArray[i].name + "</td><td class='upload-table' style='padding-right:100px;'>" + filesArray[i].size + " Byte </td></tr>";
+                        //     newHtml += tableRow;
+                        // }
                         element.find("#Tabulate").html(newHtml);
                         $rootScope.$apply(function() {
                             scope.showUploadButton = true;

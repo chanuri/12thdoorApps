@@ -82,6 +82,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
         var client = $objectstore.getClient("leger12thdoor");
     client.onGetMany(function(data) {
         if (data) {
+
             $scope.Leger = data;
             for (var i = data.length - 1; i >= 0; i--) { 
                 data[i].ID = parseInt(data[i].ID);
@@ -120,15 +121,6 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
       obj.customerid = obj.customerid.toString();
       var statusClient = $objectstore.getClient("contact12thdoor");
       statusClient.onComplete(function(data){
-        // $mdDialog.show(
-        //     $mdDialog.alert()
-        //     .parent(angular.element(document.body))
-        //     .title('Success')
-        //     .content('status changed successfully')
-        //     .ariaLabel('Alert Dialog Demo')
-        //     .ok('OK')
-        //     .targetEvent(data)
-        // );
       });
       statusClient.onError(function(data){
           $mdDialog.show(
@@ -271,49 +263,49 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
 
         $scope.convertpdf = function(content){
 
-    var totalBalance = 0;
-    var Balance = 0;
-    var Intotal = 0;
-    var CredTotal = 0;
-    var PayTotal = 0;
-    var receiptBalance = 0;
-    var CreditNoteBalance = 0;
-    var bbb = 0;
+            var totalBalance = 0;
+            var Balance = 0;
+            var Intotal = 0;
+            var CredTotal = 0;
+            var PayTotal = 0;
+            var receiptBalance = 0;
+            var CreditNoteBalance = 0;
+            var bbb = 0;
 
             var client = $objectstore.getClient("leger12thdoor");
-    client.onGetMany(function(data) {
-        if (data) {
-            $scope.Leger = data;
-            for (var i = data.length - 1; i >= 0; i--) { 
-                data[i].ID = parseInt(data[i].ID);
-                    $scope.leger.push(data[i]);
+            client.onGetMany(function(data) {
+                if (data) {
+                    $scope.Leger = data;
+                    for (var i = data.length - 1; i >= 0; i--) { 
+                        data[i].ID = parseInt(data[i].ID);
+                            $scope.leger.push(data[i]);
 
-                    if(data[i].Type == "Invoice"){
-                       Intotal += data[i].Amount; 
-                       console.log(Intotal)
-                    }
-                    else if(data[i].Type == "Credit Note"){
-                        CredTotal += data[i].Amount;
-                        CreditNoteBalance = Intotal - data[i].Amount;
-                    }else if(data[i].Type == "Receipt"){
-                        PayTotal += data[i].Amount;
-                        receiptBalance = Intotal - data[i].Amount;
-                    }
+                            if(data[i].Type == "Invoice"){
+                               Intotal += data[i].Amount; 
+                            }
+                            else if(data[i].Type == "Credit Note"){
+                                CredTotal += data[i].Amount;
+                                CreditNoteBalance = Intotal - data[i].Amount;
+                            }else if(data[i].Type == "Receipt"){
+                                PayTotal += data[i].Amount;
+                                receiptBalance = Intotal - data[i].Amount;
+                            }
 
-                    $scope.totalBalance = parseFloat($scope.Intotal - PayTotal- CredTotal);
-            }
-        }
-    });
-    client.onError(function(data) {});
-    client.getByFiltering("select * from leger12thdoor where AccountNo = '"+content.customerid+"'");
-    
+                             var totalBalance = parseFloat($scope.Intotal - PayTotal- CredTotal);
+                    }
+                }
+            });
+            client.onError(function(data) {});
+            client.getByFiltering("select * from leger12thdoor where AccountNo = '"+content.customerid+"'");
+            
 
 
              content = hasNull(content);
             toDataUrl('img/image1.jpg', function(base64Img){
             var doc = new jsPDF();
                 doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
-                var proHeight = 132;
+
+                var proHeight = 170;
 
                 
                 var newDate = $filter('date')(new Date());
@@ -348,7 +340,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
                 doc.text(60,120, newDate);
 
                 doc.setFillColor(192, 192, 192);
-                doc.rect(130, 75, 63, 50, 'F');
+                doc.rect(130, 75, 63, 55, 'F');
 
                 doc.setFontSize(12);
                 doc.setFontType("bold");
@@ -382,8 +374,247 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
                 doc.text(170,120,content.BaseCurrency + totalBalance.toString());
 
 
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(30,160,"Date");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(60,160,"Description");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(140,160,"Amount");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(170,160,"Balance");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(30, 165,"___________________________________________________________________"); 
+
+                for(pp=0; pp<= $scope.leger.length-1; pp++){
+
+                var newLegerDate = $filter('date')($scope.leger[pp].Date);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,proHeight,  newLegerDate);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(60,proHeight,$scope.leger[pp].Type);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(140,proHeight,$scope.leger[pp].Amount.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(170,proHeight,$scope.leger[pp].Amount.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, proHeight +  10 ,"___________________________________________________________________"); 
+
+                proHeight += 20;
+                if (proHeight > 272) {
+                        doc.addPage()
+                        proHeight = 10
+                    }
+                }
+                
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(140, proHeight+10, "Balance Due");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(170, proHeight+10, totalBalance.toString());
 
                 doc.save(content.customerid.toString()+'.pdf');
+            })
+        }
+
+/*___________________________________________________________________________________________________________*/
+
+        $scope.printDetails = function(content){
+
+            var totalBalance = 0;
+            var Balance = 0;
+            var Intotal = 0;
+            var CredTotal = 0;
+            var PayTotal = 0;
+            var receiptBalance = 0;
+            var CreditNoteBalance = 0;
+            var bbb = 0;
+
+            var client = $objectstore.getClient("leger12thdoor");
+            client.onGetMany(function(data) {
+                if (data) {
+                    $scope.Leger = data;
+                    for (var i = data.length - 1; i >= 0; i--) { 
+                        data[i].ID = parseInt(data[i].ID);
+                            $scope.leger.push(data[i]);
+
+                            if(data[i].Type == "Invoice"){
+                               Intotal += data[i].Amount; 
+                            }
+                            else if(data[i].Type == "Credit Note"){
+                                CredTotal += data[i].Amount;
+                                CreditNoteBalance = Intotal - data[i].Amount;
+                            }else if(data[i].Type == "Receipt"){
+                                PayTotal += data[i].Amount;
+                                receiptBalance = Intotal - data[i].Amount;
+                            }
+
+                             var totalBalance = parseFloat($scope.Intotal - PayTotal- CredTotal);
+                    }
+                }
+            });
+            client.onError(function(data) {});
+            client.getByFiltering("select * from leger12thdoor where AccountNo = '"+content.customerid+"'");
+            
+
+
+             content = hasNull(content);
+            toDataUrl('img/image1.jpg', function(base64Img){
+            var doc = new jsPDF();
+                doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
+
+                var proHeight = 170;
+
+                
+                var newDate = $filter('date')(new Date());
+
+                doc.setFontSize(20);
+                doc.setFontType("bold");
+                doc.text(30,55,"ACCOUNT STATEMENT");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,60,"Period 01/20/2016 to 2/20/2016" );
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,80,"To" );
+
+                doc.setFontSize(12);
+                doc.text(30,87, content.Name);
+
+                doc.setFontSize(12);
+                doc.text(30,94, content.baddress.street);
+
+                doc.setFontSize(12);
+                doc.text(30,101, content.baddress.city + content.baddress.state + content.baddress.zip + content.baddress.country);
+
+                doc.setFontSize(12);
+                doc.text(30,108, content.Email);
+
+                doc.setFontSize(12);
+                doc.text(30,120, "Statement Date");
+                doc.setFontSize(12);
+                doc.text(60,120, newDate);
+
+                doc.setFillColor(192, 192, 192);
+                doc.rect(130, 75, 63, 55, 'F');
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(130,83,"Summary");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(130,90,"Balance B/F");
+                doc.setFontSize(12);
+                doc.text(170,90,content.BaseCurrency + "0.00");
+
+                doc.setFontSize(12);
+                doc.text(130,97,"Invoices");
+                doc.setFontSize(12);
+                doc.text(170,97,content.BaseCurrency + Intotal.toString());
+
+                doc.setFontSize(12);
+                doc.text(130,104,"Credits");
+                doc.setFontSize(12);
+                doc.text(170,104,content.BaseCurrency + CredTotal.toString());
+
+                 doc.setFontSize(12);
+                doc.text(130,111,"Payments");
+                doc.setFontSize(12);
+                doc.text(170,111,content.BaseCurrency + PayTotal.toString());
+
+                 doc.setFontSize(12);
+                 doc.setFontType("bold");
+                doc.text(130,120,"Balance Due");
+                doc.setFontSize(12);
+                doc.text(170,120,content.BaseCurrency + totalBalance.toString());
+
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(30,160,"Date");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(60,160,"Description");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(140,160,"Amount");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(170,160,"Balance");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(30, 165,"___________________________________________________________________"); 
+
+                for(pp=0; pp<= $scope.leger.length-1; pp++){
+
+                var newLegerDate = $filter('date')($scope.leger[pp].Date);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,proHeight,  newLegerDate);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(60,proHeight,$scope.leger[pp].Type);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(140,proHeight,$scope.leger[pp].Amount.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(170,proHeight,$scope.leger[pp].Amount.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, proHeight +  10 ,"___________________________________________________________________"); 
+
+                proHeight += 20;
+                if (proHeight > 272) {
+                        doc.addPage()
+                        proHeight = 10
+                    }
+                }
+                
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(140, proHeight+10, "Balance Due");
+
+                doc.setFontSize(12);
+                doc.setFontType("bold");
+                doc.text(170, proHeight+10, totalBalance.toString());
+
+               doc.autoPrint();
+                doc.output('dataurlnewwindow');
             })
         }
 

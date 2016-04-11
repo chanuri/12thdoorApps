@@ -38,9 +38,9 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
     function querySearch(query) {
         var results = [];
         for (i = 0, len = $scope.ContactDetails.length; i < len; ++i) {
-            if ($scope.ContactDetails[i].value.indexOf(query.toLowerCase()) != -1) {
+            if ($scope.ContactDetails[i].value.indexOf(query.toLowerCase()) != -1) 
                 results.push($scope.ContactDetails[i]);
-            }
+            
         }
         return results;
     }
@@ -117,10 +117,10 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
                 });
                 $uploader.onError(function (e, data) {
                     var toast = $mdToast.simple()
-                        .content('There was an error, please upload!')
-                        .action('OK')
-                        .highlightAction(false)
-                        .position("bottom right");
+                    .content('There was an error, please upload!')
+                    .action('OK')
+                    .highlightAction(false)
+                    .position("bottom right");
                     $mdToast.show(toast).then(function () {
                         //whatever
                     }); 
@@ -202,7 +202,7 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
 
 rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$auth, $mdDialog, $stateParams,$state,$mdToast,$http,$DownloadPdf,$mdBottomSheet) {
  
-
+$auth.checkSession();
     $scope.viewPyamentArr = [];
     $scope.progressBar = false;
     $scope.maxNumber = 0;
@@ -221,7 +221,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
     function pdfFuntions(type, item){
         html2canvas($("#canvas"), {
             onrendered: function(canvas) {                      
-                var imgData = canvas.toDataURL('image/jpeg');              
+            var imgData = canvas.toDataURL('image/jpeg');              
             options = {
                 orientation: "0",
                 unit: "mm",
@@ -306,9 +306,9 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
                     return b.auotIncrement - a.auotIncrement
                 })
                 $scope.latestPaymentId = data[0].paymentid; 
-            }else{
+            }else
                 $scope.latestPaymentId = $scope.viewPyamentArr[0].paymentid
-            }        
+                   
         });
         // domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' order by auotIncrement desc").skip(0).take(1);
         domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' and customerid = '"+custID+"'");
@@ -318,10 +318,10 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
     var client = $objectstore.getClient('payment');
     client.onGetOne(function(data) {
         $scope.viewPyamentArr = [];
-        if (data.paymentStatus == 'delete') {
+        if (data.paymentStatus == 'delete') 
               $mdDialog.show($mdDialog.alert().parent(angular.element(document.body)).title('Already Deleted').content('This record already deleted').ariaLabel('Alert Dialog Demo').ok('OK').targetEvent());
        
-        }else{
+        else{
             $scope.viewPyamentArr.push(data);
 
             $scope.advancePaymentData = {}
@@ -360,9 +360,9 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
             //       return new Date(b.TodayDate) - new Date(a.TodayDate);
             //     });
             // };
-            if (data) {
+            if (data) 
                 loadAllActivities(Pcode,data);
-            };           
+                       
         });
         client.onError(function(data){
             console.log("error Loading comments");
@@ -620,9 +620,9 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
         
 
         $activityLog.newActivity(txt,pcode,function(status){
-          if (status == "success") {
+          if (status == "success") 
             callback()
-          }
+          
         });
     }
 
@@ -632,9 +632,9 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
         if (obj.Commentstxt) {
             console.log('working')
             $scope.lblVisibility = 'Hidelabel';
-        }else{
+        }else
             $scope.lblVisibility = 'Showlabel';
-        }
+        
          event.preventDefault();
     }
     $scope.CommentEdit = function(pro,obj,index){
@@ -676,7 +676,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
 
             });
         });
-        client.deleteSingle(item.comment_code,"comment_code");
+        client.deleteSingle({"comment_code":item.comment_code},"comment_code");
     }
     // comment repost 
     $scope.Repost = function(obj){              
@@ -699,7 +699,7 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
              if (obj.Commentstxt) { // if comment is not null
                  var TodayDate = new Date();
                  $scope.UserName =  $auth.getSession().Name;
-
+                 console.log($scope.UserName);
                  $scope.CommentObj = {
                     UserName : $scope.UserName,
                     TodayDate : TodayDate,
@@ -726,9 +726,9 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
              if (!$scope.viewPyamentArr[0].Comments) {
                 $scope.viewPyamentArr[0].Comments = [];
                 $scope.viewPyamentArr[0].Comments.unshift(obj);
-             }else{
+             }else
                 $scope.viewPyamentArr[0].Comments.unshift(obj);                        
-             }
+             
              //console.log($scope.viewPyamentArr[0].Comments);
              obj = {};
              $scope.ProgressBar = false;
@@ -762,11 +762,11 @@ rasm.controller('View_Payment', function($scope, $activityLog, $objectstore,$aut
         var ActivityClient = $objectstore.getClient("paymentActivity");
         ActivityClient.onGetMany(function(data){
             var fullArr = [];
-            if (data.length > 0) {
+            if (data.length > 0) 
                 fullArr = commentArr.concat(data)
-            }else{
+            else
                 fullArr = data;
-            }
+             
 
             $scope.viewPyamentArr[0].Comments = fullArr.sort(function(a,b){
               return new Date(b.date) - new Date(a.date);

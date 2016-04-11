@@ -68,7 +68,9 @@ rasm.controller("EmailController", ["$scope","$objectstore","object","$sce","$md
 
 
 rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$state","$helpers", "$activityLog","$commentLog","$mdToast","$DownloadPdf","$objectstore", "$auth","$mdDialog", function($scope, $stateParams,$rootScope,$auth, $state,$helpers, $activityLog,$commentLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
-	$scope.UserName = $auth.getSession()
+	
+	$auth.checkSession(); 
+	$scope.UserName =  $auth.getSession().Name 
 	$scope.hostUrl = $helpers.getHost()
 
 	$scope.ConvertToPdf = function(obj){

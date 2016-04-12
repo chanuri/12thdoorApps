@@ -122,7 +122,8 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
         if (data) {
 
             $scope.Leger = data;
-            for (var i = 0; i <= data.length - 1;  i++) { 
+            // for (var i = 0; i <= data.length - 1;  i++) { 
+                for (var i = data.length - 1; i >= 0; i--) {
                 data[i].ID = parseInt(data[i].ID);
                     $scope.Addleger.push(data[i]);
 
@@ -139,7 +140,7 @@ rasm.controller('AppCtrlGet', function($scope, $rootScope,$contactNotes, $state,
                         $scope.CreditNoteBalance = $scope.Intotal - data[i].Amount;
                     }else if(data[i].Type == "Receipt"){
                         $scope.PayTotal += data[i].Amount;
-                        $scope.receiptBalance = $scope.Intotal - data[i].Amount;
+                        $scope.receiptBalance = $scope.Intotal - $scope.PayTotal;
                     }
 
                     $scope.totalBalance = parseFloat($scope.Intotal - $scope.PayTotal- $scope.CredTotal);

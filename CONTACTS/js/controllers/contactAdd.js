@@ -113,6 +113,7 @@ rasm.controller('AppCtrlAddCustomer', function($scope, $state, $objectstore, $lo
           $scope.contact.favouriteStarNo = 1;
           $scope.contact.deleteStatus = false;
           $scope.contact.todayDate = new Date();
+          $scope.contact.favourite = false;
           
           client.insert($scope.contact, {
             KeyProperty: "customerid"

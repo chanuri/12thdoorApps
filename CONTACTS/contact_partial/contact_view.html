@@ -2,16 +2,14 @@
 <div class="collapse-card ng-scope" ng-repeat="contact in contacts | filter:ctrl.searchText||undefined | orderBy: prodSearch " ng-class="{ active: $active }" style="">
    <div class="collapse-card__heading" layout="row" layout-align="start start" >
       <div class="collapse-card_header_content_controls" flex="5" layout="column" layout-align="center start">
-         <div style="width:9%">
-            <div  ng-hide="contact.favoritestar" class="blankspace collapse-card_header_content_info" 
-               ng-click="favouriteFunction(contact)" layout="row">
-               <img src="img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px;  height:23px;width:23px;"/>
-            </div>
-            <div  ng-show="contact.favoritestar" class="blankspace collapse-card_header_content_info" 
-               ng-click="favouriteFunction(contact)" layout="row">
-               <img src="img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;"/>
-            </div>
-         </div>
+         <div style="width:56px;">
+                    <div ng-hide="contact.favourite" class="collapse-card_header_content_controls" ng-click="favouriteFunction(contact)" layout="row">
+                        <img src="../../img/directive_library/star-empty-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;" />
+                    </div>
+                    <div ng-show="contact.favourite" class="collapse-card_header_content_controls" ng-click="favouriteFunction(contact)" layout="row">
+                        <img src="../../img/directive_library/star-fill-lg.png" style="margin-top:14px;margin-left:7px; height:23px;width:23px;" />
+                    </div>
+                </div>
          <md-button aria-label flex ng-if="content.favourite == false" ng-disabled="false" class="md-icon-button launch" 
             ng-click="selectItem(content)">
             <md-icon md-svg-icon="img/ic_check_box_outline_blank_24px.svg"></md-icon>

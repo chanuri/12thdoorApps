@@ -1,0 +1,88 @@
+ <style type="text/css">
+  .md-chips, md-chips .md-chips {
+    box-shadow: none !important;
+  }
+  .md-chips .md-chip {
+    border-radius: 0px !important;
+  }
+  #pdfChip .md-chip-input-container input { 
+    display: none;
+  }
+  #pdfChip .md-chip {  
+    width: 50%;
+  }
+  input:focus{
+    outline: none;
+  }
+  /*.md-input-container .md-input {
+    border-width: 0px 0px 0px 0px;
+  }*/
+</style>
+            <md-dialog style="max-width:960px;" arial-label="email">
+            <md-toolbar class="modal-header">
+      <div class="md-toolbar-tools">
+         <h2>Email to customer</h2>
+         <span flex></span>
+         <md-button href class="md-icon-button"  ng-click="cancel()">
+                  <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+      </div>
+   </md-toolbar>
+          
+        <md-dialog-content style="width:650px; margin-top: 30px" >
+            <div layout layout-sm="column" layout-margin ng-init="recipientCtrl()" >
+                      <label>To</label>
+                         <md-chips flex
+                            style="margin-top: -10px;margin-left:45px;"
+                            ng-model="emailrec"
+                            readonly="readonly"
+                            delete-button-label="Remove Tag"
+                            md-on-append="myFn($chip)"
+                            delete-hint="Press delete to remove tag"
+                            >
+                            </md-chips>
+                        </div>
+
+                        <div layout layout-sm="column"  style="margin-top: 5px;" layout-margin ng-init="bccCtrl()" >
+                        <label>Bcc</label>
+                         <md-chips flex
+                            style="margin-top: -10px;margin-left:35px;"
+                            ng-model="emailBCCrec"
+                            readonly="readonly"
+                            delete-button-label="Remove Tag"
+                            delete-hint="Press delete to remove tag"
+                            >
+                            </md-chips>
+                        </div>
+            
+               <div layout layout-sm="column" layout-margin style="margin-top:10px; "> 
+                    <label style="margin-top:10px;">Subject</label>
+                    <md-input-container flex style="margin-top: 5px;">
+                        <input style="border: 0px solid;margin-top:-5px;" ng-model="subject">
+                        </md-input-container>
+                    </div>
+              <div layout layout-sm="column" layout-margin >
+             <!--  {{test.emailBody}} -->
+              <md-card style="width:100%">
+            <md-content class="md-padding" layout="column" >
+               <md-card-content  flex style=" width: 575px;">
+                  <div   ng-bind-html="emailBody" style="white-space: pre;"></div>
+                  <br>
+                  <!--  <textarea type="text" ng-model="emailBody" style="height:250px;width: 575px;background: #FFF;resize: none; border-style: none;border-color: Transparent;overflow: auto;  " ng-disabled="true"></textarea>     -->                                   
+                  <md-chips  id="pdfChip" ng-model="pdfChipArr" style="margin-left:-5px;"  readonly="false"  ng-disabed="true" >
+                     <md-chip-template>
+                        <strong>{{$chip}}</strong> 
+                     </md-chip-template>
+                  </md-chips>
+               </md-card-content>
+            </md-content>
+         </md-card>
+             </div>  
+             </md-dialog-content>    
+                   
+            <div class="md-actions" layout="row">
+                <span flex></span>
+                 <md-button href ng-click="sendmail()" class="md-raised md-primary">Send</md-button>
+            </div>
+    </md-dialog>
+

@@ -35,6 +35,7 @@
         <label style="margin-top: 30px;color: rgba(128, 128, 128, 0.67);" >To</label>
       </div>
          <md-content layout="column" class="md-padding" layout="column"  flex>
+
             <md-chips ng-model="emailTo" md-autocomplete-snap md-require-match="true" flex>
                <md-autocomplete
                   md-selected-item="selectedItemTo"
@@ -102,4 +103,10 @@
       <span flex></span>
       <md-button href ng-click="sendEmail()" class="md-raised md-primary">Send</md-button>
    </div>
+    <div ng-show="emailProgress" layout="column" layout-sm="column" layout-align="center center" style="background: white;z-index: 10;position: absolute;height: 90%;width: 100%;opacity: 0.8;">
+              <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                <span> 
+                  <b>Sending...</b>
+                </span>
+          </div>
 </md-dialog>

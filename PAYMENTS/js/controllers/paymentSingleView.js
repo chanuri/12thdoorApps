@@ -6,6 +6,7 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
     $scope.paymentid = obj.paymentid
     $scope.pdfChipArr = [];
     $scope.pdfChipArr.push(obj.paymentid+".pdf")
+    $scope.emailProgress = false;
 
     $scope.emailTo.push({
         email : obj.cusEmail,
@@ -71,6 +72,7 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
     var jsondata = {}
     $scope.sendEmail = function(){
         var bccArr = [];
+        $scope.emailProgress = true;
 
         if ($scope.emailBcc.length > 0) {
             for(t=0; t<=$scope.emailBcc.length-1; t++){
@@ -116,6 +118,7 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
                      emailWithPdf() 
                 });
                 $uploader.onError(function (e, data) {
+                    $scope.emailProgress = false;
                     var toast = $mdToast.simple()
                     .content('There was an error, please upload!')
                     .action('OK')
@@ -167,12 +170,13 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
            
             (function (em){
                 xhttp[em] = new XMLHttpRequest();
-
-                jsondata.to = $scope.emailTo[em].email; 
+                jsondata.to = $scope.emailTo[em].email;
 
                 xhttp[em].onreadystatechange = function() {
                     if (xhttp[em].readyState  == 4) { 
+                        console.log(xhttp[em].readyState)
                         if (!emailSend) {
+                            $scope.emailProgress = false;
                             emailSend = true;
                             $mdDialog.hide();
                             var toast = $mdToast.simple()
@@ -187,8 +191,8 @@ rasm.controller('emailCtrl',function($scope,obj,$objectstore,$mdDialog,$uploader
                     }
                 }
 
-                xhttp[em].onerror = function() {}
-                xhttp[em].ontimeout = function() {}
+                xhttp[em].onerror = function() { $scope.emailProgress = false;}
+                xhttp[em].ontimeout = function() { $scope.emailProgress = false;}
 
                 xhttp[em].open("POST", "http://test.12thdoor.com:3500/command/notification", true);        
                 xhttp[em].setRequestHeader('securitytoken', 'eb93cca7a7f19ff5ecb48d24c9767024');
@@ -311,7 +315,7 @@ $auth.checkSession();
                    
         });
         // domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' order by auotIncrement desc").skip(0).take(1);
-        domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' and customerid = '"+custID+"'");
+        domainClient.getByFiltering("select * from payment where paymentStatus <> 'Cancelled' and paymentStatus <> 'delete' and customerid = '"+custID+"'");
     }
     
 
@@ -484,7 +488,6 @@ $auth.checkSession();
                 $state.go("home");
             })
         });
-
         updateaAdvancePayment.onError(function(data){
             console.log("error updating advance payment ")
             $scope.progressBar = false;
@@ -533,7 +536,7 @@ $auth.checkSession();
         var advancePayment =  $scope.advancePaymentData.uAmount
         var amountReceived = parseFloat(item.amountReceived)
         var payDiff;
-
+        item.paymentStatus = "delete";  
         item.Comments = [];
         $scope.progressBar = true;
  
@@ -765,11 +768,10 @@ $auth.checkSession();
             if (data.length > 0) 
                 fullArr = commentArr.concat(data)
             else
-                fullArr = data;
-             
+                fullArr = data;             
 
             $scope.viewPyamentArr[0].Comments = fullArr.sort(function(a,b){
-              return new Date(b.date) - new Date(a.date);
+              return new Date(b.TodayDate) - new Date(a.TodayDate);
             });
             $scope.commentProgress = false;
         });

@@ -301,20 +301,21 @@ rasm.factory('ProductService',["$rootScope","$objectstore", function($rootScope,
   
 }]);
 
-rasm.service('$DownloadPdf',function($objectstore){
+rasm.service('$DownloadPdf',function($objectstore,$helpers){
 	this.GetPdf = function(obj,type){
 
-		obj = hasNull(obj); // remove all the null values inside array 		
-		
+		obj = hasNull(obj); // remove all the null values inside array 			
 
 		var doc = new jsPDF();
+		var splitDescription = doc.splitTextToSize(obj.description, 100);			 
+
 		doc.setFillColor(182, 182, 182);
 		doc.rect(120, 13, 80, 10, 'F');
 		doc.setFontSize(18);
-		doc.text(160, 20, obj.Productname);
+		doc.text(150, 20, obj.Productname);
 
 		doc.setFontSize(14);
-		doc.text(120, 30, obj.description);
+		doc.text(120, 30, splitDescription);
 
 		doc.setFontSize(14);
 		doc.text(120, 50, 'Product Code');
@@ -327,8 +328,14 @@ rasm.service('$DownloadPdf',function($objectstore){
 		doc.text(160, 60,obj.ProductUnit);
 		doc.setFontSize(14);
 		doc.text(120, 70, 'Price (with tax)');
+
 		doc.setFontSize(14);
-		doc.text(160, 70, obj.productprice.toString());
+        doc.setFontType("bold");
+		doc.text(160, 70, "USD");
+
+		doc.setFontSize(14);
+        doc.setFontType("normal");
+		doc.text(175, 70, obj.productprice.toString());
 		doc.setFontSize(14);
 
 		doc.text(120, 80, 'Tax');
@@ -364,32 +371,28 @@ rasm.service('$DownloadPdf',function($objectstore){
 
 		if(obj.tags.length > 0){
 			for (i = 0; i < obj.tags.length; i++) {
-				doc.text(160, tagLength, obj.tags[i]);
+				var splitTitle = doc.splitTextToSize(obj.tags[i], 45);		 
+				// doc.text(160, tagLength, obj.tags[i]);
+				doc.text(160, tagLength, splitTitle);
 				tagLength += 10
 			}			
 		}
 
 		if (obj.UploadImages.val.length > 0) {
-			var imageClient = $objectstore.getClient("productimagesNew");
-				imageClient.onGetOne(function(data){
-					if (!isEmpty(data)) {
+			 
+			var imageUrl = "http://"+$helpers.getHost()+"/apis/media/tenant/productimagesNew/"+obj.UploadImages.val[0].name
+			toDataUrl(imageUrl, function(base64Img){
+			   	var fileExt = obj.UploadImages.val[0].name.split('.').pop();  
+				doc.addImage(base64Img, fileExt.toUpperCase(), 20, 15, 70, 80); 
 
-							var fileExt = data.FileName.split('.').pop();
-							var imagebody ="data:image/"+fileExt+";base64," +data.Body
-							console.log(imagebody)		
-            				doc.addImage(imagebody, fileExt.toUpperCase(), 20, 15, 80, 60);    
-					}
-					if (type == 'print') {
-                    	doc.autoPrint();
-				      	doc.output('dataurlnewwindow'); 
-				    }else if (type == 'download') {
-				      	doc.save('' + obj.product_code + '.pdf');
-				    };
-				})
-				imageClient.onError(function(data){
-					console.log("error loading brochure Data")
-				})
-				imageClient.getByKey(obj.UploadImages.val[0].name)
+				if (type == 'print') {
+                	doc.autoPrint();
+			      	doc.output('dataurlnewwindow'); 
+			    }else if (type == 'download') {
+			      	doc.save('' + obj.product_code + '.pdf');
+			    };
+			});
+
 		}else{
 			if (type == 'print') {
             	doc.autoPrint();
@@ -400,7 +403,19 @@ rasm.service('$DownloadPdf',function($objectstore){
 		}
 	}
 });
-
+function toDataUrl(url, callback){
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = function() {
+      var reader  = new FileReader();
+      reader.onloadend = function () {
+          callback(reader.result);
+      }
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.send();
+}
 function isEmpty(obj) {
     for(var prop in obj) {
         if(obj.hasOwnProperty(prop))

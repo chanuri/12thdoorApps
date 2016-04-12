@@ -95,19 +95,19 @@ rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state,$Supl
     $scope.exist = false;
     $scope.SupplierDelete = function(deleteform, ev){
 
-        var client = $objectstore.getClient("leger12thdoor");
-    client.onGetMany(function(data) {
-        if (data) {
-            $scope.Leger = data;
-            for (var i = data.length - 1; i >= 0; i--) {  
-                    if(deleteform.supplierid){
-                        $scope.exist = true;
-                    }
-            }
-        }
-    });
-    client.onError(function(data) {});
-    client.getByFiltering("select * from leger12thdoor where AccountNo = '"+deleteform.supplierid+"'");
+    //     var client = $objectstore.getClient("leger12thdoor");
+    // client.onGetMany(function(data) {
+    //     if (data) {
+    //         $scope.Leger = data;
+    //         for (var i = data.length - 1; i >= 0; i--) {  
+    //                 if(deleteform.supplierid){
+    //                     $scope.exist = true;
+    //                 }
+    //         }
+    //     }
+    // });
+    // client.onError(function(data) {});
+    // client.getByFiltering("select * from leger12thdoor where AccountNo = '"+deleteform.supplierid+"'");
 
         var confirm = $mdDialog.confirm()
             .parent(angular.element(document.body))
@@ -121,7 +121,7 @@ rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state,$Supl
             var client = $objectstore.getClient("supplier12thdoor");
             deleteform.DeleteStatus = true;
             deleteform.supplierid =  deleteform.supplierid.toString();
-            if(deleteform.status == "Inactive" && $scope.exist == false){
+            if(deleteform.status == "Inactive" ){
                client.onComplete(function(data) {
                 $mdDialog.show(
                     $mdDialog.alert()
@@ -141,7 +141,7 @@ rasm.controller('AppCtrlGetSuppliers', function($scope, $rootScope, $state,$Supl
                     $mdDialog.alert()
                     .parent(angular.element(document.body))
                     .title('')
-                    .content('Unable to delete supplierid due to transactions. Please inactivate to disable for future transactions')
+                    .content('Unable to delete supplierid.  Please inactivate to disable for future transactions')
                     .ariaLabel('Alert Dialog Demo')
                     .ok('OK')
                 );

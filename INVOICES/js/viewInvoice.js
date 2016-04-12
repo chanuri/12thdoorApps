@@ -1158,7 +1158,7 @@
                 doc.setFontType("normal");
                 doc.text(30, payHeight + 29, "PST Registration No:1231564878");
 
-                if (content.paymentOptions) {
+                if (content.paymentOptions && content.paymentOptions.length > 0) {
                     var arrLength = content.paymentOptions.length - 1;
                     var count = 0;
                     var imageXaxsis = 65
@@ -1402,7 +1402,7 @@
                 doc.setFontType("normal");
                 doc.text(30, payHeight + 29, "PST Registration No:1231564878");
                 
-               if (content.paymentOptions) {
+               if (content.paymentOptions && content.paymentOptions.length > 0) {
                     var arrLength = content.paymentOptions.length - 1;
                     var count = 0;
                     var imageXaxsis = 65
@@ -1424,7 +1424,8 @@
 
                     }
                 }else{
-                    doc.save(content.invoiceNo.toString()+'.pdf');
+                     doc.autoPrint();
+                                doc.output('dataurlnewwindow');
                 }    
                
             })
@@ -1963,7 +1964,7 @@
             doc.setFontType("normal");
             doc.text(30, payHeight + 29, "PST Registration No:1231564878");
             $rootScope.dataUrl = ""
-           if (content.paymentOptions) {
+           if (content.paymentOptions && content.paymentOptions.length > 0) {
                 var arrLength = content.paymentOptions.length - 1;
                 var count = 0;
                 var imageXaxsis = 65

@@ -106,12 +106,13 @@
                            <div flex="5">
                               <md-checkbox md-no-ink ng-disabled="invo.checkDisable"   aria-label="Checkbox No Ink" ng-model="invo.checked" class="md-primary" ng-change="checkItem($index,invo)" style="margin-top: -6px; margin-left: 0px;"></md-checkbox>
                            </div>
+                          <!--  {{invo}} -->
                            <div layout-sm="row" flex>
                               <div flex-sm="25" hide-gt-sm>
                                 <label style="font-size: 12px;"><b>date</b></label>
                               </div>
                               <div flex>
-                                <label style="font-size: 12px;">{{invo.duedate|date}}</label>
+                                <label style="font-size: 12px;">{{invo.sdate|date}}</label>
                               </div>
                            </div>
                           <!--  <div layout-sm="row" flex>

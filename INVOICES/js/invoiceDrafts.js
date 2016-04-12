@@ -97,6 +97,7 @@
     app.controller('paymentCtrl', function($scope, $mdDialog, $auth, $rootScope, pim, $objectstore, $mdToast) {
 
         $scope.InvoiceDetails = [];
+        $scope.RefID = "";
     var client = $objectstore.getClient("domainClassAttributes");
     client.onGetMany(function(data) {
         if (data) {
@@ -128,16 +129,7 @@
         
         var userName = $auth.getSession().Name;
 
-        var activityObj = {
-            UserName : userName,
-            TodayDate : new Date(),
-            Comment : 'Payment added by'+userName,
-            payment_code :$scope.RefID,
-            textareaHeight : '30px;',
-            activity_code : "-999",
-            type : "activity"
-        };
-
+        
         var Address = pim.billingAddress.split(',');
         var city1 = Address[1] 
         var street1 = Address[0];
@@ -153,7 +145,6 @@
             zip: zip1
         };
         $scope.payment.cusEmail = pim.Email;
-        $scope.payment.paymentref = $scope.RefID;
 
         $scope.advancedPayment = {};
         $scope.submitVisible = true;
@@ -382,6 +373,8 @@
             $scope.payment.favouriteStarNo = 1; 
             $scope.payment.paymentid = "-999";
             $scope.payment.paymentStatus = "active";
+            $scope.payment.paymentref = $scope.RefID;
+        $scope.payment.auotIncrement = parseInt($scope.RefID);
             $scope.payment.customer = pim.Name; 
             $scope.payment.date = new Date();     
             $scope.payment.UploadImages = {
@@ -420,6 +413,18 @@
 
         function savePaymentToObjectstore(callback){
 
+            var activityObj = {
+            UserName : userName,
+            TodayDate : new Date(),
+            Comment : 'Payment added by'+" "+userName,
+            payment_code :$scope.RefID,
+            textareaHeight : '30px;',
+            activity_code : "-999",
+            type : "activity"
+        };
+
+        console.log(activityObj)
+
             var payment = $objectstore.getClient("payment");
             var activityClient = $objectstore.getClient("paymentActivity");
             payment.onComplete(function(data){
@@ -436,6 +441,7 @@
                 activityClient.onComplete(function(data){
                 console.log("activity Successfully added")
             });
+                activityClient.insert(activityObj, {KeyProperty:'activity_code'})
             activityClient.onError(function(data){
                 console.log("error Adding new activity")
                 });
@@ -445,10 +451,8 @@
                 callback();
             });
             payment.insert($scope.payment, {KeyProperty: "paymentid"})
-
             
             
-            activityClient.insert(activityObj, {KeyProperty:'activity_code'})
         }
 
         function saveAdvancePaymentToObjectstore(callback){
@@ -477,7 +481,7 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+" "+userName,
+                                        "text": parseInt($scope.payment.paidInvoice[pay].amount - $scope.payment.paidInvoice[pay].balance) +" " + "of partial payment done by"+" "+userName,
                                         "type":"Auto",
                                         "RefID":$scope.RefID
                                     }) 
@@ -488,14 +492,14 @@
                                     pim.commentsAndHistory.push({
                                         "date": new Date(),
                                         "done": false,
-                                        "text": $scope.payment.paidInvoice[pay].amount +" " +" of payment done by"+" "+userName,
+                                        "text": parseInt($scope.payment.paidInvoice[pay].amount - $scope.payment.paidInvoice[pay].balance) +" " +" of payment done by"+" "+userName,
                                         "type":"Auto",
                                         "RefID":$scope.RefID
                                     })                              
                                 }
 
                         }else{
-
+                                // console.log($scope.payment.paidInvoice[pay].amount)
                             if ( parseFloat($scope.payment.paidInvoice[pay].balance) != 0) {
                                 pim.MultiDueDAtesArr[kal]['dueDateprice'] = parseFloat($scope.payment.paidInvoice[pay].amount);                                    
                                 pim.MultiDueDAtesArr[kal]['balance'] = parseFloat($scope.payment.paidInvoice[pay].balance);                                    
@@ -503,7 +507,7 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of partial payment done by"+" "+userName,
+                                    "text": parseInt($scope.payment.paidInvoice[pay].amount - $scope.payment.paidInvoice[pay].balance) +" " + "of partial payment done by"+" "+userName,
                                     "type":"Auto",
                                     "RefID":$scope.RefID
                                 }) 
@@ -515,7 +519,7 @@
                                 pim.commentsAndHistory.push({
                                     "date": new Date(),
                                     "done": false,
-                                    "text": $scope.payment.paidInvoice[pay].amount +" " + "of payment done by"+" "+userName,
+                                    "text": parseInt($scope.payment.paidInvoice[pay].amount - $scope.payment.paidInvoice[pay].balance) +" " + "of payment done by"+" "+userName,
                                     "type":"Auto",
                                     "RefID":$scope.RefID
                                 })                   
@@ -587,6 +591,43 @@
             $mdDialog.cancel();
         };
 
+        // $scope.FullImage = {};
+        // $scope.fileExt = 'png'
+        // var client = $objectstore.getClient("invoiceUploades");
+        // client.onGetOne(function(data){
+        //     console.log(data)
+        //     if (data) {
+        //         $scope.FullImage = data
+        //         $scope.fileExt = data.FileName.split('.').pop()
+        //     }
+
+        // });
+        // client.onError(function(data){
+        //     console.log("error loading the image")
+        // });
+        // client.getByKey(item.name);
+    });
+    //--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    app.controller('ViewUploadCtrl', function($scope, $mdDialog, $rootScope, $state, UploaderService,item,$objectstore) {
+        console.log(item)
+        $scope.uploadimages = {
+            val: []
+        };
+        $scope.uploadimages.val = UploaderService.loadBasicArray();
+        //directive table content start
+        $scope.$on('viewRecord', function(event, args) {
+            $scope.uploadimages.val.splice(args, 1);
+        });
+
+        $scope.AddImage = function() {
+            $scope.uploadimages.val = UploaderService.loadBasicArray();
+            $mdDialog.cancel();
+        }
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
         $scope.FullImage = {};
         $scope.fileExt = 'png'
         var client = $objectstore.getClient("invoiceUploades");
@@ -603,6 +644,7 @@
         });
         client.getByKey(item.name);
     });
+
     //---------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------
     app.factory('InvoiceService', function($rootScope) {
@@ -634,14 +676,6 @@
                 $rootScope.testArray.val.splice(newVals, 1);
                 return $rootScope.testArray;
             },
-            // setArray1: function(newVal) {
-            //     $rootScope.showprodArray.val.push(newVal);
-            //     return $rootScope.showprodArray;
-            // },
-            // removeArray1: function(newVals) {
-            //     $rootScope.showprodArray.val.splice(newVals, 1);
-            //     return $rootScope.showprodArray;
-            // },
             setArray2: function(newVal) {
                 $rootScope.editProdArray.val.push(newVal);
                 return $rootScope.editProdArray;

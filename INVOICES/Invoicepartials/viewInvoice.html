@@ -197,63 +197,65 @@
                      <td style="padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{prod.quantity}}</td>
                      <td style="padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{prod.ProductUnit}}</td>
                      <td style="padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{prod.price|currency:item.BaseCurrency}}</td>
-                     <td style="padding: 20px;border-bottom: 1px solid;text-align: left;"flex>{{prod.amount|currency:item.BaseCurrency}}</td>
+                     <td style="padding: 20px;border-bottom: 1px solid;text-align: right;"flex>{{prod.amount|currency:item.BaseCurrency}}</td>
                   </tr>
                </table>
             </div>
            
             <div layout layout-sm="column" layout-margin  flex>
-               <div flex="40"style="margin-left:30px;" class="blankspace"></div>
+               <div flex="45" class="blankspace"></div>
                <table>
                   <tr >
-                     <td style="padding-top:15px;" flex>Sub Total</td>
-                     <td style="padding-left: 170px; padding-top:15px;" flex>
+                     <td  flex>Sub Total</td>
+                    <!--  <td style="text-align: right; padding-top:15px;" flex></td> -->
+                     <td style="text-align: right; padding-left: 170px;" flex>
                         {{item.total|currency:item.BaseCurrency}}
                      </td>
                   </tr>
-                  <tr >
+                  <tr flex>
                      <td  style="padding-top:15px;" flex>Discount</td>
-                     <td style="padding-left: 170px; padding-top:15px;" flex>
+                     <!-- <td style="text-align: right; padding-top:15px;" flex></td> -->
+                     <td style="text-align: right; padding-left: 170px; padding-top:15px;" flex>
                         {{item.discountAmount|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr ng-repeat="tt in item.taxAmounts">
                      <td style="padding-top:15px;" >{{tt.taxName}} <span>{{tt.rate}}%</span> </td>
-                     <td style="padding-left: 170px; padding-top:15px;" flex>
+                     <td style="text-align: right;padding-left: 170px; padding-top:15px;" flex>
                         {{tt.salesTax|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr >
                      <td style="padding-top:15px;" flex> Shipping</td>
-                     <td style="padding-left: 170px; padding-top:15px;" flex>
+                     <td style="text-align: right;padding-left: 170px; padding-top:15px;" flex>
                         {{item.shipping|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr >
                      <td style="padding-top:15px;" flex> Total {{item.BaseCurrency}}</td>
-                     <td style="padding-left: 170px; padding-top:15px;" flex>
+                     <td style="text-align: right; padding-left: 170px;padding-top:15px;" flex>
                         {{item.finalamount|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr ng-if="item.termtype != 'multipleDueDates'">
                      <td style="padding-top:15px;" flex> Paid</td>
-                     <td style="padding-left: 170px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr" flex>
+                     <td style="text-align: right;padding-left: 170px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr" flex>
                         {{item.finalamount - ts.balance |currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr style="background-color:#C0C0C0;"  ng-if="item.termtype != 'multipleDueDates'">
                      <td style="padding-top:15px; " flex> <label><b>Balance Due {{item.BaseCurrency}}</b></label></td>
-                     <td style="padding-left: 170px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr"flex><b>{{ts.balance|currency:item.BaseCurrency}}</b></td>
+                     <td style="text-align: right;padding-left: 170px; padding-top:15px;" ng-repeat="ts in item.MultiDueDAtesArr"flex><b>{{ts.balance|currency:item.BaseCurrency}}</b></td>
                   </tr>
                   <tr ng-if="item.termtype == 'multipleDueDates'">
                      <td style="padding-top:15px;" flex> Paid</td>
-                     <td style="padding-left: 170px; padding-top:15px;" flex>
+                     <td style="text-align: right;padding-left: 170px; padding-top:15px;" flex>
                         {{item.finalamount - calBalance |currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr style="background-color:#C0C0C0;"  ng-if="item.termtype == 'multipleDueDates'">
                      <td style="padding-top:15px; " flex> <label><b>Balance Due {{item.BaseCurrency}}</b></label></td>
-                     <td style="padding-left: 170px; padding-top:15px;" flex><b>{{calBalance|currency:item.BaseCurrency}}</b></td>
+                     <td style="padding-left: 170px; text-align: right; padding-top:15px;" flex><b>{{calBalance|currency:item.BaseCurrency}}</b></td>
                   </tr>
                </table>
             </div>
@@ -292,7 +294,7 @@
             <div layout layout-sm="column" layout-margin>
                <section-title> </section-title>
                <ul class="divbutton" id="todo-list" style="margin-top:-20px;">
-                  <li ng-repeat="todo in item.commentsAndHistory | orderBy:todo.date" style="padding:10px; margin-left:-48px;" flex>
+                  <li ng-repeat="todo in item.commentsAndHistory" style="padding:10px; margin-left:-48px;" flex>
                      <img ng-if="todo.type == 'Manual'" src="../../img/material alperbert/avatar_tile_h_28.png" />
                      <img ng-if="todo.type == 'Auto'" src="img/12thDoorLogo.png" style="width: 30px; height: 30px;" />
                      <span  color="#A9A9A9" >{{todo.date|date}} </span> 

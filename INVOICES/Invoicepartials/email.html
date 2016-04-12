@@ -19,13 +19,17 @@
   }*/
 </style>
             <md-dialog style="max-width:960px;" arial-label="email">
-            <div layout layout-sm="column" layout-margin >
-            <div flex="90"></div>
-            <md-button href class="md-icon-button"  ng-click="cancel()">
+            <md-toolbar class="modal-header">
+      <div class="md-toolbar-tools">
+         <h2>Email to customer</h2>
+         <span flex></span>
+         <md-button href class="md-icon-button"  ng-click="cancel()">
                   <md-icon md-svg-src="img/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
                 </md-button>
-       </div>
-        <md-dialog-content style="width:650px;" >
+      </div>
+   </md-toolbar>
+          
+        <md-dialog-content style="width:650px; margin-top: 30px" >
             <div layout layout-sm="column" layout-margin ng-init="recipientCtrl()" >
                       <label>To</label>
                          <md-chips flex
@@ -65,18 +69,17 @@
                   <div   ng-bind-html="emailBody" style="white-space: pre;"></div>
                   <br>
                   <!--  <textarea type="text" ng-model="emailBody" style="height:250px;width: 575px;background: #FFF;resize: none; border-style: none;border-color: Transparent;overflow: auto;  " ng-disabled="true"></textarea>     -->                                   
-                 <!--  <md-chips  id="pdfChip" ng-model="pdfChipArr" style="margin-left:-5px;"  readonly="false"  ng-disabed="true" >
+                  <md-chips  id="pdfChip" ng-model="pdfChipArr" style="margin-left:-5px;"  readonly="false"  ng-disabed="true" >
                      <md-chip-template>
                         <strong>{{$chip}}</strong> 
                      </md-chip-template>
-                  </md-chips> -->
+                  </md-chips>
                </md-card-content>
             </md-content>
          </md-card>
              </div>  
              </md-dialog-content>    
                    
-
             <div class="md-actions" layout="row">
                 <span flex></span>
                  <md-button href ng-click="sendmail()" class="md-raised md-primary">Send</md-button>

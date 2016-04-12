@@ -307,9 +307,6 @@
                 obj.MultiDueDAtesArr[x].paymentStatus = "Unpaid";
             }
             client.onComplete(function(data) {
-                // $mdDialog.show(
-
-                // );
                 $mdToast.show(
                       $mdToast.simple()
                         .textContent('Invoice Successfully Approved')
@@ -343,10 +340,13 @@
                 .ok('Yes')
                 .cancel('No');
             $mdDialog.show(confirm).then(function() {
-                var client = $objectstore.getClient("invoice12thdoor");
+               for (var z = obj.MultiDueDAtesArr.length - 1; z >= 0; z--) {
+
+                    if(obj.MultiDueDAtesArr[z].paymentStatus == "Unpaid"){
+                         var client = $objectstore.getClient("invoice12thdoor");
                 obj.invoiceNo = obj.invoiceNo.toString();
                 $scope.systemMessage.push({
-                    text: "The Invoice was Cancelled by"+$scope.userName,
+                    text: "The Invoice was Cancelled by"+" "+$scope.userName,
                     done: false,
                     date: new Date(),
                     type:"Auto",
@@ -382,7 +382,18 @@
                 });
                 client.insert(obj, {
                     KeyProperty: "invoiceNo"
-                });
+                }); 
+            }else{
+                $mdDialog.show(
+                        $mdDialog.alert()
+                        .parent(angular.element(document.body))
+                        .title('')
+                        .content('This invoice cannot be Cancelled')
+                        .ariaLabel('Alert Dialog Demo')
+                        .ok('OK')
+                        )}
+                }
+                
             })
         }
         $scope.$watch('selectedIndex', function(current, old) {
@@ -486,7 +497,10 @@
                         .targetEvent(ev);
                     $mdDialog.show(confirm).then(function() {
 
-                        var client = $objectstore.getClient("invoice12thdoor");
+                         for (var z = deleteform.MultiDueDAtesArr.length - 1; z >= 0; z--) {
+
+                            if(deleteform.MultiDueDAtesArr[z].paymentStatus == "Unpaid" || deleteform.MultiDueDAtesArr[z].paymentStatus =="Cancelled"){
+                                var client = $objectstore.getClient("invoice12thdoor");
                         deleteform.DeleteStatus = true;
                         deleteform.invoiceNo = deleteform.invoiceNo.toString();
                         $scope.systemMessage.push({
@@ -527,9 +541,19 @@
                                 .targetEvent(data)
                             );
                         });
-                        client.insert(deleteform, {
-                            KeyProperty: "invoiceNo"
-                        });
+                        client.insert(deleteform, {KeyProperty: "invoiceNo"});
+                            }else{
+                                $mdDialog.show(
+                                $mdDialog.alert()
+                                .parent(angular.element(document.body))
+                                .content('You cannot delete this record')
+                                .ariaLabel('')
+                                .ok('OK')
+                            );
+                            }
+                        }
+
+                        
                     }, function() {
                         $mdDialog.hide();
                     });
@@ -644,7 +668,7 @@
         $scope.viewImage = function(obj) {
             $mdDialog.show({
                 templateUrl: 'Invoicepartials/UploadedFiles.html',
-                controller: 'UploadCtrl',
+                controller: 'ViewUploadCtrl',
                 locals: {
                     item: obj
                 }
@@ -692,28 +716,14 @@
             if (data) {
 
                 for (var i = data.length - 1; i >= 0; i--) {
-                    // loading_spinner.remove();
                     data[i].addView = "";
                     data[i].invoiceNo = parseInt(data[i].invoiceNo);
                     $scope.TDinvoice.push(data[i]);
-                    // for (var x = data[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {                       
-                    //     if ($stateParams.invoiceno == data[i].invoiceNo && data[i].MultiDueDAtesArr[x].paymentStatus == "Draft") {
-                    //         invoiceDetails.removeArray(data[i], 1);
-                    //         invoiceDetails.setArray(data[i]);
-                    //     }
-                    // }
+                    
                 };
             }
         });
         client.onError(function(data) {
-            // $mdDialog.show(
-            //     $mdDialog.alert()
-            //     .parent(angular.element(document.body))
-            //     .content('There was an error retreving the data.')
-            //     .ariaLabel('Alert Dialog Demo')
-            //     .ok('OK')
-            //     .targetEvent(data)
-            // );
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
 
@@ -783,14 +793,6 @@
             }
         });
         client.onError(function(data) {
-            // $mdDialog.show(
-            //     $mdDialog.alert()
-            //     .parent(angular.element(document.body))
-            //     .content('There was an error retreving the data.')
-            //     .ariaLabel('Alert Dialog Demo')
-            //     .ok('OK')
-            //     .targetEvent(data)
-            // );
         });
         client.getByFiltering("select * from invoice12thdoor where DeleteStatus = 'false'");
     }else{
@@ -869,8 +871,6 @@
            return $scope.viewBalance;
         }
 
-        
-
         $scope.paydate = [];
 
         $scope.getSelected = function(inv) {
@@ -941,12 +941,12 @@
           return target;
         }
 
-        $scope.convertTopdf = function(content) {
+       $scope.convertTopdf = function(content) {
             content = hasNull(content);
             toDataUrl('img/image1.jpg', function(base64Img){
             var doc = new jsPDF();
                 doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
-                var proHeight = 132;
+                var proHeight = 137;
 
                 var newDate = $filter('date')(content.Startdate);
 
@@ -1036,7 +1036,7 @@
 
                 doc.setFontSize(12);
                 doc.setFontType("bold");
-                doc.text(30, 125,"___________________________________________________________________"); 
+                doc.text(30, 130,"___________________________________________________________________"); 
 
                 for(pp=0; pp<= content.invoiceProducts.length-1; pp++){
 
@@ -1189,7 +1189,7 @@
 
                 var doc = new jsPDF();
                 doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
-                var proHeight = 132;
+                var proHeight = 137;
 
                 var newDate = $filter('date')(content.Startdate);
                 doc.setFontSize(20);
@@ -1275,7 +1275,7 @@
 
                 doc.setFontSize(12);
                 doc.setFontType("bold");
-                doc.text(30, 125,"___________________________________________________________________"); 
+                doc.text(30, 130,"___________________________________________________________________"); 
 
                 for(pp=0; pp<= content.invoiceProducts.length-1; pp++){
 
@@ -1455,58 +1455,15 @@
                 }
             });
         };
-        var acceptContentTemplate = '\
-          <md-dialog>\
-          <md-dialog-content style="padding:24px;">\
-          <div layout layout-sm="column" layout-margin>\
-           <div flex="5">\
-            <img src="img/material alperbert/avatar_tile_f_28.png" style="margin-top:22px;border-radius:20px"/>\
-            </div>\
-            <div flex="30" style="margin-top:35px;">\
-             <label style="font-weight:700">File Details</label>\
-              </div>\
-              <md-input-container flex >\
-              <label>Name</label>\
-              <input ng-model="test.name">\
-              </md-input-container>\
-            </div>\
-         <div style="margin-left:120px;">\
-       <img data-ng-src="data:image/png;base64,{{test}}" data-err-src="images/png/avatar.png" style="with:100px; height:100px;/>\
-      </div></br><br>\
-      <md-divider></md-divider>\
-      <div class="md-actions"> \
-              <md-button class="md-primary md-button md-default-theme" ng-click="cancel()">Cancel</md-button> \
-            <md-button class="md-primary md-button md-default-theme" ng-click="hideAccept()">OK</md-button> \
-          </div> \
-          </md-content> \
-        </md-dialog> ';
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        }
-        $scope.toggleSearch = false;
-        $scope.headers = [{
-            name: 'Name',
-            field: 'name'
-        }, {
-            name: 'Size',
-            field: 'size'
-        }];
-        $scope.custom = {
-            name: 'bold',
-            size: 'grey'
-        };
-        $scope.sortable = ['name', 'size'];
-        $scope.thumbs = 'thumb';
-        $scope.count = 3;
-
-        $scope.todos = [];
+       
+        
         $scope.markAll = false;
 
         $scope.addTodo = function(todoText) {
+            $scope.todos = [];
             if (event.keyCode == 13) {
                 $scope.todos.push({
-                    text: todoText.addView,
+                    text: todoText.addView + " " + $scope.userName,
                     done: false,
                     date: new Date(),
                     type:"Manual",
@@ -1519,6 +1476,7 @@
                 for (var i = $scope.todos.length - 1; i >= 0; i--) {
                     todoText.commentsAndHistory.push($scope.todos[i]);
                 };
+                
                 todoText.addView = "";
                 client.onComplete(function(data) {
                 });
@@ -1532,15 +1490,13 @@
                         .targetEvent(data)
                     );
                 });
-                client.insert(todoText, {
-                    KeyProperty: "invoiceNo"
-                });
+                client.insert(todoText, {KeyProperty: "invoiceNo"});
             }
         };
 
 
         $scope.deleteNote = function(val,index){
-          val.commentsAndHistory.splice( val.commentsAndHistory.indexOf(index), 1 );
+          val.commentsAndHistory.splice(val.commentsAndHistory.indexOf(index), 1 );
 
           var noteClient = $objectstore.getClient("invoice12thdoor");
 
@@ -1560,8 +1516,8 @@
     }); //END OF viewCtrl
     //--------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------
-    app.controller('emailCtrl', function($scope, $mdDialog, $rootScope, invo, $mdToast, $document,$objectstore,$sce) {
-        $scope.test = invo;
+    app.controller('emailCtrl', function($scope, $mdDialog, $rootScope,$helpers, invo, $rootScope, $uploader, $mdToast, $document,$objectstore,$sce,$filter) {
+       $scope.test = invo;
         //console.log($scope.test)
         $scope.subject = "invoice No." + $scope.test.invoiceRefNo + " " + $scope.test.Name;
 
@@ -1576,30 +1532,18 @@
         console.log(data[0].emailBody) 
         var newOne = [];
         // newOne.push(data[0].emailBody.substring(data[0].emailBody.indexOf("{{")+2,data[0].emailBody.indexOf("}}")));
-        $scope.emailBody = $scope.emailBody.replace("@@invoiceNo@@", $scope.test.paymentid);
+        $scope.emailBody = $scope.emailBody.replace("@@invoiceNo@@", $scope.test.invoiceNo);
         $scope.emailBody = $scope.emailBody.replace("@@accounturl@@","<a href= 'http://12thdoor.com' >http://12thdoor.com </a>") 
-        $scope.emailBody = $scope.emailBody.replace("@@companyName@@", $scope.test.customer);
+        $scope.emailBody = $scope.emailBody.replace("@@companyName@@", $scope.test.Name);
         $scope.emailBody = $sce.trustAsHtml($scope.emailBody);
             }
         });
         client.onError(function(data) {});
         client.getByFiltering("select * from t12thdoorSettingEmailBodyy where uniqueRecord ='1' ");
 
-        $scope.recipientCtrl = function($timeout, $q) {
-            var self = this;
-            $scope.Emailerror = false;
-            self.readonly = false;
-            // self.emailrecipient = [$scope.test.Email];
-            // $scope.emailrec = angular.copy(self.emailrecipient);
-            $scope.emailrec = [$scope.test.Email];
-            self.tags = [];
-            self.newVeg = function(chip) {
-                return {
-                    name: chip,
-                    type: 'unknown'
-                };
-            };
-        }
+        $scope.Emailerror = false;
+        $scope.emailrec = [$scope.test.Email];
+        
 
         $scope.$watchCollection("emailrec", function() {
             var re = /\S+@\S+\.\S+/;
@@ -1652,22 +1596,397 @@
             });
         };
 
-        $scope.bccCtrl = function($timeout, $q) {
-            var self = this;
-            self.readonly = false;
-            self.emailBCCrecipient = [$scope.test.adminEmail];
-            self.emailBCCrec = angular.copy(self.emailBCCrecipient);
-            self.tags = [];
-            self.newVeg = function(chip) {
-                return {
-                    name: chip,
-                    type: 'unknown'
-                };
-            };
-        }
+        $scope.pdfChipArr = [];
+        $scope.pdfChipArr.push($scope.test.invoiceRefNo+".pdf")
+        $scope.emailBCCrec = [];
+        $scope.pdfInvoNo = [$scope.test.invoiceNo] 
+            
 
         $scope.listItemClick = function($index) {
             var clickedItem = $scope.items[$index];
             $mdBottomSheet.hide(clickedItem);
         };
+        var jsondata = {};
+        
+        function emailWithPdf(){
+            jsondata.attachments = [{
+                "filename": invo.invoiceNo+'.pdf',
+                "path": "http://"+$helpers.getHost()+"/apis/media/tenant/invoicePdf/"+invo.invoiceNo+'.pdf'
+            }]
+            sendEmailBody()
+        }
+        
+        function sendEmailBody(){
+
+            var xhttp = []
+            var emailSend = false;
+            
+
+            for(em=0; em<=$scope.emailrec.length-1; em++ ){
+               
+                (function (em){
+                    xhttp[em] = new XMLHttpRequest();
+
+                    jsondata.to = $scope.emailrec[em]; 
+
+                    xhttp[em].onreadystatechange = function() {
+                        if (xhttp[em].readyState  == 4) { 
+                            if (!emailSend) {
+                                emailSend = true;
+                                $mdDialog.hide();
+                                var toast = $mdToast.simple()
+                                  .content('Email Successfully send')
+                                  .action('OK')
+                                  .highlightAction(false)
+                                  .position("bottom right");
+                                $mdToast.show(toast).then(function () {
+
+                                });                                 
+                            }
+                        }
+                    }
+
+                    xhttp[em].onerror = function() {}
+                    xhttp[em].ontimeout = function() {}
+
+                    xhttp[em].open("POST", "http://test.12thdoor.com:3500/command/notification", true);        
+                    xhttp[em].setRequestHeader('securitytoken', 'eb93cca7a7f19ff5ecb48d24c9767024');
+                    xhttp[em].setRequestHeader('Content-type', 'application/json');
+                    xhttp[em].send(JSON.stringify(jsondata));
+
+                })(em);
+            } 
+        }
+
+        $scope.sendmail = function(){
+            jsondata =  {
+                 "type": "email", 
+                 "subject": $scope.subject,
+                 "bcc": $scope.emailBCCrec,
+                 "from": "Invoice <noreply-12thdoor@duoworld.com>",
+                 "Namespace": "com.duosoftware.com",
+                 "TemplateID": "T_Invoice_1",
+                 "DefaultParams": {
+                  "@@no@@": invo.invoiceNo,
+                  "@@accounturl@@": "http://12thdoor.com",
+                  "@@companyName@@": invo.Name
+                },
+                 "CustomParams": {
+                  "@@no@@": "0001",
+                  "@@accounturl@@": "http://12thdoor.com",
+                  "@@companyName@@": "12thdoor"
+                }
+            }
+
+            if ($scope.pdfChipArr.length > 0) { 
+                emailPdf(invo)
+                setTimeout(function(){
+                    var decodeUrl = $rootScope.dataUrl;
+                    var blobFile = dataURItoBlob(decodeUrl) 
+                    blobFile.name = invo.invoiceNo+'.pdf'
+                    // console.log(decodeUrl)
+                    $uploader.uploadMedia("invoicePdf",blobFile,blobFile.name);
+                    $uploader.onSuccess(function (e, data) {
+                        emailWithPdf()
+                    });
+                    $uploader.onError(function (e, data) {
+                        var toast = $mdToast.simple()
+                            .content('There was an error, please upload!')
+                            .action('OK')
+                            .highlightAction(false)
+                            .position("bottom right");
+                        $mdToast.show(toast).then(function () {
+                            //whatever
+                        }); 
+                    });
+                },1000)
+            }else
+                sendEmailBody()
+        }
+        function dataURItoBlob(dataURI, callback) {
+            // convert base64 to raw binary data held in a string
+            // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+            var byteString = atob(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+            // write the bytes of the string to an ArrayBuffer
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            // write the ArrayBuffer to a blob, and you're done
+            var bb = new Blob([ab]);
+            return bb;
+        }
+
+        function toDataUrl(url, callback){
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function() {
+              var reader  = new FileReader();
+              reader.onloadend = function () {
+                  callback(reader.result);
+              }
+              reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', url);
+            xhr.send();
+        }
+
+        function hasNull(target) {
+            for (var member in target) {
+                if (target[member] == null)
+                   target[member] = "";
+            }
+          return target;
+        }
+         function emailPdf(content){
+        content = hasNull(content);
+        toDataUrl('img/image1.jpg', function(base64Img){
+
+            var doc = new jsPDF();
+            doc.addImage(base64Img, 'JPEG', 5, 5, 60, 40);
+            var proHeight = 132;
+
+            var newDate = $filter('date')(content.Startdate);
+            doc.setFontSize(20);
+            doc.setFontType("bold");
+            doc.text(30,55,"INVOICE");
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(30,60,"#INV -" + content.invoiceNo.toString());
+
+            doc.setFontSize(12);
+            doc.text(30,77,"Invoice Date");
+            doc.setFontSize(12);
+            doc.text(65,77,newDate);
+          
+            doc.setFontSize(12);
+            doc.text(30,84,"Due Date");
+            doc.setFontSize(12);
+            doc.text(65,84,content.termtype);
+
+            doc.setFontSize(12);
+            doc.text(30,91,"PO");
+            if(content.poNum){                  
+               doc.setFontSize(12);
+               doc.text(65,91,content.poNum);  
+            }
+            
+            doc.setFontSize(12);
+            doc.text(30,98,"Currency"); 
+            if (content.BaseCurrency) {
+                doc.setFontSize(12);
+                doc.text(65,98,content.BaseCurrency);
+            }
+
+            doc.setFontSize(12);
+            doc.text(30,110,"Comments");
+            doc.setFontSize(12);
+            doc.text(65,110,content.comments);
+
+            //Address Details
+
+            var Address = content.billingAddress.split(',');
+            var street = Address[0];
+            var city = Address[1] + Address[3];
+            var country = Address[2] + Address[4];
+
+            doc.setFontSize(12);
+            doc.text(127, 70,"To:");
+
+            doc.setFontSize(12);
+            doc.text(127, 77, content.Name);
+
+            doc.setFontSize(12);
+            doc.text(127, 84, street);
+
+            doc.setFontSize(12);
+            doc.text(127, 91, city + "," +country);
+
+            doc.setFontSize(12);
+            doc.text(127, 98, content.Email);
+
+            //Product Table headers
+
+            doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(30,125,"Description");
+
+            doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(110,125,"Qty");
+
+             doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(130,125,"Unit");
+
+            doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(150,125,"Price");
+
+            doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(170,125,"Amount");
+
+            doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(30, 125,"___________________________________________________________________"); 
+
+            for(pp=0; pp<= content.invoiceProducts.length-1; pp++){
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,proHeight,content.invoiceProducts[pp].Productname);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30,proHeight+5,"Optional product line comment-");
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(110,proHeight, content.invoiceProducts[pp].quantity.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(130,proHeight,content.invoiceProducts[pp].ProductUnit);
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(150,proHeight,content.invoiceProducts[pp].price.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(170,proHeight,content.invoiceProducts[pp].amount.toString());
+
+                doc.setFontSize(12);
+                doc.setFontType("normal");
+                doc.text(30, proHeight +  10 ,"___________________________________________________________________"); 
+                proHeight += 20;
+
+                if (proHeight > 272) {
+                    doc.addPage()
+                    proHeight = 10
+                }
+            }
+
+                var balance = 0;
+                var paid = 0;
+           
+           for (var i = content.MultiDueDAtesArr.length - 1; i >= 0; i--) {
+               balance += content.MultiDueDAtesArr[i].balance;
+           }
+           paid = balance - content.finalamount;
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(93, proHeight + 10,"Sub Total"); 
+            doc.setFontSize(12);
+            doc.text(170, proHeight + 10, content.total.toString()); 
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(93, proHeight + 20,"Discount");
+            doc.setFontSize(12);
+            doc.text(170, proHeight + 20, content.fdiscount.toString()); 
+
+            var taxHeight = proHeight + 30;
+
+            for(x=0; x<= content.taxAmounts.length-1; x++){
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(93,taxHeight , content.taxAmounts[x].taxName + content.taxAmounts[x].rate +"%" );
+             doc.setFontSize(12);
+             var salesTax = content.taxAmounts[x].salesTax.toFixed(2) 
+            doc.text(170, taxHeight,salesTax.toString()); 
+
+            taxHeight += 10;
+            }
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(93, taxHeight + 5,"Shipping");
+            doc.setFontSize(12);
+            doc.text(170, taxHeight + 5, content.shipping.toString()); 
+
+            doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(93, taxHeight + 15,"Total" + content.BaseCurrency);
+            doc.setFontSize(12);
+            doc.text(170, taxHeight + 15, content.finalamount.toString()); 
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(93, taxHeight + 25,"Paid");
+            doc.setFontSize(12);
+            doc.text(170, taxHeight + 25, paid.toString());
+
+            doc.setFillColor(192, 192, 192);
+            doc.rect(90, taxHeight + 30, 100, 10, 'F');
+
+            doc.setFontSize(12);
+            doc.setFontType("bold");
+            doc.text(93, taxHeight + 35,"Balance Due");
+            doc.setFontSize(12);
+            doc.text(170, taxHeight + 35, balance.toString());
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(30, taxHeight + 55, "Payment Options");
+
+            var payHeight = taxHeight + 55;
+            // for (var i = 0; i<= content.paymentOptions.length - 1; i++) {
+            // doc.setFontSize(12);
+            // doc.text(50, payHeight, content.paymentOptions[i].url);
+            //     payHeight += 10;
+            // }
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(30, payHeight + 5, content.notes);
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(30, payHeight + 15, "Any damages must be noticed upon reciept of goods");
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(30, payHeight + 22, "GST Registration No:1231564878");
+
+            doc.setFontSize(12);
+            doc.setFontType("normal");
+            doc.text(30, payHeight + 29, "PST Registration No:1231564878");
+            $rootScope.dataUrl = ""
+           if (content.paymentOptions) {
+                var arrLength = content.paymentOptions.length - 1;
+                var count = 0;
+                var imageXaxsis = 65
+                for (var i = 0; i<= content.paymentOptions.length - 1; i++) {
+                doc.setFontSize(12);
+                    toDataUrl(content.paymentOptions[i].url, function(pImage){
+                    // doc.text(50, payHeight, content.paymentOptions[i].url);
+                        doc.addImage(pImage, 'PNG', imageXaxsis, payHeight-10, 20, 20);
+                        if (count == arrLength) {
+                            //doc.save(content.invoiceNo.toString()+'.pdf');
+ 
+                            $rootScope.dataUrl= doc.output('datauristring') 
+                            // console.log(count+' == '+ arrLength)
+                        }                           
+                        count += 1;
+                        imageXaxsis += 20;
+                    })
+
+                }
+            }else
+                $rootScope.dataUrl= doc.output('datauristring')  
+           
+        })
+    }
+
     })

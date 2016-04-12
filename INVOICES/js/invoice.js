@@ -1378,7 +1378,7 @@ var userName = $auth.getSession().Name;
         $scope.imagearray = UploaderService.loadArray();
         if ($scope.imagearray.length > 0) {
             for (indexx = 0; indexx < $scope.imagearray.length; indexx++) {
-                $uploader.upload("test.12thdoor.com", "invoiceUploades", $scope.imagearray[indexx]);
+                $uploader.uploadMedia("invoiceUploades", $scope.imagearray[indexx]);
                 $uploader.onSuccess(function(e, data) {
                     var toast = $mdToast.simple()
                         .content('Successfully uploaded!')

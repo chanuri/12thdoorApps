@@ -130,16 +130,21 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         client.getByFiltering("*");
 
 
-        for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
-            for (var x = $rootScope.invoiceArray[i].MultiDueDAtesArr.length - 1; x >= 0; x--) {
+        for (var i = 0; i <= $rootScope.invoiceArray.length - 1;  i++) {
+            for (var x = 0; x <= $rootScope.invoiceArray[i].MultiDueDAtesArr.length - 1; x++) {
                 if ($rootScope.invoiceArray[i].MultiDueDAtesArr[x].paymentStatus == "Draft") {
                     $scope.showSave = true;
                     $scope.AddProd = true;
                      $scope.payterm = false;
                 }
                  if ($state.current.name == 'edit'){
-                     if ($rootScope.invoiceArray[i].MultiDueDAtesArr[x].paymentStatus == "Unpaid") {
-                        $scope.AddProd = true;
+                    $scope.AddProd = true;
+                     if ($rootScope.invoiceArray[i].MultiDueDAtesArr[x].paymentStatus == "Paid") {
+                        $scope.AddProd = false;
+                     }else if($rootScope.invoiceArray[i].MultiDueDAtesArr[x].paymentStatus == "Partially Paid"){
+                        $scope.AddProd = false;
+                     }else if($rootScope.invoiceArray[i].MultiDueDAtesArr[x].paymentStatus == "overdue"){
+                        $scope.AddProd = false;
                      }
                     }
             }

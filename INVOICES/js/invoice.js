@@ -1151,8 +1151,8 @@ $scope.ll = [];
                             $rootScope.customerNames.push({
                                 display: $scope.contact.Name.toLowerCase(),
                                 value: $scope.contact,
-                                BillingValue: $scope.contact.baddress.street + ', ' + $scope.contact.baddress.city + ', ' + $scope.contact.baddress.zip + ', ' + $scope.contact.baddress.state + ', ' + $scope.contact.baddress.country,
-                                shippingValue: $scope.contact.saddress.s_street + ', ' + $scope.contact.saddress.s_city + ', ' + $scope.contact.saddress.s_zip + ', ' + $scope.contact.saddress.s_state + ', ' +
+                                BillingValue: $scope.contact.baddress.street + ' ' + $scope.contact.baddress.city + ' ' + $scope.contact.baddress.zip + ' ' + $scope.contact.baddress.state + ' ' + $scope.contact.baddress.country,
+                                shippingValue: $scope.contact.saddress.s_street + ' ' + $scope.contact.saddress.s_city + ' ' + $scope.contact.saddress.s_zip + ' ' + $scope.contact.saddress.s_state + ' ' +
                                     $scope.contact.saddress.s_country
                             });
                             var self = this;
@@ -1232,8 +1232,8 @@ $scope.ll = [];
                     $rootScope.customerNames.push({
                         display: cusform.Name.toLowerCase(),
                         value: cusform,
-                        BillingValue: cusform.baddress.street + ', ' + cusform.baddress.city + ', ' + cusform.baddress.zip + ', ' + cusform.baddress.state + ', ' + cusform.baddress.country,
-                        shippingValue: cusform.saddress.s_street + ', ' + cusform.saddress.s_city + ', ' + cusform.saddress.s_zip + ', ' + cusform.saddress.s_state + ', ' +
+                        BillingValue: cusform.baddress.street + ' ' + cusform.baddress.city + ' ' + cusform.baddress.zip + ' ' + cusform.baddress.state + ' ' + cusform.baddress.country,
+                        shippingValue: cusform.saddress.s_street + ' ' + cusform.saddress.s_city + ' ' + cusform.saddress.s_zip + ' ' + cusform.saddress.s_state + ' ' +
                             cusform.saddress.s_country
                     });
                     var self = this;
@@ -1287,8 +1287,8 @@ $scope.ll = [];
                     $rootScope.customerNames.push({
                         display: data[i].Name.toLowerCase(),
                         value: data[i],
-                        BillingValue: data[i].baddress.street + ', ' + data[i].baddress.city + ', ' + data[i].baddress.zip + ', ' + data[i].baddress.state + ', ' + data[i].baddress.country,
-                        shippingValue: data[i].saddress.s_street + ', ' + data[i].saddress.s_city + ', ' + data[i].saddress.s_zip + ', ' + data[i].saddress.s_state + ', ' +
+                        BillingValue: data[i].baddress.street + ' ' + data[i].baddress.city + ' ' + data[i].baddress.zip + ' ' + data[i].baddress.state + ' ' + data[i].baddress.country,
+                        shippingValue: data[i].saddress.s_street + ' ' + data[i].saddress.s_city + ' ' + data[i].saddress.s_zip + ' ' + data[i].saddress.s_state + ' ' +
                             data[i].saddress.s_country
                     });
                 }
@@ -1420,8 +1420,8 @@ var userName = $auth.getSession().Name;
         $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
         $scope.TDinvoice.Email = $rootScope.selectedItem1.value.Email;
         $scope.TDinvoice.customerid = $rootScope.selectedItem1.value.customerid;
-        $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
-        $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
+        $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.value.baddress;
+        $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.value.saddress;
         $scope.TDinvoice.invoiceNo = "-999";
         $scope.TDinvoice.taxAmounts = [];
         $scope.TDinvoice.taxAmounts = $rootScope.taxArr;

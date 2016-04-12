@@ -153,14 +153,15 @@
                <label flex="10">Due Date</label>
                <label flex="15"> {{item.termtype}}</label>
                <div flex="15" class="blankspace"></div>
-               <label>{{street}}</label>
+               <label>{{item.billingAddress.street}}</label>
             </div>
             <div layout layout-sm="column" layout-margin style="margin-top:-15px;" flex>
                <div flex="10" class="blankspace"></div>
                <label flex="10">PO</label>
                <label flex="15"> {{item.poNum}}</label>
                <div flex="15" class="blankspace"></div>
-               <label>{{city}},{{country}}</label>
+               <label>{{item.billingAddress.city}},{{item.billingAddress.state}}{{item.billingAddress.zip}}
+               {{item.billingAddress.country}}</label>
             </div>
             <div layout layout-sm="column" layout-margin style="margin-top:-15px;"  flex>
                <div flex="10" class="blankspace"></div>

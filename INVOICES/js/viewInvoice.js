@@ -770,18 +770,8 @@
                         
                            if ($stateParams.invoiceno == data[i].invoiceNo) {
                             if(data[i].MultiDueDAtesArr[x].paymentStatus != "Draft"){
-                            // invoiceDetails.removeArray(data[i], 1);
-                            // invoiceDetails.setArray(data[i]);
-                            $scope.Address = data[i].billingAddress.split(',');
-                            $scope.street = $scope.Address[0];
-                            $scope.city = $scope.Address[1] + $scope.Address[3];
-                            $scope.country = $scope.Address[2] + $scope.Address[4];
-
-                            $scope.shippingAddress = data[i].shippingAddress.split(',');
-                            $scope.ShippingStreet = $scope.shippingAddress[0];
-                            $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
-                            $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
-                            
+                            $scope.Address = data[i].billingAddress.street + data[i].billingAddress.city + data[i].billingAddress.state +
+                                            data[i].billingAddress.zip + data[i].billingAddress.country
                             $scope.calBalance += data[i].MultiDueDAtesArr[x].balance;
                             
                         } 
@@ -806,18 +796,7 @@
                            if ($stateParams.invoiceno == data[i].invoiceNo) {
                             console.log(data[i].MultiDueDAtesArr[x].paymentStatus)
                             if(data[i].MultiDueDAtesArr[x].paymentStatus == "Draft") {
-                                // invoiceDetails.removeArray(data[i], 1);
-                                // invoiceDetails.setArray(data[i]);
-                                $scope.Address = data[i].billingAddress.split(',');
-                                $scope.street = $scope.Address[0];
-                                $scope.city = $scope.Address[1] + $scope.Address[3];
-                                $scope.country = $scope.Address[2] + $scope.Address[4];
-
-                                $scope.shippingAddress = data[i].shippingAddress.split(',');
-                                $scope.ShippingStreet = $scope.shippingAddress[0];
-                                $scope.ShippingCity = $scope.shippingAddress[1] + $scope.shippingAddress[3];
-                                $scope.ShippingCountry = $scope.shippingAddress[2] + $scope.shippingAddress[4];
-
+                                
                                 $scope.calBalance += data[i].MultiDueDAtesArr[x].balance;
                             } 
                     }                   
@@ -989,11 +968,6 @@
 
                 //Address Details
 
-                var Address = content.billingAddress.split(',');
-                var street = Address[0];
-                var city = Address[1] + Address[3];
-                var country = Address[2] + Address[4];
-
                 doc.setFontSize(12);
                 doc.text(127, 70,"To:");
 
@@ -1001,10 +975,11 @@
                 doc.text(127, 77, content.Name);
 
                 doc.setFontSize(12);
-                doc.text(127, 84, street);
+                doc.text(127, 84, content.billingAddress.street);
 
                 doc.setFontSize(12);
-                doc.text(127, 91, city + "," +country);
+                doc.text(127, 91, content.billingAddress.city + content.billingAddress.state + 
+                    content.billingAddress.zip + content.billingAddress.country);
 
                 // doc.setFontSize(12);
                 // doc.text(125, 120, country);
@@ -1231,11 +1206,6 @@
 
                 //Address Details
 
-                var Address = content.billingAddress.split(',');
-                var street = Address[0];
-                var city = Address[1] + Address[3];
-                var country = Address[2] + Address[4];
-
                 doc.setFontSize(12);
                 doc.text(127, 70,"To:");
 
@@ -1243,10 +1213,11 @@
                 doc.text(127, 77, content.Name);
 
                 doc.setFontSize(12);
-                doc.text(127, 84, street);
+                doc.text(127, 84, content.billingAddress.street);
 
                 doc.setFontSize(12);
-                doc.text(127, 91, city + "," +country);
+                doc.text(127, 91, content.billingAddress.city + content.billingAddress.state + 
+                    content.billingAddress.zip + content.billingAddress.country);
 
                 doc.setFontSize(12);
                 doc.text(127, 98, content.Email);
@@ -1793,11 +1764,6 @@
 
             //Address Details
 
-            var Address = content.billingAddress.split(',');
-            var street = Address[0];
-            var city = Address[1] + Address[3];
-            var country = Address[2] + Address[4];
-
             doc.setFontSize(12);
             doc.text(127, 70,"To:");
 
@@ -1805,10 +1771,11 @@
             doc.text(127, 77, content.Name);
 
             doc.setFontSize(12);
-            doc.text(127, 84, street);
+        doc.text(127, 84, content.billingAddress.street);
 
-            doc.setFontSize(12);
-            doc.text(127, 91, city + "," +country);
+        doc.setFontSize(12);
+        doc.text(127, 91, content.billingAddress.city + content.billingAddress.state + 
+            content.billingAddress.zip + content.billingAddress.country);
 
             doc.setFontSize(12);
             doc.text(127, 98, content.Email);

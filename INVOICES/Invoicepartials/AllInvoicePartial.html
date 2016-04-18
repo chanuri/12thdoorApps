@@ -196,13 +196,13 @@
                             <section-title> </section-title>
                             <md-input-container flex="70" ng-show="Billingaddress">
                                 <label>Billing Address</label>
-                                <input ng-model="Address" ng-disabled="true" />
+                                <input ng-model="tdi.billingAddress.street+tdi.billingAddress.city+tdi.billingAddress.state+tdi.billingAddress.zip+tdi.billingAddress.country" ng-disabled="true" />
                             </md-input-container>
                             <md-input-container flex="70" ng-show="Shippingaddress">
                                 <label>Shipping Address</label>
-                                <input ng-model="tdi.shippingAddress" ng-disabled="true" />
+                                <input ng-model="tdi.shippingAddress.s_street+tdi.shippingAddress.s_city+tdi.shippingAddress.s_state+tdi.shippingAddress.s_zip+tdi.shippingAddress.s_country" ng-disabled="true" />
                             </md-input-container>
-                            <div style="height:30px;width:30px;margin-top:35px;">
+                            <div style="height:30px;width:30px;margin-top:15px;">
                                 <md-button ng-click="changeAddress()" style="height:30px;" aria-label="change_Address" href>
                                     <md-icon md-svg-src="img/ic_swap_vert_24px.svg" class="iconColor" md-ink-ripple style="right:1px;left:95%;top:20px;"></md-icon>
                                 </md-button>
@@ -218,7 +218,6 @@
                                 <label>Date</label>
                                 <input ng-model="tdi.Startdate|date" ng-disabled="true">
                             </md-input-container>
-
                         </div>
                         <div layout layout-sm="column" layout-margin>
                             <section-title> </section-title>
@@ -230,7 +229,6 @@
                                 <label>Due Date</label>
                                 <input ng-model="tdi.duedate|date" ng-disabled="true">
                             </md-input-container>
-
                         </div>
                         <div layout layout-sm="column" layout-margin>
                             <section-title> </section-title>
@@ -252,9 +250,9 @@
                                         <md-card-content>
                                             <div style="margin-top:0px;">
                                                 <span>
-                                {{item.Productname}} 
-                                <md-tooltip>Product Name</md-tooltip>
-                            </span>
+                                                    {{item.Productname}} 
+                                                    <md-tooltip>Product Name</md-tooltip>
+                                                </span>
                                                 <md-divider></md-divider>
                                             </div>
                                            <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;">
@@ -285,11 +283,9 @@
                                                             </span>
                                                         </div>
                                                         <div flex >
-                                                            <span style="color:#808080;">{{item.amount|currency:tdi.BaseCurrency}}
-                               
-                                                                
+                                                        <span style="color:#808080;">{{item.amount|currency:tdi.BaseCurrency}}
                                                                 <md-tooltip>Amount</md-tooltip>
-                                </span>
+                                                        </span>
                                             </div>
                                         </md-card-content>
                                     </md-card>
@@ -457,7 +453,7 @@
                                 </md-button>
                                 </li>
                                 </ul>
-                                    <!-- <md-table headers="headers" sortable="sortable" filters="search" custom-class="custom" thumbs="thumbs" count="count" content="tdi.UploadImages.val"></md-table> -->
+                                    
                                 </div>
                             </div>
                         </div>

@@ -140,8 +140,6 @@ app.config(function($mdThemingProvider){
 app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploader, $state, $mdDialog, InvoiceService, invoiceDetails, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, InvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
 
     $auth.checkSession();
-    //     console.log($auth.getSession().Name);
-    $scope.list = [];
     $scope.TDinvoice = {};
     $scope.Settings = {};
     $scope.total = 0;
@@ -198,7 +196,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                     $scope.cusF = $scope.Settings[i].preference.invoicepref.CusFiel
 
                     $scope.ShowDiscount = $scope.Settings[i].preference.invoicepref.enableDisscounts;
-                    // $rootScope.email = $scope.Settings[i].preference.invoicepref.emailcontent.emailBody;
 
                     if ($scope.Settings[i].preference.invoicepref.enableDisscounts == true) {
                         $scope.dis = $scope.Settings[i].preference.invoicepref.disscountItemsOption;
@@ -248,7 +245,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         paymentmethod: $scope.Settings[i].payments[y].name,
                         paymentType: $scope.Settings[i].payments[y].paymentType,
                         activate: $scope.Settings[i].payments[y].activate
-                            // url:$scope.Settings[i].payments[y].url
                     })
                 };
             };
@@ -268,7 +264,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
         $scope.UOM = $scope.UnitOfMeasure;
         $scope.CusFields = $scope.cusF;
         $scope.Displaydiscount = $scope.ShowDiscount;
-        // $scope.TDinvoice.termtype = $scope.paymentTerm
     });
     client.onError(function(data) {});
     client.getByFiltering("*");
@@ -496,7 +491,7 @@ $scope.ll = [];
                         $rootScope.checkArr = angular.copy($scope.testarr);
                         for (var i = $scope.testarr.length - 1; i >= 0; i--) {
                             $scope.calc += parseFloat($scope.testarr[i].percentage);
-                            // if($scope.calc <= 100){
+                          
                             MultipleDudtesService.calDateArray({
                                 DueDate: $scope.testarr[i].duedate,
                                 Percentage: $scope.testarr[i].percentage,
@@ -505,7 +500,7 @@ $scope.ll = [];
                                 balance: $scope.testarr[i].duDatePrice,
                                 count: $scope.testarr[i].count
                             });
-                            // }
+                        
                         };
 
                         if ($scope.calc == 100) {
@@ -696,7 +691,6 @@ $scope.ll = [];
         $rootScope.DisplayTaxes = angular.copy($scope.ShowTaxes);
         $rootScope.BaseCurrency1 = angular.copy($scope.BaseCurrency)
         
-            // console.log($scope.BaseCurrency1);
         $mdDialog.show({
             templateUrl: 'Invoicepartials/addproduct.html',
             targetEvent: ev,
@@ -708,7 +702,6 @@ $scope.ll = [];
                 $scope.AllUnitOfMeasures = [];
                 $scope.discount = 0;
                 $scope.showProduct = false;
-                // $scope.promoItems[0].tax = 0;
                 
                 if ($rootScope.discounts == "Individual Items" && $rootScope.Showdiscount == true) {
                     $scope.displayDiscountLine = true;
@@ -724,18 +717,6 @@ $scope.ll = [];
                            $scope.showProduct = false; 
                         }
                     });
-                 // $scope.$watch("addProd.price", function() {
-                 //        if ($scope.addProd.price != null) {
-                 //           $scope.showProduct = false; 
-                 //        }
-                 //    });
-                 
-
-                  // $scope.$watch("addProd.price", function() {
-                  //       if ($scope.promoItems[0].price != null) {
-                  //          $scope.showProduct = false; 
-                  //       }
-                  //   });
 
                 $scope.addproductToarray = function(item) {
                         $scope.promoItems[0] = {
@@ -758,9 +739,6 @@ $scope.ll = [];
 
                             }else if ($scope.promoItems[i].ProductUnit == "") {
                                  $scope.showProduct = true;
-
-                            // } else if ($scope.promoItems[i].tax == undefined) {
-                            //      $scope.promoItems[i].tax = 0;
 
                             }else if ($scope.promoItems[i].price == null) {
                                  $scope.showProduct = true;
@@ -1047,8 +1025,7 @@ $scope.ll = [];
                         left: false,
                         right: true
                     };
-                    
-                    
+                          
                     $scope.toastPosition = angular.extend({}, last);
                     $scope.getToastPosition = function() {
                         sanitizePosition();

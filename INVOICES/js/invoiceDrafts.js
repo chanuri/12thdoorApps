@@ -130,20 +130,20 @@
         var userName = $auth.getSession().Name;
 
         
-        var Address = pim.billingAddress.split(',');
-        var city1 = Address[1] 
-        var street1 = Address[0];
-        var state1 =   Address[3];
-        var country1 = Address[4]; 
-        var zip1 =  Address[2];
+        // var Address = pim.billingAddress.split(',');
+        // var city1 = Address[1] 
+        // var street1 = Address[0];
+        // var state1 =   Address[3];
+        // var country1 = Address[4]; 
+        // var zip1 =  Address[2];
 
-        $scope.payment.cusAddress = {
-            city: city1,
-            country: country1 ,
-            state: state1,
-            street: street1,
-            zip: zip1
-        };
+        $scope.payment.cusAddress = pim.billingAddress
+        //     city: pim.billingAddress.,
+        //     country: pim.billingAddress ,
+        //     state: pim.billingAddress,
+        //     street: pim.billingAddress,
+        //     zip: pim.billingAddress
+        // };
         $scope.payment.cusEmail = pim.Email;
 
         $scope.advancedPayment = {};

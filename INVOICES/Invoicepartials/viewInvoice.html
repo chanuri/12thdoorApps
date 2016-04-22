@@ -170,16 +170,11 @@
                <div flex="15" class="blankspace"></div>
                <label>{{item.Email}}</label>
             </div>
-            <!-- <div layout layout-sm="column" layout-margin style="margin-top:-15px;"  flex>
-               <div flex="55" class="blankspace"></div>
-               <label>{{item.Email}}</label>
-            </div> -->
+            
             <div layout layout-sm="column" layout-margin style="margin-top:-5px;" flex>
                <div flex="10" class="blankspace"></div>
                <label flex="10">Comments</label>
                <label flex>{{item.comments}}</label>
-               <!-- <div flex="15" class="blankspace"></div>
-               <label>{{item.Email}}</label> -->
             </div>
             <div layout layout-sm="column" style="margin-top:30px; " layout-margin  flex>
                <div flex="10" class="blankspace"></div>
@@ -208,14 +203,12 @@
                <table>
                   <tr >
                      <td  flex>Sub Total</td>
-                    <!--  <td style="text-align: right; padding-top:15px;" flex></td> -->
                      <td style="text-align: right; padding-left: 170px;" flex>
                         {{item.total|currency:item.BaseCurrency}}
                      </td>
                   </tr>
                   <tr flex>
                      <td  style="padding-top:15px;" flex>Discount</td>
-                     <!-- <td style="text-align: right; padding-top:15px;" flex></td> -->
                      <td style="text-align: right; padding-left: 170px; padding-top:15px;" flex>
                         {{item.discountAmount|currency:item.BaseCurrency}}
                      </td>
@@ -315,12 +308,6 @@
                   </li>
                </ul>
             </div>
-            <!-- <div layout layout-sm="column" layout-margin>
-               <section-title> </section-title>
-               <a id="clear-completed" ng-click="clear()" ng-show="hasDone()">
-               Clear <span >{{(todos.length - remaining())}} {{itemText()}}</span>.
-               </a>
-            </div> -->
             <md-divider></md-divider>
             <div layout layout-sm="column" layout-margin>
                <section-title title="Payment History"> </section-title>
@@ -333,20 +320,19 @@
                   </tr>
                   <tr ng-repeat="cc in Payment">
                      <td style="padding: 5px;text-align: left;" flex>{{cc.date|date}}</td>
-                     <td style="padding: 20px;text-align: left;"flex>{{cc.paymentid}}</td>
+                     <td style="padding: 20px;text-align: left;"flex><a href="#">{{cc.paymentid}}</a></td>
                      <td style="padding: 20px;text-align: left;"flex>{{cc.paymentMethod}}</td>
                      <td style="padding: 20px;text-align: left;"flex>{{cc.total|currency:item.BaseCurrency}}</td>
                   </tr>
-                  <!-- <md-divider></md-divider> -->
                </table>
             </div>
             <md-divider></md-divider>
             <div layout layout-sm="column" ng-show="item.DiplayShipiingAddress" layout-margin>
                <section-title title="Shipping Address"> </section-title>
                <div layout layout-sm="column" layout-margin>
-                  {{ShippingStreet}}<br>
-                  {{ShippingCity}}<br>
-                  {{ShippingCountry}}<br>
+                  {{item.s_street}}<br>
+                  {{item.s_city}}{{item.s_state}}<br>
+                  {{item.s_zip}}{{item.s_country}}<br>
                </div>
             </div>
          </md-content>

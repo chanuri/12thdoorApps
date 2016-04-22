@@ -22,8 +22,8 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
 
         for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
             $rootScope.selctedName = $rootScope.invoiceArray[i].Name;
-            var bADD = $rootScope.invoiceArray[i].billingAddress;
-            var sADD = $rootScope.invoiceArray[i].shippingAddress;
+            $scope.bADD = $rootScope.invoiceArray[i].billingAddress;
+            $scope.sADD = $rootScope.invoiceArray[i].shippingAddress;
             
             $scope.termtype = $rootScope.invoiceArray[i].termtype;
             if($rootScope.invoiceArray[i].termtype != "multipleDueDates"){
@@ -49,9 +49,9 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
 
          for (var i = $rootScope.customerNames.length - 1; i >= 0; i--) {
             if($rootScope.customerNames[i].display == $rootScope.selctedName){
-                $rootScope.customerNames[i].BillingAddress = bADD
+                $rootScope.customerNames[i].BillingAddress = $scope.bADD
                 console.log($rootScope.customerNames[i].BillingAddress);
-                $rootScope.customerNames[i].ShippingAddress = sADD
+                $rootScope.customerNames[i].ShippingAddress = $scope.sADD
             }
                 
             }
@@ -106,7 +106,6 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                             paymentmethod: $scope.Settings[i].payments[y].name,
                             paymentType: $scope.Settings[i].payments[y].paymentType,
                             activate: $scope.Settings[i].payments[y].activate
-                                // url:$scope.Settings[i].payments[y].url
                         })
                     };
                 };
@@ -308,23 +307,19 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         };
         $scope.finaldiscount = function(data) {
             $scope.finalDisc = 0;
-            $scope.Discount = 0;
-        // if ($scope.dis == "SubTotal Items") {
+
             $scope.finalDisc = parseFloat(($scope.salesTax + $scope.total) * data.fdiscount / 100)
-        // } else if ($scope.dis == "Individual Items") {
-        //     $scope.finalDisc = 0;
-        // }
-        return $scope.finalDisc;
-        }
+            return $scope.finalDisc;
+            }
         $scope.CalculateTax = function() {
            $scope.salesTax = 0;
         for (var i = $rootScope.taxArr1.length - 1; i >= 0; i--) {
             $scope.salesTax += parseFloat($rootScope.taxArr1[i].salesTax);
-            // $scope.salesTax = tt;
         }
         return $scope.salesTax;
 
         }
+        $rootScope.famount = 0;
         $scope.finalamount = function(data) {
             $rootScope.famount = 0;
             $rootScope.famount = parseFloat($scope.total - $scope.finalDisc) + parseFloat($scope.salesTax) + parseFloat(data.shipping);
@@ -362,6 +357,12 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 obj.favourite = false;
                 obj.favouriteStarNo = 1;
                 obj.DeleteStatus = false;
+                obj.invoiceRefNo = $scope.refNo;
+                obj.total = $scope.total;
+                obj.taxAmounts = [];
+                obj.taxAmounts = $rootScope.taxArr1;
+            
+            obj.finalamount = $scope.famount;
                 draftdelete.onComplete(function(data) {
                     if (obj.termtype != "multipleDueDates") {
                         obj.MultiDueDAtesArr = [{
@@ -865,6 +866,8 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
             updatedForm.OfflinePaymentDetails = $scope.OfflinePaymentDetails;
             updatedForm.termtype = $scope.termtype;
             updatedForm.duedate = $scope.duedate;
+            updatedForm.taxAmounts = [];
+            updatedForm.taxAmounts = $rootScope.taxArr1;
 
             $scope.imagearray = UploaderService.loadArray();
             if ($scope.imagearray.length > 0) {
@@ -911,7 +914,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
             updatedForm.cardOpen = false;
             updatedForm.favourite = false;
             updatedForm.favouriteStarNo = 1;
-            // updatedForm.DeleteStatus = false;
+            updatedForm.DeleteStatus = false;
             updatedForm.finalamount = $scope.famount;
              updatedForm.commentsAndHistory = [];
             updatedForm.commentsAndHistory.push({
@@ -985,10 +988,6 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                     obj.total = $scope.total;
                     obj.finalamount = $scope.famount;
                     obj.status = "Draft";
-                    // $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
-                    // $scope.TDinvoice.billingAddress = $rootScope.selectedItem1.BillingValue;
-                    // $scope.TDinvoice.shippingAddress = $rootScope.selectedItem1.shippingValue;
-                    // $scope.TDinvoice.MultiDueDAtesArr = $scope.dateArray.value;
 
                     client.onComplete(function(data) {
                         $state.go('settings.invoice_app');
@@ -1013,7 +1012,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                             .targetEvent(data)
                         );
                     });
-                    //console.log(obj);
+                   
                     obj.invoiceNo = "-999";
                     client.insert([obj], {
                         KeyProperty: "invoiceNo"

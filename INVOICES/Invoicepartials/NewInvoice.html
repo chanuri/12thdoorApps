@@ -110,7 +110,6 @@
                             <md-select ng-model="TDinvoice.termtype" required="" md-no-asterisk="" name="terms"/>
                             <md-optgroup label="Terms type">
                                 <md-option value="DueonReceipt" ng-show"dueDtaesShow">Due on Receipt</md-option>
-                                <md-option value="Custom" >Custom</md-option>
                                 <md-option value="Net 7 days">Net 7 days</md-option>
                                 <md-option value="Net 14 days" >Net 14 days</md-option>
                                 <md-option value="Net 21 days">Net 21 days</md-option>
@@ -118,6 +117,7 @@
                                 <md-option value="Net 45 days">Net 45 days</md-option>
                                 <md-option value="Net 60 days">Net 60 days</md-option>
                                 <md-option value="Net 90 days">Net 90 days</md-option>
+                                <md-option value="Custom" >Custom</md-option>
                                 <md-option value="multipleDueDates" ng-click="MultiDuDates()">Multiple Due Dates</md-option>
                             </md-optgroup>
                         </md-select>
@@ -215,6 +215,15 @@
                                                             </span>
                                                         </div>
                                                     </div>
+                                                     <md-divider></md-divider>
+                                                    <div>
+                                                      <div layout="row" layout-sm="column" style="height:20px; margin-top:10px;">
+                                                            <span style="color:#808080;">{{item.olp}}
+                                                             
+                                                                <md-tooltip>Desciption</md-tooltip>
+                                                            </span>
+                                                        </div>  
+                                                    </div>
                                                 </md-card-content>
                                             </md-card>
                                         </li>
@@ -255,14 +264,14 @@
                                         <label>Discount</label>
                                     </div>
                                     <md-input-container flex="20" >
-                                        <input type="text"  ng-model="TDinvoice.fdiscount" aria-label="discount" style="margin-top:-12px;" ng-disabled="checkDiscout"/>
+                                        <input type="text"  ng-model="$root.adddiscount" aria-label="discount" style="margin-top:-12px;" ng-disabled="checkDiscout" ng-change ="calDiscAgain($root.adddiscount)"/>
                                         <md-icon md-svg-src="img/disc.svg"  md-ink-ripple style="margin-left:-30px;margin-top:-5px;" ></md-icon>
                                     </md-input-container>
                                     <div flex="5">
                                         <label></label>
                                     </div>
                                     <div flex="30">
-                                        <label>{{finaldiscount(TDinvoice.fdiscount) | currency:BaseCurrency}}</label>
+                                        <label>{{finaldiscount(TDinvoice) | currency:BaseCurrency}}</label>
                                     </div>
                                 </div>
                                 <div layout layout-sm="column" ng-repeat="tt in taxArr" layout-margin style="overflow:hidden;">
@@ -373,7 +382,7 @@
                                         </td>
                                             <td style=" padding-left:200px;"  flex>
                                                 <md-input-container flex ng-if=" txt.type== 'textBox'" >
-                                                    <input aria-label="ttt" ng-model="txt.inputType" ng-disabled="true">
+                                                    <input aria-label="ttt" ng-model="txt.inputType">
                                                     </md-input-container>
                                                     <md-select ng-change="check(nn)" placeholder="id" ng-if=" txt.type == 'selectBox'" ng-model="nn" flex >
                                                         <md-option ng-repeat="nn in txt.fields" value="{{nn}}">{{nn}}</md-option>

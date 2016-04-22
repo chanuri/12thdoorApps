@@ -8,6 +8,8 @@
          $scope.test = item;
         $scope.prevTrax = angular.copy($scope.test)
 
+        $scope.checkAvaialability = false;
+
         var client = $objectstore.getClient("Settings12thdoor");
         client.onGetMany(function(data) {
             if (data) {
@@ -35,6 +37,21 @@
         });
         client.onError(function(data) {});
         client.getByFiltering("*");
+
+        var client = $objectstore.getClient("product12thdoor");
+        client.onGetMany(function(data) {
+            if (data) {
+                for (var i = data.length - 1; i >= 0; i--) {
+                    if(data[i].Productname.toLowerCase() == item.Productname.toLowerCase()){
+                         $scope.checkAvaialability = true;
+
+                    }
+                }
+        };
+    });
+        client.onError(function(data) {});
+        client.getByFiltering("select * from product12thdoor where deleteStatus = 'false' and status = 'Active'");
+
 
 
         $scope.cancel = function() {
@@ -129,21 +146,7 @@
         
         var userName = $auth.getSession().Name;
 
-        
-        // var Address = pim.billingAddress.split(',');
-        // var city1 = Address[1] 
-        // var street1 = Address[0];
-        // var state1 =   Address[3];
-        // var country1 = Address[4]; 
-        // var zip1 =  Address[2];
-
         $scope.payment.cusAddress = pim.billingAddress
-        //     city: pim.billingAddress.,
-        //     country: pim.billingAddress ,
-        //     state: pim.billingAddress,
-        //     street: pim.billingAddress,
-        //     zip: pim.billingAddress
-        // };
         $scope.payment.cusEmail = pim.Email;
 
         $scope.advancedPayment = {};
@@ -381,14 +384,6 @@
                 val: []
             };
             $scope.payment.custField = []; 
-
-            // if ($scope.payment.total == 0) {
-            //     $scope.payment.uAmount = $scope.payment.namount;
-            //     $scope.advancedPayment.uAmount = $scope.payment.uAmount;
-            // } else if ($scope.payment.namount > 0) {
-            //     $scope.payment.uAmount = $scope.payment.namount;
-            //     $scope.advancedPayment.uAmount = $scope.payment.uAmount;
-            // }
 
             $scope.advancedPayment.uAmount = $scope.payment.namount;
             if (!$scope.advancePaymentExsist) {
@@ -686,7 +681,7 @@
                 return arry;
             },
             setFullArr: function(obj) {
-                this.setArray(obj);
+                 this.setArray(obj);
                 $rootScope.correctArr = [];
                 $rootScope.multiTax = [];
                 $rootScope.total = 0;
@@ -698,13 +693,17 @@
 
                 if (obj.tax != null) {
                     if (obj.tax.type == "individualtaxes") {
-                        if (obj.tax.rate == 0) {} else {
+                        if (obj.tax.rate == 0) {
+
+                        } else {
+                           
                             $rootScope.taxArr.push({
                                 taxName: obj.tax.taxname,
                                 rate: obj.tax.rate,
-                                salesTax: parseFloat(obj.amount * obj.tax.rate / 100),
-                                compoundCheck: obj.tax.compound
-                            })
+                                salesTax: parseFloat((obj.amount-(obj.amount * $rootScope.adddiscount/100))*(obj.tax.rate)/100),
+                                compoundCheck: obj.tax.compound,
+                                positionID: obj.tax.positionId
+                            })  
                         }
                     } else if (obj.tax.type == "multipletaxgroup") {
                         for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
@@ -740,7 +739,110 @@
                                     taxName: $rootScope.calculateCompound[y].taxname,
                                     rate: $rootScope.calculateCompound[y].rate,
                                     salesTax: $rootScope.total,
-                                    compoundCheck: $rootScope.calculateCompound[y].compound
+                                    compoundCheck: $rootScope.calculateCompound[y].compound,
+                                    positionID: $rootScope.calculateCompound[y].positionId
+                                })
+                                console.log($rootScope.taxArr)
+                            }
+                        }
+                    }
+                      $rootScope.taxArr = $rootScope.taxArr.sort(function(a, b) {
+                       return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                    });
+
+                    if ($rootScope.taxArr.length > 1) {
+
+                        for (l = 0; l <= $rootScope.taxArr.length - 1; l++) {
+                            if ($rootScope.taxArr[l + 1]) {
+
+                                if ($rootScope.taxArr[l].taxName == $rootScope.taxArr[l + 1].taxName) {
+                                    var sumSalesTax = 0;
+                                    var txtName = $rootScope.taxArr[l].taxName;
+                                    var rate = $rootScope.taxArr[l].rate;
+                                    var compound = $rootScope.taxArr[l].compoundCheck;
+                                    var pId = $rootScope.taxArr[l].positionID;
+                                    sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l + 1].salesTax;
+
+                                    $rootScope.taxArr.splice(l, 2);
+                                    $rootScope.taxArr.push({
+                                        taxName: txtName,
+                                        rate: rate,
+                                        salesTax: sumSalesTax,
+                                        compoundCheck: compound,
+                                        positionID:pId
+                                    })
+                                     $rootScope.taxArr = $rootScope.taxArr.sort(function(a, b) {
+                                       return a.positionID > b.positionID ? 1 : a.positionID < b.positionID ? -1 : 0;
+                                    });
+                                }
+                            };
+                        }
+                        $rootScope.taxArr.sort(function(a, b) {
+                            return a.positionID > b.positionID ? 1 : a.positionID < b.positionID ? -1 : 0;
+                        }); 
+                    }
+                }
+            },
+            setFullArr1: function(obj) {
+                // this.setArray(obj);
+                $rootScope.correctArr = [];
+                $rootScope.multiTax = [];
+                $rootScope.total = 0;
+                $rootScope.getFamount = 0;
+                $rootScope.compoundcal = [];
+                $rootScope.calculateCompound = [];
+                $rootScope.falseComp = [];
+                $rootScope.trueComp = [];
+                
+                if (obj.tax != null) {
+                    if (obj.tax.type == "individualtaxes") {
+                        if (obj.tax.rate == 0) {} else {
+                            $rootScope.taxArr.push({
+                                taxName: obj.tax.taxname,
+                                rate: obj.tax.rate,
+                                salesTax: parseFloat(obj.amount * obj.tax.rate / 100),
+                                compoundCheck: obj.tax.compound,
+                                positionID: obj.tax.positionId
+                            })
+
+                            console.log($rootScope.taxArr)
+                        }
+                    } else if (obj.tax.type == "multipletaxgroup") {
+                        for (var x = obj.tax.individualtaxes.length - 1; x >= 0; x--) {
+
+                            if (obj.tax.individualtaxes[x].compound == false) {
+                                $rootScope.falseComp.push(obj.tax.individualtaxes[x]);
+                            } else if (obj.tax.individualtaxes[x].compound == true) {
+                                $rootScope.trueComp.push(obj.tax.individualtaxes[x])
+                                $rootScope.compountTrue = $rootScope.trueComp.sort(function(a, b) {
+                                    return a.positionId > b.positionId ? 1 : a.positionId < b.positionId ? -1 : 0;
+                                });
+                            }
+                        }
+                        $rootScope.calculateCompound = $rootScope.falseComp.concat($rootScope.compountTrue);
+                        var tcopmAmount = 0;
+                        var fcompAmount = 0;
+                        var finalCal = 0;
+                        for (var y = 0; y <= $rootScope.calculateCompound.length - 1; y++) {
+                            
+                            if ($rootScope.calculateCompound[y].compound == false) {
+                                fcompAmount = parseFloat(obj.amount * $rootScope.calculateCompound[y].rate / 100)
+                                $rootScope.total = fcompAmount;
+                                $rootScope.getFamount += fcompAmount;
+                            } else if ($rootScope.calculateCompound[y].compound == true) {
+                                tcopmAmount = parseFloat($rootScope.getFamount + obj.amount);
+                                finalCal = (parseFloat(finalCal + tcopmAmount) * $rootScope.calculateCompound[y].rate / 100);
+                                $rootScope.total = finalCal;
+                            }
+                            if ($rootScope.calculateCompound[y].rate == 0) {
+
+                            } else {
+                                $rootScope.taxArr.push({
+                                    taxName: $rootScope.calculateCompound[y].taxname,
+                                    rate: $rootScope.calculateCompound[y].rate,
+                                    salesTax: $rootScope.total,
+                                    compoundCheck: $rootScope.calculateCompound[y].compound,
+                                     positionID: $rootScope.calculateCompound[y].positionId
                                 })
                                 console.log($rootScope.taxArr)
                             }
@@ -759,6 +861,7 @@
                                     var txtName = $rootScope.taxArr[l].taxName;
                                     var rate = $rootScope.taxArr[l].rate;
                                     var compound = $rootScope.taxArr[l].compoundCheck;
+                                    var pId = $rootScope.taxArr[l].positionID;
                                     sumSalesTax = $rootScope.taxArr[l].salesTax + $rootScope.taxArr[l + 1].salesTax;
 
                                     $rootScope.taxArr.splice(l, 2);
@@ -766,14 +869,18 @@
                                         taxName: txtName,
                                         rate: rate,
                                         salesTax: sumSalesTax,
-                                        compoundCheck: compound
+                                        compoundCheck: compound,
+                                        positionID:pId
                                     })
-                                    $rootScope.taxArr.sort(function(a, b) {
-                                        return a.taxName.toLowerCase() > b.taxName.toLowerCase() ? 1 : a.taxName.toLowerCase() < b.taxName.toLowerCase() ? -1 : 0;
+                                     $rootScope.taxArr = $rootScope.taxArr.sort(function(a, b) {
+                                       return a.positionID > b.positionID ? 1 : a.positionID < b.positionID ? -1 : 0;
                                     });
-                                };
+                                }
                             };
                         }
+                        $rootScope.taxArr.sort(function(a, b) {
+                            return a.positionID > b.positionID ? 1 : a.positionID < b.positionID ? -1 : 0;
+                        }); 
                     }
                 }
             },
@@ -988,8 +1095,6 @@
                         }
                     }
                     }
-                    
-                // }
 
                 var sorted_arr = arr.sort();
                 var results = [];

@@ -65,10 +65,10 @@
       </div>
       <div layout layout-sm="column" layout-margin>
          <section-title></section-title>
-         <md-input-container ng-show="displayDiscountLine"  flex>
+         <md-input-container  flex>
             <label>Discount</label>
-            <input type="text" ng-model="discount" />
-            <md-icon md-svg-src="img/disc.svg"  md-ink-ripple style="margin-left:-30px;margin-top:-5px;" ></md-icon>
+            <input type="text" ng-model="discount" ng-disabled="displayDiscountLine"/>
+            <md-icon md-svg-src="img/disc.svg"  md-ink-ripple style="margin-left:-30px;margin-top:5px;" ></md-icon>
          </md-input-container>
          <div flex ng-repeat="pim in promoItems" ng-show="$root.DisplayTaxes">
             <md-input-container flex style=" margin-top:2px;">

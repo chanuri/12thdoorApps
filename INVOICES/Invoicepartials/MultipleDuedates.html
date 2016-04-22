@@ -108,7 +108,7 @@
                                                                             <b>percentage is exceeded</b>
                                                                         </div>
                                                                         <div ng-message="limit" ng-show="$root.showmsg">
-                                                  please check the percentage
+                                                  Please add a line item to configure multiple due dates
                                               </div>
                                                                     </div>
                                                                 </md-input-container>
@@ -136,6 +136,9 @@
                                     </div>
                                 </md-dialog-content>
                                 <div class="md-actions" layout="row">
+                                <div  ng-show="showProduct" >
+                                               <span style="color:red" flex>Please Check the Percentage </span>
+                                           </div>
                                     <span flex></span>
                                     <md-button href ng-if="$root.dateArray.val.length == 0" ng-click="AddDueDates()" class="md-primary">Save</md-button>
                                     <md-button href ng-if="$root.dateArray.val.length != 0" ng-click="UpdateDueDates()" class="md-primary">update</md-button>

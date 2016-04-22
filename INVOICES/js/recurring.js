@@ -1,6 +1,5 @@
-// angular.module('mainApp')
 app.controller('newRecurringCtrl', function($scope, $state, $objectstore, $uploader, $mdDialog, $window, $objectstore, $auth, $timeout, $q, $http, $mdToast, $rootScope, recurringInvoiceService, $filter, $location, UploaderService, MultipleDudtesService) {
-      $scope.list = [];
+
       $scope.TDinvoice = {};
       $scope.invoicDEtails = {};
       $scope.total = 0;
@@ -26,7 +25,7 @@ app.controller('newRecurringCtrl', function($scope, $state, $objectstore, $uploa
               client.onGetMany(function(data) {
                  if (data) {
                   $scope.InvoiceDetailss = data;
-                   //console.log(data);
+            
                 for (var i = $scope.InvoiceDetailss.length - 1; i >= 0; i--) {
                   $scope.ID = $scope.InvoiceDetailss[i].maxCount;
             };
@@ -152,7 +151,6 @@ var client = $objectstore.getClient("Settings12thdoor");
         $scope.UOM = $scope.UnitOfMeasure;
         $scope.CusFields = $scope.cusF;
         $scope.Displaydiscount = $scope.ShowDiscount;
-        // $scope.TDinvoice.termtype = $scope.paymentTerm
     });
     client.onError(function(data) {});
     client.getByFiltering("*");
@@ -162,7 +160,6 @@ var client = $objectstore.getClient("Settings12thdoor");
         $scope.checkDiscout = false;
     }
 
-     // $scope.invoiceProducts =  $scope.prodArray.val;
       //checks whether the use has selected a name or not. if the name is selecter the it enebles the user to edit the customer details
       $scope.selectedItemChange = function(c) {
          $scope.showEditCustomer = true;
@@ -210,7 +207,6 @@ var client = $objectstore.getClient("Settings12thdoor");
       $scope.deleteproduct = function(name, index) {
         recurringInvoiceService.ReverseEditTax(name, index);
         $rootScope.prodArray.val.splice($rootScope.prodArray.val.indexOf(name), 1);
-            // recurringInvoiceService.removeArray(name);
          }
          //dialog box pop up to add product
       $scope.addproduct = function(ev) {
@@ -572,8 +568,20 @@ var client = $objectstore.getClient("Settings12thdoor");
                     $scope.contact = {};
                     $scope.baddress = {};
                     $scope.saddress = {};
-                    $scope.contact["baddress"] = {};
-                    $scope.contact["saddress"] = {};
+                    $scope.contact["baddress"] = {
+                                city: "",
+                                country: "",
+                                state: "",
+                                street: "",
+                                zip: ""
+                              };
+                     $scope.contact["saddress"] = {
+                                s_city: "",
+                                s_country: "",
+                                s_state: "",
+                                s_street: "",
+                                s_zip: ""
+                              };
                     $scope.showShipping = $scope.showShipping;
                     $scope.showBilling = !$scope.showBilling;
                     $scope.cb = false;
@@ -637,8 +645,8 @@ var client = $objectstore.getClient("Settings12thdoor");
                             $rootScope.customerNames.push({
                                 display: $scope.contact.Name.toLowerCase(),
                                 value: $scope.contact,
-                                BillingValue: $scope.contact.baddress.street + ', ' + $scope.contact.baddress.city + ', ' + $scope.contact.baddress.zip + ', ' + $scope.contact.baddress.state + ', ' + $scope.contact.baddress.country,
-                                shippingValue: $scope.contact.saddress.s_street + ', ' + $scope.contact.saddress.s_city + ', ' + $scope.contact.saddress.s_zip + ', ' + $scope.contact.saddress.s_state + ', ' +
+                                BillingValue: $scope.contact.baddress.street + ' ' + $scope.contact.baddress.city + ' ' + $scope.contact.baddress.zip + ' ' + $scope.contact.baddress.state + ' ' + $scope.contact.baddress.country,
+                                shippingValue: $scope.contact.saddress.s_street + ' ' + $scope.contact.saddress.s_city + ' ' + $scope.contact.saddress.s_zip + ' ' + $scope.contact.saddress.s_state + ' ' +
                                     $scope.contact.saddress.s_country
                             });
                             var self = this;
@@ -717,8 +725,8 @@ var client = $objectstore.getClient("Settings12thdoor");
                      $rootScope.customerNames.push({
                               display: cusform.Name.toLowerCase(),
                               value: cusform,
-                              BillingValue: cusform.baddress.street + ', ' + cusform.baddress.city + ', ' + cusform.baddress.zip + ', ' + cusform.baddress.state + ', ' + cusform.baddress.country,
-                              shippingValue: cusform.saddress.s_street + ', ' + cusform.saddress.s_city + ', ' + cusform.saddress.s_zip + ', ' + cusform.saddress.s_state + ', ' +
+                              BillingValue: cusform.baddress.street + ' ' + cusform.baddress.city + ' ' + cusform.baddress.zip + ' ' + cusform.baddress.state + ' ' + cusform.baddress.country,
+                              shippingValue: cusform.saddress.s_street + ' ' + cusform.saddress.s_city + ' ' + cusform.saddress.s_zip + ' ' + cusform.saddress.s_state + ' ' +
                              cusform.saddress.s_country
                            });
                            
@@ -771,9 +779,9 @@ var client = $objectstore.getClient("Settings12thdoor");
                   $rootScope.customerNames.push({
                      display: data[i].Name.toLowerCase(),
                      value: data[i],
-                     BillingValue: data[i].baddress.street + ', ' + data[i].baddress.city + ', ' + data[i].baddress.zip + ', ' + data[i].baddress.state + ', ' + data[i].baddress.country,
-                     shippingValue: data[i].saddress.s_street + ', ' + data[i].saddress.s_city + ', ' + data[i].saddress.s_zip + ', ' + data[i].saddress.s_state + ', ' +
-                        data[i].saddress.s_country
+                     BillingValue: data[i].baddress.street + ' ' + data[i].baddress.city + ' ' + data[i].baddress.zip + ' ' + data[i].baddress.state + ' ' + data[i].baddress.country,
+                     shippingValue: data[i].saddress.s_street + ' ' + data[i].saddress.s_city + ' ' + data[i].saddress.s_zip + ' ' + data[i].saddress.s_state + ' ' +
+                        data[i].saddress.s_countr
                   });
                }
             }
@@ -880,9 +888,8 @@ var userName = $auth.getSession().Name;
          $scope.TDinvoice.favouriteStarNo = 1;
          $scope.TDinvoice.Name = $rootScope.selectedItem2.display;
          $scope.TDinvoice.Email = $rootScope.selectedItem2.value.Email;
-         $scope.TDinvoice.billingAddress = $rootScope.selectedItem2.BillingValue;
-         $scope.TDinvoice.shippingAddress = $rootScope.selectedItem2.shippingValue;
-         // $scope.TDinvoice.MultiDueDAtesArr = $scope.dateArray.value;
+         $scope.TDinvoice.billingAddress = $rootScope.selectedItem2.value.baddress;
+         $scope.TDinvoice.shippingAddress = $rootScope.selectedItem2.value.saddress;
          $scope.TDinvoice.UploadImages = {
             val: []
          };
@@ -893,9 +900,8 @@ var userName = $auth.getSession().Name;
          $scope.invoicDEtails.DraftActive = false;
          $scope.invoicDEtails.Name = $rootScope.selectedItem2.display;
          $scope.invoicDEtails.Email = $rootScope.selectedItem2.value.Email;
-         $scope.invoicDEtails.billingAddress = $rootScope.selectedItem2.BillingValue;
-         $scope.invoicDEtails.shippingAddress = $rootScope.selectedItem2.shippingValue;
-         // $scope.invoicDEtails.MultiDueDAtesArr = $scope.dateArray.value;
+         $scope.invoicDEtails.billingAddress =$rootScope.selectedItem2.value.baddress;
+         $scope.invoicDEtails.shippingAddress = $rootScope.selectedItem2.value.saddress;
          $scope.invoicDEtails.UploadImages = {
             val: []
          };

@@ -37,13 +37,13 @@
                      <section-title > </section-title>
                        <md-input-container flex="70" ng-show="Billingaddress">
                         <label>Billing Address</label>
-                        <input  ng-model="bADD " ng-disabled="true"/>
+                        <input  ng-model="bADD.street + bADD.city + bADD.state + bADD.zip + bADD.country" ng-disabled="true"/>
                     </md-input-container>
                     <md-input-container flex="70" ng-show="Shippingaddress" >
                         <label>Shipping Address</label>
-                        <input  ng-model="sADD " ng-disabled="true"/>
+                        <input  ng-model="sADD.s_street + sADD.s_city + sADD.s_state + sADD.s_zip + sADD.s_country" ng-disabled="true"/>
                     </md-input-container>
-                      <div style="height:30px;width:30px;margin-top:35px;"> 
+                      <div style="height:30px;width:30px;margin-top:15px;"> 
                       <md-button ng-click="changeAddress()" style="height:30px;" aria-label="change_Address" href>
                       <md-icon md-svg-src="img/ic_swap_vert_24px.svg" class="iconColor"  md-ink-ripple style="right:1px;left:95%;top:20px;" ></md-icon>
                       </md-button>

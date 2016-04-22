@@ -1,6 +1,6 @@
 <md-dialog style="max-width:960px;">
 <form>
-	<md-toolbar>
+  <md-toolbar>
     <div class="md-toolbar-tools">
       <h2>Change Currency</h2>
       <span flex></span>
@@ -14,7 +14,7 @@
             <section-title title="Change Currency"> </section-title>
              <md-input-container flex >
                   <label>Select A Currency</label>
-                  <md-select ng-model="TDinvoice.currency" ng-change="changeCurrency()" flex required/>
+                  <md-select ng-model="TDinvoice.currency " ng-change="changeCurrency(TDinvoice.currency)" flex required/>
                   <md-optgroup label="Terms type">
                        <md-option ng-repeat="pay in Currency"  value="{{pay}}">{{pay}}</md-option>
                   </md-optgroup>
@@ -48,7 +48,7 @@
       <div class="md-actions" layout="row">
                 
                 <span flex></span>
-                <md-button href ng-click="Change()" class="md-primary">save</md-button>
+                <md-button href ng-click="ChangeCurrency(TDinvoice.currency)" class="md-primary">save</md-button>
               </div>
 </form>
 </md-dialog>

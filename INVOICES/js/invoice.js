@@ -239,14 +239,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         })
                     };
                 }
-
-                for (var y = $scope.Settings[i].payments.length - 1; y >= 0; y--) {
-                    $scope.paymentMethod.push({
-                        paymentmethod: $scope.Settings[i].payments[y].name,
-                        paymentType: $scope.Settings[i].payments[y].paymentType,
-                        activate: $scope.Settings[i].payments[y].activate
-                    })
-                };
             };
         }
 

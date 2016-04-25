@@ -67,11 +67,41 @@ rasm.controller("EmailController", ["$scope","$objectstore","object","$sce","$md
 }])
 
 
-rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$state","$helpers", "$activityLog","$commentLog","$mdToast","$DownloadPdf","$objectstore", "$auth","$mdDialog", function($scope, $stateParams,$rootScope,$auth, $state,$helpers, $activityLog,$commentLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog){
+rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$state","$helpers", "$activityLog","$commentLog","$mdToast","$DownloadPdf","$objectstore", "$auth","$mdDialog", "$storage","$http", function($scope, $stateParams,$rootScope,$auth, $state,$helpers, $activityLog,$commentLog, $mdToast,$DownloadPdf, $objectstore, $auth, $mdDialog, $storage, $http){
 	
 	$auth.checkSession(); 
 	$scope.UserName =  $auth.getSession().Name 
 	$scope.hostUrl = $helpers.getHost()
+	$scope.pdf = {
+		file: null,
+		thumbnail: ""
+	};
+
+	function loadThumnail(){
+		if ($scope.ViewExpense[0].UploadBrochure.val.length > 0) {
+			var url = $storage.getMediaUrl("productbrochureNew", $scope.ViewExpense[0].UploadBrochure.val[0].name);
+			console.log(url);
+		 
+
+			toDataUrl(url, function(response){
+				console.log(response)
+			})
+
+			function toDataUrl(url, callback){
+			    var xhr = new XMLHttpRequest();
+			    xhr.responseType = 'blob';
+			    xhr.onload = function(e) {
+				  if (this.status == 200) {
+				    // Note: .response instead of .responseText
+				    $scope.pdf.file = new Blob([this.response], {type: 'application/pdf'});
+				    callback($scope.pdf);
+				  }
+				};
+			    xhr.open('GET', url);
+			    xhr.send();
+			}
+		}		
+	}
 
 	$scope.ConvertToPdf = function(obj){
 		$DownloadPdf.GetPdf(obj,'download')
@@ -266,6 +296,8 @@ rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$s
 		}else if ($scope.ViewExpense[0].status == 'Inactive') {
 			$scope.ProductStatus = "Active";
 		};
+		loadThumnail();
+
 		LoadImageData(function(){
 			LoadAllComments($scope.ViewExpense[0].product_code);
 		});

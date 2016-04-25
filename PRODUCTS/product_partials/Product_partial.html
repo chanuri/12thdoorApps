@@ -13,10 +13,10 @@
 
             <div layout layout-sm="column" layout-margin>
              <section-title title="Product Details"> </section-title>
-                       
+                       <!--  ng-blur="GenerateCode(product)" -->
                <md-input-container flex>
                   <label>Product name</label>
-                  <input required type="text" ng-model="product.Productname" ng-blur="GenerateCode(product)"/> 
+                  <input required type="text" ng-model="product.Productname"/> 
                </md-input-container>
             </div>
             <div layout layout-sm="column" layout-margin> 
@@ -31,7 +31,7 @@
              <section-title> </section-title>
                <md-input-container flex>
                   <label>Product Code</label>
-                  <input required type="text" ng-model="product.ProductCode" /> 
+                  <input   type="text" ng-model="product.ProductCode" /> 
                </md-input-container>
                         <md-input-container flex>
                         <label>Unit</label>

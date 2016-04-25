@@ -62,7 +62,10 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
       var ProductUnits = arr[0].preference.productpref.units;
       for(i=0; i<= ProductUnits.length -1; i++){
         if(ProductUnits[i].activate){
-            $scope.ProUnits.push(ProductUnits[i].unitsOfMeasurement);      
+            $scope.ProUnits.push(ProductUnits[i].unitsOfMeasurement);
+            if (ProductUnits[i].unitsOfMeasurement == "each") {
+              $scope.product.ProductUnit = ProductUnits[i].unitsOfMeasurement;
+            }  
         }
      }
      callback();
@@ -118,23 +121,18 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
     $scope.OpenViewScreen = function(obj){
       $state.go('View_Screen',{'productID':obj.ProductCode})
     }
-   //product code auto genarate 
-   $scope.GenerateCode = function(obj){
-    //console.log(obj.Productname.substring(0, 3).toUpperCase());
+   //product code auto generate 
+  $scope.GenerateCode = function(obj){
+    
     if (obj.Productname) {
-      $scope.FirstLetters = obj.Productname.substring(0, 3).toUpperCase();
-    };
-        
-    var client = $objectstore.getClient("product12thdoor");
-    client.onGetMany(function(data){
-      $rootScope.FullArray = data;
-      if (data.length>0) {
+        $scope.FirstLetters = obj.Productname.substring(0, 3).toUpperCase();    
+        if ($rootScope.FullArray.length>0) {
         //if array is not empty
          $scope.PatternExsist = false; // use to check pattern match the object of a array 
          $scope.MaxID = 0;
-          for(i=0; i<=data.length-1; i++){
-            if (data[i].ProductCode.substring(0, 3) === $scope.FirstLetters) {
-              $scope.CurrendID = data[i].ProductCodeID;
+          for(i=0; i<=$rootScope.FullArray.length-1; i++){
+            if ($rootScope.FullArray[i].ProductCode.substring(0, 3) === $scope.FirstLetters) {
+              $scope.CurrendID = $rootScope.FullArray[i].ProductCodeID;
               if (parseInt($scope.CurrendID) > $scope.MaxID) {
                 $scope.MaxID = parseInt($scope.CurrendID);
               };
@@ -151,15 +149,19 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
         obj.ProductCode = $scope.FirstLetters + '-0001';
         obj.ProductCodeID = 1;
       }
-      
-    });
-    client.onError(function(data){
-      console.log("error loading data")
-    });
-    client.getByFiltering("*");
-   }
+    }      
+  }
 
-   $scope.GetMaxNumber = function(obj,name,MaxID){
+  var client = $objectstore.getClient("product12thdoor");
+  client.onGetMany(function(data){
+    $rootScope.FullArray = data;
+  });
+  client.onError(function(data){
+    console.log("error loading data")
+  });
+  client.getByFiltering("*");
+
+  $scope.GetMaxNumber = function(obj,name,MaxID){
 
     $scope.FinalNumber = parseInt(MaxID) +1;
     $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
@@ -171,9 +173,7 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
     $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
     obj.ProductCodeID = $scope.FinalNumber;
     obj.ProductCode = name +'-'+ $scope.Zerros;
-   }
-
-
+  }
 
     // sort function variable start
     $scope.testarr = [{
@@ -240,6 +240,7 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
       $scope.indexno = 1;
       $scope.latest = '-todayDate';
     }
+
     $scope.CheckFullArrayStatus = function(type,id){  
         $scope.BackUpArray = [];
         //remove all all object that status = paid and put them into backup array
@@ -261,7 +262,6 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
         arr.sort(function(a,b){
          return new Date(b.todayDate) - new Date(a.todayDate);
         });
-
         //prepend backup array to fullarray 
         for (var i = backup.length - 1; i >= 0; i--) {
             arr.unshift(backup[i]);        
@@ -321,13 +321,11 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
                     $scope.testarr[$scope.indexno].close = false;
                     $scope.indexno = index;                    
                   }
-
               } else {
                   item.upstatus = !item.upstatus;
                   item.downstatus = !item.downstatus;
                   item.close = true;
               }
-
               $scope.self.searchText = "";
 
               if (item.upstatus) {
@@ -387,13 +385,7 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
     self.selectedItem = null;
     self.searchText = null;
     self.querySearch = querySearch;
-    // ******************************
-    // Internal methods
-    // ******************************
-    /**
-     * Search for tenants... use $timeout to simulate
-     * remote dataservice call.
-     */
+    
     function querySearch(query) {
       $scope.enter = function (keyEvent) {
         if (keyEvent.which === 13) {
@@ -622,19 +614,23 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
     $scope.SubmitProgress = false;
 
     $scope.submit = function () {
-      if (!$scope.product.productprice) {
-        $scope.product.productprice = "0";
-      }
+
+      if ($scope.product.ProductCode == "" || !$scope.product.ProductCode)  
+        $scope.GenerateCode($scope.product)
+      else if(($scope.product.ProductCode.slice(4).toString().length == 4) || (isNormalInteger($scope.product.ProductCode.slice(4).toString()))) 
+        $scope.product.ProductCodeID = parseInt($scope.product.ProductCode.slice(4) )
+ 
+      if (!$scope.product.productprice) 
+        $scope.product.productprice = "0";     
       
       $scope.product.producttax = {};
-      if ($scope.producttax) {
-        $scope.product.producttax = JSON.parse($scope.producttax);
-      }else{
-         $scope.product.producttax = 0
-      }
-      //console.log($scope.product.producttax);
 
-      if ($scope.product.ProductCode.indexOf('-') === -1) {
+      if($scope.producttax) 
+        $scope.product.producttax = JSON.parse($scope.producttax);
+      else
+        $scope.product.producttax = 0 
+
+      if($scope.product.ProductCode.indexOf('-') === -1) {
         //console.log("dash missing")
         $mdDialog.show(
               $mdDialog.alert()
@@ -645,7 +641,8 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
               .ok('OK')
               .targetEvent()
             );
-      }else if(($scope.product.Productname.substring(0, 3).toUpperCase() != $scope.product.ProductCode.substring(0,3)) || ($scope.product.ProductCode.indexOf('-') != 3)){
+      //($scope.product.Productname.substring(0, 3).toUpperCase() != $scope.product.ProductCode.substring(0,3)) ||
+      }else if(($scope.product.ProductCode.indexOf('-') != 3)){
         //console.log("first letters not match")
         $mdDialog.show(
               $mdDialog.alert()
@@ -803,9 +800,10 @@ rasm.controller('AppCtrl', ["$scope", "$auth", "$http","ProductService", "$uploa
           };
           $scope.product.customFields = $scope.ProCustArr;
 
-          if (!$scope.product.tags) {
+          if (!$scope.product.tags)  
             $scope.product.tags = [];
-          };
+           
+
           $scope.product.UploadImages.val = ProductService.loadBasicArray();
           $scope.product.UploadBrochure.val = ProductService.loadBasicArraybrochure();
           //console.log($scope.product)

@@ -16,7 +16,7 @@ rasm.controller("CopyCtrl",["$scope","$rootScope","$uploader", "$stateParams", "
 	client.onError(function(data){
 		console.log("error Loading data")
 	});
-	client.getByFiltering("select * from product12thdoor where ProductCode = "+$stateParams.productID+"");	 
+	client.getByFiltering("select * from product12thdoor where ProductCode = '"+$stateParams.productID+"'");	 
 
 	function ChangeProductCode(obj){ // call to prouce new product code
 
@@ -48,7 +48,60 @@ rasm.controller("CopyCtrl",["$scope","$rootScope","$uploader", "$stateParams", "
 
 	}
 
+	$scope.GenerateCode = function(obj){
+    
+	    if (obj.Productname) {
+	        $scope.FirstLetters = obj.Productname.substring(0, 3).toUpperCase();    
+	        if ($rootScope.FullArray.length>0) {
+	        //if array is not empty
+	         $scope.PatternExsist = false; // use to check pattern match the object of a array 
+	         $scope.MaxID = 0;
+	          for(i=0; i<=$rootScope.FullArray.length-1; i++){
+	            if ($rootScope.FullArray[i].ProductCode.substring(0, 3) === $scope.FirstLetters) {
+	              $scope.CurrendID = $rootScope.FullArray[i].ProductCodeID;
+	              if (parseInt($scope.CurrendID) > $scope.MaxID) {
+	                $scope.MaxID = parseInt($scope.CurrendID);
+	              };
+	               $scope.PatternExsist = true;
+	            };
+	          }
+	          if (!$scope.PatternExsist) {
+	            obj.ProductCode = $scope.FirstLetters + '-0001';
+	            obj.ProductCodeID = 1;
+	          }else if($scope.PatternExsist){
+	            $scope.GetMaxNumber(obj,$scope.FirstLetters,$scope.MaxID)
+	          }       
+	      }else{
+	        obj.ProductCode = $scope.FirstLetters + '-0001';
+	        obj.ProductCodeID = 1;
+	      }
+	    }      
+	}
+
+ 
+
+	$scope.GetMaxNumber = function(obj,name,MaxID){
+
+	    $scope.FinalNumber = parseInt(MaxID) +1;
+	    $scope.FinalNumberLength = $scope.FinalNumber.toString().length;
+	    $scope.Zerros="";
+	    for(i=0; i<4-$scope.FinalNumberLength; i++ ){
+	      var str = "0";
+	      $scope.Zerros = $scope.Zerros + str;
+	    }
+	    $scope.Zerros  = $scope.Zerros + $scope.FinalNumber.toString(); 
+	    obj.ProductCodeID = $scope.FinalNumber;
+	    obj.ProductCode = name +'-'+ $scope.Zerros;
+	}
+
+
 	$scope.submit = function(obj){
+
+
+	    if (obj.ProductCode == "" || !obj.ProductCode)  
+	        $scope.GenerateCode(obj)
+	    else if((obj.ProductCode.slice(4).toString().length == 4) || (isNormalInteger(obj.ProductCode.slice(4).toString()))) 
+        	obj.ProductCodeID = parseInt(obj.ProductCode.slice(4) )
 
 		if (obj.ProductCode.indexOf('-') === -1) {
         console.log("dash missing")
@@ -61,7 +114,7 @@ rasm.controller("CopyCtrl",["$scope","$rootScope","$uploader", "$stateParams", "
               .ok('OK')
               .targetEvent()
             );
-      }else if((obj.Productname.substring(0, 3).toUpperCase() != obj.ProductCode.substring(0,3)) || (obj.ProductCode.indexOf('-') != 3)){
+      }else if( (obj.ProductCode.indexOf('-') != 3)){
         console.log("first letters not match")
         $mdDialog.show(
               $mdDialog.alert()

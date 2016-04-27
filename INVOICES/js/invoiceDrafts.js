@@ -76,6 +76,7 @@
         }
 
         $scope.edit = function(tst, index) {
+
             $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(tst), 1);
             InvoiceService.ReverseTax($scope.prevTrax, index);
             // console.log($scope.prevTrax);

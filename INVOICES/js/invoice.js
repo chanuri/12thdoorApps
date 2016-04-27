@@ -163,8 +163,17 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
     $scope.roles = [];
     $scope.permission = [];
     $scope.TDinvoice.paymentOptions = [];
-    // $rootScope.testArray.val = [];
-    // $rootScope.dateArray.val = [];
+    $rootScope.testArray.val = [];
+    $rootScope.dateArray.val = [];
+    $scope.paymentMethod = [];
+    $rootScope.discountDesc = false;
+    $rootScope.currencyStatus = false;
+
+    $scope.paymentMethod.push({
+    paymentmethod: 'Offline Payments Only',
+    paymentType: 'offline',
+    activate: "Active"
+})
 
     var client = $objectstore.getClient("Settings12thdoor");
     client.onGetMany(function(data) {
@@ -206,7 +215,8 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
 
                 if ($scope.Settings[i].profile) {
                     $scope.mail = $scope.Settings[i].profile.adminEmail;
-                    $scope.BaseCurrency = $scope.Settings[i].profile.baseCurrency;
+                     $rootScope.BaseCurrency = $scope.Settings[i].profile.baseCurrency;
+                    $scope.TDinvoice.BaseCurrency = $scope.Settings[i].profile.baseCurrency;
                 }
 
                 if ($scope.Settings[i].taxes) {
@@ -229,7 +239,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         }
                     };
                 }
-                $scope.paymentMethod = [];
+               
                 if ($scope.Settings[i].preference.paymentpref) {
                     for (var x = $scope.Settings[i].preference.paymentpref.PaymentMethod.length - 1; x >= 0; x--) {
                         $scope.paymentMethod.push({
@@ -239,6 +249,20 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         })
                     };
                 }
+
+                 $scope.paymentMethod.push({
+                        paymentmethod: 'All Online Payment Options',
+                        paymentType: 'offline',
+                        activate: "Active"
+                    })
+                for (var y = $scope.Settings[i].payments.length - 1; y >= 0; y--) {
+                        $scope.paymentMethod.push({
+                            paymentmethod: $scope.Settings[i].payments[y].name,
+                            paymentType: $scope.Settings[i].payments[y].paymentType,
+                            activate: $scope.Settings[i].payments[y].activate
+                                // url:$scope.Settings[i].payments[y].url
+                        })
+                    };
             };
         }
 
@@ -248,7 +272,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
         $scope.TDinvoice.comments = $scope.com;
         $scope.TDinvoice.notes = $scope.note;
         $scope.TDinvoice.termtype = $scope.paymentTerm;
-        $scope.TDinvoice.BaseCurrency = $scope.BaseCurrency
         $scope.TDinvoice.DiplayShipiingAddress = $scope.ShowShipAddress;
         $scope.TDinvoice.allowPartialPayments = $scope.partialPayment;
 
@@ -405,42 +428,13 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
         $mdDialog.show({
             templateUrl: 'Invoicepartials/changeCurrency.html',
             targetEvent: ev,
-            controller: 'AppCtrl'
+            controller: 'currencyCtrl',
+            locals: {
+                    item: ev
+                }
         })
     }
 
-//----------------------------Currency exchange (get currency by openexchangerates API)-------------------------------------
-$scope.Currency = [];
-$scope.ll = [];
-
-    $http({
-        url : 'http://openexchangerates.org/api/latest.json?app_id=32c5a0d1a1204a57be97937c10121785&base=USD',
-        method : 'GET'
-    }).then(function(response){
-        for (var key in response.data.rates) {
-            $scope.Currency.push(key)
-            if($scope.TDinvoice.currency == key){
-                $scope.TDinvoice.exchangeRate = response.data.rates[key];
-            }
-
-        }
-        $scope.changeCurrency = function(){
-            for (var key in response.data.rates) {
-            $scope.Currency.push(key)
-            if($scope.TDinvoice.currency == key){
-                $scope.TDinvoice.exchangeRate = response.data.rates[key];
-            }
-        }
-        }
-    },function(response){
-        console.log(response)
-    })
-      $scope.ChangeCurrency = function (cur) {
-        $scope.BaseCurrency = cur;
-        console.log($scope.BaseCurrency)
-        $mdDialog.hide();
-        // body...
-    }
 //------------------pops a dialog box which enble the user to add Multiple du dates--------------------------------
     $scope.MultiDuDates = function(data) {
         if ($rootScope.testArray.val.length == 0) {
@@ -453,10 +447,10 @@ $scope.ll = [];
                 .ok('OK')
                 .targetEvent(data)
             );
-        } else {
+        } else if($rootScope.testArray.val.length != 0){
             $scope.showdate = true;
-            $scope.TDinvoice.termtype = "multipleDueDates";
-            $scope.TDinvoice.duedate = null;
+           $scope.TDinvoice.termtype = "multipleDueDates";
+                    $scope.TDinvoice.duedate = null;
             $scope.showPercentage = false;
             $rootScope.showmsg = false;
 
@@ -471,8 +465,10 @@ $scope.ll = [];
                     $scope.newfamount = angular.copy($rootScope.famount)
                     $scope.editDueDates = false;
                     $scope.DueDateprice = 0;
-
-
+                    $scope.showEditButton = false;
+                    $scope.editMultipleDuedates = [];
+                    $scope.editMultipleDuedates = angular.copy($rootScope.dateArray.val)
+                    console.log($scope.editMultipleDuedates)
                     $scope.testarr = [{
                         duedate: '',
                         percentage: '',
@@ -489,7 +485,7 @@ $scope.ll = [];
                         $rootScope.checkArr = angular.copy($scope.testarr);
                         for (var i = $scope.testarr.length - 1; i >= 0; i--) {
                             $scope.calc += parseFloat($scope.testarr[i].percentage);
-                          
+                            // if($scope.calc <= 100){
                             MultipleDudtesService.calDateArray({
                                 DueDate: $scope.testarr[i].duedate,
                                 Percentage: $scope.testarr[i].percentage,
@@ -498,7 +494,7 @@ $scope.ll = [];
                                 balance: $scope.testarr[i].duDatePrice,
                                 count: $scope.testarr[i].count
                             });
-                        
+                            // }
                         };
 
                         if ($scope.calc == 100) {
@@ -515,9 +511,7 @@ $scope.ll = [];
                             var numbers = parseInt($scope.testarr[i].count) + 1;
                             $scope.focus = 'checkfocus' + (parseInt($scope.testarr[i].count) + 1).toString();
                         };
-                        if ($scope.perCount >= 100) {
-                            $rootScope.showmsg = false;
-                        } else if ($scope.perCount < 100) {
+                        if ($scope.perCount >= 100) {} else if ($scope.perCount < 100) {
                             $scope.testarr.push({
                                 duedate: '',
                                 percentage: '',
@@ -531,58 +525,37 @@ $scope.ll = [];
                         }
                     };
 
-                    $scope.addEditDueDates = function(index) {
+                    $scope.addEditDueDates = function(val,index) {
                         $scope.arrr = [];
                         $scope.perCount = 0;
                         // $scope.numbers = 0;
                         $scope.focus = 0;
-                        for (i = 0; i <= $scope.editMultipleDuedates.length - 1; i++) {
-                            $scope.perCount += parseInt($scope.editMultipleDuedates[i].percentage);
-                            $scope.calc += parseInt($scope.editMultipleDuedates[i].percentage);
-                            var numbers = parseInt($scope.editMultipleDuedates[i].count) + 1;
-                            $scope.focus = 'checkfocus' + (parseInt($scope.editMultipleDuedates[i].count) + 1).toString();
-                        };
-                        if ($scope.perCount >= 100) {} else if ($scope.perCount < 100) {
-                            $scope.editMultipleDuedates.push({
-                                duedate: '',
-                                percentage: '',
-                                duDatePrice: '',
-                                paymentStatus: 'Unpaid',
-                                balance: $scope.DueDateprice,
-                                count: numbers,
-                                uniqueKey: $scope.focus
-                            });
-                        }
+                        // for (i = 0; i <= $scope.editMultipleDuedates.length - 1; i++) {
+                        //     $scope.perCount += parseInt($scope.editMultipleDuedates[i].percentage);
+                        //     $scope.calc += parseInt($scope.editMultipleDuedates[i].percentage);
+                        //     var numbers = parseInt($scope.editMultipleDuedates[i].count) + 1;
+                        //     $scope.focus = 'checkfocus' + (parseInt($scope.editMultipleDuedates[i].count) + 1).toString();
+                        // };
+                        // if ($scope.perCount >= 100) {} else if ($scope.perCount < 100) {
+                            // $scope.editMultipleDuedates.push({
+                            //     duedate: '',
+                            //     percentage: '',
+                            //     duDatePrice: '',
+                            //     paymentStatus: 'Unpaid',
+                            //     balance: $scope.DueDateprice,
+                            //     count: numbers,
+                            //     uniqueKey: $scope.focus
+                            // });
+                        // }
                     }
 
-                    $scope.rmoveDate = function(cc, index) {
-                        $scope.cal = 0;
-                        $rootScope.dateArray.val.splice($rootScope.dateArray.val.indexOf(cc), 1);
-
-                        for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
-                            $scope.cal += $rootScope.dateArray.val[i].balance;
-                        }
-                        $scope.DueDateprice = $scope.newfamount - $scope.cal
-                        console.log($rootScope.dateArray.val)
-
-                        $scope.editMultipleDuedates = [{
-                            duedate: '',
-                            percentage: '',
-                            duDatePrice: '',
-                            paymentStatus: 'Unpaid',
-                            balance: $scope.DueDateprice,
-                            count: 1,
-                            uniqueKey: 'checkfocus1'
-                        }];
-                        $scope.editDueDates = true;
-                    }
-
-                    $scope.removeeditArray = function(index) {
-                        $scope.editMultipleDuedates.splice($scope.editMultipleDuedates.indexOf(index), 1);
+                    $scope.removeeditArray = function(cc,index) {
+                        $scope.editMultipleDuedates.splice($scope.editMultipleDuedates.indexOf(cc), 1);
+                         $scope.editDueDates = true;
                     };
 
-                    $scope.removeItem = function(index) {
-                        $scope.testarr.splice($scope.testarr.indexOf(index), 1);
+                    $scope.removeItem = function(cc, index) {
+                        $scope.testarr.splice($scope.testarr.indexOf(cc), 1);
                     };
                     $scope.cancel = function() {
                         $scope.showdate = false;
@@ -1397,6 +1370,7 @@ var userName = $auth.getSession().Name;
         $scope.TDinvoice.favourite = false;
         $scope.TDinvoice.favouriteStarNo = 1;
         $scope.TDinvoice.DraftActive = false;
+        $scope.TDinvoice.CurrencyChanged = $rootScope.currencyStatus;
         $scope.TDinvoice.Name = $rootScope.selectedItem1.display;
         $scope.TDinvoice.Email = $rootScope.selectedItem1.value.Email;
         $scope.TDinvoice.customerid = $rootScope.selectedItem1.value.customerid;
@@ -1503,7 +1477,7 @@ var userName = $auth.getSession().Name;
         $scope.Discount = 0;
         if ($scope.dis == "SubTotal Items") {
             $rootScope.discountDesc = true;
-           $rootScope.finalDisc = parseFloat($rootScope.total* $scope.TDinvoice.fdiscount / 100)
+           $rootScope.finalDisc = parseFloat($rootScope.total* tt / 100)
         } else if ($scope.dis == "Individual Items") {
             $rootScope.discountDesc = false;
             $rootScope.finalDisc = 0;
@@ -1716,4 +1690,70 @@ var userName = $auth.getSession().Name;
         }
         
     }
+})
+//----------------------------------------------------------------------------------------------------------------
+//----------------------------Currency exchange (get currency by openexchangerates API)-------------------------------------
+app.controller('currencyCtrl', function($scope, $mdDialog, $rootScope, $objectstore,$http,  $state, InvoiceService, item) {
+
+    
+$scope.Currency = [];
+$scope.ll = [];
+$rootScope.testArray1 = {val:[]};
+$rootScope.testArray1.val = angular.copy(item);
+
+    $http({
+        url : 'http://openexchangerates.org/api/latest.json?app_id=32c5a0d1a1204a57be97937c10121785&base=USD',
+        method : 'GET'
+    }).then(function(response){
+        for (var key in response.data.rates) {
+            $scope.Currency.push(key)
+            if($scope.currency == key){
+                $rootScope.exchangeRate = response.data.rates[key];
+            }
+
+        }
+        $scope.changeCurrency = function(){
+            for (var key in response.data.rates) {
+            $scope.Currency.push(key)
+            if($scope.currency == key){
+                $rootScope.exchangeRate = response.data.rates[key];
+            }
+        }
+        }
+    },function(response){
+        console.log(response)
+    })
+      $scope.ChangeCurrency = function (cur) {
+        $rootScope.BaseCurrency = cur;
+        $rootScope.currencyStatus = true;
+        for (var i = $rootScope.testArray.val.length - 1; i >= 0; i--) {
+            InvoiceService.ReverseTax($rootScope.testArray.val[i], 1);
+        $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf($rootScope.testArray.val[i]), 1);
+
+    }
+            for (var i = $rootScope.testArray1.val.length - 1; i >= 0; i--) {
+
+            InvoiceService.setFullArr({
+                Productname: $rootScope.testArray1.val[i].Productname,
+                price: $rootScope.testArray1.val[i].price,
+                quantity: $rootScope.testArray1.val[i].quantity,
+                ProductUnit: $rootScope.testArray1.val[i].ProductUnit,
+                discount: $rootScope.testArray1.val[i].discount,
+                tax: $rootScope.testArray1.val[i].tax,
+                olp: $rootScope.testArray1.val[i].olp,
+                amount: parseFloat($rootScope.testArray1.val[i].amount*$rootScope.exchangeRate),
+                status: $rootScope.testArray1.val[i].status
+            })
+            // $rootScope.testArray.val.splice(0, 1);
+            }
+        // $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(tst), 1);
+            // InvoiceService.ReverseTax(tst, index);
+
+        $mdDialog.hide();
+    }
+
+    $scope.cancel = function () {
+       $mdDialog.hide();
+    }
+
 })

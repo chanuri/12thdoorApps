@@ -154,6 +154,8 @@
                                             <!--  {{item}} -->
                                             <md-card style="margin-left:-30px;" as-sortable-item-handle flex>
                                                 <md-card-content >
+                                                
+                                                <div style="margin-top:0px;" flex="10"></div>
                                                     <div style="margin-top:0px;">
                                                         <span>
                                                             {{item.Productname}} 
@@ -271,7 +273,7 @@
                                         <label></label>
                                     </div>
                                     <div flex="30">
-                                        <label>{{finaldiscount(TDinvoice) | currency:BaseCurrency}}</label>
+                                        <label>{{finaldiscount($root.adddiscount) | currency:BaseCurrency}}</label>
                                     </div>
                                 </div>
                                 <div layout layout-sm="column" ng-repeat="tt in taxArr" layout-margin style="overflow:hidden;">
@@ -328,7 +330,7 @@
                                         </span>
                                     </div>
                                     <div style="height:30px; width:40px;">
-                                        <md-button ng-click="acceptAccount()" style="height:30px;" aria-label="accept account" href>
+                                        <md-button ng-click="acceptAccount(testArray.val)" style="height:30px;" aria-label="accept account" href>
                                             <md-icon md-svg-src="img/ic_more_horiz_24px.svg" class="iconColor"  md-ink-ripple style="right:1px;margin-right:0px;" ></md-icon>
                                         </md-button>
                                     </div>
@@ -374,12 +376,10 @@
                             <md-divider></md-divider>
                             <div layout layout-sm="column" layout-margin>
                                 <section-title title="Custom Fields"></section-title>
-                                <div layout layout-sm="column" layout-margin >
+                                <div layout layout-sm="column" layout-margin style="margin-top: -10px;">
                                     <table>
-                                        <!-- <tr><th style="" flex>Name</th><th style=" padding-left:200px;" flex>Id</th></tr> -->
                                         <tr ng-repeat="txt in CusFields">
-                                            <td style=""flex>{{txt.labelshown}}
-                                        </td>
+                                            <td style=""flex>{{txt.labelshown}}</td>
                                             <td style=" padding-left:200px;"  flex>
                                                 <md-input-container flex ng-if=" txt.type== 'textBox'" >
                                                     <input aria-label="ttt" ng-model="txt.inputType">

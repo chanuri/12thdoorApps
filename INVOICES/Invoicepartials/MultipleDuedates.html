@@ -38,7 +38,7 @@
                                             </md-input-container>
                                             <md-input-container flex style=" padding-left:10px;margin-top:10px;">
                                                 <label>Amount</label>
-                                                <input ng-model="cn.duDatePrice|currency"  >
+                                                <input ng-model="cn.duDatePrice"  >
                                                 </md-input-container>
                                                 <md-button  href class="md-mini md-primary" ng-click="removeItem(cn,$index)" style="height:30px;margin-left:-18px;top:10px;">
                                                     <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
@@ -58,87 +58,47 @@
                         </div>
                     </div>
                 </div>
-                <md-divider></md-divider>
+               <!--  <md-divider></md-divider> -->
                 <div layout layout-sm="column" layout-margin  >
                     <div flex="5"></div>
-                    <!--  <section-title ></section-title> -->
+                   <div layout layout-sm="row" layout-margin >
+                <div class="table-responsive-vertical"  style="overflow-x:hidden; margin-left:-20px;" >
                     <table id="table" class="table table-hover table-mc-light-blue" >
                         <tbody>
-                            <tr animate ng-repeat="cc in $root.dateArray.val">
+                            <tr animate ng-repeat="cc in editMultipleDuedates">
                                 <td data-title="Item Detail" >
                                     <div layout layout-sm="column" layout-margin>
-                                        <md-input-container flex style="margin-top:-15px; padding-left:10px;">
-                                            <label>Date</label>
-                                            <input ng-model="cc.DueDate|date" style="margin-top:5px;">
-                                            </md-input-container>
+                                    <md-datepicker ng-model="cc.DueDate" md-min-date="minDate" md-placeholder="Due Date" required flex style="margin-top:-15px; padding-left:10px;" ></md-datepicker>
+                    
                                             <md-input-container flex style="margin-top:-15px; padding-left:5px;" >
                                                 <label>Percentage</label>
-                                                <input ng-model="cc.Percentage" style="margin-top:5px;" ng-change="DueAmount(cn,$index)">
+                                                <input ng-model="cc.Percentage" style="margin-top:5px;"  >
                                                 </md-input-container>
                                                 <md-input-container flex style="margin-top:-15px; padding-left:10px;">
                                                     <label>Amount</label>
-                                                    <input ng-model="cc.dueDateprice|currency" style="margin-top:5px;">
+                                                    <input ng-model="cc.dueDateprice" style="margin-top:5px;">
                                                     </md-input-container>
-                                                    <md-button href class="md-mini md-primary" ng-click="rmoveDate(cc,$index)" style="height:30px;margin-left:-18px;top:10px;">
-                                                        <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
-                                                        <md-tooltip md-direction="left">Delete</md-tooltip>
-                                                    </md-button>
+                                                    <md-button href class="md-mini md-primary" ng-click="removeeditArray(cc, $index)" style="height:30px;margin-left:-18px;top:10px;">
+                                                    <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
+                                                    <md-tooltip md-direction="left">Delete</md-tooltip>
+                                                </md-button>
                                                 </div>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                            <md-divider></md-divider>
-                            <div layout layout-sm="column" layout-margin ng-show="editDueDates">
-                                <div flex="5"></div>
-                                <div layout layout-sm="row" layout-margin >
-                                    <div class="table-responsive-vertical"  style="overflow-x:hidden; margin-left:-20px;" >
-                                        <table id="table"  class="table table-hover table-mc-light-blue" >
-                                            <tbody>
-                                                <tr animate ng:repeat="ss in editMultipleDuedates">
-                                                    <td data-title="Item Detail" >
-                                                        <div layout layout-sm="column" layout-margin>
-                                                            <md-datepicker ng-model="ss.duedate" md-placeholder="Due Date" required flex style=" width:230px; margin-left:-20px;" ></md-datepicker>
-                                                            <md-input-container flex style=" padding-left:5px;">
-                                                                <label>Percentage</label>
-                                                                <input  ng-model="ss.percentage" id="{{ss.uniqueKey}}" ng-change="EditDueAmount(ss,$index)" >
-                                                                    <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
-                                                                        <div ng-message="required" ng-show="showPercentage">
-                                                                            <b>percentage is exceeded</b>
-                                                                        </div>
-                                                                        <div ng-message="limit" ng-show="$root.showmsg">
-                                                  Please add a line item to configure multiple due dates
-                                              </div>
-                                                                    </div>
-                                                                </md-input-container>
-                                                                <md-input-container flex style=" padding-left:10px;margin-top:10px;">
-                                                                    <label>Amount</label>
-                                                                    <input ng-model="ss.duDatePrice|currency"  >
-                                                                    </md-input-container>
-                                                                    <md-button href class="md-mini md-primary" ng-click="removeeditArray(ss)" style="height:30px;margin-left:-18px;top:10px;">
-                                                                        <md-icon md-svg-src="img/ic_delete_24px.svg" class="iconColor" style="right:1px;right:90%;" ></md-icon>
-                                                                        <md-tooltip md-direction="left">Delete</md-tooltip>
-                                                                    </md-button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <div layout layout-sm="column" layout-margin>
+                             <div layout layout-sm="column" ng-show="editDueDates" layout-margin>
                                                     <md-button href class="md-mini md-primary" ng-click="addEditDueDates()" style="margin-left:-18px;">
                                                         <md-icon md-svg-src="img/ic_add_circle_outline_24px.svg" class="iconColor" style="right:1px;right:90%;top:20px;" ></md-icon>
                                                         <md-tooltip md-direction="left">Add another Date</md-tooltip>
                                                     </md-button>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            </div>
+                            </div>
+                            </div>
+
                                 </md-dialog-content>
                                 <div class="md-actions" layout="row">
-                                <div  ng-show="showProduct" >
-                                               <span style="color:red" flex>Please Check the Percentage </span>
-                                           </div>
                                     <span flex></span>
                                     <md-button href ng-if="$root.dateArray.val.length == 0" ng-click="AddDueDates()" class="md-primary">Save</md-button>
                                     <md-button href ng-if="$root.dateArray.val.length != 0" ng-click="UpdateDueDates()" class="md-primary">update</md-button>

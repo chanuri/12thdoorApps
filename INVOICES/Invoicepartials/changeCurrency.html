@@ -14,9 +14,9 @@
             <section-title title="Change Currency"> </section-title>
              <md-input-container flex >
                   <label>Select A Currency</label>
-                  <md-select ng-model="TDinvoice.currency " ng-change="changeCurrency(TDinvoice.currency)" flex required/>
+                  <md-select ng-model="currency " ng-change="changeCurrency(currency)" flex required/>
                   <md-optgroup label="Terms type">
-                       <md-option ng-repeat="pay in Currency"  value="{{pay}}">{{pay}}</md-option>
+                       <md-option ng-repeat="pay in Currency track by $index"  value="{{pay}}">{{pay}}</md-option>
                   </md-optgroup>
               </md-select>
             </md-input-container>
@@ -29,7 +29,7 @@
                      <section-title> </section-title>
                     <md-input-container flex >
                         <label>Exchange Rate</label>
-                        <input ng-model="TDinvoice.exchangeRate">
+                        <input ng-model="$root.exchangeRate">
                         </md-input-container>
                         <div flex >
                            <br><br><label>1 USD in {{TDinvoice.currency}}</label>
@@ -48,7 +48,7 @@
       <div class="md-actions" layout="row">
                 
                 <span flex></span>
-                <md-button href ng-click="ChangeCurrency(TDinvoice.currency)" class="md-primary">save</md-button>
+                <md-button href ng-click="ChangeCurrency(currency)" class="md-primary">save</md-button>
               </div>
 </form>
 </md-dialog>

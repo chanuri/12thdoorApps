@@ -468,7 +468,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                     $scope.showEditButton = false;
                     $scope.editMultipleDuedates = [];
                     $scope.editMultipleDuedates = angular.copy($rootScope.dateArray.val)
-                    console.log($scope.editMultipleDuedates)
+
                     $scope.testarr = [{
                         duedate: '',
                         percentage: '',
@@ -525,33 +525,41 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         }
                     };
 
-                    $scope.addEditDueDates = function(val,index) {
+                    $scope.addEditDueDates = function(index) {
                         $scope.arrr = [];
                         $scope.perCount = 0;
                         // $scope.numbers = 0;
                         $scope.focus = 0;
-                        // for (i = 0; i <= $scope.editMultipleDuedates.length - 1; i++) {
-                        //     $scope.perCount += parseInt($scope.editMultipleDuedates[i].percentage);
-                        //     $scope.calc += parseInt($scope.editMultipleDuedates[i].percentage);
-                        //     var numbers = parseInt($scope.editMultipleDuedates[i].count) + 1;
-                        //     $scope.focus = 'checkfocus' + (parseInt($scope.editMultipleDuedates[i].count) + 1).toString();
-                        // };
+                        for (i = 0; i <= $scope.editMultipleDuedates.length - 1; i++) {
+                            $scope.perCount += parseInt($scope.editMultipleDuedates[i].percentage);
+                            $scope.calc += parseInt($scope.editMultipleDuedates[i].percentage);
+                            var numbers = parseInt($scope.editMultipleDuedates[i].count) + 1;
+                            $scope.focus = 'checkfocus' + (parseInt($scope.editMultipleDuedates[i].count) + 1).toString();
+                        };
                         // if ($scope.perCount >= 100) {} else if ($scope.perCount < 100) {
-                            // $scope.editMultipleDuedates.push({
-                            //     duedate: '',
-                            //     percentage: '',
-                            //     duDatePrice: '',
-                            //     paymentStatus: 'Unpaid',
-                            //     balance: $scope.DueDateprice,
-                            //     count: numbers,
-                            //     uniqueKey: $scope.focus
-                            // });
+                            $scope.editMultipleDuedates.push({
+                                DueDate: '',
+                                Percentage: '',
+                                dueDateprice: '',
+                                paymentStatus: 'Unpaid',
+                                balance: $scope.DueDateprice,
+                                count: numbers,
+                                uniqueKey: $scope.focus
+                            });
                         // }
                     }
 
                     $scope.removeeditArray = function(cc,index) {
+                        $scope.delDuedate = angular.copy(cc.DueDate)
+                        console.log($scope.delDuedate)
                         $scope.editMultipleDuedates.splice($scope.editMultipleDuedates.indexOf(cc), 1);
-                         $scope.editDueDates = true;
+                        $scope.editDueDates = true;
+
+                        $scope.editMultipleDuedates.sort(function(a,b){
+                        return new Date(a.DueDate) - new Date(b.DueDate)
+                        
+                        })
+                        console.log($scope.editMultipleDuedates)
                     };
 
                     $scope.removeItem = function(cc, index) {
@@ -586,35 +594,23 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         $focus(cn.uniqueKey);
                     }
 
-                    $scope.EditDueAmount = function(cc, index) {
+                    $scope.EditDueAmount = function(cn, index) {
+                       
                         $scope.showPercentage = false;
                         $scope.cal = 0;
-                        $scope.ccc = 0;
-                        $scope.tot = 0;
-                        $scope.finalTotal = 0;
-                        $scope.oldPercentage = 0;
-
-                        for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
-                            $scope.oldPercentage += parseFloat($rootScope.dateArray.val[i].Percentage);
-                        }
-                        for (var i = $scope.editMultipleDuedates.length - 1; i >= 0; i--) {
-                            $scope.showPercentage = false;
-                            $scope.cal += parseFloat($scope.editMultipleDuedates[i].percentage);
-                        }
-
-                        if ($scope.cal + $scope.oldPercentage > 100) {
-                            $scope.showPercentage = true;
-                        }
-                        $scope.ccc = (parseFloat($scope.newfamount * cc.percentage) / 100);
+                
+                        $scope.newfamount = (parseFloat($rootScope.famount * cn.Percentage) / 100);
                         $scope.editMultipleDuedates[index] = {
-                            duedate: cc.duedate,
-                            percentage: cc.percentage,
-                            duDatePrice: $scope.ccc,
-                            balance: $scope.ccc,
-                            count: cc.count,
-                            uniqueKey: cc.uniqueKey
+                            DueDate: cn.DueDate,
+                            Percentage: cn.Percentage,
+                            dueDateprice: $scope.newfamount,
+                            balance: $scope.newfamount,
+                            count: cn.count,
+                            paymentStatus: 'Unpaid',
+                            uniqueKey: cn.uniqueKey
                         }
-                        $focus(cc.uniqueKey);
+
+                        $focus(cn.uniqueKey);
                     }
 
                     $scope.UpdateDueDates = function() {

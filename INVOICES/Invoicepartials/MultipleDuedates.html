@@ -27,14 +27,7 @@
                                             <label>Percentage</label>
                                             <input  ng-model="cn.percentage" id="{{cn.uniqueKey}}" ng-change="DueAmount(cn,$index)" >
                                             <md-icon md-svg-src="img/disc.svg"  md-ink-ripple style="margin-left:-30px;margin-top:9px;" ></md-icon>
-                                                <div ng-messages="projectForm.rate.$error" multiple md-auto-hide="false">
-                                                    <div ng-message="required" ng-show="showPercentage">
-                                                        <b>percentage is exceeded</b>
-                                                    </div>
-                                                    <div ng-message="limit" ng-show="$root.showmsg">
-                                                  please check the percentage
-                                              </div>
-                                                </div>
+                    
                                             </md-input-container>
                                             <md-input-container flex style=" padding-left:10px;margin-top:10px;">
                                                 <label>Amount</label>
@@ -72,7 +65,7 @@
                     
                                             <md-input-container flex style="margin-top:-15px; padding-left:5px;" >
                                                 <label>Percentage</label>
-                                                <input ng-model="cc.Percentage" style="margin-top:5px;"  >
+                                                <input ng-model="cc.Percentage" style="margin-top:5px;" id="{{cc.uniqueKey}}" ng-change="EditDueAmount(cc,$index)">
                                                 </md-input-container>
                                                 <md-input-container flex style="margin-top:-15px; padding-left:10px;">
                                                     <label>Amount</label>

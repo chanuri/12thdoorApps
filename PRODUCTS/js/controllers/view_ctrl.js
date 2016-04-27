@@ -7,6 +7,7 @@ rasm.controller("EmailController", ["$scope","$objectstore","object","$sce","$md
     $scope.productid = object.product_code
     $scope.pdfChipArr = [];
     $scope.pdfChipArr.push(object.product_code+".pdf")
+    $scope.brochureDownloadBtn = false;
 
 	$scope.ContactDetails = []
 
@@ -78,29 +79,37 @@ rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$s
 	};
 
 	function loadThumnail(){
-		if ($scope.ViewExpense[0].UploadBrochure.val.length > 0) {
-			var url = $storage.getMediaUrl("productbrochureNew", $scope.ViewExpense[0].UploadBrochure.val[0].name);
-			console.log(url);
-		 
+		if ($scope.ViewExpense[0].UploadBrochure.val.length > 0 ) {
+			if ($scope.ViewExpense[0].UploadBrochure.val[0].name.split('.').pop() == 'pdf') {
+				$scope.url = $storage.getMediaUrl("productbrochureNew", $scope.ViewExpense[0].UploadBrochure.val[0].name);
+			 	 
 
-			toDataUrl(url, function(response){
-				console.log(response)
-			})
+				toDataUrl($scope.url, function(response){
+					console.log(response) 				
+					$scope.brochureDownloadBtn = true;
 
-			function toDataUrl(url, callback){
-			    var xhr = new XMLHttpRequest();
-			    xhr.responseType = 'blob';
-			    xhr.onload = function(e) {
-				  if (this.status == 200) {
-				    // Note: .response instead of .responseText
-				    $scope.pdf.file = new Blob([this.response], {type: 'application/pdf'});
-				    callback($scope.pdf);
-				  }
-				};
-			    xhr.open('GET', url);
-			    xhr.send();
+					$scope.$apply();
+				})
+
+				function toDataUrl(url, callback){
+				    var xhr = new XMLHttpRequest();
+				    xhr.responseType = 'blob';
+				    xhr.onload = function(e) {
+					  if (this.status == 200) { 
+					    $scope.pdf.file = new Blob([this.response], {type: 'application/pdf'});
+					    callback($scope.pdf);
+
+					  }
+					};
+				    xhr.open('GET', url);
+				    xhr.send();
+				}				
 			}
 		}		
+	}
+
+	$scope.downloadBrochure = function(obj){
+		window.location.href = $scope.url;
 	}
 
 	$scope.ConvertToPdf = function(obj){

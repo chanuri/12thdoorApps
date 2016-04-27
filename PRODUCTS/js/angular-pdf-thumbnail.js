@@ -1,7 +1,4 @@
-/*
- * angular-pdf-thumbnail v1.0.0
- * https://github.com/jdryg/angular-pdf-thumbnail
- */
+
 (function (angular, PDFJS) {
 	"use strict";
 
@@ -14,7 +11,7 @@
 				file: "=",
 				thumbnail: "="
 			},
-			template: "<img alt='Thumbnail' />",
+			template: "<img />",
 			controller: ["$scope", function ($scope) {
 				$scope.generateThumbnail = function (file) {
 					var reader = new FileReader();

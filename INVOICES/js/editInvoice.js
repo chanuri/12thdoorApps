@@ -178,7 +178,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
             if ($scope.status == "Draft") {
 
                 var client = $objectstore.getClient("invoice12thdoorDraft");
-                updatedForm.total = $scope.total;
+                updatedForm.total = $rootScope.total;
                 updatedForm.finalamount = $scope.famount;
                 updatedForm.Startdate = $scope.Startdate;
                 //updatedForm.termtype = $scope.termtype;
@@ -231,7 +231,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
             } else {
                 var client = $objectstore.getClient("invoice12thdoor");
                 //updatedForm.invoiceProducts = $rootScope.showprodArray.val;
-                updatedForm.total = $scope.total;
+                updatedForm.total = $rootScope.total;
                 updatedForm.finalamount = $scope.famount;
                 updatedForm.Startdate = $scope.Startdate;
                 updatedForm.duedate = $scope.duedate;
@@ -299,16 +299,16 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
             };
         }
         $scope.calculatetotal = function(data) {
-            $scope.total = 0;
+            $rootScope.total = 0;
             angular.forEach(data.invoiceProducts, function(tdIinvoice) {
-                $scope.total += (tdIinvoice.price * tdIinvoice.quantity);
+                $rootScope.total += (tdIinvoice.price * tdIinvoice.quantity);
             })
-            return $scope.total;
+            return $rootScope.total;
         };
         $scope.finaldiscount = function(data) {
             $scope.finalDisc = 0;
 
-            $scope.finalDisc = parseFloat(($scope.salesTax + $scope.total) * data.fdiscount / 100)
+            $scope.finalDisc = parseFloat(($scope.salesTax + $rootScope.total) * data.fdiscount / 100)
             return $scope.finalDisc;
             }
         $scope.CalculateTax = function() {
@@ -322,7 +322,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         $rootScope.famount = 0;
         $scope.finalamount = function(data) {
             $rootScope.famount = 0;
-            $rootScope.famount = parseFloat($scope.total - $scope.finalDisc) + parseFloat($scope.salesTax) + parseFloat(data.shipping);
+            $rootScope.famount = parseFloat($rootScope.total - $scope.finalDisc) + parseFloat($scope.salesTax) + parseFloat(data.shipping);
             return $rootScope.famount;
         };
 
@@ -358,7 +358,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 obj.favouriteStarNo = 1;
                 obj.DeleteStatus = false;
                 obj.invoiceRefNo = $scope.refNo;
-                obj.total = $scope.total;
+                obj.total = $rootScope.total;
                 obj.taxAmounts = [];
                 obj.taxAmounts = $rootScope.taxArr1;
             
@@ -442,6 +442,211 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                 }
             });
         }
+//---------------------------------------------------------------------------------------------------------------------
+$scope.MultiDuDates = function(data) {
+            $scope.showdate = true;
+           $scope.TDinvoice.termtype = "multipleDueDates";
+            $scope.TDinvoice.duedate = null;
+            $scope.showPercentage = false;
+            $rootScope.showmsg = false;
+
+            $mdDialog.show({
+                templateUrl: 'Invoicepartials/MultipleDuedates.html',
+                controller: function addMultipleDueDates($scope, $mdDialog) {
+                    $scope.minDate = new Date();
+                    $scope.aDatearr = {
+                        val: []
+                    };
+            
+                    $scope.newfamount = angular.copy($rootScope.famount)
+                    $scope.editDueDates = false;
+                    $scope.DueDateprice = 0;
+                    $scope.showEditButton = false;
+                    $scope.editMultipleDuedates = [];
+                     for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
+                              $scope.editMultipleDuedates = angular.copy($rootScope.invoiceArray[i].MultiDueDAtesArr);
+                        }
+                    // $scope.editMultipleDuedates = angular.copy($rootScope.dateArray.val)
+                       $scope.editMultipleDuedates = $scope.editMultipleDuedates.sort(function(a,b){
+                        return new Date(a.DueDate) - new Date(b.DueDate)
+                        })
+                        
+                    $scope.testarr = [{
+                        duedate: '',
+                        percentage: '',
+                        duDatePrice: '',
+                        paymentStatus: 'Unpaid',
+                        balance: $scope.newfamount,
+                        count: 1,
+                        uniqueKey: 'checkfocus1'
+                    }];
+
+                    $scope.AddDueDates = function() {
+                        $scope.calc = 0;
+                        $rootScope.checkArr = [];
+                        $rootScope.checkArr = angular.copy($scope.testarr);
+                        for (var i = $scope.testarr.length - 1; i >= 0; i--) {
+                            $scope.calc += parseFloat($scope.testarr[i].percentage);
+                            MultipleDudtesService.calDateArray({
+                                DueDate: $scope.testarr[i].duedate,
+                                Percentage: $scope.testarr[i].percentage,
+                                dueDateprice: $scope.testarr[i].duDatePrice,
+                                paymentStatus: "Unpaid",
+                                balance: $scope.testarr[i].duDatePrice,
+                                count: $scope.testarr[i].count
+                            });
+                        };
+
+                        if ($scope.calc == 100) {
+                            $mdDialog.hide();
+                        }
+                    }
+
+                    $scope.addItem = function() {
+                        $scope.arrr = [];
+                        $scope.perCount = 0;
+                        $scope.focus = 0;
+                        for (i = 0; i <= $scope.testarr.length - 1; i++) {
+                            $scope.perCount += parseInt($scope.testarr[i].percentage);
+                            var numbers = parseInt($scope.testarr[i].count) + 1;
+                            $scope.focus = 'checkfocus' + (parseInt($scope.testarr[i].count) + 1).toString();
+                        };
+                        if ($scope.perCount >= 100) {} else if ($scope.perCount < 100) {
+                            $scope.testarr.push({
+                                duedate: '',
+                                percentage: '',
+                                duDatePrice: '',
+                                paymentStatus: 'Unpaid',
+                                balance: parseFloat($rootScope.famount - $scope.newfamount),
+                                count: numbers,
+                                uniqueKey: $scope.focus
+
+                            });
+                        }
+                    };
+
+                    $scope.addEditDueDates = function(index) {
+                        $scope.arrr = [];
+                        $scope.perCount = 0;
+                        $scope.focus = 0;
+                        for (i = 0; i <= $scope.editMultipleDuedates.length - 1; i++) {
+                            $scope.perCount += parseInt($scope.editMultipleDuedates[i].Percentage);
+                            var numbers = parseInt($scope.editMultipleDuedates[i].count) + 1;
+                            $scope.focus = 'checkfocus' + (parseInt($scope.editMultipleDuedates[i].count) + 1).toString();
+                        };
+                        if ($scope.perCount >= 100) {
+
+                        } else if ($scope.perCount < 100) {
+                            $scope.editMultipleDuedates.push({
+                                DueDate: '',
+                                Percentage: '',
+                                dueDateprice: '',
+                                paymentStatus: 'Unpaid',
+                                balance: $scope.DueDateprice,
+                                count: numbers,
+                                uniqueKey: $scope.focus
+                            });
+                        }
+                    }
+
+                    $scope.removeeditArray = function(cc,index) {
+                        var tt = index + 1;
+                        if($scope.editMultipleDuedates.length > 1){
+                         $scope.editMultipleDuedates.splice($scope.editMultipleDuedates.indexOf(cc), 1);   
+
+                         if($scope.editMultipleDuedates.length >= tt){
+                            $scope.deletedP = parseInt($scope.editMultipleDuedates[index].Percentage) +parseInt(cc.Percentage);
+                                $scope.editMultipleDuedates[index] = {
+                                DueDate: $scope.editMultipleDuedates[index].DueDate,
+                                Percentage: $scope.deletedP,
+                                dueDateprice: parseFloat($scope.editMultipleDuedates[index].dueDateprice+cc.dueDateprice),
+                                balance: parseFloat($scope.editMultipleDuedates[index].balance+cc.balance),
+                                count: $scope.editMultipleDuedates[index].count,
+                                paymentStatus: $scope.editMultipleDuedates[index].paymentStatus,
+                                uniqueKey: $scope.editMultipleDuedates[index].uniqueKey
+                            }
+                        }else if($scope.editMultipleDuedates.length < tt){
+                            $scope.deletedP = parseInt($scope.editMultipleDuedates[index-1].Percentage) +parseInt(cc.Percentage);
+                            $scope.editMultipleDuedates[index-1] = {
+                                DueDate: $scope.editMultipleDuedates[index-1].DueDate,
+                                Percentage: $scope.deletedP,
+                                dueDateprice: parseFloat($scope.editMultipleDuedates[index-1].dueDateprice+cc.dueDateprice),
+                                balance: parseFloat($scope.editMultipleDuedates[index-1].balance+cc.balance),
+                                count: $scope.editMultipleDuedates[index-1].count,
+                                paymentStatus: $scope.editMultipleDuedates[index-1].paymentStatus,
+                                uniqueKey: $scope.editMultipleDuedates[index-1].uniqueKey
+                            }
+                        }
+
+                        }
+                        $scope.editDueDates = true;
+                    };
+
+                    $scope.removeItem = function(cc, index) {
+                        $scope.testarr.splice($scope.testarr.indexOf(cc), 1);
+                    };
+                    $scope.cancel = function() {
+                        $scope.showdate = false;
+                        $mdDialog.cancel();
+                    }
+                    $scope.duecost = 0;
+
+                    $scope.DueAmount = function(cn, index) {
+                        $scope.showPercentage = false;
+                        $scope.cal = 0;
+                        for (var i = $scope.testarr.length - 1; i >= 0; i--) {
+                            $scope.showPercentage = false;
+                            $scope.cal += parseFloat($scope.testarr[i].percentage);
+
+                            if ($scope.cal > 100) {
+                                $scope.showPercentage = true;
+                            }
+                        }
+                        $scope.newfamount = (parseFloat($rootScope.total * cn.percentage) / 100);
+                        $scope.testarr[index] = {
+                            duedate: cn.duedate,
+                            percentage: cn.percentage,
+                            duDatePrice: $scope.newfamount,
+                            balance: $scope.newfamount,
+                            count: cn.count,
+                            uniqueKey: cn.uniqueKey
+                        }
+                        $focus(cn.uniqueKey);
+                    }
+
+                    $scope.EditDueAmount = function(cn, index) {
+                        $scope.showPercentage = false;
+                        $scope.cal = 0;
+                
+                        $scope.newfamount = (parseFloat($rootScope.famount * cn.Percentage) / 100);
+                        $scope.editMultipleDuedates[index] = {
+                            DueDate: cn.DueDate,
+                            Percentage: cn.Percentage,
+                            dueDateprice: $scope.newfamount,
+                            balance: $scope.newfamount,
+                            count: cn.count,
+                            paymentStatus: 'Unpaid',
+                            uniqueKey: cn.uniqueKey
+                        }
+                        $focus(cn.uniqueKey);
+                    }
+
+                    $scope.UpdateDueDates = function() {
+                        $scope.calc = 0;
+                        $rootScope.checkArr = [];
+                        $rootScope.checkArr = angular.copy($scope.editMultipleDuedates);
+                        $scope.oldPercentage = 0;
+
+                        for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
+                            $rootScope.dateArray.val.splice($rootScope.dateArray.val.indexOf($rootScope.dateArray.val[i]),1)
+                        }
+                        $rootScope.dateArray.val = $scope.editMultipleDuedates;
+                        $mdDialog.hide();
+                    }
+                }
+            })
+        
+    }
 //---------------Deelete Product---------------------------------------------------------------------------------------------
         $scope.deleteEditproduct = function(name, index) {
             for (var i = $rootScope.invoiceArray[0].MultiDueDAtesArr.length - 1; i >= 0; i--) {
@@ -476,6 +681,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
         }
 //--------------add product --------------------------------------------------------------------------------------------
         $scope.addProductArray = function(ev, arr) {
+            $rootScope.termType = angular.copy($scope.TDinvoice.termtype);
             $rootScope.taxType = angular.copy($scope.AllTaxes);
             $rootScope.AllUnitOfMeasures = angular.copy($scope.UOM)
             $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
@@ -510,22 +716,18 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                             }
                             for (var i = $scope.promoItems.length - 1; i >= 0; i--) {
 
-                                if ($scope.promoItems[i].qty == null) {
-                                    $scope.showActionToast = function() {
-                                        var toast = $mdToast.simple()
-                                            .content('Action Toast!')
-                                            .action('OK')
-                                            .highlightAction(false)
-                                            .position($scope.getToastPosition());
-                                        $mdToast.show(toast).then(function(response) {
-                                            if (response == 'ok') {
-                                                alert('You clicked \'OK\'.');
-                                            }
-                                        });
-                                    };
-                                } else if ($scope.promoItems[i].ProductUnit == null) {
+                                if ($scope.promoItems[i].productName == null) {
+                                 $scope.showProduct = true;
+                            } else if ($scope.promoItems[i].qty == null) {
+                                $scope.showProduct = true;
+                            } else if ($scope.promoItems[i].ProductUnit == null) {
+                                 $scope.showProduct = true;
 
-                                } else if ($scope.promoItems[i].price == null) {
+                            }else if ($scope.promoItems[i].ProductUnit == "") {
+                                 $scope.showProduct = true;
+
+                            }else if ($scope.promoItems[i].price == null) {
+                                 $scope.showProduct = true;
 
                                 } else {
                                     InvoiceService.setTempArr({
@@ -539,6 +741,12 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                                         amount: $scope.Amount,
                                         status: $scope.promoItems[i].status,
                                     });
+
+                                    if( $rootScope.termType){
+                                    if($rootScope.termType == "multipleDueDates"){
+                                    $scope.UpdateDates();
+                                    } 
+                                }
 
                                     if ($scope.promoItems[i].status == 'notavailable') {
                                         var confirm = $mdDialog.confirm()
@@ -646,6 +854,36 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
                                 }
                             }
                         }
+
+                        $scope.UpdateDates = function(){
+                        $scope.updateDate = [];
+                        $scope.newfamount = 0;
+                         $scope.calc = 0;
+                        $rootScope.checkArr = [];
+                       
+                        for (var i = $rootScope.invoiceArray.length - 1; i >= 0; i--) {
+                             $scope.updateDate = angular.copy($rootScope.invoiceArray[i].MultiDueDAtesArr);
+                              $rootScope.checkArr = angular.copy($rootScope.invoiceArray[i].MultiDueDAtesArr);
+                        }
+                       
+                        for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
+                            $scope.calculatetotal($rootScope.dateArray.val[i]);
+                            //$rootScope.dateArray.val.splice($rootScope.dateArray.val.indexOf($rootScope.dateArray.val[i]),1)
+                        }
+                        
+                        for (var i = $scope.updateDate.length - 1; i >= 0; i--) {
+                            $scope.newfamount = parseFloat(($rootScope.total +$scope.Amount)  * $scope.updateDate[i].Percentage) / 100;
+                               MultipleDudtesService.calDateArray({
+                                        DueDate: $scope.updateDate[i].DueDate,
+                                        Percentage: $scope.updateDate[i].Percentage,
+                                        dueDateprice: $scope.newfamount,
+                                        paymentStatus: $scope.updateDate[i].paymentStatus,
+                                        balance:$scope.newfamount,
+                                        count: $scope.updateDate[i].count
+                                    });
+                        }   
+
+                    }
 
                     $scope.cancel = function() {
                         $mdDialog.cancel();
@@ -910,7 +1148,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
             }
             var client = $objectstore.getClient("invoice12thdoor");
             updatedForm.invoiceRefNo = $scope.refNo;
-            updatedForm.total = $scope.total;
+            updatedForm.total = $rootScope.total;
             updatedForm.cardOpen = false;
             updatedForm.favourite = false;
             updatedForm.favouriteStarNo = 1;
@@ -985,7 +1223,7 @@ app.controller('editCtrl', function($scope, $mdDialog, $objectstore, $window, $r
 
                     var client = $objectstore.getClient("invoice12thdoorDraft");
                     obj.invoiceProducts = $rootScope.testArray.val;
-                    obj.total = $scope.total;
+                    obj.total = $rootScope.total;
                     obj.finalamount = $scope.famount;
                     obj.status = "Draft";
 

@@ -1,4 +1,5 @@
 <md-dialog style="max-width:850px;" aria-label="multiple due dates">
+<form  name="multiDuedates">
     <md-toolbar class="modal-header">
         <div class="md-toolbar-tools">
             <h2>Due Dates</h2>
@@ -63,10 +64,10 @@
                                     <div layout layout-sm="column" layout-margin>
                                     <md-datepicker ng-model="cc.DueDate" md-min-date="minDate" md-placeholder="Due Date" required flex style="margin-top:-15px; padding-left:10px;" ></md-datepicker>
                     
-                                            <md-input-container flex style="margin-top:-15px; padding-left:5px;" >
-                                                <label>Percentage</label>
-                                                <input ng-model="cc.Percentage" style="margin-top:5px;" id="{{cc.uniqueKey}}" ng-change="EditDueAmount(cc,$index)">
-                                                </md-input-container>
+                                        <md-input-container flex style="margin-top:-15px; padding-left:5px;" >
+                                            <label>Percentage</label>
+                                            <input ng-model="cc.Percentage" style="margin-top:5px;" id="{{cc.uniqueKey}}" ng-change="EditDueAmount(cc,$index)">
+                                            </md-input-container>
                                                 <md-input-container flex style="margin-top:-15px; padding-left:10px;">
                                                     <label>Amount</label>
                                                     <input ng-model="cc.dueDateprice" style="margin-top:5px;">
@@ -96,6 +97,7 @@
                                     <md-button href ng-if="$root.dateArray.val.length == 0" ng-click="AddDueDates()" class="md-primary">Save</md-button>
                                     <md-button href ng-if="$root.dateArray.val.length != 0" ng-click="UpdateDueDates()" class="md-primary">update</md-button>
                                 </div>
+                                </form>
                             </md-dialog>
 
 

@@ -450,7 +450,7 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
         } else if($rootScope.testArray.val.length != 0){
             $scope.showdate = true;
            $scope.TDinvoice.termtype = "multipleDueDates";
-                    $scope.TDinvoice.duedate = null;
+            $scope.TDinvoice.duedate = null;
             $scope.showPercentage = false;
             $rootScope.showmsg = false;
 
@@ -461,14 +461,17 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                     $scope.aDatearr = {
                         val: []
                     };
-                    $scope.duePaymenet = angular.copy($rootScope.famount);
+            
                     $scope.newfamount = angular.copy($rootScope.famount)
                     $scope.editDueDates = false;
                     $scope.DueDateprice = 0;
                     $scope.showEditButton = false;
                     $scope.editMultipleDuedates = [];
                     $scope.editMultipleDuedates = angular.copy($rootScope.dateArray.val)
-
+                       $scope.editMultipleDuedates = $scope.editMultipleDuedates.sort(function(a,b){
+                        return new Date(a.DueDate) - new Date(b.DueDate)
+                        })
+                        
                     $scope.testarr = [{
                         duedate: '',
                         percentage: '',
@@ -485,7 +488,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         $rootScope.checkArr = angular.copy($scope.testarr);
                         for (var i = $scope.testarr.length - 1; i >= 0; i--) {
                             $scope.calc += parseFloat($scope.testarr[i].percentage);
-                            // if($scope.calc <= 100){
                             MultipleDudtesService.calDateArray({
                                 DueDate: $scope.testarr[i].duedate,
                                 Percentage: $scope.testarr[i].percentage,
@@ -494,7 +496,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                                 balance: $scope.testarr[i].duDatePrice,
                                 count: $scope.testarr[i].count
                             });
-                            // }
                         };
 
                         if ($scope.calc == 100) {
@@ -528,15 +529,15 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                     $scope.addEditDueDates = function(index) {
                         $scope.arrr = [];
                         $scope.perCount = 0;
-                        // $scope.numbers = 0;
                         $scope.focus = 0;
                         for (i = 0; i <= $scope.editMultipleDuedates.length - 1; i++) {
-                            $scope.perCount += parseInt($scope.editMultipleDuedates[i].percentage);
-                            $scope.calc += parseInt($scope.editMultipleDuedates[i].percentage);
+                            $scope.perCount += parseInt($scope.editMultipleDuedates[i].Percentage);
                             var numbers = parseInt($scope.editMultipleDuedates[i].count) + 1;
                             $scope.focus = 'checkfocus' + (parseInt($scope.editMultipleDuedates[i].count) + 1).toString();
                         };
-                        // if ($scope.perCount >= 100) {} else if ($scope.perCount < 100) {
+                        if ($scope.perCount >= 100) {
+
+                        } else if ($scope.perCount < 100) {
                             $scope.editMultipleDuedates.push({
                                 DueDate: '',
                                 Percentage: '',
@@ -546,20 +547,40 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                                 count: numbers,
                                 uniqueKey: $scope.focus
                             });
-                        // }
+                        }
                     }
 
                     $scope.removeeditArray = function(cc,index) {
-                        $scope.delDuedate = angular.copy(cc.DueDate)
-                        console.log($scope.delDuedate)
-                        $scope.editMultipleDuedates.splice($scope.editMultipleDuedates.indexOf(cc), 1);
-                        $scope.editDueDates = true;
+                        var tt = index + 1;
+                        if($scope.editMultipleDuedates.length > 1){
+                         $scope.editMultipleDuedates.splice($scope.editMultipleDuedates.indexOf(cc), 1);   
 
-                        $scope.editMultipleDuedates.sort(function(a,b){
-                        return new Date(a.DueDate) - new Date(b.DueDate)
-                        
-                        })
-                        console.log($scope.editMultipleDuedates)
+                         if($scope.editMultipleDuedates.length >= tt){
+                            $scope.deletedP = parseInt($scope.editMultipleDuedates[index].Percentage) +parseInt(cc.Percentage);
+                                $scope.editMultipleDuedates[index] = {
+                                DueDate: $scope.editMultipleDuedates[index].DueDate,
+                                Percentage: $scope.deletedP,
+                                dueDateprice: parseFloat($scope.editMultipleDuedates[index].dueDateprice+cc.dueDateprice),
+                                balance: parseFloat($scope.editMultipleDuedates[index].balance+cc.balance),
+                                count: $scope.editMultipleDuedates[index].count,
+                                paymentStatus: $scope.editMultipleDuedates[index].paymentStatus,
+                                uniqueKey: $scope.editMultipleDuedates[index].uniqueKey
+                            }
+                        }else if($scope.editMultipleDuedates.length < tt){
+                            $scope.deletedP = parseInt($scope.editMultipleDuedates[index-1].Percentage) +parseInt(cc.Percentage);
+                            $scope.editMultipleDuedates[index-1] = {
+                                DueDate: $scope.editMultipleDuedates[index-1].DueDate,
+                                Percentage: $scope.deletedP,
+                                dueDateprice: parseFloat($scope.editMultipleDuedates[index-1].dueDateprice+cc.dueDateprice),
+                                balance: parseFloat($scope.editMultipleDuedates[index-1].balance+cc.balance),
+                                count: $scope.editMultipleDuedates[index-1].count,
+                                paymentStatus: $scope.editMultipleDuedates[index-1].paymentStatus,
+                                uniqueKey: $scope.editMultipleDuedates[index-1].uniqueKey
+                            }
+                        }
+
+                        }
+                        $scope.editDueDates = true;
                     };
 
                     $scope.removeItem = function(cc, index) {
@@ -595,7 +616,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                     }
 
                     $scope.EditDueAmount = function(cn, index) {
-                       
                         $scope.showPercentage = false;
                         $scope.cal = 0;
                 
@@ -609,7 +629,6 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                             paymentStatus: 'Unpaid',
                             uniqueKey: cn.uniqueKey
                         }
-
                         $focus(cn.uniqueKey);
                     }
 
@@ -620,39 +639,26 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                         $scope.oldPercentage = 0;
 
                         for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
-                            $scope.oldPercentage += parseFloat($rootScope.dateArray.val[i].Percentage);
+                            $rootScope.dateArray.val.splice($rootScope.dateArray.val.indexOf($rootScope.dateArray.val[i]),1)
                         }
-
-                        for (var i = $scope.editMultipleDuedates.length - 1; i >= 0; i--) {
-                            $scope.calc += parseFloat($scope.editMultipleDuedates[i].percentage);
-
-                            MultipleDudtesService.editDateArray({
-                                DueDate: $scope.editMultipleDuedates[i].duedate,
-                                Percentage: $scope.editMultipleDuedates[i].percentage,
-                                dueDateprice: $scope.editMultipleDuedates[i].duDatePrice,
-                                paymentStatus: "Unpaid",
-                                balance: $scope.editMultipleDuedates[i].duDatePrice,
-                                count: $scope.editMultipleDuedates[i].count
-                            });
-                        };
-
-                        if ($scope.calc + $scope.oldPercentage == 100) {
-                            $mdDialog.hide();
-                        }
+                        $rootScope.dateArray.val = $scope.editMultipleDuedates;
+                        $mdDialog.hide();
                     }
                 }
             })
         }
     }
 
-    //---------------------------Delete added products-----------------------------------------
+//---------------------------Delete added products-----------------------------------------
     $scope.deleteproduct = function(name, index) {
         InvoiceService.ReverseTax(name, index);
         $rootScope.testArray.val.splice($rootScope.testArray.val.indexOf(name), 1);
     }
 
-    //dialog box pop up to add product
+//--------------------dialog box pop up to add product------------------------------------
+
     $scope.addproduct = function(ev) {
+        $rootScope.termType = angular.copy($scope.TDinvoice.termtype);
         $rootScope.taxType = angular.copy($scope.AllTaxes);
         $rootScope.AllUnitOfMeasures = angular.copy($scope.UOM)
         $rootScope.Showdiscount = angular.copy($scope.Displaydiscount);
@@ -724,7 +730,12 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                                     amount: $scope.Amount,
                                     status: $scope.promoItems[i].status,
                                 });
-
+                                if( $rootScope.termType){
+                                    if($rootScope.termType == "multipleDueDates"){
+                                    $scope.UpdateDates();
+                                    } 
+                                }
+                               
                                 if ($scope.promoItems[i].status == 'notavailable') {
                                     var confirm = $mdDialog.confirm()
                                         .title('Would you like to save this product for future use?')
@@ -822,6 +833,28 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                             }
                         }
                     }
+
+                    $scope.UpdateDates = function(){
+                        $scope.updateDate = [];
+                        $scope.newfamount = 0;
+                        $scope.updateDate = angular.copy($rootScope.dateArray.val);
+                        for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
+                            $rootScope.dateArray.val.splice($rootScope.dateArray.val.indexOf($rootScope.dateArray.val[i]),1)
+                        }
+                        
+                        for (var i = $scope.updateDate.length - 1; i >= 0; i--) {
+                            $scope.newfamount = parseFloat(($rootScope.famount +$scope.Amount)  * $scope.updateDate[i].Percentage) / 100;
+                               MultipleDudtesService.calDateArray({
+                                        DueDate: $scope.updateDate[i].DueDate,
+                                        Percentage: $scope.updateDate[i].Percentage,
+                                        dueDateprice: $scope.newfamount,
+                                        paymentStatus: $scope.updateDate[i].paymentStatus,
+                                        balance:$scope.newfamount,
+                                        count: $scope.updateDate[i].count
+                                    });
+                        }   
+                    }
+                    
                     //close dialog box
                 $scope.cancel = function() {
                     $mdDialog.cancel();
@@ -926,7 +959,10 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
                     } else {
                         $scope.Amount = $scope.totall;
                     }
-                    return $scope.Amount;
+                    if($rootScope.currencyStatus == true){
+                         $scope.Amount = $scope.Amount* $rootScope.exchangeRate;
+                    }
+                         return $scope.Amount;
                 }
 
                 var client = $objectstore.getClient("product12thdoor");
@@ -981,7 +1017,11 @@ app.controller('AppCtrl', function($scope, $objectstore, $focus, $auth, $uploade
     }
     $scope.contacts = [];
 
-    //dialog box pop up to add customer through invoice
+//------------------------------------------------------------------------------------------------------------
+
+
+
+//-------------------------/dialog box pop up to add customer through invoice-----------------------------------
     $scope.addCustomer = function() {
             $mdDialog.show({
                 templateUrl: 'Invoicepartials/addCustomer.html',
@@ -1473,7 +1513,7 @@ var userName = $auth.getSession().Name;
         $scope.Discount = 0;
         if ($scope.dis == "SubTotal Items") {
             $rootScope.discountDesc = true;
-           $rootScope.finalDisc = parseFloat($rootScope.total* tt / 100)
+           $rootScope.finalDisc = parseFloat($scope.total* tt / 100)
         } else if ($scope.dis == "Individual Items") {
             $rootScope.discountDesc = false;
             $rootScope.finalDisc = 0;
@@ -1500,6 +1540,7 @@ var userName = $auth.getSession().Name;
                                     status: $rootScope.testArray.val[i].status,
                                 });
             }
+            $scope.finaldiscount(obj)
     }
 
     $scope.CalculateTax = function() {

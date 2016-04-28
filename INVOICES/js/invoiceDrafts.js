@@ -106,6 +106,9 @@
             } else {
                 $scope.Amount = $scope.total;
             }
+            if($rootScope.currencyStatus == true){
+                 $scope.Amount = $scope.Amount* $rootScope.exchangeRate;
+            }
 
             return $scope.Amount;
         }
@@ -1203,27 +1206,6 @@
                     $rootScope.showmsg = true;
                 }
             },
-
-            editDateArray: function(val) {
-                $rootScope.showmsg = false;
-                $rootScope.calPercentatge = 0;
-                $rootScope.oldPercentage = 0;
-
-                for (var i = $rootScope.dateArray.val.length - 1; i >= 0; i--) {
-                    $rootScope.oldPercentage += parseFloat($rootScope.dateArray.val[i].Percentage);
-                }
-
-
-                for (var i = $rootScope.checkArr.length - 1; i >= 0; i--) {
-                    $rootScope.calPercentatge += parseFloat($rootScope.checkArr[i].percentage);
-                };
-                this.setDateArray(val);
-                if ($rootScope.calPercentatge + $rootScope.oldPercentage == 100) {
-
-                } else {
-                    $rootScope.showmsg = true;
-                }
-            }
         }
     });
     //-----------------------------------------------------------------------------------------------

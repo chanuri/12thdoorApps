@@ -151,7 +151,6 @@
                                 <div>
                                     <ul as-sortable="sortableOptions"  ng-model="testArray.val"  flex>
                                         <li ng-repeat="item in testArray.val" as-sortable-item flex style="margin-bottom:20px !important;">
-                                            <!--  {{item}} -->
                                             <md-card style="margin-left:-30px;" as-sortable-item-handle flex>
                                                 <md-card-content >
                                                 
@@ -381,7 +380,7 @@
                                         <tr ng-repeat="txt in CusFields">
                                             <td style=""flex>{{txt.labelshown}}</td>
                                             <td style=" padding-left:200px;"  flex>
-                                                <md-input-container flex ng-if=" txt.type== 'textBox'" >
+                                                <md-input-container flex ng-if=" txt.type== 'textBox'" style="margin-top:20px;">
                                                     <input aria-label="ttt" ng-model="txt.inputType">
                                                     </md-input-container>
                                                     <md-select ng-change="check(nn)" placeholder="id" ng-if=" txt.type == 'selectBox'" ng-model="nn" flex >

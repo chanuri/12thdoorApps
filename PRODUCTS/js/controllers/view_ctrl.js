@@ -8,6 +8,7 @@ rasm.controller("EmailController", ["$scope","$objectstore","object","$sce","$md
     $scope.pdfChipArr = [];
     $scope.pdfChipArr.push(object.product_code+".pdf")
     $scope.brochureDownloadBtn = false;
+    $scope.showBrochure = true // brochure progress bar
 
 	$scope.ContactDetails = []
 
@@ -79,15 +80,19 @@ rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$s
 	};
 
 	function loadThumnail(){
+		$scope.brochureDownloadBtn = false;
+		$scope.showBrochure = false;
 		if ($scope.ViewExpense[0].UploadBrochure.val.length > 0 ) {
+
+			$scope.brochureDownloadBtn = true;
+			$scope.fileExtension = $scope.ViewExpense[0].UploadBrochure.val[0].name.split('.').pop()
+			$scope.url = $storage.getMediaUrl("productbrochureNew", $scope.ViewExpense[0].UploadBrochure.val[0].name)
+
 			if ($scope.ViewExpense[0].UploadBrochure.val[0].name.split('.').pop() == 'pdf') {
-				$scope.url = $storage.getMediaUrl("productbrochureNew", $scope.ViewExpense[0].UploadBrochure.val[0].name);
-			 	 
-
+				$scope.showBrochure = true;
+				
 				toDataUrl($scope.url, function(response){
-					console.log(response) 				
-					$scope.brochureDownloadBtn = true;
-
+					$scope.showBrochure = false;
 					$scope.$apply();
 				})
 
@@ -104,7 +109,7 @@ rasm.controller("ViewScreen",["$scope", "$stateParams","$rootScope","$auth", "$s
 				    xhr.open('GET', url);
 				    xhr.send();
 				}				
-			}
+			} 
 		}		
 	}
 

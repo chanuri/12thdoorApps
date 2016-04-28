@@ -101,8 +101,14 @@ md-input-container.md-input-focused label {
                           <md-button ng-show="brochureDownloadBtn" href="{{url}}"  download="product.UploadBrochure.val[0].name" style="position: absolute;left: 445px;top: 110px;"  class="md-icon-button md-primary" aria-label="Settings">
                             <md-icon md-svg-icon="img/ic_file_download_24px.svg"></md-icon>
                           </md-button> 
-                              <pdf-thumbnail data-file="pdf.file" data-thumbnail="pdf.thumbnail_data" data-thumb-width="400">
-                              </pdf-thumbnail>
+                              <pdf-thumbnail ng-if="fileExtension == 'pdf' || fileExtension == 'docs' " data-file="pdf.file" data-thumbnail="pdf.thumbnail_data" data-thumb-width="400">
+                              </pdf-thumbnail> 
+                              <img style="width: 400px;" src="{{url}}" ng-if="fileExtension == 'png' ||  fileExtension == 'jpeg' || fileExtension == 'svg'">
+                              <div ng-show="showBrochure" layout="column" layout-sm="column" layout-align="center center" style="background: white;z-index: 10;position: absolute;height: 61%;width: 45%;opacity: 0.8;top: 15%;">
+                                  <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                    
+                              </div>
+
                           </div>                
                       </div>
                       
